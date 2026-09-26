@@ -27,7 +27,7 @@
     },
     {
       "id": "DISC-002",
-      "name": "Inspect remaining Reporting and Settings screens",
+      "name": "Inspect Reporting, Settings and nested screens",
       "status": "IN_PROGRESS",
       "dependencies": [
         "DISC-001"
@@ -43,6 +43,23 @@
       "regressionChecks": [
         "No live records changed"
       ]
+    },
+    {
+      "id": "DISC-003",
+      "name": "Verify remaining safe state and workflow branches",
+      "status": "PLANNED",
+      "dependencies": [
+        "DISC-002"
+      ],
+      "acceptanceCriteria": [
+        "No missing nested screens or unexplained gaps"
+      ],
+      "verificationCommands": [
+        "Reconcile registry and inventory"
+      ],
+      "regressionChecks": [
+        "No irreversible action"
+      ]
     }
   ],
   "unresolvedQuestions": [
@@ -51,6 +68,9 @@
     "Q-003",
     "Q-004",
     "Q-005",
-    "Q-006"
+    "Q-006",
+    "Q-007",
+    "Q-008",
+    "Q-009"
   ]
 }

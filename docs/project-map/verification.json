@@ -14,6 +14,20 @@
       "status": "VERIFIED",
       "method": "Compare navigation labels and observed routes to authorized UI",
       "result": "Passed for recorded checkpoint; NAV_ONLY content not asserted"
+    },
+    {
+      "id": "CHK-003",
+      "taskId": "DISC-002",
+      "status": "VERIFIED",
+      "method": "Open formerly NAV_ONLY routes, classify evidence",
+      "result": "122 screens; 121 partial, 1 package inaccessible, 0 NAV_ONLY"
+    },
+    {
+      "id": "CHK-004",
+      "taskId": "DISC-002",
+      "status": "IN_PROGRESS",
+      "method": "Safe nested workflow and state coverage",
+      "result": "Incomplete; live writes and alternate roles untested"
     }
   ],
   "unresolvedQuestions": [
@@ -22,6 +36,9 @@
     "Q-003",
     "Q-004",
     "Q-005",
-    "Q-006"
+    "Q-006",
+    "Q-007",
+    "Q-008",
+    "Q-009"
   ]
 }

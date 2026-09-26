@@ -1,11 +1,11 @@
-CURRENT PHASE: Product discovery (PHASE-01).
-CURRENT TASK: DISC-002 — inspect remaining Reporting and Settings screens.
+CURRENT PHASE: PHASE-01 Product discovery (IN_PROGRESS).
+CURRENT TASK: DISC-002 nested and partial screen coverage.
 STATUS: IN_PROGRESS
-COMPLETED: 10 observed domains; 93 screen entries (47 inspected, 46 navigation-only); 11 workflow paths (some unsubmitted).
-FILES CREATED: docs/discovery/application-inventory.md; docs/project-map/feature-registry.json.
-FILES MODIFIED: docs/project-map/app-map.json; docs/project-map/roadmap.json; docs/project-map/verification.json; docs/project-map/handoff.md.
-TESTS EXECUTED: JSON parse; unique IDs; route and screen cross-reference; read-only UI inspection.
-TEST RESULTS: Passed for documented checkpoint; complete application inventory remains IN PROGRESS.
-UNRESOLVED ISSUES: Q-001 through Q-006 in feature-registry.json; NAV_ONLY screens not inspected; permission differences unknown.
-NEXT EXACT TASK: Open SCR-028 Revenue in Reporting, record filters, tiles, actions, states and permission result; continue Reporting links in ID order.
-FILES NEXT AGENT MUST READ: AGENTS.md; docs/discovery/application-inventory.md; docs/project-map/feature-registry.json; docs/project-map/roadmap.json; docs/project-map/app-map.json; docs/project-map/decisions.json; docs/project-map/verification.json; docs/project-map/handoff.md.
+COMPLETED: 10 domains; 16 modules; 122 screens (0 full, 121 partial, 1 package inaccessible, 0 NAV_ONLY); 14 workflows.
+FILES CREATED: None this task.
+FILES MODIFIED: docs/discovery/application-inventory.md; docs/project-map/feature-registry.json; docs/project-map/roadmap.json; docs/project-map/verification.json; docs/project-map/handoff.md.
+TESTS EXECUTED: JSON parse; unique IDs; registry/inventory route parity; read-only browser checks; sensitive-data scan.
+TEST RESULTS: Document checks passed; full discovery remains incomplete; no live write submitted.
+UNRESOLVED ISSUES: U-001–U-006; Q-001–Q-009; SCR-094 package NO ACCESS; decisions.json absent; role/error/success branches untested.
+NEXT EXACT TASK: Revisit SCR-096 Floorplan Layout Editor read-only; inspect toolbar, Settings, Tables and Combinations tabs; then nested settings/workflows by ID with safe test data.
+FILES NEXT AGENT MUST READ: AGENTS.md; docs/discovery/application-inventory.md; docs/project-map/feature-registry.json; docs/project-map/roadmap.json; docs/project-map/app-map.json; docs/project-map/decisions.json (absent); docs/project-map/verification.json; docs/project-map/handoff.md.
