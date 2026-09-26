@@ -4906,12 +4906,40 @@
       "route": "/manager2/oceansatarthurs/settings/landingpage",
       "parentNavigation": "Settings > Widget Settings",
       "domainId": "DOM-08",
-      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
-      "visibleComponents": [],
-      "primaryActions": [],
+      "purpose": "Configure public landing page",
+      "visibleComponents": [
+        "Header text",
+        "venue banner",
+        "attention message",
+        "primary and secondary buttons",
+        "direct link"
+      ],
+      "primaryActions": [
+        "Add New Button",
+        "reorder buttons"
+      ],
       "secondaryActions": [],
       "forms": [],
-      "fields": [],
+      "fields": [
+        {
+          "name": "Header Text",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Buttons",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Links",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
       "tables": [],
       "filters": [],
       "searchBehavior": "UNKNOWN",
@@ -4927,11 +4955,13 @@
       "dependencies": [],
       "likelyEntities": [],
       "userRoles": "Current signed-in user; other roles NEEDS TESTING",
-      "observedBusinessRules": [],
+      "observedBusinessRules": [
+        "Landing page styles inherit reservation widget styles; no change saved"
+      ],
       "evidenceStatus": "CONFIRMED",
-      "inspectionLevel": "NAV_ONLY",
+      "inspectionLevel": "INSPECTED",
       "unknowns": [
-        "Page content and interactions not yet inspected"
+        "Validation, save result, and role differences NEEDS TESTING"
       ],
       "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
     },
