@@ -1,0 +1,6 @@
+{
+  "name": "project-x",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Project scaffold; stack and scripts pending architecture decisions."
+}
