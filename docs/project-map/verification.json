@@ -1,5 +1,27 @@
 {
   "schemaVersion": 1,
-  "checks": [],
-  "unresolvedQuestions": []
+  "checks": [
+    {
+      "id": "CHK-001",
+      "taskId": "DISC-001",
+      "status": "VERIFIED",
+      "method": "JSON syntax and unique screen/flow ID check",
+      "result": "Passed before commit"
+    },
+    {
+      "id": "CHK-002",
+      "taskId": "DISC-001",
+      "status": "VERIFIED",
+      "method": "Compare navigation labels and observed routes to authorized UI",
+      "result": "Passed for recorded checkpoint; NAV_ONLY content not asserted"
+    }
+  ],
+  "unresolvedQuestions": [
+    "Q-001",
+    "Q-002",
+    "Q-003",
+    "Q-004",
+    "Q-005",
+    "Q-006"
+  ]
 }

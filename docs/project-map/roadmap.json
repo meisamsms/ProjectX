@@ -1,7 +1,56 @@
 {
   "schemaVersion": 1,
-  "currentPhase": null,
-  "phases": [],
-  "tasks": [],
-  "unresolvedQuestions": []
+  "currentPhase": "DISCOVERY",
+  "phases": [
+    {
+      "id": "PHASE-01",
+      "name": "Product discovery",
+      "status": "IN_PROGRESS"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "DISC-001",
+      "name": "Map main navigation and core workflows",
+      "status": "VERIFIED",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "Inventory and registry preserve observed routes and uncertainty"
+      ],
+      "verificationCommands": [
+        "Parse project-map JSON",
+        "Check route/ID cross-references"
+      ],
+      "regressionChecks": [
+        "No application code changed"
+      ]
+    },
+    {
+      "id": "DISC-002",
+      "name": "Inspect remaining Reporting and Settings screens",
+      "status": "IN_PROGRESS",
+      "dependencies": [
+        "DISC-001"
+      ],
+      "acceptanceCriteria": [
+        "Every listed route opened or marked inaccessible",
+        "Filters, fields, states, actions and evidence recorded"
+      ],
+      "verificationCommands": [
+        "Parse project-map JSON",
+        "Reconcile screen IDs and route list"
+      ],
+      "regressionChecks": [
+        "No live records changed"
+      ]
+    }
+  ],
+  "unresolvedQuestions": [
+    "Q-001",
+    "Q-002",
+    "Q-003",
+    "Q-004",
+    "Q-005",
+    "Q-006"
+  ]
 }

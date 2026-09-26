@@ -1,0 +1,5057 @@
+{
+  "schemaVersion": 1,
+  "reference": "Authorized SevenRooms manager account, Ocean’s at Arthur’s",
+  "asOf": "2026-09-26",
+  "scope": "Visible UI only; no application code and no guest data reproduced",
+  "domains": [
+    {
+      "id": "DOM-01",
+      "name": "Home and navigation",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "DOM-02",
+      "name": "Reservations and seating",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "DOM-03",
+      "name": "Requests",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "DOM-04",
+      "name": "Clients",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "DOM-05",
+      "name": "Marketing and voice",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "DOM-06",
+      "name": "Online sales",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "DOM-07",
+      "name": "Reporting",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "DOM-08",
+      "name": "Availability and venue settings",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "DOM-09",
+      "name": "People and permissions",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "DOM-10",
+      "name": "Integrations and widgets",
+      "status": "CONFIRMED"
+    }
+  ],
+  "screens": [
+    {
+      "id": "SCR-001",
+      "name": "Home",
+      "route": "/app/home/oceansatarthurs",
+      "parentNavigation": "Global navigation",
+      "domainId": "DOM-01",
+      "purpose": "Operational launch dashboard",
+      "visibleComponents": [
+        "Upcoming Covers week",
+        "Revenue prompts",
+        "VIP reservations",
+        "Guest Satisfaction preview",
+        "learning and upsell cards"
+      ],
+      "primaryActions": [
+        "Select date/shift",
+        "open report",
+        "refresh covers",
+        "switch week"
+      ],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [
+        "Week navigation"
+      ],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [
+        {
+          "name": "Reservation",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Review",
+          "status": "INFERRED"
+        }
+      ],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [
+        "CONFIRMED: card routes lead to reservations, reports, marketing"
+      ],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "INSPECTED",
+      "unknowns": [
+        "Field-level validation, error states, and permission differences remain untested"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-002",
+      "name": "Reservations day",
+      "route": "/manager/oceansatarthurs/reservations/day/:date",
+      "parentNavigation": "Global navigation",
+      "domainId": "DOM-02",
+      "purpose": "Day reservation list",
+      "visibleComponents": [
+        "Month picker",
+        "Group by",
+        "Availability links",
+        "Cover Flow",
+        "grouped reservation rows",
+        "summary counts"
+      ],
+      "primaryActions": [
+        "Add Reservation",
+        "select day",
+        "open existing reservation"
+      ],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Search",
+          "type": "text (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
+      "tables": [
+        {
+          "description": "Observed table or grid",
+          "columns": [
+            "Time",
+            "Covers",
+            "Name",
+            "Table",
+            "Notes",
+            "Spend",
+            "Status",
+            "Booked By"
+          ]
+        }
+      ],
+      "filters": [
+        "Group by Default, Time, Seating Area, VIP / Other, Reservation Tags, Reservation Status"
+      ],
+      "searchBehavior": "NEEDS TESTING",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [
+        "Booked",
+        "Confirmed",
+        "canceled/no-show hidden by default"
+      ],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [
+        {
+          "name": "Reservation",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Shift",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Table",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Client",
+          "status": "INFERRED"
+        }
+      ],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [
+        "CONFIRMED: can show canceled/no-show reservations",
+        "list aggregates reservations and covers"
+      ],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "INSPECTED",
+      "unknowns": [
+        "Field-level validation, error states, and permission differences remain untested"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-003",
+      "name": "Add Reservation slideout",
+      "route": "/manager/oceansatarthurs/reservations/day/:date (slideout)",
+      "parentNavigation": "Reservations day; Grid; Floorplan",
+      "domainId": "DOM-02",
+      "purpose": "Internal booking entry",
+      "visibleComponents": [
+        "Availability time slots and pacing",
+        "client lookup",
+        "payment",
+        "source",
+        "tags",
+        "notes",
+        "table"
+      ],
+      "primaryActions": [
+        "Book Reservation (not submitted)"
+      ],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Date",
+          "type": "date picker (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Guests",
+          "type": "number selector (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Shift",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Duration",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Seating Area",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Phone, Name, or Email",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Search sources",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Reservation Tags",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Reservation Notes",
+          "type": "textarea (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Table",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Booked By",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
+      "tables": [],
+      "filters": [
+        "Show Access Rules"
+      ],
+      "searchBehavior": "NEEDS TESTING",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [
+        "No Payment",
+        "Charge Card Now",
+        "Save Card for Later"
+      ],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [
+        "SCR-002",
+        "SCR-023",
+        "SCR-024"
+      ],
+      "likelyEntities": [
+        {
+          "name": "Reservation",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Client",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Shift",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Access Rule",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Payment",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Tag",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Table",
+          "status": "INFERRED"
+        }
+      ],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [
+        "CONFIRMED: defaults include 1 hr 30 min duration in observed shift",
+        "reservation phone and last name requirements shown in venue settings"
+      ],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "INSPECTED",
+      "unknowns": [
+        "Field-level validation, error states, and permission differences remain untested"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-004",
+      "name": "Grid",
+      "route": "/manager2/oceansatarthurs/:date/reservations/grid",
+      "parentNavigation": "Global navigation",
+      "domainId": "DOM-02",
+      "purpose": "Table by time reservation grid",
+      "visibleComponents": [
+        "Date",
+        "Shift",
+        "time slots",
+        "pacing counts",
+        "seating areas and table capacities"
+      ],
+      "primaryActions": [
+        "Add Reservation",
+        "select date/shift"
+      ],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [
+        {
+          "description": "Observed table or grid",
+          "columns": [
+            "Table rows by area and time"
+          ]
+        }
+      ],
+      "filters": [
+        "Date",
+        "Shift"
+      ],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [
+        {
+          "name": "Reservation",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Table",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Seating Area",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Shift",
+          "status": "INFERRED"
+        }
+      ],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [
+        "CONFIRMED: area heading includes manual-assignment-only bar in observed shift"
+      ],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "INSPECTED",
+      "unknowns": [
+        "Field-level validation, error states, and permission differences remain untested"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-005",
+      "name": "Floorplan",
+      "route": "/manager2/oceansatarthurs/:date/reservations/floorplan",
+      "parentNavigation": "Global navigation",
+      "domainId": "DOM-02",
+      "purpose": "Visual seating view",
+      "visibleComponents": [
+        "Date",
+        "Shift",
+        "reservation cards",
+        "area labels Main, West Wing, Bar, Sushi Bar"
+      ],
+      "primaryActions": [
+        "Add Reservation",
+        "select date/shift"
+      ],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [
+        "Date",
+        "Shift"
+      ],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [
+        {
+          "name": "Reservation",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Table",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Room",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Seating Area",
+          "status": "INFERRED"
+        }
+      ],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "INSPECTED",
+      "unknowns": [
+        "Field-level validation, error states, and permission differences remain untested"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-006",
+      "name": "Requests",
+      "route": "/manager/oceansatarthurs/requests/all",
+      "parentNavigation": "Global navigation",
+      "domainId": "DOM-03",
+      "purpose": "Request inbox and filtering",
+      "visibleComponents": [
+        "Status groups",
+        "date, shift, source, assignee filters",
+        "sort",
+        "search",
+        "request grid"
+      ],
+      "primaryActions": [
+        "Add Request",
+        "filter requests",
+        "Export"
+      ],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Reservation Date",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Search",
+          "type": "text (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
+      "tables": [
+        {
+          "description": "Observed table or grid",
+          "columns": [
+            "Name",
+            "Res Date",
+            "Time",
+            "Guests",
+            "Reservation",
+            "Available",
+            "Message",
+            "Last",
+            "Created"
+          ]
+        }
+      ],
+      "filters": [
+        "Status",
+        "Shift",
+        "Source",
+        "Assigned"
+      ],
+      "searchBehavior": "NEEDS TESTING",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [
+        "Active",
+        "Priority",
+        "Priority Alert",
+        "Needs action",
+        "Offer pending",
+        "Expiring soon",
+        "All requests"
+      ],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [
+        {
+          "name": "Request",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Reservation",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Client",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Staff",
+          "status": "INFERRED"
+        }
+      ],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [
+        "CONFIRMED: observed empty state says No requests for this day"
+      ],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "INSPECTED",
+      "unknowns": [
+        "Field-level validation, error states, and permission differences remain untested"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-007",
+      "name": "Add Request slideout",
+      "route": "/manager/oceansatarthurs/requests/all (slideout)",
+      "parentNavigation": "Requests",
+      "domainId": "DOM-03",
+      "purpose": "Create request without sending in this discovery",
+      "visibleComponents": [
+        "Availability",
+        "client lookup",
+        "notes",
+        "booked by",
+        "messaging choice"
+      ],
+      "primaryActions": [
+        "Request (not submitted)"
+      ],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Date",
+          "type": "date picker (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Guests",
+          "type": "number selector (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Reservation Time Between",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Phone, Name, or Email",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Request Notes",
+          "type": "textarea (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Booked By",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
+      "tables": [],
+      "filters": [
+        "Date",
+        "party size"
+      ],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [
+        "SCR-006"
+      ],
+      "likelyEntities": [
+        {
+          "name": "Request",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Client",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Shift",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Staff",
+          "status": "INFERRED"
+        }
+      ],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [
+        "CONFIRMED: notes state they are not included in request notification to guest"
+      ],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "INSPECTED",
+      "unknowns": [
+        "Field-level validation, error states, and permission differences remain untested"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-008",
+      "name": "Clients directory",
+      "route": "/manager/oceansatarthurs/clients",
+      "parentNavigation": "Global navigation",
+      "domainId": "DOM-04",
+      "purpose": "Client search and list",
+      "visibleComponents": [
+        "Add profile",
+        "Filters",
+        "Venues",
+        "Tags",
+        "Exclude Tag",
+        "row selection",
+        "merge",
+        "pagination"
+      ],
+      "primaryActions": [
+        "Search",
+        "Add profile",
+        "open profile"
+      ],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Search",
+          "type": "text (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
+      "tables": [
+        {
+          "description": "Observed table or grid",
+          "columns": [
+            "Name",
+            "Phone",
+            "Email",
+            "Company",
+            "Visits",
+            "Spend",
+            "Profile Notes"
+          ]
+        }
+      ],
+      "filters": [
+        "Venues",
+        "Tags",
+        "Exclude Tag"
+      ],
+      "searchBehavior": "NEEDS TESTING",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [
+        {
+          "name": "Client",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Client Tag",
+          "status": "INFERRED"
+        }
+      ],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [
+        "CONFIRMED: paginated result count and sort by visits were visible"
+      ],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "INSPECTED",
+      "unknowns": [
+        "Field-level validation, error states, and permission differences remain untested"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-009",
+      "name": "Create client profile",
+      "route": "/manager/oceansatarthurs/clients/create",
+      "parentNavigation": "Clients directory",
+      "domainId": "DOM-04",
+      "purpose": "Enter a new client profile",
+      "visibleComponents": [
+        "Identity",
+        "notes",
+        "tags",
+        "contact",
+        "dates",
+        "privacy",
+        "loyalty",
+        "language"
+      ],
+      "primaryActions": [
+        "Save (not submitted)",
+        "cancel"
+      ],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "First name",
+          "type": "text (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Last Name",
+          "type": "text (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Salutation",
+          "type": "select (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Job Title",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Company",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Profile notes",
+          "type": "textarea (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Private notes",
+          "type": "textarea (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Tags",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Email",
+          "type": "email (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Alt email",
+          "type": "email (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Phone",
+          "type": "tel (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Work phone",
+          "type": "tel (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Address",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "City",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "State",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Postal code",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Country",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Birthday",
+          "type": "month/day selectors (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Anniversary",
+          "type": "month/day selectors (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Gender",
+          "type": "radio (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Loyalty ID",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Loyalty Tier",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Loyalty Rank",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Preferred Language",
+          "type": "select (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [
+        "SCR-008"
+      ],
+      "likelyEntities": [
+        {
+          "name": "Client",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Client Tag",
+          "status": "INFERRED"
+        }
+      ],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [
+        "CONFIRMED: notes show 5000-character counter",
+        "contact visibility can be restricted to superusers"
+      ],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "INSPECTED",
+      "unknowns": [
+        "Field-level validation, error states, and permission differences remain untested"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-010",
+      "name": "Venue profile information",
+      "route": "/manager2/oceansatarthurs/marketing/venueprofile",
+      "parentNavigation": "Marketing",
+      "domainId": "DOM-05",
+      "purpose": "Venue public profile editor",
+      "visibleComponents": [
+        "Venue Information",
+        "Review Sites",
+        "Social Media Links"
+      ],
+      "primaryActions": [
+        "Save Changes (not submitted)",
+        "Cancel"
+      ],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Address",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Cross Street",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "City",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "State / Province",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Postal Code",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Country",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Phone",
+          "type": "tel (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Primary Contact",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Website",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Menu Link",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Google Maps Link",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Booking Link",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Avg Spend / Cover",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Avg Spend / Order",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Review site URLs",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Social media URLs",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [
+        {
+          "name": "Venue",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Review Source",
+          "status": "INFERRED"
+        }
+      ],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "INSPECTED",
+      "unknowns": [
+        "Field-level validation, error states, and permission differences remain untested"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-011",
+      "name": "Auto-tags activity",
+      "route": "/manager2/oceansatarthurs/marketing/autotags/",
+      "parentNavigation": "Marketing",
+      "domainId": "DOM-05",
+      "purpose": "Auto-tag trend and aggregate table",
+      "visibleComponents": [
+        "Date filter",
+        "activity chart",
+        "last applied timestamp"
+      ],
+      "primaryActions": [
+        "Change date range"
+      ],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Start date",
+          "type": "date picker (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "End date",
+          "type": "date picker (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
+      "tables": [
+        {
+          "description": "Observed table or grid",
+          "columns": [
+            "Tag Name",
+            "Category",
+            "Type",
+            "Total Clients",
+            "Avg Visits",
+            "Avg Spend/Cover",
+            "Added Clients",
+            "Removed Clients"
+          ]
+        }
+      ],
+      "filters": [
+        "Date range"
+      ],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [
+        {
+          "name": "Auto Tag",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Client",
+          "status": "INFERRED"
+        }
+      ],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "INSPECTED",
+      "unknowns": [
+        "Field-level validation, error states, and permission differences remain untested"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-012",
+      "name": "Smart Boost",
+      "route": "/manager2/oceansatarthurs/marketing/smart-boost/",
+      "parentNavigation": "Marketing",
+      "domainId": "DOM-05",
+      "purpose": "Feature introduction and activation",
+      "visibleComponents": [
+        "Benefits",
+        "How It Works"
+      ],
+      "primaryActions": [
+        "Get Started",
+        "Activate Boost Now (not activated)"
+      ],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [
+        {
+          "name": "Boost Campaign",
+          "status": "INFERRED"
+        }
+      ],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [
+        "CONFIRMED: account displayed an activation landing page",
+        "active campaign controls not inspected"
+      ],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "INSPECTED",
+      "unknowns": [
+        "Field-level validation, error states, and permission differences remain untested"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-013",
+      "name": "Guest Satisfaction",
+      "route": "/manager2/oceansatarthurs/marketing/reviews/",
+      "parentNavigation": "Marketing",
+      "domainId": "DOM-05",
+      "purpose": "Review dashboard and feedback list",
+      "visibleComponents": [
+        "Summary ratings",
+        "sentiment",
+        "platform counts",
+        "review grid"
+      ],
+      "primaryActions": [
+        "Export",
+        "search",
+        "filter"
+      ],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Search",
+          "type": "text (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
+      "tables": [
+        {
+          "description": "Observed table or grid",
+          "columns": [
+            "Platform",
+            "Date Received",
+            "Details",
+            "Rating",
+            "Reviewer ID",
+            "Link"
+          ]
+        }
+      ],
+      "filters": [
+        "Date",
+        "Platform",
+        "Rating"
+      ],
+      "searchBehavior": "NEEDS TESTING",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [
+        {
+          "name": "Review",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Feedback",
+          "status": "INFERRED"
+        }
+      ],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "INSPECTED",
+      "unknowns": [
+        "Field-level validation, error states, and permission differences remain untested"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-014",
+      "name": "Voice AI Call Dashboard",
+      "route": "/app/voice/oceansatarthurs",
+      "parentNavigation": "Marketing > Voice AI",
+      "domainId": "DOM-05",
+      "purpose": "Call activity dashboard",
+      "visibleComponents": [
+        "Call counts",
+        "time saved",
+        "reservation covers",
+        "revenue",
+        "category chart",
+        "call table"
+      ],
+      "primaryActions": [
+        "Filter calls",
+        "open settings"
+      ],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Category",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Action taken",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Date filter",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
+      "tables": [
+        {
+          "description": "Observed table or grid",
+          "columns": [
+            "Call Detail",
+            "Client",
+            "Category",
+            "Action Taken",
+            "Recording"
+          ]
+        }
+      ],
+      "filters": [
+        "Category",
+        "Action",
+        "Date"
+      ],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [
+        "Reservation Management",
+        "General Inquiry",
+        "Current Availability",
+        "Request for Human",
+        "Spam",
+        "Other"
+      ],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [
+        {
+          "name": "Call",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Client",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Recording",
+          "status": "INFERRED"
+        }
+      ],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [
+        "CONFIRMED: recording links are present",
+        "recording content not opened"
+      ],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "INSPECTED",
+      "unknowns": [
+        "Field-level validation, error states, and permission differences remain untested"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-015",
+      "name": "Voice AI Settings",
+      "route": "/app/voice/oceansatarthurs/settings",
+      "parentNavigation": "Voice AI Call Dashboard",
+      "domainId": "DOM-05",
+      "purpose": "Configure voice assistant",
+      "visibleComponents": [
+        "Agent Configuration",
+        "Venue Details",
+        "Advanced tabs"
+      ],
+      "primaryActions": [
+        "Save Changes (not submitted)"
+      ],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Tone of Voice",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Primary language",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Call Transfer",
+          "type": "checkbox (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Cross-Sell",
+          "type": "checkbox (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Venue name",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Time format",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Hours",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "FAQ",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Custom Instructions",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Greeting variants",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Pronunciation Dictionary",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Off-topic threshold",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Dietary wording",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [
+        "SCR-014"
+      ],
+      "likelyEntities": [
+        {
+          "name": "Voice Agent",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Voice Instruction",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Operating Hours",
+          "status": "INFERRED"
+        },
+        {
+          "name": "FAQ",
+          "status": "INFERRED"
+        }
+      ],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [
+        "CONFIRMED: up to five custom instructions at 1000 characters each",
+        "immutable PII/assistant/conduct rules displayed",
+        "legal recording disclosure fixed",
+        "Add Instruction disabled when five present"
+      ],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "INSPECTED",
+      "unknowns": [
+        "Field-level validation, error states, and permission differences remain untested"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-016",
+      "name": "Offers",
+      "route": "/manager2/oceansatarthurs/marketing/experiences2/",
+      "parentNavigation": "Online Sales",
+      "domainId": "DOM-06",
+      "purpose": "Offer catalogue",
+      "visibleComponents": [
+        "Template cards",
+        "inactive entries",
+        "Offers Directory"
+      ],
+      "primaryActions": [
+        "Create New Offer",
+        "Use Template",
+        "item menu"
+      ],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [
+        "Status"
+      ],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [
+        "Inactive"
+      ],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [
+        {
+          "name": "Offer",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Experience",
+          "status": "INFERRED"
+        }
+      ],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "INSPECTED",
+      "unknowns": [
+        "Field-level validation, error states, and permission differences remain untested"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-017",
+      "name": "Create Offer",
+      "route": "/manager2/oceansatarthurs/marketing/experiences2/create/",
+      "parentNavigation": "Offers",
+      "domainId": "DOM-06",
+      "purpose": "Offer editor before publication",
+      "visibleComponents": [
+        "Overview",
+        "details",
+        "rich text",
+        "file/image uploads",
+        "display controls"
+      ],
+      "primaryActions": [
+        "Save as Draft",
+        "Publish Offer (not submitted)",
+        "Cancel"
+      ],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Offer Name",
+          "type": "text (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Default Party Size",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Price",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Description Title",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Description Body",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Menu file",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Display on Widget",
+          "type": "radio (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Header Image",
+          "type": "file (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Alternative Images",
+          "type": "file (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [
+        "SCR-016"
+      ],
+      "likelyEntities": [
+        {
+          "name": "Offer",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Media",
+          "status": "INFERRED"
+        }
+      ],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [
+        "CONFIRMED: image limit shown under 2MB",
+        "alternative images up to 8"
+      ],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "INSPECTED",
+      "unknowns": [
+        "Field-level validation, error states, and permission differences remain untested"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-018",
+      "name": "Reservation Upgrades",
+      "route": "/app/prearrivals/oceansatarthurs/upgrades",
+      "parentNavigation": "Online Sales",
+      "domainId": "DOM-06",
+      "purpose": "Upgrade onboarding",
+      "visibleComponents": [
+        "Included in package",
+        "feature explanation",
+        "steps"
+      ],
+      "primaryActions": [
+        "Get started (not activated)",
+        "Learn more"
+      ],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [
+        {
+          "name": "Upgrade",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Upgrade Category",
+          "status": "INFERRED"
+        }
+      ],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [
+        "CONFIRMED: page shows onboarding rather than an upgrade list"
+      ],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "INSPECTED",
+      "unknowns": [
+        "Field-level validation, error states, and permission differences remain untested"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-019",
+      "name": "Automated Emails",
+      "route": "/manager2/oceansatarthurs/marketing/email-center/emails/",
+      "parentNavigation": "Marketing > Email",
+      "domainId": "DOM-05",
+      "purpose": "Email performance and list",
+      "visibleComponents": [
+        "Metric cards",
+        "trend chart",
+        "campaign table"
+      ],
+      "primaryActions": [
+        "Filter",
+        "sort",
+        "pagination"
+      ],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Status",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Automated Emails",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Date Filters",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
+      "tables": [
+        {
+          "description": "Observed table or grid",
+          "columns": [
+            "Name",
+            "Status",
+            "Recipients",
+            "Opens",
+            "Clicks",
+            "Cross-Promos",
+            "Revenue",
+            "Reservations",
+            "Covers",
+            "Orders",
+            "Unsubscribed",
+            "Bounce",
+            "Complaints"
+          ]
+        }
+      ],
+      "filters": [
+        "Status",
+        "campaign",
+        "date"
+      ],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [
+        {
+          "name": "Email Campaign",
+          "status": "INFERRED"
+        }
+      ],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [
+        "CONFIRMED: empty campaign table observed in selected view"
+      ],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "INSPECTED",
+      "unknowns": [
+        "Field-level validation, error states, and permission differences remain untested"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-020",
+      "name": "Email Settings",
+      "route": "/manager2/oceansatarthurs/marketing/email-settings/",
+      "parentNavigation": "Marketing > Email",
+      "domainId": "DOM-05",
+      "purpose": "Shared sender and audience settings",
+      "visibleComponents": [
+        "Guest-Facing Contact",
+        "Audience Opt-In Classification"
+      ],
+      "primaryActions": [
+        "Save Changes (not submitted)"
+      ],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Sender Name",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Sender Role",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Email Address",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Explicit/Implicit Consent",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Privacy Link",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Policy Holder Name",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [
+        {
+          "name": "Email Settings",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Consent",
+          "status": "INFERRED"
+        }
+      ],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [
+        "CONFIRMED: email campaigns only send to explicitly opted-in guests according to page copy",
+        "automated email default classification configurable"
+      ],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "INSPECTED",
+      "unknowns": [
+        "Field-level validation, error states, and permission differences remain untested"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-021",
+      "name": "Reporting Home",
+      "route": "/manager2/oceansatarthurs/reporting/home",
+      "parentNavigation": "Global navigation",
+      "domainId": "DOM-07",
+      "purpose": "Report directory and search",
+      "visibleComponents": [
+        "Highlighted reports",
+        "categorized report links"
+      ],
+      "primaryActions": [
+        "Find a report",
+        "open report"
+      ],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Find a report",
+          "type": "text (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
+      "tables": [],
+      "filters": [
+        "Categories"
+      ],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [
+        {
+          "name": "Report",
+          "status": "INFERRED"
+        }
+      ],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "INSPECTED",
+      "unknowns": [
+        "Field-level validation, error states, and permission differences remain untested"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-022",
+      "name": "Reservation Summary report",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/129",
+      "parentNavigation": "Reporting > Reservation Dashboards",
+      "domainId": "DOM-07",
+      "purpose": "Embedded metrics dashboard",
+      "visibleComponents": [
+        "Looker iframe",
+        "tiles and chart",
+        "dashboard actions"
+      ],
+      "primaryActions": [
+        "Filter",
+        "hide filters",
+        "tile actions"
+      ],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Reservation Date",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Date Granularity",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Shift",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Reservation Status",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Client Tag",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Reservation Tag",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Marketing Opt In",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Reporting Period",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
+      "tables": [
+        {
+          "description": "Observed table or grid",
+          "columns": [
+            "Covers",
+            "Walk-in Covers",
+            "Reservations",
+            "Walk-in Reservations",
+            "Canceled",
+            "No Show"
+          ]
+        }
+      ],
+      "filters": [
+        "Date",
+        "Shift",
+        "Status",
+        "Tags"
+      ],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [
+        "SCR-021"
+      ],
+      "likelyEntities": [
+        {
+          "name": "Report",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Reservation",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Spend",
+          "status": "INFERRED"
+        }
+      ],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [
+        "CONFIRMED: displayed definition excludes canceled/no-show from net covers"
+      ],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "INSPECTED",
+      "unknowns": [
+        "Field-level validation, error states, and permission differences remain untested"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-023",
+      "name": "Venue Settings",
+      "route": "/manager2/oceansatarthurs/settings/venue",
+      "parentNavigation": "Settings > General",
+      "domainId": "DOM-08",
+      "purpose": "Venue-wide reservation and communication settings",
+      "visibleComponents": [
+        "Internal Team Emails",
+        "Guest Email/Text",
+        "Reservations",
+        "Charges tabs"
+      ],
+      "primaryActions": [
+        "Save Changes (not submitted)"
+      ],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Internal summary email toggles",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Guest notification delivery",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Reminder shifts",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Required booking contact fields",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Duplicate reservation scope",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Seating default",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Paylink collection",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Service charge",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Gratuity",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [
+        {
+          "name": "Venue",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Reservation Policy",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Notification",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Charge",
+          "status": "INFERRED"
+        }
+      ],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [
+        "CONFIRMED: widget booking notification always sends",
+        "internal booking notification configurable",
+        "phone/last name requirements shown selected",
+        "duplicate reservation prevention enabled in current account"
+      ],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "INSPECTED",
+      "unknowns": [
+        "Field-level validation, error states, and permission differences remain untested"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-024",
+      "name": "Availability Settings",
+      "route": "/app/availability/oceansatarthurs/availability-settings",
+      "parentNavigation": "Settings > Availability",
+      "domainId": "DOM-08",
+      "purpose": "Shifts calendar and reusable modes",
+      "visibleComponents": [
+        "Shifts and Modes tabs",
+        "weekly calendar",
+        "mode type navigation"
+      ],
+      "primaryActions": [
+        "Create Shift (not submitted)",
+        "select date",
+        "select mode"
+      ],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Date range",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Mode Type",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
+      "tables": [],
+      "filters": [
+        "Shift",
+        "Mode type"
+      ],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [
+        {
+          "name": "Shift",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Mode",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Floorplan Layout",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Pacing",
+          "status": "INFERRED"
+        }
+      ],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [
+        "CONFIRMED: mode changes apply to all referenced shifts according to page text"
+      ],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "INSPECTED",
+      "unknowns": [
+        "Field-level validation, error states, and permission differences remain untested"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-025",
+      "name": "User Accounts",
+      "route": "/manager/oceansatarthurs/access/user/list",
+      "parentNavigation": "Settings > People",
+      "domainId": "DOM-09",
+      "purpose": "Account roster and access model",
+      "visibleComponents": [
+        "Users grouped by access level",
+        "access explanation"
+      ],
+      "primaryActions": [
+        "Add new",
+        "open user",
+        "Export"
+      ],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [
+        {
+          "description": "Observed table or grid",
+          "columns": [
+            "Name",
+            "Job Title",
+            "Additional Options",
+            "Email Notifications"
+          ]
+        }
+      ],
+      "filters": [
+        "Access level"
+      ],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [
+        "Superuser",
+        "User Manager Only",
+        "Manager",
+        "Sub-Manager",
+        "Basic",
+        "Basic iPad"
+      ],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [
+        {
+          "name": "User",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Role",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Permission",
+          "status": "INFERRED"
+        }
+      ],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "INSPECTED",
+      "unknowns": [
+        "Field-level validation, error states, and permission differences remain untested"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-026",
+      "name": "Add User",
+      "route": "/manager/oceansatarthurs/access/user/create",
+      "parentNavigation": "User Accounts",
+      "domainId": "DOM-09",
+      "purpose": "Create user with granular permissions",
+      "visibleComponents": [
+        "Account information",
+        "access level",
+        "additional options",
+        "subscriptions",
+        "other locations"
+      ],
+      "primaryActions": [
+        "Create",
+        "Create + Add Another (not submitted)"
+      ],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "First Name",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Last Name",
+          "type": "text (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Email",
+          "type": "email (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Job Title",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Access Level",
+          "type": "select (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Email Alerts",
+          "type": "checkbox (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Mobile MFA",
+          "type": "checkbox (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Suspended",
+          "type": "checkbox (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Granular Permissions",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Email Subscriptions",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Create same access at other venues",
+          "type": "UNKNOWN",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [
+        "SCR-025"
+      ],
+      "likelyEntities": [
+        {
+          "name": "User",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Role",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Permission",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Venue",
+          "status": "INFERRED"
+        }
+      ],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [
+        "CONFIRMED: selectable access levels and granular permissions",
+        "auto-assign requests described as round-robin in UI"
+      ],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "INSPECTED",
+      "unknowns": [
+        "Field-level validation, error states, and permission differences remain untested"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-027",
+      "name": "Tax Rates",
+      "route": "/manager/oceansatarthurs/manage/tax_rates",
+      "parentNavigation": "Settings > General",
+      "domainId": "DOM-08",
+      "purpose": "Venue tax rate grid",
+      "visibleComponents": [
+        "Venue rows",
+        "tax type column"
+      ],
+      "primaryActions": [
+        "Save tax rates (not submitted)",
+        "Add tax column"
+      ],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Tax Type",
+          "type": "text (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Rate percent",
+          "type": "number (CONFIRMED)",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
+      "tables": [
+        {
+          "description": "Observed table or grid",
+          "columns": [
+            "Venue",
+            "Tax Type",
+            "Rate"
+          ]
+        }
+      ],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [
+        {
+          "name": "Tax Rate",
+          "status": "INFERRED"
+        },
+        {
+          "name": "Venue",
+          "status": "INFERRED"
+        }
+      ],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "INSPECTED",
+      "unknowns": [
+        "Field-level validation, error states, and permission differences remain untested"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-028",
+      "name": "Revenue",
+      "route": "/manager2/oceansatarthurs/reporting/revenue",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-029",
+      "name": "Covers Calendar",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/358",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-030",
+      "name": "Guestlists Export",
+      "route": "/manager2/oceansatarthurs/reporting/embed/looks/128",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-031",
+      "name": "Payments Export",
+      "route": "/manager2/oceansatarthurs/reporting/embed/looks/50",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-032",
+      "name": "Reservations Export",
+      "route": "/manager2/oceansatarthurs/reporting/embed/looks/49",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-033",
+      "name": "Booked By",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/130",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-034",
+      "name": "Cross-Promotion Conversion",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/299",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-035",
+      "name": "Daily Snapshot",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/136",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-036",
+      "name": "Experiences Reporting",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/395",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-037",
+      "name": "Feedback and Server Trends",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/428",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-038",
+      "name": "Flexible Table Capacity Reporting",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/480",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-039",
+      "name": "Guest List",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/334",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-040",
+      "name": "No-Show / Short-Show",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/279",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-041",
+      "name": "POS Check Linking Report",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/447",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-042",
+      "name": "Performance Comparison: Monthly",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/51",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-043",
+      "name": "Performance Comparison: Weekly",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/104",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-044",
+      "name": "Policy Fees Reporting",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/397",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-045",
+      "name": "Priority Alerts & Request Reporting",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/415",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-046",
+      "name": "Sourced By",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/280",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-047",
+      "name": "Top Spenders",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/135",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-048",
+      "name": "Turn Time Analysis",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/313",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-049",
+      "name": "Turndown Summary",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/332",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-050",
+      "name": "Utilization",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/330",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-051",
+      "name": "Upgrades Reporting",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/335",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-052",
+      "name": "Waitlist Snapshot",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/100",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-053",
+      "name": "Upgrades Export",
+      "route": "/manager2/oceansatarthurs/reporting/embed/looks/160",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-054",
+      "name": "Search Reservations",
+      "route": "/manager/oceansatarthurs/search/reservations",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-055",
+      "name": "Search Payments",
+      "route": "/manager/oceansatarthurs/reports/payments",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-056",
+      "name": "Actuals",
+      "route": "/manager/oceansatarthurs/actuals",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-057",
+      "name": "Outgoing Emails",
+      "route": "/manager2/oceansatarthurs/reporting/outgoingemails",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-058",
+      "name": "Activity Log",
+      "route": "/manager/oceansatarthurs/activitylog",
+      "parentNavigation": "Reporting",
+      "domainId": "DOM-07",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-059",
+      "name": "Client Tags",
+      "route": "/manager/oceansatarthurs/manage/tags",
+      "parentNavigation": "Settings > General",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-060",
+      "name": "Reservation Tags",
+      "route": "/manager/oceansatarthurs/manage/reservationtags",
+      "parentNavigation": "Settings > General",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-061",
+      "name": "Payment Processors",
+      "route": "/manager2/oceansatarthurs/settings/payment-integration/view",
+      "parentNavigation": "Settings > Integrations",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-062",
+      "name": "Email Service Providers",
+      "route": "/manager2/oceansatarthurs/settings/emailserviceproviders/",
+      "parentNavigation": "Settings > Integrations",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-063",
+      "name": "Point of Sale",
+      "route": "/manager2/oceansatarthurs/settings/posi/view",
+      "parentNavigation": "Settings > Integrations",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-064",
+      "name": "Table Status Updates",
+      "route": "/manager2/oceansatarthurs/settings/table-status-mapping/",
+      "parentNavigation": "Settings > Integrations",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-065",
+      "name": "Reservations on DoorDash",
+      "route": "/manager2/oceansatarthurs/settings/doordash-integration",
+      "parentNavigation": "Settings > Integrations",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-066",
+      "name": "Access Rules",
+      "route": "/manager2/oceansatarthurs/settings/availability/accessrules",
+      "parentNavigation": "Settings > Availability",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-067",
+      "name": "Daily Program",
+      "route": "/manager/oceansatarthurs/manage/program",
+      "parentNavigation": "Settings > Availability",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-068",
+      "name": "Blackout Dates",
+      "route": "/manager/oceansatarthurs/manage/blackoutdates",
+      "parentNavigation": "Settings > Availability",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-069",
+      "name": "Concierge Perks",
+      "route": "/manager/oceansatarthurs/manage/perks/list",
+      "parentNavigation": "Settings > Availability",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-070",
+      "name": "Availability Quick View",
+      "route": "/manager2/oceansatarthurs/availability",
+      "parentNavigation": "Settings > Availability",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-071",
+      "name": "Shift Reporting Periods",
+      "route": "/manager2/oceansatarthurs/settings/shift-reporting-periods",
+      "parentNavigation": "Settings > Availability",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-072",
+      "name": "Reservation Widget",
+      "route": "/manager/oceansatarthurs/settings/widgets/dining",
+      "parentNavigation": "Settings > Widget Settings",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-073",
+      "name": "Waitlist Widget",
+      "route": "/manager/oceansatarthurs/settings/widgets/waitlist",
+      "parentNavigation": "Settings > Widget Settings",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-074",
+      "name": "Subscription Widget",
+      "route": "/manager2/oceansatarthurs/settings/subscription",
+      "parentNavigation": "Settings > Widget Settings",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-075",
+      "name": "Landing Page Settings",
+      "route": "/manager2/oceansatarthurs/settings/landingpage",
+      "parentNavigation": "Settings > Widget Settings",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-076",
+      "name": "Custom Audiences",
+      "route": "/manager2/oceansatarthurs/settings/custom-audiences/view",
+      "parentNavigation": "Settings > Widget Settings",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-077",
+      "name": "Floorplan Layouts",
+      "route": "/app/availability/oceansatarthurs/floorplan-layouts/list",
+      "parentNavigation": "Settings > Floorplan",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-078",
+      "name": "Rooms",
+      "route": "/manager/oceansatarthurs/manage/capacity/rooms/edit",
+      "parentNavigation": "Settings > Floorplan",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-079",
+      "name": "Seating Areas",
+      "route": "/manager/oceansatarthurs/manage/capacity/areas/edit",
+      "parentNavigation": "Settings > Floorplan",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-080",
+      "name": "Tables",
+      "route": "/manager/oceansatarthurs/manage/capacity/table/edit",
+      "parentNavigation": "Settings > Floorplan",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-081",
+      "name": "Table Combinations",
+      "route": "/app/availability/oceansatarthurs/table-combinations",
+      "parentNavigation": "Settings > Floorplan",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-082",
+      "name": "Reservation Statuses",
+      "route": "/manager/oceansatarthurs/manage/service_status",
+      "parentNavigation": "Settings > Floorplan",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-083",
+      "name": "Booked By Names",
+      "route": "/manager/oceansatarthurs/manage/bookedbynames/edit",
+      "parentNavigation": "Settings > People",
+      "domainId": "DOM-09",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-084",
+      "name": "Server Names",
+      "route": "/manager/oceansatarthurs/manage/servernames/edit",
+      "parentNavigation": "Settings > People",
+      "domainId": "DOM-09",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-085",
+      "name": "Emails",
+      "route": "/manager2/oceansatarthurs/settings/email_settings/",
+      "parentNavigation": "Settings > Guest-Facing Language",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-086",
+      "name": "Text",
+      "route": "/manager2/oceansatarthurs/settings/sms_settings/",
+      "parentNavigation": "Settings > Guest-Facing Language",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-087",
+      "name": "Policies",
+      "route": "/manager2/oceansatarthurs/settings/policy_settings/",
+      "parentNavigation": "Settings > Guest-Facing Language",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-088",
+      "name": "Language Settings",
+      "route": "/manager2/oceansatarthurs/settings/language_settings/",
+      "parentNavigation": "Settings > Guest-Facing Language",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-089",
+      "name": "Imports",
+      "route": "/app/imports/oceansatarthurs",
+      "parentNavigation": "Settings > Reservation & Client Imports",
+      "domainId": "DOM-08",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-090",
+      "name": "Text Marketing",
+      "route": "/app/webstore/oceansatarthurs/marketing/text",
+      "parentNavigation": "Available upgrades",
+      "domainId": "DOM-05",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-091",
+      "name": "Email Marketing",
+      "route": "/app/webstore/oceansatarthurs/marketing/email",
+      "parentNavigation": "Available upgrades",
+      "domainId": "DOM-05",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    },
+    {
+      "id": "SCR-092",
+      "name": "Event Management",
+      "route": "/app/webstore/oceansatarthurs/marketing/event-management",
+      "parentNavigation": "Available upgrades",
+      "domainId": "DOM-06",
+      "purpose": "Listed in accessible navigation; purpose NEEDS TESTING",
+      "visibleComponents": [],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [],
+      "likelyEntities": [],
+      "userRoles": "Current signed-in user; other roles NEEDS TESTING",
+      "observedBusinessRules": [],
+      "evidenceStatus": "CONFIRMED",
+      "inspectionLevel": "NAV_ONLY",
+      "unknowns": [
+        "Page content and interactions not yet inspected"
+      ],
+      "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied"
+    }
+  ],
+  "workflows": [
+    {
+      "id": "FLOW-001",
+      "name": "Home to reservation day",
+      "status": "CONFIRMED",
+      "steps": [
+        "SCR-001",
+        "SCR-002"
+      ],
+      "result": "Date card opens a day list"
+    },
+    {
+      "id": "FLOW-002",
+      "name": "Internal reservation entry",
+      "status": "NEEDS TESTING",
+      "steps": [
+        "SCR-002",
+        "SCR-003"
+      ],
+      "result": "Form inspected; booking not submitted"
+    },
+    {
+      "id": "FLOW-003",
+      "name": "Request creation",
+      "status": "NEEDS TESTING",
+      "steps": [
+        "SCR-006",
+        "SCR-007"
+      ],
+      "result": "Form inspected; notification not sent"
+    },
+    {
+      "id": "FLOW-004",
+      "name": "Client profile creation",
+      "status": "NEEDS TESTING",
+      "steps": [
+        "SCR-008",
+        "SCR-009"
+      ],
+      "result": "Form inspected; profile not saved"
+    },
+    {
+      "id": "FLOW-005",
+      "name": "Offer creation",
+      "status": "NEEDS TESTING",
+      "steps": [
+        "SCR-016",
+        "SCR-017"
+      ],
+      "result": "Editor inspected; draft and publish not submitted"
+    },
+    {
+      "id": "FLOW-006",
+      "name": "User account creation",
+      "status": "NEEDS TESTING",
+      "steps": [
+        "SCR-025",
+        "SCR-026"
+      ],
+      "result": "Role and permissions form inspected; user not created"
+    },
+    {
+      "id": "FLOW-007",
+      "name": "Shift and Mode configuration",
+      "status": "NEEDS TESTING",
+      "steps": [
+        "SCR-024"
+      ],
+      "result": "Calendar and Modes tab inspected; no change saved"
+    },
+    {
+      "id": "FLOW-008",
+      "name": "Reporting directory to dashboard",
+      "status": "CONFIRMED",
+      "steps": [
+        "SCR-021",
+        "SCR-022"
+      ],
+      "result": "Embedded dashboard with filter controls opened"
+    },
+    {
+      "id": "FLOW-009",
+      "name": "Voice AI monitoring to settings",
+      "status": "CONFIRMED",
+      "steps": [
+        "SCR-014",
+        "SCR-015"
+      ],
+      "result": "Dashboard and three settings tabs opened"
+    }
+  ],
+  "unresolvedQuestions": [
+    {
+      "id": "Q-001",
+      "status": "NEEDS TESTING",
+      "question": "What are the full validation and error messages for booking, request, client, offer, and user forms?"
+    },
+    {
+      "id": "Q-002",
+      "status": "NEEDS TESTING",
+      "question": "How do statuses change across reservation, request, table, and payment lifecycles?"
+    },
+    {
+      "id": "Q-003",
+      "status": "NEEDS TESTING",
+      "question": "Which actions and screens differ under lower permission roles?"
+    },
+    {
+      "id": "Q-004",
+      "status": "NEEDS TESTING",
+      "question": "What are the exact settings and report behaviors in navigation-only entries?"
+    },
+    {
+      "id": "Q-005",
+      "status": "UNKNOWN",
+      "question": "What network contracts and data model exist behind observed UI? No API/network audit performed."
+    },
+    {
+      "id": "Q-006",
+      "status": "NEEDS TESTING",
+      "question": "How do zero results, loading, unavailable slots, payment failure, duplicate reservations, and expired requests appear?"
+    }
+  ]
+}

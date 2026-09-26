@@ -1,11 +1,11 @@
-CURRENT PHASE: Unassigned; discovery has not started.
-CURRENT TASK: Create repository scaffold.
-STATUS: IMPLEMENTED
-COMPLETED: Directory and project-map starter files prepared.
-FILES CREATED: README.md; package.json; apps/.gitkeep; services/.gitkeep; packages/.gitkeep; database/.gitkeep; tests/.gitkeep; docs/project-map/roadmap.json; docs/project-map/app-map.json; docs/project-map/dependencies.json; docs/project-map/decisions.json; docs/project-map/verification.json; docs/project-map/handoff.md.
-FILES MODIFIED: None; existing AGENTS.md preserved.
-TESTS EXECUTED: JSON syntax validation.
-TEST RESULTS: Passed for package.json and all project-map JSON files.
-UNRESOLVED ISSUES: Reference-app inventory and implementation architecture have not been determined.
-NEXT EXACT TASK: Define the first scoped discovery task in roadmap.json, then observe the authorized reference app and record evidence in app-map.json.
-FILES NEXT AGENT MUST READ: AGENTS.md; README.md; docs/project-map/roadmap.json; docs/project-map/app-map.json; docs/project-map/dependencies.json; docs/project-map/decisions.json; docs/project-map/verification.json; docs/project-map/handoff.md.
+CURRENT PHASE: Product discovery (PHASE-01).
+CURRENT TASK: DISC-002 — inspect remaining Reporting and Settings screens.
+STATUS: IN_PROGRESS
+COMPLETED: 10 observed domains; 92 screen entries (27 inspected, 65 navigation-only); 9 workflow paths (some unsubmitted).
+FILES CREATED: docs/discovery/application-inventory.md; docs/project-map/feature-registry.json.
+FILES MODIFIED: docs/project-map/app-map.json; docs/project-map/roadmap.json; docs/project-map/verification.json; docs/project-map/handoff.md.
+TESTS EXECUTED: JSON parse; unique IDs; route and screen cross-reference; read-only UI inspection.
+TEST RESULTS: Passed for documented checkpoint; complete application inventory remains IN PROGRESS.
+UNRESOLVED ISSUES: Q-001 through Q-006 in feature-registry.json; NAV_ONLY screens not inspected; permission differences unknown.
+NEXT EXACT TASK: Open SCR-028 Revenue in Reporting, record filters, tiles, actions, states and permission result; continue Reporting links in ID order.
+FILES NEXT AGENT MUST READ: AGENTS.md; docs/discovery/application-inventory.md; docs/project-map/feature-registry.json; docs/project-map/roadmap.json; docs/project-map/app-map.json; docs/project-map/decisions.json; docs/project-map/verification.json; docs/project-map/handoff.md.

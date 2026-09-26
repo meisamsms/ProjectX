@@ -1,10 +1,524 @@
 {
   "schemaVersion": 1,
-  "screens": [],
-  "flows": [],
+  "screens": [
+    {
+      "id": "SCR-001",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-002",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-003",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-004",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-005",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-006",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-007",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-008",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-009",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-010",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-011",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-012",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-013",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-014",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-015",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-016",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-017",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-018",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-019",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-020",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-021",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-022",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-023",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-024",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-025",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-026",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-027",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-028",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-029",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-030",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-031",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-032",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-033",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-034",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-035",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-036",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-037",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-038",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-039",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-040",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-041",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-042",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-043",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-044",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-045",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-046",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-047",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-048",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-049",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-050",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-051",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-052",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-053",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-054",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-055",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-056",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-057",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-058",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-059",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-060",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-061",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-062",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-063",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-064",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-065",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-066",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-067",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-068",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-069",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-070",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-071",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-072",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-073",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-074",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-075",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-076",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-077",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-078",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-079",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-080",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-081",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-082",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-083",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-084",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-085",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-086",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-087",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-088",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-089",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-090",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-091",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-092",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    }
+  ],
+  "flows": [
+    {
+      "id": "FLOW-001",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "FLOW-002",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "NEEDS TESTING"
+    },
+    {
+      "id": "FLOW-003",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "NEEDS TESTING"
+    },
+    {
+      "id": "FLOW-004",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "NEEDS TESTING"
+    },
+    {
+      "id": "FLOW-005",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "NEEDS TESTING"
+    },
+    {
+      "id": "FLOW-006",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "NEEDS TESTING"
+    },
+    {
+      "id": "FLOW-007",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "NEEDS TESTING"
+    },
+    {
+      "id": "FLOW-008",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    },
+    {
+      "id": "FLOW-009",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
+    }
+  ],
   "apis": [],
   "entities": [],
   "permissions": [],
   "businessRules": [],
-  "unresolvedQuestions": []
+  "unresolvedQuestions": [
+    "Q-001",
+    "Q-002",
+    "Q-003",
+    "Q-004",
+    "Q-005",
+    "Q-006"
+  ]
 }
