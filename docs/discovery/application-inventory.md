@@ -55,6 +55,25 @@ Status: **IN PROGRESS**. Observations are from the authorized Ocean’s at Arthu
 | SCR-025 | User Accounts | `/manager/oceansatarthurs/access/user/list` | Settings > People | Users grouped by access level; access explanation; Add new; open user; Export; Table: Observed table or grid | Field rules NEEDS TESTING; submit/error path UNKNOWN |
 | SCR-026 | Add User | `/manager/oceansatarthurs/access/user/create` | User Accounts | Account information; access level; additional options; Create; Create + Add Another (not submitted); Fields: First Name, Last Name, Email, Job Title, Access Level, Email Alerts, Mobile MFA, Suspended, Granular Permissions, Email Subscriptions, Create same access at other venues | CONFIRMED: selectable access levels and granular permissions; auto-assign requests described as round-robin in UI; submit/error path UNKNOWN |
 | SCR-027 | Tax Rates | `/manager/oceansatarthurs/manage/tax_rates` | Settings > General | Venue rows; tax type column; Save tax rates (not submitted); Add tax column; Fields: Tax Type, Rate percent; Table: Observed table or grid | Field rules NEEDS TESTING; submit/error path UNKNOWN |
+| SCR-030 | Guestlists Export | `/manager2/oceansatarthurs/reporting/embed/looks/128` | Reporting | Looker filter bar; results grid; No Results empty state; Filter; export; Fields: Guestlist date, status, covers, contact, tags, prepayment fields; Table: Guestlist export result | Export definitions and populated rows NEEDS TESTING; submit/error path UNKNOWN |
+| SCR-059 | Client Tags | `/manager/oceansatarthurs/manage/tags` | Settings > General | Local and Global categories; enabled and disabled groups; tag rows; Add category; Fields: Category, tag, show on reservation/chit | Creation and deletion not submitted; submit/error path UNKNOWN |
+| SCR-060 | Reservation Tags | `/manager/oceansatarthurs/manage/reservationtags` | Settings > General | Categories and tag rows; disabled categories; Add category; Fields: Category, tag, show on reservation/chit | Creation and deletion not submitted; submit/error path UNKNOWN |
+| SCR-061 | Payment Processors | `/manager2/oceansatarthurs/settings/payment-integration/view` | Settings > Integrations | Stripe integration card; connection details; offline state; Test integration; Fields: Processor | Payment connection and charges NEEDS TESTING; submit/error path UNKNOWN |
+| SCR-062 | Email Service Providers | `/manager2/oceansatarthurs/settings/emailserviceproviders/` | Settings > Integrations | Emma and Mailchimp cards; Authenticate | Authentication not performed; submit/error path UNKNOWN |
+| SCR-063 | Point of Sale | `/manager2/oceansatarthurs/settings/posi/view` | Settings > Integrations | Square for Restaurants; Lightspeed K/O; Oracle MICROS Simphony; Set Up Integration; More integrations | No connection initiated; submit/error path UNKNOWN |
+| SCR-064 | Table Status Updates | `/manager2/oceansatarthurs/settings/table-status-mapping/` | Settings > Integrations | Connection onboarding; CSV menu upload description; menu-to-status mapping description; Connect a point of sale | Requires POS connection to configure mapping; submit/error path UNKNOWN |
+| SCR-065 | Reservations on DoorDash | `/manager2/oceansatarthurs/settings/doordash-integration` | Settings > Integrations | Online indicator; venue details; description; Copy marketplace link; edit listing; Fields: Cuisine, Description, Menu, Images | Images require JPG/JPEG/PNG, at least 1400×800 pixels, under 2 MB; listing not edited; submit/error path UNKNOWN |
+| SCR-066 | Access Rules | `/manager2/oceansatarthurs/settings/availability/accessrules` | Settings > Availability | Weekly calendar; compact/expanded; list view; Create Access Rule; Review Changes; Fields: Name, start/end dates, weekdays, shifts/times, party size, seating, booking channels, audiences, durations, upgrades, tags, booking window… | Unsaved drawer inspected; Review Changes disabled in observed state; submit/error path UNKNOWN |
+| SCR-067 | Daily Program | `/manager/oceansatarthurs/manage/program` | Settings > Availability | Week calendar; date selector; shift blocks; Previous/next week; select date; Fields: Date | Shift editing not tested; submit/error path UNKNOWN |
+| SCR-068 | Blackout Dates | `/manager/oceansatarthurs/manage/blackoutdates` | Settings > Availability | Date/Day/Description/Blackout grid; Add new; Save changes; Fields: Date, Description, Blackout | Blackout restricts external reservations for whole day while internal users can still book; submit/error path UNKNOWN |
+| SCR-069 | Concierge Perks | `/manager/oceansatarthurs/manage/perks/list` | Settings > Availability | No perks created empty state; Add new | Perk creation form opened separately; submit/error path UNKNOWN |
+| SCR-070 | Availability Quick View | `/manager2/oceansatarthurs/availability` | Settings > Availability | Date; audience; access rule; Select date/audience/area; inspect slot; Fields: Date, Audience, Access Rule, Seating Area | Slot detail NEEDS TESTING; submit/error path UNKNOWN |
+| SCR-071 | Shift Reporting Periods | `/manager2/oceansatarthurs/settings/shift-reporting-periods` | Settings > Availability | Period group; Brunch/Lunch/Dinner/Night schedule controls; Add Shift Period Group; Save Changes; Fields: Group name, period times, enabled periods | Changes not submitted; submit/error path UNKNOWN |
+| SCR-072 | Reservation Widget | `/manager/oceansatarthurs/settings/widgets/dining` | Settings > Widget Settings | Migration prompt; theme; font; Preview; Set Up Now; Remind Me Later; Fields: Theme, Font, Colors, Images, Button Text | Embed snippet and signed policy links omitted; submit/error path UNKNOWN |
+| SCR-073 | Waitlist Widget | `/manager/oceansatarthurs/settings/widgets/waitlist` | Settings > Widget Settings | Inherited formatting; button; link/embed; Save; Fields: Button Text, Button Color, Minimum Guests, Maximum Guests, Show Wait Times, Opt-ins, Buffer, Arrival Time | No settings saved; submit/error path UNKNOWN |
+| SCR-074 | Subscription Widget | `/manager2/oceansatarthurs/settings/subscription` | Settings > Widget Settings | Formatting; logo; button; Save Changes; Fields: Primary Color, Logo Header, Button Text, Button Color, Redirect URL, Salutation, Birthday, Postal Code, Dietary Restrictions, Marketing Opt-ins, reCAPTCHA | Form fields offer Hidden/Required/Optional where shown; no settings saved; submit/error path UNKNOWN |
+| SCR-076 | Custom Audiences | `/manager2/oceansatarthurs/settings/custom-audiences/view` | Settings > Widget Settings | Empty table; API availability description; Add; Fields: Name, Client ID, Widget URL, Is active | Add form not inspected; submit/error path UNKNOWN |
+| SCR-093 | Create Concierge Perk | `/manager/oceansatarthurs/manage/perks/create` | Settings > Availability > Concierge Perks | Perk details; date range; weekday and concierge selection; Save changes (not submitted); Fields: Perk, Staff Instructions, Additional Information, Collateral Link, Start Date, End Date, Weekdays, Concierge Access | CONFIRMED: Perk and Staff Instructions marked required; Additional Information shows 500-character limit; submit/error path UNKNOWN |
 
 ## Navigation listed, content not inspected
 
@@ -62,7 +81,6 @@ Status: **IN PROGRESS**. Observations are from the authorized Ocean’s at Arthu
 |---|---|---|---|---|
 | SCR-028 | Revenue | `/manager2/oceansatarthurs/reporting/revenue` | Reporting | CONFIRMED link; content NEEDS TESTING |
 | SCR-029 | Covers Calendar | `/manager2/oceansatarthurs/reporting/embed/dashboards/358` | Reporting | CONFIRMED link; content NEEDS TESTING |
-| SCR-030 | Guestlists Export | `/manager2/oceansatarthurs/reporting/embed/looks/128` | Reporting | CONFIRMED link; content NEEDS TESTING |
 | SCR-031 | Payments Export | `/manager2/oceansatarthurs/reporting/embed/looks/50` | Reporting | CONFIRMED link; content NEEDS TESTING |
 | SCR-032 | Reservations Export | `/manager2/oceansatarthurs/reporting/embed/looks/49` | Reporting | CONFIRMED link; content NEEDS TESTING |
 | SCR-033 | Booked By | `/manager2/oceansatarthurs/reporting/embed/dashboards/130` | Reporting | CONFIRMED link; content NEEDS TESTING |
@@ -91,24 +109,7 @@ Status: **IN PROGRESS**. Observations are from the authorized Ocean’s at Arthu
 | SCR-056 | Actuals | `/manager/oceansatarthurs/actuals` | Reporting | CONFIRMED link; content NEEDS TESTING |
 | SCR-057 | Outgoing Emails | `/manager2/oceansatarthurs/reporting/outgoingemails` | Reporting | CONFIRMED link; content NEEDS TESTING |
 | SCR-058 | Activity Log | `/manager/oceansatarthurs/activitylog` | Reporting | CONFIRMED link; content NEEDS TESTING |
-| SCR-059 | Client Tags | `/manager/oceansatarthurs/manage/tags` | Settings > General | CONFIRMED link; content NEEDS TESTING |
-| SCR-060 | Reservation Tags | `/manager/oceansatarthurs/manage/reservationtags` | Settings > General | CONFIRMED link; content NEEDS TESTING |
-| SCR-061 | Payment Processors | `/manager2/oceansatarthurs/settings/payment-integration/view` | Settings > Integrations | CONFIRMED link; content NEEDS TESTING |
-| SCR-062 | Email Service Providers | `/manager2/oceansatarthurs/settings/emailserviceproviders/` | Settings > Integrations | CONFIRMED link; content NEEDS TESTING |
-| SCR-063 | Point of Sale | `/manager2/oceansatarthurs/settings/posi/view` | Settings > Integrations | CONFIRMED link; content NEEDS TESTING |
-| SCR-064 | Table Status Updates | `/manager2/oceansatarthurs/settings/table-status-mapping/` | Settings > Integrations | CONFIRMED link; content NEEDS TESTING |
-| SCR-065 | Reservations on DoorDash | `/manager2/oceansatarthurs/settings/doordash-integration` | Settings > Integrations | CONFIRMED link; content NEEDS TESTING |
-| SCR-066 | Access Rules | `/manager2/oceansatarthurs/settings/availability/accessrules` | Settings > Availability | CONFIRMED link; content NEEDS TESTING |
-| SCR-067 | Daily Program | `/manager/oceansatarthurs/manage/program` | Settings > Availability | CONFIRMED link; content NEEDS TESTING |
-| SCR-068 | Blackout Dates | `/manager/oceansatarthurs/manage/blackoutdates` | Settings > Availability | CONFIRMED link; content NEEDS TESTING |
-| SCR-069 | Concierge Perks | `/manager/oceansatarthurs/manage/perks/list` | Settings > Availability | CONFIRMED link; content NEEDS TESTING |
-| SCR-070 | Availability Quick View | `/manager2/oceansatarthurs/availability` | Settings > Availability | CONFIRMED link; content NEEDS TESTING |
-| SCR-071 | Shift Reporting Periods | `/manager2/oceansatarthurs/settings/shift-reporting-periods` | Settings > Availability | CONFIRMED link; content NEEDS TESTING |
-| SCR-072 | Reservation Widget | `/manager/oceansatarthurs/settings/widgets/dining` | Settings > Widget Settings | CONFIRMED link; content NEEDS TESTING |
-| SCR-073 | Waitlist Widget | `/manager/oceansatarthurs/settings/widgets/waitlist` | Settings > Widget Settings | CONFIRMED link; content NEEDS TESTING |
-| SCR-074 | Subscription Widget | `/manager2/oceansatarthurs/settings/subscription` | Settings > Widget Settings | CONFIRMED link; content NEEDS TESTING |
 | SCR-075 | Landing Page Settings | `/manager2/oceansatarthurs/settings/landingpage` | Settings > Widget Settings | CONFIRMED link; content NEEDS TESTING |
-| SCR-076 | Custom Audiences | `/manager2/oceansatarthurs/settings/custom-audiences/view` | Settings > Widget Settings | CONFIRMED link; content NEEDS TESTING |
 | SCR-077 | Floorplan Layouts | `/app/availability/oceansatarthurs/floorplan-layouts/list` | Settings > Floorplan | CONFIRMED link; content NEEDS TESTING |
 | SCR-078 | Rooms | `/manager/oceansatarthurs/manage/capacity/rooms/edit` | Settings > Floorplan | CONFIRMED link; content NEEDS TESTING |
 | SCR-079 | Seating Areas | `/manager/oceansatarthurs/manage/capacity/areas/edit` | Settings > Floorplan | CONFIRMED link; content NEEDS TESTING |
@@ -139,6 +140,8 @@ Status: **IN PROGRESS**. Observations are from the authorized Ocean’s at Arthu
 | FLOW-007 | Shift and Mode configuration | SCR-024 | Calendar and Modes tab inspected; no change saved (NEEDS TESTING) |
 | FLOW-008 | Reporting directory to dashboard | SCR-021 → SCR-022 | Embedded dashboard with filter controls opened (CONFIRMED) |
 | FLOW-009 | Voice AI monitoring to settings | SCR-014 → SCR-015 | Dashboard and three settings tabs opened (CONFIRMED) |
+| FLOW-010 | Concierge perk creation | SCR-069 → SCR-093 | Empty list and create form opened; save not submitted (NEEDS TESTING) |
+| FLOW-011 | Access rule creation | SCR-066 | Calendar and create drawer opened; review and save not submitted (NEEDS TESTING) |
 
 ## Cross-screen findings
 

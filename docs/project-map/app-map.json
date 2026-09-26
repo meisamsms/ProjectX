@@ -460,6 +460,11 @@
       "id": "SCR-092",
       "registryRef": "docs/project-map/feature-registry.json",
       "status": "CONFIRMED"
+    },
+    {
+      "id": "SCR-093",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "CONFIRMED"
     }
   ],
   "flows": [
@@ -507,6 +512,16 @@
       "id": "FLOW-009",
       "registryRef": "docs/project-map/feature-registry.json",
       "status": "CONFIRMED"
+    },
+    {
+      "id": "FLOW-010",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "NEEDS TESTING"
+    },
+    {
+      "id": "FLOW-011",
+      "registryRef": "docs/project-map/feature-registry.json",
+      "status": "NEEDS TESTING"
     }
   ],
   "apis": [],

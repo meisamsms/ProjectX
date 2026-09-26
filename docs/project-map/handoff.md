@@ -1,7 +1,7 @@
 CURRENT PHASE: Product discovery (PHASE-01).
 CURRENT TASK: DISC-002 — inspect remaining Reporting and Settings screens.
 STATUS: IN_PROGRESS
-COMPLETED: 10 observed domains; 92 screen entries (27 inspected, 65 navigation-only); 9 workflow paths (some unsubmitted).
+COMPLETED: 10 observed domains; 93 screen entries (46 inspected, 47 navigation-only); 11 workflow paths (some unsubmitted).
 FILES CREATED: docs/discovery/application-inventory.md; docs/project-map/feature-registry.json.
 FILES MODIFIED: docs/project-map/app-map.json; docs/project-map/roadmap.json; docs/project-map/verification.json; docs/project-map/handoff.md.
 TESTS EXECUTED: JSON parse; unique IDs; route and screen cross-reference; read-only UI inspection.
