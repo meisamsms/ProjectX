@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "reference": "Authorized SevenRooms manager account, Ocean’s at Arthur’s",
-  "asOf": "2026-09-26",
+  "asOf": "2026-09-27",
   "scope": "Visible UI only; no application code and no guest data reproduced",
   "domains": [
     {
@@ -3037,7 +3037,9 @@
         "Select date",
         "explore features"
       ],
-      "secondaryActions": [],
+      "secondaryActions": [
+        "Expanded Automated Emails, Cancellation & No-Show Fees, Experiences, Upgrades and Other Prepayments"
+      ],
       "forms": [],
       "fields": [],
       "tables": [],
@@ -3055,8 +3057,12 @@
       "pagination": "UNKNOWN",
       "statuses": [],
       "buttons": [],
-      "menus": [],
-      "modals": [],
+      "menus": [
+        "Date filter options recorded previously"
+      ],
+      "modals": [
+        "SCR-131"
+      ],
       "notifications": [],
       "errors": [],
       "emptyStates": [],
@@ -3064,18 +3070,25 @@
       "likelyEntities": [],
       "userRoles": "Current signed-in user; other roles NEEDS TESTING",
       "observedBusinessRules": [
-        "Opportunity measured against regional benchmark; some cards require package update"
+        "Opportunity measured against regional benchmark; some cards require package update",
+        "Automated Emails expansion shows campaign metrics, a revenue chart and Explore Report link.",
+        "Other Prepayments expansion shows monthly revenue chart and accessible Month/Revenue/bg table.",
+        "Cancellation fees, Experiences and Upgrades expand to descriptive benchmark/help panels."
       ],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
       "unknowns": [
-        "Page content and interactions not yet inspected"
+        "UNKNOWN: remaining feature accordion details and date/sort branches",
+        "UNKNOWN: other-role behavior; package update badges observed for several features"
       ],
       "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied",
-      "partialReason": "Observed the page; live write, error, alternate-role and all filter branches were not tested.",
+      "partialReason": "Five feature expansions and explanation inspected. Remaining safe date/sort and package-marked feature panels still need inspection; no demo requests or configuration changes submitted.",
       "layout": "OBSERVED: Date filter",
       "tabs": [],
-      "cards": [],
+      "cards": [
+        "Five opportunity cards",
+        "Feature performance accordions"
+      ],
       "loadingState": "UNKNOWN",
       "populatedState": "UNKNOWN",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
@@ -3084,8 +3097,14 @@
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
-      ]
+        "U-003",
+        "U-007"
+      ],
+      "childScreenIds": [
+        "SCR-131"
+      ],
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-002"
     },
     {
       "id": "SCR-029",
@@ -3118,8 +3137,13 @@
       "pagination": "UNKNOWN",
       "statuses": [],
       "buttons": [],
-      "menus": [],
-      "modals": [],
+      "menus": [
+        "Dashboard actions: Clear cache and refresh; Download; Schedule delivery; Reset filters"
+      ],
+      "modals": [
+        "SCR-132",
+        "SCR-133"
+      ],
       "notifications": [],
       "errors": [],
       "emptyStates": [],
@@ -3135,20 +3159,27 @@
         "Page content and interactions not yet inspected"
       ],
       "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied",
-      "partialReason": "Observed the page; live write, error, alternate-role and all filter branches were not tested.",
+      "partialReason": "Download and delivery dialogs inspected without submission. Dashboard filter popovers, tile actions and calendar drilldowns still need safe inspection; other roles and delivery outcomes untested.",
       "layout": "OBSERVED: Looker month grid",
       "tabs": [],
       "cards": [],
-      "loadingState": "UNKNOWN",
-      "populatedState": "UNKNOWN",
+      "loadingState": "OBSERVED dashboard progressbar and Element Loading before populated month grid.",
+      "populatedState": "OBSERVED month grid containing daily shift reservations/covers and comparison arrows.",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "disabledState": "UNKNOWN",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
-      ]
+        "U-003",
+        "U-007"
+      ],
+      "childScreenIds": [
+        "SCR-132",
+        "SCR-133"
+      ],
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-002"
     },
     {
       "id": "SCR-030",
@@ -6566,8 +6597,8 @@
         "sort and search"
       ],
       "primaryActions": [
-        "Add Floorplan Layout",
-        "Layout actions"
+        "Edit opens SCR-096",
+        "Add Floorplan Layout opens naming surface SCR-123"
       ],
       "secondaryActions": [],
       "forms": [],
@@ -6586,7 +6617,9 @@
       "pagination": "UNKNOWN",
       "statuses": [],
       "buttons": [],
-      "menus": [],
+      "menus": [
+        "Layout actions: Edit, Duplicate, Print"
+      ],
       "modals": [],
       "notifications": [],
       "errors": [],
@@ -6598,13 +6631,15 @@
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
       "unknowns": [
-        "Page content and interactions not yet inspected"
+        "UNKNOWN: Duplicate and Print outcomes; not activated"
       ],
       "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied",
       "partialReason": "Observed the page; live write, error, alternate-role and all filter branches were not tested.",
       "layout": "OBSERVED: Layout cards",
       "tabs": [],
-      "cards": [],
+      "cards": [
+        "OBSERVED four layout cards with last-edited date, active/inactive table counts, combination counts and meal periods"
+      ],
       "loadingState": "UNKNOWN",
       "populatedState": "UNKNOWN",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
@@ -6614,7 +6649,9 @@
         "U-001",
         "U-002",
         "U-003"
-      ]
+      ],
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-002"
     },
     {
       "id": "SCR-078",
@@ -7830,41 +7867,96 @@
       "primaryActions": [],
       "secondaryActions": [],
       "forms": [],
-      "fields": [],
+      "fields": [
+        {
+          "name": "Zoom level",
+          "type": "combobox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Adjust spacing between objects",
+          "type": "slider",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
       "tables": [],
       "filters": [],
       "searchBehavior": "UNKNOWN",
-      "sorting": "UNKNOWN",
+      "sorting": "OBSERVED Combinations offers Sort by Table and Sort by Party Size; Party Size selected without saving.",
       "pagination": "UNKNOWN",
       "statuses": [],
-      "buttons": [],
-      "menus": [],
+      "buttons": [
+        "Exit Editor",
+        "Add Table",
+        "Add Structural Element",
+        "Undo",
+        "Redo",
+        "Keyboard Shortcuts",
+        "Settings",
+        "Discard changes",
+        "Save",
+        "Room navigation",
+        "Add room"
+      ],
+      "menus": [
+        "Active table: Duplicate, Deactivate, Move to; Move to submenu lists other rooms. No destination selected.",
+        "Combination: Edit, Delete. Edit opens SCR-128; Delete not activated."
+      ],
       "modals": [],
       "notifications": [],
       "errors": [],
-      "emptyStates": [],
+      "emptyStates": [
+        "OBSERVED create-layout canvas empty before naming"
+      ],
       "dependencies": [],
       "likelyEntities": [],
       "userRoles": "Current account OBSERVED; other roles UNKNOWN",
-      "observedBusinessRules": [],
+      "observedBusinessRules": [
+        "UI guidance says active tables require a seating area; an active No Seating Area group was also visible, so enforcement remains UNKNOWN.",
+        "UI guidance describes Shift/Command selection before adding a combination.",
+        "Inactive table button labels state Enter adds them to the floorplan; not executed."
+      ],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Opened page; safe read-only controls seen; further states, validation and roles unknown.",
-      "unknowns": [],
+      "partialReason": "No canvas mutation, Save, Done creation, Delete, Duplicate, Deactivate or Move destination submitted. Selection-based editing controls and unlabeled presets still need safe inspection; persistence/validation and other roles untested.",
+      "unknowns": [
+        "UNKNOWN: selected-table and structural contextual editor details",
+        "UNKNOWN: enforcement of seating-area guidance",
+        "UNKNOWN_REQUIRES_SAFE_TEST_DATA: save, create, delete, move and duplicate outcomes"
+      ],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Canvas",
-      "tabs": [],
+      "tabs": [
+        "Tables",
+        "Combinations"
+      ],
       "cards": [],
-      "loadingState": "UNKNOWN",
-      "populatedState": "UNKNOWN",
+      "loadingState": "OBSERVED empty canvas and progressbar during load; populated canvas after load.",
+      "populatedState": "OBSERVED 29 tables on current-room canvas; active/inactive lists grouped by seating area; combination rows show tables and cover range.",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
-      "disabledState": "Undo, Redo and Discard disabled on unmodified canvas",
+      "disabledState": "OBSERVED Undo, Redo, Discard changes and Save disabled after unchanged layout finished loading.",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
-      ]
+        "U-003",
+        "U-007",
+        "U-009"
+      ],
+      "childScreenIds": [
+        "SCR-123",
+        "SCR-124",
+        "SCR-125",
+        "SCR-126",
+        "SCR-127",
+        "SCR-128",
+        "SCR-129"
+      ],
+      "cancelBackBehavior": "OBSERVED Exit Editor returns to layouts list; naming Cancel returns to list; nested Cancel/Close dismisses without saving.",
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-002"
     },
     {
       "id": "SCR-097",
@@ -7882,7 +7974,15 @@
       "secondaryActions": [],
       "forms": [],
       "fields": [],
-      "tables": [],
+      "tables": [
+        {
+          "description": "Reservation Confirmation and Referrals grids",
+          "columns": [
+            "Description",
+            "English"
+          ]
+        }
+      ],
       "filters": [],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
@@ -7900,13 +8000,16 @@
       "observedBusinessRules": [],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Template route opened; translation, edit/publish and protected message body not verified or copied.",
-      "unknowns": [],
+      "partialReason": "Clicking description and English value cells did not expose an editor. Loading indicator remained; further control availability UNKNOWN. No publish/delivery tested.",
+      "unknowns": [
+        "UNKNOWN: whether residual Loading... prevents additional controls",
+        "UNKNOWN_REQUIRES_SAFE_TEST_DATA: editing, translation, publish and delivery"
+      ],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Description and English language grid",
       "tabs": [],
       "cards": [],
-      "loadingState": "UNKNOWN",
+      "loadingState": "OBSERVED Loading... beneath populated sections",
       "populatedState": "UNKNOWN",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "disabledState": "UNKNOWN",
@@ -7914,8 +8017,20 @@
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
-      ]
+        "U-003",
+        "U-008"
+      ],
+      "templateRowLabels": [
+        "Email subject",
+        "Email header",
+        "Upgrades header",
+        "Tip label",
+        "Referred Perk Text",
+        "Referral Link Subject",
+        "Referral Link Body"
+      ],
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-002"
     },
     {
       "id": "SCR-098",
@@ -7933,7 +8048,15 @@
       "secondaryActions": [],
       "forms": [],
       "fields": [],
-      "tables": [],
+      "tables": [
+        {
+          "description": "Guest-facing language grid",
+          "columns": [
+            "Description",
+            "English"
+          ]
+        }
+      ],
       "filters": [],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
@@ -7951,21 +8074,30 @@
       "observedBusinessRules": [],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Template route opened; translation, edit/publish and protected message body not verified or copied.",
+      "partialReason": "Grid observed; editing, translation and delivery outcomes untested. Loading indicator remains; its cause and whether further controls should load are UNKNOWN. No publish/send performed.",
       "unknowns": [],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Description and English language grid",
       "tabs": [],
       "cards": [],
-      "loadingState": "UNKNOWN",
-      "populatedState": "UNKNOWN",
+      "loadingState": "OBSERVED Loading... remains beneath populated grid",
+      "populatedState": "OBSERVED grid with labels and current English values; bodies omitted",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "disabledState": "UNKNOWN",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
+        "U-003",
+        "U-008"
+      ],
+      "taskId": "DISC-002",
+      "lastObserved": "2026-09-27",
+      "templateRowLabels": [
+        "Email subject",
+        "Email header",
+        "Confirm Reservation button",
+        "Cancel Reservation button"
       ]
     },
     {
@@ -7984,7 +8116,15 @@
       "secondaryActions": [],
       "forms": [],
       "fields": [],
-      "tables": [],
+      "tables": [
+        {
+          "description": "Guest-facing language grid",
+          "columns": [
+            "Description",
+            "English"
+          ]
+        }
+      ],
       "filters": [],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
@@ -8002,21 +8142,27 @@
       "observedBusinessRules": [],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Template route opened; translation, edit/publish and protected message body not verified or copied.",
+      "partialReason": "Grid observed; editing, translation and delivery outcomes untested. Loading indicator remains; its cause and whether further controls should load are UNKNOWN. No publish/send performed.",
       "unknowns": [],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Description and English language grid",
       "tabs": [],
       "cards": [],
-      "loadingState": "UNKNOWN",
-      "populatedState": "UNKNOWN",
+      "loadingState": "OBSERVED Loading... remains beneath populated grid",
+      "populatedState": "OBSERVED grid with labels and current English values; bodies omitted",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "disabledState": "UNKNOWN",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
+        "U-003",
+        "U-008"
+      ],
+      "taskId": "DISC-002",
+      "lastObserved": "2026-09-27",
+      "templateRowLabels": [
+        "Email subject"
       ]
     },
     {
@@ -8035,7 +8181,15 @@
       "secondaryActions": [],
       "forms": [],
       "fields": [],
-      "tables": [],
+      "tables": [
+        {
+          "description": "Guest-facing language grid",
+          "columns": [
+            "Description",
+            "English"
+          ]
+        }
+      ],
       "filters": [],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
@@ -8053,21 +8207,28 @@
       "observedBusinessRules": [],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Template route opened; translation, edit/publish and protected message body not verified or copied.",
+      "partialReason": "Grid observed; editing, translation and delivery outcomes untested. Loading indicator remains; its cause and whether further controls should load are UNKNOWN. No publish/send performed.",
       "unknowns": [],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Description and English language grid",
       "tabs": [],
       "cards": [],
-      "loadingState": "UNKNOWN",
-      "populatedState": "UNKNOWN",
+      "loadingState": "OBSERVED Loading... remains beneath populated grid",
+      "populatedState": "OBSERVED grid with labels and current English values; bodies omitted",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "disabledState": "UNKNOWN",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
+        "U-003",
+        "U-008"
+      ],
+      "taskId": "DISC-002",
+      "lastObserved": "2026-09-27",
+      "templateRowLabels": [
+        "Email subject",
+        "Email body"
       ]
     },
     {
@@ -8086,7 +8247,15 @@
       "secondaryActions": [],
       "forms": [],
       "fields": [],
-      "tables": [],
+      "tables": [
+        {
+          "description": "Guest-facing language grid",
+          "columns": [
+            "Description",
+            "English"
+          ]
+        }
+      ],
       "filters": [],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
@@ -8104,21 +8273,29 @@
       "observedBusinessRules": [],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Template route opened; translation, edit/publish and protected message body not verified or copied.",
+      "partialReason": "Grid observed; editing, translation and delivery outcomes untested. Loading indicator remains; its cause and whether further controls should load are UNKNOWN. No publish/send performed.",
       "unknowns": [],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Description and English language grid",
       "tabs": [],
       "cards": [],
-      "loadingState": "UNKNOWN",
-      "populatedState": "UNKNOWN",
+      "loadingState": "OBSERVED Loading... remains beneath populated grid",
+      "populatedState": "OBSERVED grid with labels and current English values; bodies omitted",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "disabledState": "UNKNOWN",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
+        "U-003",
+        "U-008"
+      ],
+      "taskId": "DISC-002",
+      "lastObserved": "2026-09-27",
+      "templateRowLabels": [
+        "Complete payment header",
+        "Complete payment subject",
+        "Refund payment header"
       ]
     },
     {
@@ -8137,7 +8314,15 @@
       "secondaryActions": [],
       "forms": [],
       "fields": [],
-      "tables": [],
+      "tables": [
+        {
+          "description": "Guest-facing language grid",
+          "columns": [
+            "Description",
+            "English"
+          ]
+        }
+      ],
       "filters": [],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
@@ -8155,21 +8340,28 @@
       "observedBusinessRules": [],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Template route opened; translation, edit/publish and protected message body not verified or copied.",
+      "partialReason": "Grid observed; editing, translation and delivery outcomes untested. Loading indicator remains; its cause and whether further controls should load are UNKNOWN. No publish/send performed.",
       "unknowns": [],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Description and English language grid",
       "tabs": [],
       "cards": [],
-      "loadingState": "UNKNOWN",
-      "populatedState": "UNKNOWN",
+      "loadingState": "OBSERVED Loading... remains beneath populated grid",
+      "populatedState": "OBSERVED grid with labels and current English values; bodies omitted",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "disabledState": "UNKNOWN",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
+        "U-003",
+        "U-008"
+      ],
+      "taskId": "DISC-002",
+      "lastObserved": "2026-09-27",
+      "templateRowLabels": [
+        "Guestlist Request Paragraph",
+        "Reservation Request Paragraph"
       ]
     },
     {
@@ -8188,7 +8380,15 @@
       "secondaryActions": [],
       "forms": [],
       "fields": [],
-      "tables": [],
+      "tables": [
+        {
+          "description": "Guest-facing language grid",
+          "columns": [
+            "Description",
+            "English"
+          ]
+        }
+      ],
       "filters": [],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
@@ -8206,21 +8406,29 @@
       "observedBusinessRules": [],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Template route opened; translation, edit/publish and protected message body not verified or copied.",
+      "partialReason": "Grid observed; editing, translation and delivery outcomes untested. Loading indicator remains; its cause and whether further controls should load are UNKNOWN. No publish/send performed.",
       "unknowns": [],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Description and English language grid",
       "tabs": [],
       "cards": [],
-      "loadingState": "UNKNOWN",
-      "populatedState": "UNKNOWN",
+      "loadingState": "OBSERVED Loading... remains beneath populated grid",
+      "populatedState": "OBSERVED grid with labels and current English values; bodies omitted",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "disabledState": "UNKNOWN",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
+        "U-003",
+        "U-008"
+      ],
+      "taskId": "DISC-002",
+      "lastObserved": "2026-09-27",
+      "templateRowLabels": [
+        "Email header",
+        "Email subject",
+        "Email body"
       ]
     },
     {
@@ -8239,7 +8447,15 @@
       "secondaryActions": [],
       "forms": [],
       "fields": [],
-      "tables": [],
+      "tables": [
+        {
+          "description": "Guest-facing language grid",
+          "columns": [
+            "Description",
+            "English"
+          ]
+        }
+      ],
       "filters": [],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
@@ -8257,21 +8473,29 @@
       "observedBusinessRules": [],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Template route opened; translation, edit/publish and protected message body not verified or copied.",
+      "partialReason": "Grid observed; editing, translation and delivery outcomes untested. Loading indicator remains; its cause and whether further controls should load are UNKNOWN. No publish/send performed.",
       "unknowns": [],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Description and English language grid",
       "tabs": [],
       "cards": [],
-      "loadingState": "UNKNOWN",
-      "populatedState": "UNKNOWN",
+      "loadingState": "OBSERVED Loading... remains beneath populated grid",
+      "populatedState": "OBSERVED grid with labels and current English values; bodies omitted",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "disabledState": "UNKNOWN",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
+        "U-003",
+        "U-008"
+      ],
+      "taskId": "DISC-002",
+      "lastObserved": "2026-09-27",
+      "templateRowLabels": [
+        "Email header",
+        "Email subject",
+        "Email body"
       ]
     },
     {
@@ -8290,7 +8514,15 @@
       "secondaryActions": [],
       "forms": [],
       "fields": [],
-      "tables": [],
+      "tables": [
+        {
+          "description": "Guest-facing language grid",
+          "columns": [
+            "Description",
+            "English"
+          ]
+        }
+      ],
       "filters": [],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
@@ -8308,21 +8540,36 @@
       "observedBusinessRules": [],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Template route opened; translation, edit/publish and protected message body not verified or copied.",
+      "partialReason": "Grid observed; editing, translation and delivery outcomes untested. Loading indicator remains; its cause and whether further controls should load are UNKNOWN. No publish/send performed.",
       "unknowns": [],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Description and English language grid",
       "tabs": [],
       "cards": [],
-      "loadingState": "UNKNOWN",
-      "populatedState": "UNKNOWN",
+      "loadingState": "OBSERVED Loading... remains beneath populated grid",
+      "populatedState": "OBSERVED grid with labels and current English values; bodies omitted",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "disabledState": "UNKNOWN",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
+        "U-003",
+        "U-008"
+      ],
+      "taskId": "DISC-002",
+      "lastObserved": "2026-09-27",
+      "templateRowLabels": [
+        "Payment request subject",
+        "Payment request body",
+        "Payment request button",
+        "Card hold request subject",
+        "Card hold request body",
+        "Card hold request button",
+        "Payment request body with Expiration",
+        "Card hold request body with Expiration",
+        "Payment request subject reminder",
+        "Card hold request subject reminder"
       ]
     },
     {
@@ -8341,7 +8588,15 @@
       "secondaryActions": [],
       "forms": [],
       "fields": [],
-      "tables": [],
+      "tables": [
+        {
+          "description": "Guest-facing language grid",
+          "columns": [
+            "Description",
+            "English"
+          ]
+        }
+      ],
       "filters": [],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
@@ -8359,21 +8614,31 @@
       "observedBusinessRules": [],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Template route opened; translation, edit/publish and protected message body not verified or copied.",
+      "partialReason": "Grid observed; editing, translation and delivery outcomes untested. Loading indicator remains; its cause and whether further controls should load are UNKNOWN. No publish/send performed.",
       "unknowns": [],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Description and English language grid",
       "tabs": [],
       "cards": [],
-      "loadingState": "UNKNOWN",
-      "populatedState": "UNKNOWN",
+      "loadingState": "OBSERVED Loading... remains beneath populated grid",
+      "populatedState": "OBSERVED grid with labels and current English values; bodies omitted",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "disabledState": "UNKNOWN",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
+        "U-003",
+        "U-008"
+      ],
+      "taskId": "DISC-002",
+      "lastObserved": "2026-09-27",
+      "templateRowLabels": [
+        "Guestlist Email Header",
+        "Guestlist Email Body",
+        "Guestlist Email Remove Link Text",
+        "Guestlist Email QR Code Title",
+        "Guestlist Email QR Code Description"
       ]
     },
     {
@@ -8392,7 +8657,15 @@
       "secondaryActions": [],
       "forms": [],
       "fields": [],
-      "tables": [],
+      "tables": [
+        {
+          "description": "Guest-facing language grid",
+          "columns": [
+            "Description",
+            "English"
+          ]
+        }
+      ],
       "filters": [],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
@@ -8410,21 +8683,33 @@
       "observedBusinessRules": [],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Template route opened; translation, edit/publish and protected message body not verified or copied.",
+      "partialReason": "Grid observed; editing, translation and delivery outcomes untested. Loading indicator remains; its cause and whether further controls should load are UNKNOWN. No publish/send performed.",
       "unknowns": [],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Description and English language grid",
       "tabs": [],
       "cards": [],
-      "loadingState": "UNKNOWN",
-      "populatedState": "UNKNOWN",
+      "loadingState": "OBSERVED Loading... remains beneath populated grid",
+      "populatedState": "OBSERVED grid with labels and current English values; bodies omitted",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "disabledState": "UNKNOWN",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
+        "U-003",
+        "U-008"
+      ],
+      "taskId": "DISC-002",
+      "lastObserved": "2026-09-27",
+      "templateRowLabels": [
+        "Priority Alerts Confirmation Email Header",
+        "Priority Alerts Confirmation Not a Reservation",
+        "Priority Alerts Confirmation Subject",
+        "Priority Alerts Cancel Alert",
+        "Priority Alerts Time Slot Opening Header",
+        "Priority Alerts Time Slot Opening Button",
+        "Priority Alerts Notification Subject"
       ]
     },
     {
@@ -8443,7 +8728,15 @@
       "secondaryActions": [],
       "forms": [],
       "fields": [],
-      "tables": [],
+      "tables": [
+        {
+          "description": "Guest-facing language grid",
+          "columns": [
+            "Description",
+            "English"
+          ]
+        }
+      ],
       "filters": [],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
@@ -8461,21 +8754,33 @@
       "observedBusinessRules": [],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Template route opened; translation, edit/publish and protected message body not verified or copied.",
+      "partialReason": "Grid observed; editing, translation and delivery outcomes untested. Loading indicator remains; its cause and whether further controls should load are UNKNOWN. No publish/send performed.",
       "unknowns": [],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Description and English language grid",
       "tabs": [],
       "cards": [],
-      "loadingState": "UNKNOWN",
-      "populatedState": "UNKNOWN",
+      "loadingState": "OBSERVED Loading... remains beneath populated grid",
+      "populatedState": "OBSERVED grid with labels and current English values; bodies omitted",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "disabledState": "UNKNOWN",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
+        "U-003",
+        "U-008"
+      ],
+      "taskId": "DISC-002",
+      "lastObserved": "2026-09-27",
+      "templateRowLabels": [
+        "Marketing subscription confirmation email subject",
+        "Marketing subscription confirmation email header",
+        "Marketing subscription confirmation email line 1",
+        "Marketing subscription confirmation email line 2",
+        "Marketing subscription confirmation email button label",
+        "Marketing subscription confirmation email line 3",
+        "Marketing subscription confirmation email line 4"
       ]
     },
     {
@@ -8494,7 +8799,15 @@
       "secondaryActions": [],
       "forms": [],
       "fields": [],
-      "tables": [],
+      "tables": [
+        {
+          "description": "Guest-facing language grid",
+          "columns": [
+            "Description",
+            "English"
+          ]
+        }
+      ],
       "filters": [],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
@@ -8512,21 +8825,33 @@
       "observedBusinessRules": [],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Template route opened; translation, edit/publish and protected message body not verified or copied.",
+      "partialReason": "Grid observed; editing, translation and delivery outcomes untested. Loading indicator remains; its cause and whether further controls should load are UNKNOWN. No publish/send performed.",
       "unknowns": [],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Description and English language grid",
       "tabs": [],
       "cards": [],
-      "loadingState": "UNKNOWN",
-      "populatedState": "UNKNOWN",
+      "loadingState": "OBSERVED Loading... remains beneath populated grid",
+      "populatedState": "OBSERVED grid with labels and current English values; bodies omitted",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "disabledState": "UNKNOWN",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
+        "U-003",
+        "U-008"
+      ],
+      "taskId": "DISC-002",
+      "lastObserved": "2026-09-27",
+      "templateRowLabels": [
+        "Marketing subscription confirmation email subject",
+        "Marketing subscription confirmation email header",
+        "Marketing subscription confirmation email line 1",
+        "Marketing subscription confirmation email line 2",
+        "Marketing subscription confirmation email button label",
+        "Marketing subscription confirmation email line 3",
+        "Marketing subscription confirmation email line 4"
       ]
     },
     {
@@ -8545,7 +8870,15 @@
       "secondaryActions": [],
       "forms": [],
       "fields": [],
-      "tables": [],
+      "tables": [
+        {
+          "description": "Guest-facing language grid",
+          "columns": [
+            "Description",
+            "English"
+          ]
+        }
+      ],
       "filters": [],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
@@ -8563,21 +8896,28 @@
       "observedBusinessRules": [],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Template route opened; translation, edit/publish and protected message body not verified or copied.",
+      "partialReason": "Grid observed; editing, translation and delivery outcomes untested. Loading indicator remains; its cause and whether further controls should load are UNKNOWN. No publish/send performed.",
       "unknowns": [],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Description and English language grid",
       "tabs": [],
       "cards": [],
-      "loadingState": "UNKNOWN",
-      "populatedState": "UNKNOWN",
+      "loadingState": "OBSERVED Loading... remains beneath populated grid",
+      "populatedState": "OBSERVED grid with labels and current English values; bodies omitted",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "disabledState": "UNKNOWN",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
+        "U-003",
+        "U-008"
+      ],
+      "taskId": "DISC-002",
+      "lastObserved": "2026-09-27",
+      "templateRowLabels": [
+        "Manage reservation link text",
+        "Cancel reservation link text"
       ]
     },
     {
@@ -8596,7 +8936,15 @@
       "secondaryActions": [],
       "forms": [],
       "fields": [],
-      "tables": [],
+      "tables": [
+        {
+          "description": "Guest-facing language grid",
+          "columns": [
+            "Description",
+            "English"
+          ]
+        }
+      ],
       "filters": [],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
@@ -8614,21 +8962,29 @@
       "observedBusinessRules": [],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Template route opened; translation, edit/publish and protected message body not verified or copied.",
+      "partialReason": "Grid observed; editing, translation and delivery outcomes untested. Loading indicator remains; its cause and whether further controls should load are UNKNOWN. No publish/send performed.",
       "unknowns": [],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Description and English language grid",
       "tabs": [],
       "cards": [],
-      "loadingState": "UNKNOWN",
-      "populatedState": "UNKNOWN",
+      "loadingState": "OBSERVED Loading... remains beneath populated grid",
+      "populatedState": "OBSERVED grid with labels and current English values; bodies omitted",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "disabledState": "UNKNOWN",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
+        "U-003",
+        "U-008"
+      ],
+      "taskId": "DISC-002",
+      "lastObserved": "2026-09-27",
+      "templateRowLabels": [
+        "Subscription Link Subject",
+        "Subscription Link Body",
+        "Subscription Link Text"
       ]
     },
     {
@@ -8646,7 +9002,15 @@
       "secondaryActions": [],
       "forms": [],
       "fields": [],
-      "tables": [],
+      "tables": [
+        {
+          "description": "Guest-facing language grid",
+          "columns": [
+            "Description",
+            "English"
+          ]
+        }
+      ],
       "filters": [],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
@@ -8664,21 +9028,29 @@
       "observedBusinessRules": [],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Template route opened; message copy and publish state not verified or copied.",
+      "partialReason": "Grid observed; editing, translation and delivery outcomes untested. Loading indicator remains; its cause and whether further controls should load are UNKNOWN. No publish/send performed.",
       "unknowns": [],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Description and English grid",
       "tabs": [],
       "cards": [],
-      "loadingState": "UNKNOWN",
-      "populatedState": "UNKNOWN",
+      "loadingState": "OBSERVED Loading... remains beneath populated grid",
+      "populatedState": "OBSERVED grid with labels and current English values; bodies omitted",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "disabledState": "UNKNOWN",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
+        "U-003",
+        "U-008"
+      ],
+      "taskId": "DISC-002",
+      "lastObserved": "2026-09-27",
+      "templateRowLabels": [
+        "Event Reservation - Confirmation",
+        "Event Reservation - Updated",
+        "Event Reservation - Reminder"
       ]
     },
     {
@@ -8696,7 +9068,15 @@
       "secondaryActions": [],
       "forms": [],
       "fields": [],
-      "tables": [],
+      "tables": [
+        {
+          "description": "Guest-facing language grid",
+          "columns": [
+            "Description",
+            "English"
+          ]
+        }
+      ],
       "filters": [],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
@@ -8714,21 +9094,32 @@
       "observedBusinessRules": [],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Template route opened; message copy and publish state not verified or copied.",
+      "partialReason": "Grid observed; editing, translation and delivery outcomes untested. Loading indicator remains; its cause and whether further controls should load are UNKNOWN. No publish/send performed.",
       "unknowns": [],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Description and English grid",
       "tabs": [],
       "cards": [],
-      "loadingState": "UNKNOWN",
-      "populatedState": "UNKNOWN",
+      "loadingState": "OBSERVED Loading... remains beneath populated grid",
+      "populatedState": "OBSERVED grid with labels and current English values; bodies omitted",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "disabledState": "UNKNOWN",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
+        "U-003",
+        "U-008"
+      ],
+      "taskId": "DISC-002",
+      "lastObserved": "2026-09-27",
+      "templateRowLabels": [
+        "Payment request text",
+        "Payment request text with expiration",
+        "Payment request text reminder",
+        "Card hold request text",
+        "Card hold request text with expiration",
+        "Card hold request text reminder"
       ]
     },
     {
@@ -8746,7 +9137,15 @@
       "secondaryActions": [],
       "forms": [],
       "fields": [],
-      "tables": [],
+      "tables": [
+        {
+          "description": "Guest-facing language grid",
+          "columns": [
+            "Description",
+            "English"
+          ]
+        }
+      ],
       "filters": [],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
@@ -8764,21 +9163,28 @@
       "observedBusinessRules": [],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Template route opened; message copy and publish state not verified or copied.",
+      "partialReason": "Grid observed; editing, translation and delivery outcomes untested. Loading indicator remains; its cause and whether further controls should load are UNKNOWN. No publish/send performed.",
       "unknowns": [],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Description and English grid",
       "tabs": [],
       "cards": [],
-      "loadingState": "UNKNOWN",
-      "populatedState": "UNKNOWN",
+      "loadingState": "OBSERVED Loading... remains beneath populated grid",
+      "populatedState": "OBSERVED grid with labels and current English values; bodies omitted",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "disabledState": "UNKNOWN",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
+        "U-003",
+        "U-008"
+      ],
+      "taskId": "DISC-002",
+      "lastObserved": "2026-09-27",
+      "templateRowLabels": [
+        "Priority Alerts - Available Time Slot Text",
+        "Priority Alerts - Canceled"
       ]
     },
     {
@@ -8796,7 +9202,15 @@
       "secondaryActions": [],
       "forms": [],
       "fields": [],
-      "tables": [],
+      "tables": [
+        {
+          "description": "Guest-facing language grid",
+          "columns": [
+            "Description",
+            "English"
+          ]
+        }
+      ],
       "filters": [],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
@@ -8814,21 +9228,33 @@
       "observedBusinessRules": [],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Template route opened; message copy and publish state not verified or copied.",
+      "partialReason": "Grid observed; editing, translation and delivery outcomes untested. Loading indicator remains; its cause and whether further controls should load are UNKNOWN. No publish/send performed.",
       "unknowns": [],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Description and English grid",
       "tabs": [],
       "cards": [],
-      "loadingState": "UNKNOWN",
-      "populatedState": "UNKNOWN",
+      "loadingState": "OBSERVED Loading... remains beneath populated grid",
+      "populatedState": "OBSERVED grid with labels and current English values; bodies omitted",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "disabledState": "UNKNOWN",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
+        "U-003",
+        "U-008"
+      ],
+      "taskId": "DISC-002",
+      "lastObserved": "2026-09-27",
+      "templateRowLabels": [
+        "Reservation - Confirmation",
+        "Reservation - Updated",
+        "Reservation - Canceled",
+        "Reservation - Reminder",
+        "Reservation - Table Ready",
+        "Reservation - Arrival",
+        "Reservation - Complete via link"
       ]
     },
     {
@@ -8846,7 +9272,15 @@
       "secondaryActions": [],
       "forms": [],
       "fields": [],
-      "tables": [],
+      "tables": [
+        {
+          "description": "Guest-facing language grid",
+          "columns": [
+            "Description",
+            "English"
+          ]
+        }
+      ],
       "filters": [],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
@@ -8864,21 +9298,27 @@
       "observedBusinessRules": [],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Template route opened; message copy and publish state not verified or copied.",
+      "partialReason": "Grid observed; editing, translation and delivery outcomes untested. Loading indicator remains; its cause and whether further controls should load are UNKNOWN. No publish/send performed.",
       "unknowns": [],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Description and English grid",
       "tabs": [],
       "cards": [],
-      "loadingState": "UNKNOWN",
-      "populatedState": "UNKNOWN",
+      "loadingState": "OBSERVED Loading... remains beneath populated grid",
+      "populatedState": "OBSERVED grid with labels and current English values; bodies omitted",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "disabledState": "UNKNOWN",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
+        "U-003",
+        "U-008"
+      ],
+      "taskId": "DISC-002",
+      "lastObserved": "2026-09-27",
+      "templateRowLabels": [
+        "Inbound Transactional Auto-Reply"
       ]
     },
     {
@@ -8896,7 +9336,15 @@
       "secondaryActions": [],
       "forms": [],
       "fields": [],
-      "tables": [],
+      "tables": [
+        {
+          "description": "Guest-facing language grid",
+          "columns": [
+            "Description",
+            "English"
+          ]
+        }
+      ],
       "filters": [],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
@@ -8914,21 +9362,31 @@
       "observedBusinessRules": [],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Template route opened; message copy and publish state not verified or copied.",
+      "partialReason": "Grid observed; editing, translation and delivery outcomes untested. Loading indicator remains; its cause and whether further controls should load are UNKNOWN. No publish/send performed.",
       "unknowns": [],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Description and English grid",
       "tabs": [],
       "cards": [],
-      "loadingState": "UNKNOWN",
-      "populatedState": "UNKNOWN",
+      "loadingState": "OBSERVED Loading... remains beneath populated grid",
+      "populatedState": "OBSERVED grid with labels and current English values; bodies omitted",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "disabledState": "UNKNOWN",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
+        "U-003",
+        "U-008"
+      ],
+      "taskId": "DISC-002",
+      "lastObserved": "2026-09-27",
+      "templateRowLabels": [
+        "Waitlist - Added to List",
+        "Waitlist - Guest Joined Via Widget",
+        "Waitlist - Confirmed",
+        "Waitlist - Canceled",
+        "Waitlist - Table Ready"
       ]
     },
     {
@@ -8946,7 +9404,15 @@
       "secondaryActions": [],
       "forms": [],
       "fields": [],
-      "tables": [],
+      "tables": [
+        {
+          "description": "Guest-facing language grid",
+          "columns": [
+            "Custom Text",
+            "English"
+          ]
+        }
+      ],
       "filters": [],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
@@ -8964,21 +9430,27 @@
       "observedBusinessRules": [],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Template route opened; message copy and publish state not verified or copied.",
+      "partialReason": "Grid observed; editing, translation and delivery outcomes untested. Loading indicator remains; its cause and whether further controls should load are UNKNOWN. No publish/send performed.",
       "unknowns": [],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Description and English grid",
       "tabs": [],
       "cards": [],
-      "loadingState": "UNKNOWN",
-      "populatedState": "UNKNOWN",
+      "loadingState": "OBSERVED Loading... remains beneath populated grid",
+      "populatedState": "OBSERVED grid with labels and current English values; bodies omitted",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "disabledState": "UNKNOWN",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
+        "U-003",
+        "U-008"
+      ],
+      "taskId": "DISC-002",
+      "lastObserved": "2026-09-27",
+      "templateRowLabels": [
+        ""
       ]
     },
     {
@@ -8996,14 +9468,38 @@
       "primaryActions": [],
       "secondaryActions": [],
       "forms": [],
-      "fields": [],
-      "tables": [],
+      "fields": [
+        {
+          "name": "Policy Name",
+          "type": "text",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "English policy body",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
+      "tables": [
+        {
+          "description": "Policy editor",
+          "columns": [
+            "Policy Name",
+            "English"
+          ]
+        }
+      ],
       "filters": [],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
       "pagination": "UNKNOWN",
       "statuses": [],
-      "buttons": [],
+      "buttons": [
+        "Create New Policy",
+        "Save and Publish (not activated)"
+      ],
       "menus": [],
       "modals": [],
       "notifications": [],
@@ -9012,29 +9508,40 @@
       "dependencies": [],
       "likelyEntities": [],
       "userRoles": "Current account OBSERVED; other roles UNKNOWN",
-      "observedBusinessRules": [],
+      "observedBusinessRules": [
+        "UI states policies appear in Access Rules policy dropdown and HTML can format the policy."
+      ],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Policy route opened; no edit, save, publish or alternate-role path tested.",
+      "partialReason": "Editable fields and creation control observed; no text entered or publication submitted. Validation, published outcome and other roles untested.",
       "unknowns": [],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Policy rows",
       "tabs": [],
       "cards": [],
-      "loadingState": "UNKNOWN",
-      "populatedState": "UNKNOWN",
+      "loadingState": "OBSERVED Loading... remains beneath populated grid",
+      "populatedState": "OBSERVED grid with labels and current English values; bodies omitted",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "disabledState": "UNKNOWN",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
+        "U-003",
+        "U-008"
+      ],
+      "taskId": "DISC-002",
+      "lastObserved": "2026-09-27",
+      "templateRowLabels": [
+        "Default Booking Policy"
+      ],
+      "childScreenIds": [
+        "SCR-130"
       ]
     },
     {
       "id": "SCR-120",
-      "name": "Payment Policies",
+      "name": "Cancellation Policies",
       "route": "/manager2/oceansatarthurs/settings/policy_settings/payment_policies",
       "parentNavigation": "Settings > Policies",
       "domainId": "DOM-08",
@@ -9047,14 +9554,38 @@
       "primaryActions": [],
       "secondaryActions": [],
       "forms": [],
-      "fields": [],
-      "tables": [],
+      "fields": [
+        {
+          "name": "Policy Name",
+          "type": "text",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "English policy body",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
+      "tables": [
+        {
+          "description": "Policy editor",
+          "columns": [
+            "Policy Name",
+            "English"
+          ]
+        }
+      ],
       "filters": [],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
       "pagination": "UNKNOWN",
       "statuses": [],
-      "buttons": [],
+      "buttons": [
+        "Create New Policy",
+        "Save and Publish (not activated)"
+      ],
       "menus": [],
       "modals": [],
       "notifications": [],
@@ -9063,25 +9594,34 @@
       "dependencies": [],
       "likelyEntities": [],
       "userRoles": "Current account OBSERVED; other roles UNKNOWN",
-      "observedBusinessRules": [],
+      "observedBusinessRules": [
+        "UI states policies appear in Access Rules policy dropdown and HTML can format the policy."
+      ],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Policy route opened; no edit, save, publish or alternate-role path tested.",
+      "partialReason": "Editable fields and creation control observed; no text entered or publication submitted. Validation, published outcome and other roles untested.",
       "unknowns": [],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Policy rows",
       "tabs": [],
       "cards": [],
-      "loadingState": "UNKNOWN",
-      "populatedState": "UNKNOWN",
+      "loadingState": "OBSERVED Loading... remains beneath populated grid",
+      "populatedState": "OBSERVED grid with labels and current English values; bodies omitted",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "disabledState": "UNKNOWN",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
-      ]
+        "U-003",
+        "U-008"
+      ],
+      "taskId": "DISC-002",
+      "lastObserved": "2026-09-27",
+      "templateRowLabels": [
+        "Default Cancellation Policy"
+      ],
+      "routeLabelNote": "OBSERVED heading Cancellation Policies at payment_policies route; route retained."
     },
     {
       "id": "SCR-121",
@@ -9098,14 +9638,77 @@
       "primaryActions": [],
       "secondaryActions": [],
       "forms": [],
-      "fields": [],
+      "fields": [
+        {
+          "name": "Email Marketing Policy: Venue",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Email Marketing Policy: Group",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Custom Checkout Policy",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Agree to Waitlist Policy",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Text Marketing Policy: Venue",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Group Booking Policy label",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Group Booking Policy body",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Tailored Communication Marketing Opt-In Label",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Tailored Communication Marketing Policy Header",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Tailored Communication Marketing Policy Body",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
       "tables": [],
       "filters": [],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
       "pagination": "UNKNOWN",
       "statuses": [],
-      "buttons": [],
+      "buttons": [
+        "Save and Publish (not activated)"
+      ],
       "menus": [],
       "modals": [],
       "notifications": [],
@@ -9117,21 +9720,36 @@
       "observedBusinessRules": [],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Policy route opened; no edit, save, publish or alternate-role path tested.",
+      "partialReason": "Policy text fields observed; no edits or publication. Validation and published outcomes require isolated test data; alternate roles untested.",
       "unknowns": [],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Policy rows",
       "tabs": [],
       "cards": [],
-      "loadingState": "UNKNOWN",
-      "populatedState": "UNKNOWN",
+      "loadingState": "OBSERVED Loading... remains beneath populated grid",
+      "populatedState": "OBSERVED grid with labels and current English values; bodies omitted",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "disabledState": "UNKNOWN",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
-        "U-003"
+        "U-003",
+        "U-008"
+      ],
+      "taskId": "DISC-002",
+      "lastObserved": "2026-09-27",
+      "templateRowLabels": [
+        "Email Marketing Policy: Venue",
+        "Email Marketing Policy: Group",
+        "Custom Checkout Policy",
+        "Agree to Waitlist Policy",
+        "Text Marketing Policy: Venue",
+        "Group Booking Policy label",
+        "Group Booking Policy body",
+        "Tailored Communication Marketing Opt-In Label",
+        "Tailored Communication Marketing Policy Header",
+        "Tailored Communication Marketing Policy Body"
       ]
     },
     {
@@ -9161,7 +9779,8 @@
           "name": "Active",
           "type": "checkbox",
           "required": "UNKNOWN",
-          "validation": "UNKNOWN"
+          "validation": "UNKNOWN",
+          "checked": true
         }
       ],
       "tables": [],
@@ -9182,10 +9801,77 @@
       "observedBusinessRules": [],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Opened page; safe read-only controls seen; further states, validation and roles unknown.",
+      "partialReason": "Form inspected without typing or saving; required-name validation, creation result, API integration and alternate roles UNKNOWN.",
       "unknowns": [],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Name textbox",
+      "tabs": [],
+      "cards": [],
+      "loadingState": "UNKNOWN",
+      "populatedState": "OBSERVED blank Name and checked Active",
+      "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "disabledState": "UNKNOWN",
+      "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
+      "unknownBehaviorIds": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
+      "taskId": "DISC-002",
+      "lastObserved": "2026-09-27",
+      "templateRowLabels": []
+    },
+    {
+      "id": "SCR-123",
+      "name": "Name Floorplan Layout",
+      "route": "/app/availability/oceansatarthurs/floorplan-layouts/editor/create",
+      "parentNavigation": "Floorplan Layout Editor",
+      "domainId": "DOM-08",
+      "purpose": "Name Floorplan Layout",
+      "visibleComponents": [
+        "Layout name textbox",
+        "Cancel",
+        "Done"
+      ],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Layout name",
+          "type": "text",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN",
+          "placeholder": "Enter Layout name"
+        }
+      ],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [
+        "Cancel",
+        "Done"
+      ],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [
+        "SCR-096"
+      ],
+      "likelyEntities": [],
+      "userRoles": "Current account OBSERVED; other roles UNKNOWN",
+      "observedBusinessRules": [],
+      "evidenceStatus": "OBSERVED",
+      "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
+      "partialReason": "Name validation and creation require submitting a new layout; not attempted.",
+      "unknowns": [],
+      "evidence": "Authorized visible UI observation; no private values or protected message bodies retained.",
+      "layout": "OBSERVED: nested UI surface",
       "tabs": [],
       "cards": [],
       "loadingState": "UNKNOWN",
@@ -9197,7 +9883,980 @@
         "U-001",
         "U-002",
         "U-003"
-      ]
+      ],
+      "parentScreenId": "SCR-096",
+      "surfaceKey": "Name Floorplan Layout",
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-002",
+      "cancelBackBehavior": "OBSERVED Cancel returns to SCR-077 layout list."
+    },
+    {
+      "id": "SCR-124",
+      "name": "Editor Settings",
+      "route": "/app/availability/oceansatarthurs/floorplan-layouts/editor/:layoutId",
+      "parentNavigation": "Floorplan Layout Editor",
+      "domainId": "DOM-08",
+      "purpose": "Editor Settings",
+      "visibleComponents": [
+        "Five checkboxes",
+        "Close",
+        "Cancel",
+        "Done"
+      ],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Show Gridlines",
+          "type": "checkbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN",
+          "checked": true
+        },
+        {
+          "name": "Show Seating Area Labels",
+          "type": "checkbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN",
+          "checked": true
+        },
+        {
+          "name": "Show chairs around Tables",
+          "type": "checkbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN",
+          "checked": true
+        },
+        {
+          "name": "Lock Tables to their position on the Floorplan",
+          "type": "checkbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN",
+          "checked": false
+        },
+        {
+          "name": "Allow Objects to snap to the Grid",
+          "type": "checkbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN",
+          "checked": true
+        }
+      ],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [
+        "Close",
+        "Cancel",
+        "Done"
+      ],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [
+        "SCR-096"
+      ],
+      "likelyEntities": [],
+      "userRoles": "Current account OBSERVED; other roles UNKNOWN",
+      "observedBusinessRules": [],
+      "evidenceStatus": "OBSERVED",
+      "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
+      "partialReason": "Settings were read without toggling or applying; persistence and other-role behavior untested.",
+      "unknowns": [],
+      "evidence": "Authorized visible UI observation; no private values or protected message bodies retained.",
+      "layout": "OBSERVED: nested UI surface",
+      "tabs": [],
+      "cards": [],
+      "loadingState": "UNKNOWN",
+      "populatedState": "UNKNOWN",
+      "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "disabledState": "UNKNOWN",
+      "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
+      "unknownBehaviorIds": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
+      "childScreenIds": [
+        "SCR-123"
+      ],
+      "parentScreenId": "SCR-096",
+      "surfaceKey": "Editor Settings",
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-002",
+      "cancelBackBehavior": "OBSERVED Cancel closes dialog."
+    },
+    {
+      "id": "SCR-125",
+      "name": "Keyboard Shortcuts",
+      "route": "/app/availability/oceansatarthurs/floorplan-layouts/editor/:layoutId",
+      "parentNavigation": "Floorplan Layout Editor",
+      "domainId": "DOM-08",
+      "purpose": "Keyboard Shortcuts",
+      "visibleComponents": [
+        "General shortcuts",
+        "Table shortcuts",
+        "Structural shortcuts",
+        "Close"
+      ],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [
+        "Close"
+      ],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [
+        "SCR-096"
+      ],
+      "likelyEntities": [],
+      "userRoles": "Current account OBSERVED; other roles UNKNOWN",
+      "observedBusinessRules": [
+        "Displayed shortcuts include undo/redo, selection, nudging, rotation, duplication; T opens table menu, S opens structural menu; backspace deactivates a table or deletes a structure."
+      ],
+      "evidenceStatus": "OBSERVED",
+      "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
+      "partialReason": "Mutation shortcuts not executed; alternate platform and role behavior unknown.",
+      "unknowns": [],
+      "evidence": "Authorized visible UI observation; no private values or protected message bodies retained.",
+      "layout": "OBSERVED: nested UI surface",
+      "tabs": [],
+      "cards": [],
+      "loadingState": "UNKNOWN",
+      "populatedState": "UNKNOWN",
+      "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "disabledState": "UNKNOWN",
+      "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
+      "unknownBehaviorIds": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
+      "childScreenIds": [
+        "SCR-123",
+        "SCR-124"
+      ],
+      "parentScreenId": "SCR-096",
+      "surfaceKey": "Keyboard Shortcuts",
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-002",
+      "cancelBackBehavior": "OBSERVED Close returns to canvas."
+    },
+    {
+      "id": "SCR-126",
+      "name": "Add Table preset panel",
+      "route": "/app/availability/oceansatarthurs/floorplan-layouts/editor/:layoutId",
+      "parentNavigation": "Floorplan Layout Editor",
+      "domainId": "DOM-08",
+      "purpose": "Add Table preset panel",
+      "visibleComponents": [
+        "Ten unlabeled preset buttons",
+        "Back to tables"
+      ],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [
+        "Back to tables"
+      ],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [
+        "SCR-096"
+      ],
+      "likelyEntities": [],
+      "userRoles": "Current account OBSERVED; other roles UNKNOWN",
+      "observedBusinessRules": [],
+      "evidenceStatus": "OBSERVED",
+      "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
+      "partialReason": "Preset selection would add a table to the draft canvas; not selected. Unlabeled shapes need visual inspection.",
+      "unknowns": [],
+      "evidence": "Authorized visible UI observation; no private values or protected message bodies retained.",
+      "layout": "OBSERVED: nested UI surface",
+      "tabs": [],
+      "cards": [],
+      "loadingState": "UNKNOWN",
+      "populatedState": "UNKNOWN",
+      "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "disabledState": "OBSERVED Add Structural Element disabled while Add Table panel is open.",
+      "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
+      "unknownBehaviorIds": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
+      "childScreenIds": [
+        "SCR-123",
+        "SCR-124",
+        "SCR-125"
+      ],
+      "parentScreenId": "SCR-096",
+      "surfaceKey": "Add Table preset panel",
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-002",
+      "cancelBackBehavior": "OBSERVED Back to tables restores list."
+    },
+    {
+      "id": "SCR-127",
+      "name": "Add Structural Element panel",
+      "route": "/app/availability/oceansatarthurs/floorplan-layouts/editor/:layoutId",
+      "parentNavigation": "Floorplan Layout Editor",
+      "domainId": "DOM-08",
+      "purpose": "Add Structural Element panel",
+      "visibleComponents": [
+        "Labels",
+        "Shapes",
+        "Furniture",
+        "Back to tables"
+      ],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [
+        "Text",
+        "Exit label",
+        "Headphones label",
+        "Arrow label",
+        "Three unlabeled shapes",
+        "Bar, booth, chair, sofa, stairs and piano presets",
+        "Back to tables"
+      ],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [
+        "SCR-096"
+      ],
+      "likelyEntities": [],
+      "userRoles": "Current account OBSERVED; other roles UNKNOWN",
+      "observedBusinessRules": [],
+      "evidenceStatus": "OBSERVED",
+      "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
+      "partialReason": "No element selected because that changes the draft canvas; shape details and resulting edit controls unobserved.",
+      "unknowns": [],
+      "evidence": "Authorized visible UI observation; no private values or protected message bodies retained.",
+      "layout": "OBSERVED: nested UI surface",
+      "tabs": [],
+      "cards": [],
+      "loadingState": "UNKNOWN",
+      "populatedState": "UNKNOWN",
+      "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "disabledState": "UNKNOWN",
+      "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
+      "unknownBehaviorIds": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
+      "childScreenIds": [
+        "SCR-123",
+        "SCR-124",
+        "SCR-125",
+        "SCR-126"
+      ],
+      "parentScreenId": "SCR-096",
+      "surfaceKey": "Add Structural Element panel",
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-002",
+      "cancelBackBehavior": "OBSERVED Back to tables restores list."
+    },
+    {
+      "id": "SCR-128",
+      "name": "Edit Table Combination",
+      "route": "/app/availability/oceansatarthurs/floorplan-layouts/editor/:layoutId",
+      "parentNavigation": "Floorplan Layout Editor",
+      "domainId": "DOM-08",
+      "purpose": "Edit Table Combination",
+      "visibleComponents": [
+        "Tables textbox",
+        "Cover Min spinbutton",
+        "Cover Max spinbutton",
+        "Cancel",
+        "Save"
+      ],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Tables",
+          "type": "text",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Cover Min",
+          "type": "number",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Cover Max",
+          "type": "number",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [
+        "Cancel",
+        "Save"
+      ],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [
+        "SCR-096"
+      ],
+      "likelyEntities": [],
+      "userRoles": "Current account OBSERVED; other roles UNKNOWN",
+      "observedBusinessRules": [],
+      "evidenceStatus": "OBSERVED",
+      "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
+      "partialReason": "No values changed or saved; cover limits, invalid ranges, persistence and other roles unknown.",
+      "unknowns": [],
+      "evidence": "Authorized visible UI observation; no private values or protected message bodies retained.",
+      "layout": "OBSERVED: nested UI surface",
+      "tabs": [],
+      "cards": [],
+      "loadingState": "UNKNOWN",
+      "populatedState": "OBSERVED existing table combination and numeric cover range.",
+      "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "disabledState": "UNKNOWN",
+      "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
+      "unknownBehaviorIds": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
+      "childScreenIds": [
+        "SCR-123",
+        "SCR-124",
+        "SCR-125",
+        "SCR-126",
+        "SCR-127"
+      ],
+      "parentScreenId": "SCR-096",
+      "surfaceKey": "Edit Table Combination",
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-002",
+      "cancelBackBehavior": "OBSERVED Cancel returns to combinations list."
+    },
+    {
+      "id": "SCR-129",
+      "name": "Add Room dialog",
+      "route": "/app/availability/oceansatarthurs/floorplan-layouts/editor/:layoutId",
+      "parentNavigation": "Floorplan Layout Editor",
+      "domainId": "DOM-08",
+      "purpose": "Add Room dialog",
+      "visibleComponents": [
+        "Room Abbreviation textbox",
+        "Room Name textbox",
+        "Close",
+        "Cancel",
+        "Done"
+      ],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Room Abbreviation",
+          "type": "text",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN",
+          "placeholder": "MAIN"
+        },
+        {
+          "name": "Room Name",
+          "type": "text",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN",
+          "placeholder": "Main"
+        }
+      ],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [
+        "Close",
+        "Cancel",
+        "Done"
+      ],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [
+        "OBSERVED both textboxes initially blank"
+      ],
+      "dependencies": [
+        "SCR-096"
+      ],
+      "likelyEntities": [],
+      "userRoles": "Current account OBSERVED; other roles UNKNOWN",
+      "observedBusinessRules": [],
+      "evidenceStatus": "OBSERVED",
+      "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
+      "partialReason": "Creation and required-field validation not submitted; other-role behavior unknown.",
+      "unknowns": [],
+      "evidence": "Authorized visible UI observation; no private values or protected message bodies retained.",
+      "layout": "OBSERVED: nested UI surface",
+      "tabs": [],
+      "cards": [],
+      "loadingState": "UNKNOWN",
+      "populatedState": "UNKNOWN",
+      "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "disabledState": "UNKNOWN",
+      "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
+      "unknownBehaviorIds": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
+      "childScreenIds": [
+        "SCR-123",
+        "SCR-124",
+        "SCR-125",
+        "SCR-126",
+        "SCR-127",
+        "SCR-128"
+      ],
+      "parentScreenId": "SCR-096",
+      "surfaceKey": "Add Room dialog",
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-002",
+      "cancelBackBehavior": "OBSERVED Cancel closes dialog."
+    },
+    {
+      "id": "SCR-130",
+      "name": "New Booking Policy row",
+      "route": "/manager2/oceansatarthurs/settings/policy_settings/booking_policies",
+      "parentNavigation": "Booking Policies",
+      "domainId": "DOM-08",
+      "purpose": "New Booking Policy row",
+      "visibleComponents": [
+        "Blank policy name textbox",
+        "Blank policy body textbox",
+        "Save and Publish on parent"
+      ],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Policy name",
+          "type": "text",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN",
+          "placeholder": "Enter policy name"
+        },
+        {
+          "name": "Policy body",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN",
+          "placeholder": "Enter your policy"
+        }
+      ],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "OBSERVED Combinations offers Sort by Table and Sort by Party Size; Party Size selected without saving.",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [
+        "OBSERVED blank inline row"
+      ],
+      "dependencies": [
+        "SCR-119"
+      ],
+      "likelyEntities": [],
+      "userRoles": "Current account OBSERVED; other roles UNKNOWN",
+      "observedBusinessRules": [],
+      "evidenceStatus": "OBSERVED",
+      "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
+      "partialReason": "Creation control adds an unsaved row; no values entered or published. Validation and persistence require safe test data.",
+      "unknowns": [],
+      "evidence": "Authorized visible UI observation; no private values or protected message bodies retained.",
+      "layout": "OBSERVED: nested UI surface",
+      "tabs": [],
+      "cards": [],
+      "loadingState": "UNKNOWN",
+      "populatedState": "UNKNOWN",
+      "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "disabledState": "UNKNOWN",
+      "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
+      "unknownBehaviorIds": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
+      "childScreenIds": [
+        "SCR-123",
+        "SCR-124",
+        "SCR-125",
+        "SCR-126",
+        "SCR-127",
+        "SCR-128",
+        "SCR-129"
+      ],
+      "cancelBackBehavior": "OBSERVED reload removes unsaved blank row; original one-row grid restored.",
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-002",
+      "parentScreenId": "SCR-119",
+      "surfaceKey": "New Booking Policy row"
+    },
+    {
+      "id": "SCR-131",
+      "name": "Revenue opportunity explanation",
+      "route": "/manager2/oceansatarthurs/reporting/revenue",
+      "parentNavigation": "Revenue",
+      "domainId": "DOM-07",
+      "purpose": "Revenue opportunity explanation",
+      "visibleComponents": [
+        "Explanation dialog",
+        "Learn More link"
+      ],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "OBSERVED Combinations offers Sort by Table and Sort by Party Size; Party Size selected without saving.",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [
+        "SCR-028"
+      ],
+      "likelyEntities": [],
+      "userRoles": "Current account OBSERVED; other roles UNKNOWN",
+      "observedBusinessRules": [
+        "Displayed explanation defines feature opportunity from regional average revenue, then sums opportunities. Revenue uses POS spend and online prepayments; absent POS data uses estimated spend per cover."
+      ],
+      "evidenceStatus": "OBSERVED",
+      "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
+      "partialReason": "Explanation observed; independent calculation accuracy and other-role display untested.",
+      "unknowns": [],
+      "evidence": "Authorized visible UI observation; no private values or protected message bodies retained.",
+      "layout": "OBSERVED: nested UI surface",
+      "tabs": [],
+      "cards": [],
+      "loadingState": "UNKNOWN",
+      "populatedState": "UNKNOWN",
+      "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "disabledState": "UNKNOWN",
+      "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
+      "unknownBehaviorIds": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
+      "childScreenIds": [
+        "SCR-123",
+        "SCR-124",
+        "SCR-125",
+        "SCR-126",
+        "SCR-127",
+        "SCR-128",
+        "SCR-129"
+      ],
+      "cancelBackBehavior": "OBSERVED Escape dismissed explanation.",
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-002",
+      "parentScreenId": "SCR-028",
+      "surfaceKey": "Revenue opportunity explanation"
+    },
+    {
+      "id": "SCR-132",
+      "name": "Covers Calendar Download dialog",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/358",
+      "parentNavigation": "Covers Calendar",
+      "domainId": "DOM-07",
+      "purpose": "Covers Calendar Download dialog",
+      "visibleComponents": [
+        "Format combobox",
+        "Paper Size combobox",
+        "Expand tables checkbox",
+        "Single-column checkbox",
+        "Download",
+        "Cancel",
+        "Open in Browser"
+      ],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Format",
+          "type": "combobox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN",
+          "options": [
+            "PDF",
+            "CSV"
+          ]
+        },
+        {
+          "name": "Paper Size",
+          "type": "combobox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN",
+          "observedValue": "Fit Page To Dashboard"
+        },
+        {
+          "name": "Expand tables to show all rows",
+          "type": "checkbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Arrange dashboard tiles in a single column",
+          "type": "checkbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
+      "tables": [],
+      "filters": [],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "OBSERVED Combinations offers Sort by Table and Sort by Party Size; Party Size selected without saving.",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [
+        "SCR-029"
+      ],
+      "likelyEntities": [],
+      "userRoles": "Current account OBSERVED; other roles UNKNOWN",
+      "observedBusinessRules": [
+        "OBSERVED CSV selection hides PDF paper/layout controls and Open in Browser.",
+        "UI warning says large tables may render as text or limit rows."
+      ],
+      "evidenceStatus": "OBSERVED",
+      "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
+      "partialReason": "No export generated; PDF paper-size choices and rendered output remain unverified.",
+      "unknowns": [],
+      "evidence": "Authorized visible UI observation; no private values or protected message bodies retained.",
+      "layout": "OBSERVED: nested UI surface",
+      "tabs": [],
+      "cards": [],
+      "loadingState": "UNKNOWN",
+      "populatedState": "UNKNOWN",
+      "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "disabledState": "UNKNOWN",
+      "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
+      "unknownBehaviorIds": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
+      "childScreenIds": [
+        "SCR-123",
+        "SCR-124",
+        "SCR-125",
+        "SCR-126",
+        "SCR-127",
+        "SCR-128",
+        "SCR-129"
+      ],
+      "cancelBackBehavior": "OBSERVED Cancel dismisses without downloading.",
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-002",
+      "parentScreenId": "SCR-029",
+      "surfaceKey": "Covers Calendar Download dialog"
+    },
+    {
+      "id": "SCR-133",
+      "name": "Covers Calendar Scheduled Plan Editor",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/358",
+      "parentNavigation": "Covers Calendar",
+      "domainId": "DOM-07",
+      "purpose": "Covers Calendar Scheduled Plan Editor",
+      "visibleComponents": [
+        "Settings tab",
+        "Filters tab",
+        "Advanced options tab",
+        "Save",
+        "Cancel"
+      ],
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Schedule Name",
+          "type": "text",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Recurrence",
+          "type": "combobox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN",
+          "options": [
+            "Send now",
+            "Monthly",
+            "Weekly",
+            "Daily",
+            "Hourly",
+            "Minutes",
+            "Specific months",
+            "Specific days",
+            "Datagroup update"
+          ]
+        },
+        {
+          "name": "Time",
+          "type": "combobox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN",
+          "observedValue": "06:00"
+        },
+        {
+          "name": "Destination",
+          "type": "combobox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN",
+          "options": [
+            "Email",
+            "Amazon S3",
+            "SFTP"
+          ]
+        },
+        {
+          "name": "Email addresses",
+          "type": "multi-value textbox",
+          "required": "OBSERVED required",
+          "validation": "OBSERVED at least one item required"
+        },
+        {
+          "name": "Format",
+          "type": "combobox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN",
+          "observedValue": "PDF"
+        },
+        {
+          "name": "Custom Message",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "OBSERVED 0/1500 counter"
+        },
+        {
+          "name": "Include links",
+          "type": "checkbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN",
+          "checked": true
+        },
+        {
+          "name": "Expand tables to show all rows",
+          "type": "checkbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Arrange dashboard tiles in a single column",
+          "type": "checkbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Paper size",
+          "type": "combobox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Delivery timezone",
+          "type": "combobox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN",
+          "observedValue": "America - New York"
+        },
+        {
+          "name": "Bucket",
+          "type": "text",
+          "required": "OBSERVED required",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Optional Path",
+          "type": "text",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Access Key",
+          "type": "text",
+          "required": "OBSERVED required",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Secret Key",
+          "type": "textbox",
+          "required": "OBSERVED required",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Region",
+          "type": "combobox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN",
+          "observedValue": "US East (N. Virginia)"
+        },
+        {
+          "name": "Address",
+          "type": "text",
+          "required": "OBSERVED required",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Username",
+          "type": "text",
+          "required": "OBSERVED required",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Password",
+          "type": "textbox",
+          "required": "OBSERVED required",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Preferred key exchange algorithm",
+          "type": "combobox",
+          "required": "OBSERVED required",
+          "validation": "UNKNOWN",
+          "observedValue": "Default"
+        }
+      ],
+      "tables": [],
+      "filters": [
+        "Shift Name",
+        "Reservation Date",
+        "Reporting Period Group Name"
+      ],
+      "searchBehavior": "UNKNOWN",
+      "sorting": "OBSERVED Combinations offers Sort by Table and Sort by Party Size; Party Size selected without saving.",
+      "pagination": "UNKNOWN",
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [
+        "OBSERVED All (0), External (0) recipient categories and blank required destination fields"
+      ],
+      "dependencies": [
+        "SCR-029"
+      ],
+      "likelyEntities": [],
+      "userRoles": "Current account OBSERVED; other roles UNKNOWN",
+      "observedBusinessRules": [],
+      "evidenceStatus": "OBSERVED",
+      "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
+      "partialReason": "No recipients/credentials entered and no schedule saved or sent. Recurrence-specific branches, format-specific settings, delivery and integration outcomes remain UNKNOWN.",
+      "unknowns": [],
+      "evidence": "Authorized visible UI observation; no private values or protected message bodies retained.",
+      "layout": "OBSERVED: nested UI surface",
+      "tabs": [
+        "Settings",
+        "Filters",
+        "Advanced options"
+      ],
+      "cards": [],
+      "loadingState": "OBSERVED Loading Scheduled Plans before editor appeared.",
+      "populatedState": "UNKNOWN",
+      "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "disabledState": "OBSERVED Save disabled with empty required fields for Email, Amazon S3 and SFTP.",
+      "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
+      "unknownBehaviorIds": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
+      "childScreenIds": [
+        "SCR-123",
+        "SCR-124",
+        "SCR-125",
+        "SCR-126",
+        "SCR-127",
+        "SCR-128",
+        "SCR-129"
+      ],
+      "cancelBackBehavior": "OBSERVED Cancel dismisses editor; no schedule created.",
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-002",
+      "parentScreenId": "SCR-029",
+      "surfaceKey": "Covers Calendar Scheduled Plan Editor"
     }
   ],
   "workflows": [
@@ -9513,15 +11172,22 @@
       "status": "PARTIALLY_INSPECTED_WITH_REASON",
       "steps": [
         "SCR-077",
-        "SCR-096"
+        "SCR-096",
+        "SCR-123",
+        "SCR-124",
+        "SCR-125",
+        "SCR-126",
+        "SCR-127",
+        "SCR-128",
+        "SCR-129"
       ],
       "entryPoint": "SCR-077",
-      "branches": "Create or edit; Tables or Combinations",
+      "branches": "OBSERVED naming, Settings, Tables/presets, structures, Combinations/Edit, Add Room; write outcomes UNKNOWN",
       "statuses": "OBSERVED clean canvas",
-      "validation": "UNKNOWN",
+      "validation": "UNKNOWN_REQUIRES_SAFE_TEST_DATA; no blank or invalid form submitted",
       "successState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "failureState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
-      "cancelBackBehavior": "Exit Editor; discard disabled on unchanged canvas",
+      "cancelBackBehavior": "OBSERVED naming Cancel returns to list; panel Back restores table list; dialog Cancel/Close returns to editor; Exit Editor returns to layouts.",
       "crossModuleDependencies": [
         "SCR-080",
         "SCR-081"
@@ -9554,6 +11220,81 @@
         "U-003"
       ],
       "result": "Dashboard rendered; drill/export untested"
+    },
+    {
+      "id": "FLOW-015",
+      "name": "Calendar export configuration",
+      "status": "PARTIALLY_INSPECTED_WITH_REASON",
+      "entryPoint": "SCR-029",
+      "steps": [
+        "SCR-029",
+        "SCR-132"
+      ],
+      "branches": "PDF or CSV; PDF paper/layout options",
+      "statuses": "OBSERVED configuration only",
+      "validation": "UNKNOWN: export output not generated",
+      "successState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "failureState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "cancelBackBehavior": "OBSERVED Cancel closes without download",
+      "crossModuleDependencies": [
+        "SCR-029"
+      ],
+      "unknownBehaviorIds": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
+      "result": "No final action submitted"
+    },
+    {
+      "id": "FLOW-016",
+      "name": "Calendar delivery configuration",
+      "status": "PARTIALLY_INSPECTED_WITH_REASON",
+      "entryPoint": "SCR-029",
+      "steps": [
+        "SCR-029",
+        "SCR-133"
+      ],
+      "branches": "Email, S3, SFTP; Settings, Filters, Advanced options",
+      "statuses": "OBSERVED configuration only",
+      "validation": "OBSERVED required destination fields and disabled Save",
+      "successState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "failureState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "cancelBackBehavior": "OBSERVED Cancel closes without saving",
+      "crossModuleDependencies": [
+        "SCR-029"
+      ],
+      "unknownBehaviorIds": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
+      "result": "No final action submitted"
+    },
+    {
+      "id": "FLOW-017",
+      "name": "Booking policy draft preparation",
+      "status": "PARTIALLY_INSPECTED_WITH_REASON",
+      "entryPoint": "SCR-119",
+      "steps": [
+        "SCR-119",
+        "SCR-130"
+      ],
+      "branches": "Existing fields or blank new inline row",
+      "statuses": "OBSERVED configuration only",
+      "validation": "UNKNOWN: no values or publish submitted",
+      "successState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "failureState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "cancelBackBehavior": "OBSERVED Reload discards empty unsaved row",
+      "crossModuleDependencies": [
+        "SCR-119"
+      ],
+      "unknownBehaviorIds": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
+      "result": "No final action submitted"
     }
   ],
   "unresolvedQuestions": [
@@ -9628,6 +11369,22 @@
       "reason": "File absent",
       "risk": "Discovery gap",
       "futureVerificationMethod": "Use authorized test account or repository history"
+    },
+    {
+      "id": "Q-010",
+      "status": "UNKNOWN",
+      "question": "Do residual Loading indicators hide guest-language controls?",
+      "reason": "Populated grid and loading label coexist.",
+      "risk": "Incomplete controls inventory",
+      "futureVerificationMethod": "Safe revisit and visual inspection"
+    },
+    {
+      "id": "Q-011",
+      "status": "UNKNOWN",
+      "question": "How is seating-area assignment enforced in floorplan?",
+      "reason": "Guidance and active unassigned group coexist.",
+      "risk": "Incorrect business rule",
+      "futureVerificationMethod": "Isolated test venue validation"
     }
   ],
   "modules": [
@@ -9754,6 +11511,27 @@
       "reason": "Protected text avoided; no live publish",
       "risk": "Workflow unknown",
       "futureVerificationMethod": "Use isolated test venue and locale"
+    },
+    {
+      "id": "U-007",
+      "description": "Remaining safe nested control coverage",
+      "reason": "DISC-002 pass has not inspected every filter, tile, menu and contextual editor; NAV_ONLY=0 does not mean coverage complete.",
+      "risk": "Missing product states or screens",
+      "futureVerificationMethod": "Continue per-screen read-only inspection in stable ID order; record new surfaces."
+    },
+    {
+      "id": "U-008",
+      "description": "Guest-language residual loading indicators",
+      "reason": "Populated grids still display Loading...; cause not observable from UI.",
+      "risk": "Additional editor controls may be missing",
+      "futureVerificationMethod": "Revisit settled screen and inspect screenshot/visible controls without submitting changes."
+    },
+    {
+      "id": "U-009",
+      "description": "Floorplan seating-area guidance enforcement",
+      "reason": "Guidance requires area for active table while active No Seating Area group was visible.",
+      "risk": "Incorrect activation rule",
+      "futureVerificationMethod": "Test activation and validation only in isolated venue with disposable table."
     }
   ]
 }

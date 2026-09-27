@@ -20,14 +20,21 @@
       "taskId": "DISC-002",
       "status": "VERIFIED",
       "method": "Open formerly NAV_ONLY routes, classify evidence",
-      "result": "122 screens; 121 partial, 1 package inaccessible, 0 NAV_ONLY"
+      "result": "133 screens: 0 full, 132 partial, 1 package inaccessible, 0 NAV_ONLY. Prior route-opening evidence retained; nested coverage NOT complete."
     },
     {
       "id": "CHK-004",
       "taskId": "DISC-002",
       "status": "IN_PROGRESS",
       "method": "Safe nested workflow and state coverage",
-      "result": "Incomplete; live writes and alternate roles untested"
+      "result": "INCOMPLETE: safe Reporting filter/tile/drill branches and other Settings nested controls remain; write outcomes and other roles untested."
+    },
+    {
+      "id": "CHK-005",
+      "taskId": "DISC-002",
+      "status": "VERIFIED",
+      "method": "JSON parse; unique IDs in each registry collection; inventory/registry ID-set parity; all registry routes present in inventory; parent and workflow references resolve",
+      "result": "PASS: 133 unique screen IDs; matching inventory ID set; all routes and parent/workflow references resolve. Same-route nested surfaces intentionally allowed. This is document validation, not completed discovery."
     }
   ],
   "unresolvedQuestions": [
@@ -39,6 +46,23 @@
     "Q-006",
     "Q-007",
     "Q-008",
-    "Q-009"
+    "Q-009",
+    "Q-010",
+    "Q-011"
+  ],
+  "liveChanges": "No production save/publish/delete/send/pay/invite submitted. Blank unsaved policy row removed by reload; original single row restored.",
+  "discoveryCounts": {
+    "total": 133,
+    "full": 0,
+    "partial": 132,
+    "inaccessible": 1,
+    "navOnly": 0,
+    "workflows": 17,
+    "questions": 11
+  },
+  "validationNotes": [
+    "Initial document-generation check failed on non-zero-padded SCR-097 ID lookup; corrected padding and reran all document checks successfully.",
+    "No application tests run: discovery documentation only.",
+    "No claim of complete route coverage beyond prior opened-route evidence; nested route/surface completeness remains IN_PROGRESS."
   ]
 }

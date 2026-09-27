@@ -33,8 +33,12 @@
         "DISC-001"
       ],
       "acceptanceCriteria": [
-        "Every listed route opened or marked inaccessible",
-        "Filters, fields, states, actions and evidence recorded"
+        "Every assigned route opened or inaccessible with reason",
+        "Every known nested surface inspected and assigned stable ID",
+        "Inventory and registry agree; no NAV_ONLY",
+        "Unknown behavior identified with reasons",
+        "No production data changed",
+        "JSON, unique-ID and route cross-reference validation passes"
       ],
       "verificationCommands": [
         "Parse project-map JSON",
@@ -42,7 +46,9 @@
       ],
       "regressionChecks": [
         "No live records changed"
-      ]
+      ],
+      "remainingWork": "SCR-029 Covers Calendar: open Shift Name, Reservation Date and Reporting Period Group Name filter popovers, then tile actions and safe calendar drilldowns; inspect without scheduling or exporting. Continue remaining DISC-002 Reporting/Settings screens in stable ID order. SCR-028 remaining feature/date/sort branches also remain open.",
+      "discoveryGate": "Not passed: safe nested coverage remains incomplete."
     },
     {
       "id": "DISC-003",
@@ -71,6 +77,8 @@
     "Q-006",
     "Q-007",
     "Q-008",
-    "Q-009"
+    "Q-009",
+    "Q-010",
+    "Q-011"
   ]
 }
