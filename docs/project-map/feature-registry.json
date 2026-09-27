@@ -3038,7 +3038,8 @@
         "explore features"
       ],
       "secondaryActions": [
-        "Expanded Automated Emails, Cancellation & No-Show Fees, Experiences, Upgrades and Other Prepayments"
+        "Expanded Automated Emails, Cancellation & No-Show Fees, Experiences, Upgrades and Other Prepayments",
+        "Expanded Multi-Venue Widgets and package-marked Email Marketing, Text Marketing, Ticketed Events and Event Management panels"
       ],
       "forms": [],
       "fields": [],
@@ -3053,7 +3054,7 @@
         "All time"
       ],
       "searchBehavior": "UNKNOWN",
-      "sorting": "UNKNOWN",
+      "sorting": "OBSERVED Covers, Regional Benchmark and Revenue headings toggle descending then ascending; visible row order changes, route query unchanged.",
       "pagination": "UNKNOWN",
       "statuses": [],
       "buttons": [],
@@ -3073,16 +3074,19 @@
         "Opportunity measured against regional benchmark; some cards require package update",
         "Automated Emails expansion shows campaign metrics, a revenue chart and Explore Report link.",
         "Other Prepayments expansion shows monthly revenue chart and accessible Month/Revenue/bg table.",
-        "Cancellation fees, Experiences and Upgrades expand to descriptive benchmark/help panels."
+        "Cancellation fees, Experiences and Upgrades expand to descriptive benchmark/help panels.",
+        "Multi-Venue Widgets expansion shows Top Venue Promoter, Reservations from Cross-Promotions, Explore Report to dashboard/299 and revenue chart.",
+        "Package-marked Email Marketing, Text Marketing, Ticketed Events and Event Management expand to About, Learn More, regional benchmark and Try link with Requires package update.",
+        "Date choices change visible headline and URL filter query; no backend query semantics inferred."
       ],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
       "unknowns": [
-        "UNKNOWN: remaining feature accordion details and date/sort branches",
-        "UNKNOWN: other-role behavior; package update badges observed for several features"
+        "UNKNOWN: opportunity calculation accuracy; no independent data validation",
+        "UNKNOWN: other-role and package upgrade outcomes"
       ],
       "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied",
-      "partialReason": "Five feature expansions and explanation inspected. Remaining safe date/sort and package-marked feature panels still need inspection; no demo requests or configuration changes submitted.",
+      "partialReason": "All named safe feature/date/sort branches inspected. Demo/upgrade destinations, export/write outcomes, calculations and other-role behavior remain untested.",
       "layout": "OBSERVED: Date filter",
       "tabs": [],
       "cards": [
@@ -3107,10 +3111,10 @@
       "lastObserved": "2026-09-27",
       "taskId": "DISC-002",
       "partialBoundary": {
-        "PARTIAL REASON": "Safe nested inspection remains open because the authenticated session redirected to login on 2026-09-27; later write/role branches remain intentionally untested.",
-        "UNVERIFIED BEHAVIOR": "For SCR-029: three filter popovers, tile actions and safe drilldowns. For SCR-028: remaining feature/date/sort branches. For SCR-132/133: final export/delivery outcomes.",
-        "WHY IT CANNOT BE SAFELY VERIFIED": "The current browser is on MFA verification after session expiration; secure authentication submission failed. Export/delivery outcomes would disclose data or schedule messages; other roles unavailable.",
-        "FUTURE TEST METHOD": "After successful authorized authentication, inspect SCR-029 filters/tile/drill branches read-only, then SCR-028 branches; use isolated venue and authorized alternate accounts for unsafe/role outcomes."
+        "PARTIAL REASON": "Safe controls inspected; package-marked features and help links do not expose licensed outcomes to this account.",
+        "UNVERIFIED BEHAVIOR": "Demo requests, package upgrade, calculation accuracy and other-role behavior.",
+        "WHY IT CANNOT BE SAFELY VERIFIED": "Would involve external request, unavailable subscription or alternate role.",
+        "FUTURE TEST METHOD": "Use authorized test account/package and isolated reference fixtures; do not submit live demo requests."
       }
     },
     {
@@ -3130,7 +3134,10 @@
         "inspect day",
         "set filter"
       ],
-      "secondaryActions": [],
+      "secondaryActions": [
+        "Tile actions > Download data, View > Expanded, Clear cache & refresh",
+        "Read-only month navigation and cell tooltip"
+      ],
       "forms": [],
       "fields": [],
       "tables": [],
@@ -3140,7 +3147,7 @@
         "Reporting Period Group Name"
       ],
       "searchBehavior": "UNKNOWN",
-      "sorting": "UNKNOWN",
+      "sorting": "No sort control observed in calendar tile.",
       "pagination": "UNKNOWN",
       "statuses": [],
       "buttons": [],
@@ -3158,22 +3165,26 @@
       "likelyEntities": [],
       "userRoles": "Current signed-in user; other roles NEEDS TESTING",
       "observedBusinessRules": [
-        "Links to separate Covers Calendar by Day Part"
+        "Links to separate Covers Calendar by Day Part",
+        "Three filters display Shift Name is any value, Reservation Date last month for 3 months and Reporting Period Group Name is any value by default.",
+        "Calendar tile shows month grid with Sun-Sat columns, daily shift rows with label/icon, reservation and cover counts and up/down comparisons.",
+        "Clicking a populated day/shift exposed a comparison tooltip without route navigation; next/previous month buttons changed heading without top-level URL change."
       ],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
       "unknowns": [
-        "Page content and interactions not yet inspected"
+        "UNKNOWN: applied filter results and validation; Update not activated",
+        "UNKNOWN: export/schedule outcomes and other-role permissions"
       ],
       "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied",
-      "partialReason": "Download and delivery dialogs inspected without submission. Dashboard filter popovers, tile actions and calendar drilldowns still need safe inspection; other roles and delivery outcomes untested.",
+      "partialReason": "Safe filter popovers, tile menu, expanded view, month navigation and cell tooltip inspected. Applied filters, export/schedule, production data changes and alternate roles untested.",
       "layout": "OBSERVED: Looker month grid",
       "tabs": [],
       "cards": [],
       "loadingState": "OBSERVED dashboard progressbar and Element Loading before populated month grid.",
       "populatedState": "OBSERVED month grid containing daily shift reservations/covers and comparison arrows.",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
-      "disabledState": "UNKNOWN",
+      "disabledState": "OBSERVED today button disabled on September 2026 default month; enabled after next-month navigation.",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
@@ -3184,15 +3195,19 @@
       ],
       "childScreenIds": [
         "SCR-132",
-        "SCR-133"
+        "SCR-133",
+        "SCR-134",
+        "SCR-135",
+        "SCR-136",
+        "SCR-137"
       ],
       "lastObserved": "2026-09-27",
       "taskId": "DISC-002",
       "partialBoundary": {
-        "PARTIAL REASON": "Safe nested inspection remains open because the authenticated session redirected to login on 2026-09-27; later write/role branches remain intentionally untested.",
-        "UNVERIFIED BEHAVIOR": "For SCR-029: three filter popovers, tile actions and safe drilldowns. For SCR-028: remaining feature/date/sort branches. For SCR-132/133: final export/delivery outcomes.",
-        "WHY IT CANNOT BE SAFELY VERIFIED": "The current browser is on MFA verification after session expiration; secure authentication submission failed. Export/delivery outcomes would disclose data or schedule messages; other roles unavailable.",
-        "FUTURE TEST METHOD": "After successful authorized authentication, inspect SCR-029 filters/tile/drill branches read-only, then SCR-028 branches; use isolated venue and authorized alternate accounts for unsafe/role outcomes."
+        "PARTIAL REASON": "Safe filter/menu/calendar controls inspected; final export, delivery and query-update outcomes remain intentionally untested.",
+        "UNVERIFIED BEHAVIOR": "Applied filter validation/results; export/delivery; other-role behavior.",
+        "WHY IT CANNOT BE SAFELY VERIFIED": "No live data export, scheduled delivery or production mutation permitted; other roles unavailable.",
+        "FUTURE TEST METHOD": "Use isolated venue/test data and authorized alternate role; apply filters and test delivery there."
       }
     },
     {
@@ -7879,7 +7894,9 @@
         "Exit"
       ],
       "primaryActions": [],
-      "secondaryActions": [],
+      "secondaryActions": [
+        "Selected an active table in sidebar, opened size, seating and move destination menus without applying changes."
+      ],
       "forms": [],
       "fields": [
         {
@@ -7930,15 +7947,15 @@
       "observedBusinessRules": [
         "UI guidance says active tables require a seating area; an active No Seating Area group was also visible, so enforcement remains UNKNOWN.",
         "UI guidance describes Shift/Command selection before adding a combination.",
-        "Inactive table button labels state Enter adds them to the floorplan; not executed."
+        "Inactive table button labels state Enter adds them to the floorplan; not executed.",
+        "Selecting active table 124 reveals SCR-138; Save remains disabled with unchanged selection; Escape deselects."
       ],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "No canvas mutation, Save, Done creation, Delete, Duplicate, Deactivate or Move destination submitted. Selection-based editing controls and unlabeled presets still need safe inspection; persistence/validation and other roles untested.",
+      "partialReason": "Safe active-table selection and contextual controls inspected; no canvas mutation or save. Structural selection and creation outcomes require draft alteration; other roles unknown.",
       "unknowns": [
-        "UNKNOWN: selected-table and structural contextual editor details",
-        "UNKNOWN: enforcement of seating-area guidance",
-        "UNKNOWN_REQUIRES_SAFE_TEST_DATA: save, create, delete, move and duplicate outcomes"
+        "UNKNOWN: mutation/persistence and structural selection details require a disposable layout",
+        "UNKNOWN: enforcement of seating-area guidance"
       ],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Canvas",
@@ -7966,7 +7983,8 @@
         "SCR-126",
         "SCR-127",
         "SCR-128",
-        "SCR-129"
+        "SCR-129",
+        "SCR-138"
       ],
       "cancelBackBehavior": "OBSERVED Exit Editor returns to layouts list; naming Cancel returns to list; nested Cancel/Close dismisses without saving.",
       "lastObserved": "2026-09-27",
@@ -10103,7 +10121,7 @@
       "observedBusinessRules": [],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "Preset selection would add a table to the draft canvas; not selected. Unlabeled shapes need visual inspection.",
+      "partialReason": "Ten presets visually inspected: five angular and five circular tabletop variants in increasing sizes/chair arrangements. Selecting one would add to draft; no preset activated.",
       "unknowns": [],
       "evidence": "Authorized visible UI observation; no private values or protected message bodies retained.",
       "layout": "OBSERVED: nested UI surface",
@@ -10170,7 +10188,7 @@
       "observedBusinessRules": [],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "No element selected because that changes the draft canvas; shape details and resulting edit controls unobserved.",
+      "partialReason": "Labels, three Shapes and furniture silhouettes visually inspected; selecting an element would add to draft. No creation performed.",
       "unknowns": [],
       "evidence": "Authorized visible UI observation; no private values or protected message bodies retained.",
       "layout": "OBSERVED: nested UI surface",
@@ -10524,7 +10542,19 @@
           "type": "combobox",
           "required": "UNKNOWN",
           "validation": "UNKNOWN",
-          "observedValue": "Fit Page To Dashboard"
+          "observedValue": "Fit Page To Dashboard",
+          "options": [
+            "Fit Page To Dashboard",
+            "Letter",
+            "Legal",
+            "Tabloid",
+            "A0",
+            "A1",
+            "A2",
+            "A3",
+            "A4",
+            "A5"
+          ]
         },
         {
           "name": "Expand tables to show all rows",
@@ -10562,7 +10592,7 @@
       ],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "No export generated; PDF paper-size choices and rendered output remain unverified.",
+      "partialReason": "PDF paper-size list inspected without choosing an output or downloading; rendered output, delivery and other-role behavior untested.",
       "unknowns": [],
       "evidence": "Authorized visible UI observation; no private values or protected message bodies retained.",
       "layout": "OBSERVED: nested UI surface",
@@ -10584,10 +10614,10 @@
       "parentScreenId": "SCR-029",
       "surfaceKey": "Covers Calendar Download dialog",
       "partialBoundary": {
-        "PARTIAL REASON": "Safe nested inspection remains open because the authenticated session redirected to login on 2026-09-27; later write/role branches remain intentionally untested.",
-        "UNVERIFIED BEHAVIOR": "For SCR-029: three filter popovers, tile actions and safe drilldowns. For SCR-028: remaining feature/date/sort branches. For SCR-132/133: final export/delivery outcomes.",
-        "WHY IT CANNOT BE SAFELY VERIFIED": "The current browser is on MFA verification after session expiration; secure authentication submission failed. Export/delivery outcomes would disclose data or schedule messages; other roles unavailable.",
-        "FUTURE TEST METHOD": "After successful authorized authentication, inspect SCR-029 filters/tile/drill branches read-only, then SCR-028 branches; use isolated venue and authorized alternate accounts for unsafe/role outcomes."
+        "PARTIAL REASON": "All safe dialog controls inspected without export.",
+        "UNVERIFIED BEHAVIOR": "Rendered PDF/CSV output and any download side effects.",
+        "WHY IT CANNOT BE SAFELY VERIFIED": "Export execution is prohibited for live production data.",
+        "FUTURE TEST METHOD": "Use isolated test dashboard and authorized export fixture."
       }
     },
     {
@@ -10780,10 +10810,13 @@
       ],
       "likelyEntities": [],
       "userRoles": "Current account OBSERVED; other roles UNKNOWN",
-      "observedBusinessRules": [],
+      "observedBusinessRules": [
+        "Monthly reveals Day and Time; Weekly Day and Time; Hourly/Minutes reveal Send every and Start/End; Specific months exposes month toggles; Specific days weekday toggles; Datagroup update exposes Datagroup; Send now removes time controls.",
+        "Advanced options vary by Format: CSV zip file shows Results and Values radio groups; PNG visualization shows single-column checkbox; PDF shows expand tables, single-column and Paper size."
+      ],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
-      "partialReason": "No recipients/credentials entered and no schedule saved or sent. Recurrence-specific branches, format-specific settings, delivery and integration outcomes remain UNKNOWN.",
+      "partialReason": "Recurrence branches and PDF/CSV zip/PNG format-specific advanced controls inspected without recipients, credentials, Save or Send. Delivery and integration outcomes remain unknown.",
       "unknowns": [],
       "evidence": "Authorized visible UI observation; no private values or protected message bodies retained.",
       "layout": "OBSERVED: nested UI surface",
@@ -10809,10 +10842,470 @@
       "parentScreenId": "SCR-029",
       "surfaceKey": "Covers Calendar Scheduled Plan Editor",
       "partialBoundary": {
-        "PARTIAL REASON": "Safe nested inspection remains open because the authenticated session redirected to login on 2026-09-27; later write/role branches remain intentionally untested.",
-        "UNVERIFIED BEHAVIOR": "For SCR-029: three filter popovers, tile actions and safe drilldowns. For SCR-028: remaining feature/date/sort branches. For SCR-132/133: final export/delivery outcomes.",
-        "WHY IT CANNOT BE SAFELY VERIFIED": "The current browser is on MFA verification after session expiration; secure authentication submission failed. Export/delivery outcomes would disclose data or schedule messages; other roles unavailable.",
-        "FUTURE TEST METHOD": "After successful authorized authentication, inspect SCR-029 filters/tile/drill branches read-only, then SCR-028 branches; use isolated venue and authorized alternate accounts for unsafe/role outcomes."
+        "PARTIAL REASON": "Safe configuration branches inspected; final delivery intentionally not submitted.",
+        "UNVERIFIED BEHAVIOR": "Schedule persistence, delivery, destination validation and external integrations.",
+        "WHY IT CANNOT BE SAFELY VERIFIED": "Would send or schedule live report to a destination or use credentials.",
+        "FUTURE TEST METHOD": "Use isolated test venue with approved test recipient and integration."
+      }
+    },
+    {
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Condition",
+          "type": "combobox",
+          "observedValue": "is",
+          "options": [
+            "is",
+            "is not",
+            "contains",
+            "doesn't contain",
+            "starts with",
+            "doesn't start with",
+            "ends with",
+            "doesn't end with",
+            "is blank",
+            "is not blank",
+            "is null",
+            "is not null",
+            "matches a user attribute",
+            "matches (advanced)"
+          ]
+        },
+        {
+          "name": "Shift values",
+          "type": "multi-select combobox",
+          "observedValue": "any value",
+          "options": [
+            "BRUNCH",
+            "DINNER",
+            "LUNCH"
+          ]
+        }
+      ],
+      "tables": [],
+      "filters": [],
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [
+        "SCR-029"
+      ],
+      "likelyEntities": [],
+      "observedBusinessRules": [],
+      "unknowns": [],
+      "tabs": [],
+      "cards": [],
+      "id": "SCR-134",
+      "name": "Shift Name filter popover",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/358",
+      "parentNavigation": "Covers Calendar",
+      "parentScreenId": "SCR-029",
+      "domainId": "DOM-07",
+      "purpose": "Shift Name filter popover",
+      "visibleComponents": [
+        "Condition combobox",
+        "Multi-value combobox",
+        "Add",
+        "Cancel",
+        "Done"
+      ],
+      "triggerAction": "Shift Name button",
+      "surfaceKey": "Shift Name filter popover",
+      "parentWorkflowId": "FLOW-014",
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "userRoles": "Current signed-in account OBSERVED; other roles UNKNOWN",
+      "evidenceStatus": "OBSERVED",
+      "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
+      "evidence": "Authorized visible read-only UI, 2026-09-27",
+      "layout": "Nested popover/dialog/panel",
+      "loadingState": "UNKNOWN",
+      "populatedState": "OBSERVED",
+      "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "disabledState": "UNKNOWN",
+      "visiblePermissionBehavior": "Current account OBSERVED; other roles UNKNOWN",
+      "unknownBehaviorIds": [
+        "U-002",
+        "U-003"
+      ],
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-002",
+      "partialReason": "Filter UI inspected; dashboard Update was not used to alter report state. Validation, alternate roles and data-result branches remain untested.",
+      "partialBoundary": {
+        "PARTIAL REASON": "Filter UI inspected; dashboard Update was not used to alter report state. Validation, alternate roles and data-result branches remain untested.",
+        "UNVERIFIED BEHAVIOR": "Applied filter result and invalid expressions.",
+        "WHY IT CANNOT BE SAFELY VERIFIED": "A query/update on live reporting data was not needed for read-only control inspection; alternate role not available.",
+        "FUTURE TEST METHOD": "Exercise filter combinations with authorized isolated test data and compare visible results."
+      }
+    },
+    {
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Condition",
+          "type": "combobox",
+          "observedValue": "matches (advanced)",
+          "options": [
+            "is in the last",
+            "is on the day",
+            "is in range",
+            "is before",
+            "is on or after",
+            "is in the year",
+            "is in the month",
+            "is this",
+            "is next",
+            "is previous",
+            "is",
+            "is null",
+            "is not null",
+            "is any time",
+            "matches a user attribute",
+            "matches (advanced)"
+          ]
+        },
+        {
+          "name": "Date expression",
+          "type": "textbox",
+          "observedValue": "last month for 3 months"
+        }
+      ],
+      "tables": [],
+      "filters": [],
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [
+        "SCR-029"
+      ],
+      "likelyEntities": [],
+      "observedBusinessRules": [],
+      "unknowns": [],
+      "tabs": [],
+      "cards": [],
+      "id": "SCR-135",
+      "name": "Reservation Date filter popover",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/358",
+      "parentNavigation": "Covers Calendar",
+      "parentScreenId": "SCR-029",
+      "domainId": "DOM-07",
+      "purpose": "Reservation Date filter popover",
+      "visibleComponents": [
+        "Condition combobox",
+        "Advanced date expression textbox"
+      ],
+      "triggerAction": "Reservation Date button",
+      "surfaceKey": "Reservation Date filter popover",
+      "parentWorkflowId": "FLOW-014",
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "userRoles": "Current signed-in account OBSERVED; other roles UNKNOWN",
+      "evidenceStatus": "OBSERVED",
+      "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
+      "evidence": "Authorized visible read-only UI, 2026-09-27",
+      "layout": "Nested popover/dialog/panel",
+      "loadingState": "UNKNOWN",
+      "populatedState": "OBSERVED",
+      "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "disabledState": "UNKNOWN",
+      "visiblePermissionBehavior": "Current account OBSERVED; other roles UNKNOWN",
+      "unknownBehaviorIds": [
+        "U-002",
+        "U-003"
+      ],
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-002",
+      "partialReason": "Date expression and operator list inspected without changing expression or submitting Update.",
+      "partialBoundary": {
+        "PARTIAL REASON": "Date expression and operator list inspected without changing expression or submitting Update.",
+        "UNVERIFIED BEHAVIOR": "Expression validation and applied calendar change.",
+        "WHY IT CANNOT BE SAFELY VERIFIED": "No synthetic date fixture or invalid production query was used.",
+        "FUTURE TEST METHOD": "Apply valid/invalid expressions in an isolated test venue."
+      }
+    },
+    {
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Condition",
+          "type": "combobox",
+          "observedValue": "is"
+        },
+        {
+          "name": "Group values",
+          "type": "multi-select combobox",
+          "observedValue": "any value",
+          "options": [
+            "Oceans"
+          ]
+        }
+      ],
+      "tables": [],
+      "filters": [],
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [
+        "SCR-029"
+      ],
+      "likelyEntities": [],
+      "observedBusinessRules": [],
+      "unknowns": [],
+      "tabs": [],
+      "cards": [],
+      "id": "SCR-136",
+      "name": "Reporting Period Group Name filter popover",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/358",
+      "parentNavigation": "Covers Calendar",
+      "parentScreenId": "SCR-029",
+      "domainId": "DOM-07",
+      "purpose": "Reporting Period Group Name filter popover",
+      "visibleComponents": [
+        "Condition combobox",
+        "Multi-value combobox",
+        "Add",
+        "Cancel",
+        "Done"
+      ],
+      "triggerAction": "Reporting Period Group Name button",
+      "surfaceKey": "Reporting Period Group Name filter popover",
+      "parentWorkflowId": "FLOW-014",
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "userRoles": "Current signed-in account OBSERVED; other roles UNKNOWN",
+      "evidenceStatus": "OBSERVED",
+      "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
+      "evidence": "Authorized visible read-only UI, 2026-09-27",
+      "layout": "Nested popover/dialog/panel",
+      "loadingState": "UNKNOWN",
+      "populatedState": "OBSERVED",
+      "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "disabledState": "UNKNOWN",
+      "visiblePermissionBehavior": "Current account OBSERVED; other roles UNKNOWN",
+      "unknownBehaviorIds": [
+        "U-002",
+        "U-003"
+      ],
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-002",
+      "partialReason": "Filter UI inspected; dashboard Update was not used to alter report state. Validation, alternate roles and data-result branches remain untested.",
+      "partialBoundary": {
+        "PARTIAL REASON": "Filter UI inspected; dashboard Update was not used to alter report state. Validation, alternate roles and data-result branches remain untested.",
+        "UNVERIFIED BEHAVIOR": "Applied filter result and invalid expressions.",
+        "WHY IT CANNOT BE SAFELY VERIFIED": "A query/update on live reporting data was not needed for read-only control inspection; alternate role not available.",
+        "FUTURE TEST METHOD": "Exercise filter combinations with authorized isolated test data and compare visible results."
+      }
+    },
+    {
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [
+        "SCR-029"
+      ],
+      "likelyEntities": [],
+      "observedBusinessRules": [],
+      "unknowns": [],
+      "tabs": [],
+      "cards": [],
+      "id": "SCR-137",
+      "name": "Calendar expanded view",
+      "route": "/manager2/oceansatarthurs/reporting/embed/dashboards/358",
+      "parentNavigation": "Covers Calendar",
+      "parentScreenId": "SCR-029",
+      "domainId": "DOM-07",
+      "purpose": "Calendar expanded view",
+      "visibleComponents": [
+        "Expanded view dialog",
+        "Calendar month grid",
+        "Close",
+        "Previous slide"
+      ],
+      "triggerAction": "Tile actions > View > Expanded",
+      "surfaceKey": "Calendar expanded view",
+      "parentWorkflowId": "FLOW-014",
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "userRoles": "Current signed-in account OBSERVED; other roles UNKNOWN",
+      "evidenceStatus": "OBSERVED",
+      "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
+      "evidence": "Authorized visible read-only UI, 2026-09-27",
+      "layout": "Nested popover/dialog/panel",
+      "loadingState": "UNKNOWN",
+      "populatedState": "OBSERVED",
+      "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "disabledState": "UNKNOWN",
+      "visiblePermissionBehavior": "Current account OBSERVED; other roles UNKNOWN",
+      "unknownBehaviorIds": [
+        "U-002",
+        "U-003"
+      ],
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-002",
+      "partialReason": "Expanded month dialog opened and closed; other slide or data export not executed.",
+      "partialBoundary": {
+        "PARTIAL REASON": "Expanded month dialog opened and closed; other slide or data export not executed.",
+        "UNVERIFIED BEHAVIOR": "Slide navigation and export output.",
+        "WHY IT CANNOT BE SAFELY VERIFIED": "Only one calendar tile present and export prohibited.",
+        "FUTURE TEST METHOD": "Use a safe multi-tile dashboard fixture; inspect export with authorized test data."
+      }
+    },
+    {
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Table Name",
+          "type": "textbox",
+          "observedValue": "124"
+        },
+        {
+          "name": "Seating Area",
+          "type": "combobox",
+          "observedValue": "Unassigned",
+          "options": [
+            "Main",
+            "West Wing",
+            "VIP",
+            "BAR",
+            "bar booth",
+            "Create Seating Area"
+          ]
+        },
+        {
+          "name": "Cover Min",
+          "type": "spinbutton",
+          "observedValue": "2"
+        },
+        {
+          "name": "Cover Max",
+          "type": "spinbutton",
+          "observedValue": "4"
+        },
+        {
+          "name": "Customize Cover Limit for this Layout",
+          "type": "checkbox"
+        },
+        {
+          "name": "Shape",
+          "type": "button group",
+          "options": [
+            "square",
+            "circle",
+            "rectangle"
+          ],
+          "observedValue": "rectangle"
+        },
+        {
+          "name": "End Chairs",
+          "type": "checkbox"
+        },
+        {
+          "name": "Size",
+          "type": "combobox",
+          "observedValue": "Medium",
+          "options": [
+            "Extra Small",
+            "Small",
+            "Medium",
+            "Large",
+            "Extra Large",
+            "Extra Extra Large"
+          ]
+        }
+      ],
+      "tables": [],
+      "filters": [],
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [
+        "SCR-096"
+      ],
+      "likelyEntities": [],
+      "observedBusinessRules": [],
+      "unknowns": [],
+      "tabs": [],
+      "cards": [],
+      "id": "SCR-138",
+      "name": "Selected floorplan table details",
+      "route": "/app/availability/oceansatarthurs/floorplan-layouts/editor/:layoutId",
+      "parentNavigation": "Floorplan Layout Editor",
+      "parentScreenId": "SCR-096",
+      "domainId": "DOM-08",
+      "purpose": "Selected floorplan table details",
+      "visibleComponents": [
+        "Selection Details panel",
+        "Default Settings",
+        "Floorplan Specific Settings",
+        "selected-table toolbar"
+      ],
+      "triggerAction": "Click an active table row in Tables sidebar",
+      "surfaceKey": "Selected floorplan table details",
+      "parentWorkflowId": "FLOW-013",
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "userRoles": "Current signed-in account OBSERVED; other roles UNKNOWN",
+      "evidenceStatus": "OBSERVED",
+      "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
+      "evidence": "Authorized visible read-only UI, 2026-09-27",
+      "layout": "Nested popover/dialog/panel",
+      "loadingState": "UNKNOWN",
+      "populatedState": "OBSERVED",
+      "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "disabledState": "UNKNOWN",
+      "visiblePermissionBehavior": "Current account OBSERVED; other roles UNKNOWN",
+      "unknownBehaviorIds": [
+        "U-002",
+        "U-003"
+      ],
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-002",
+      "partialReason": "Selected table panel and safe menus inspected; no shape, seating, rotation, move, duplicate or save applied.",
+      "partialBoundary": {
+        "PARTIAL REASON": "Selected table panel and safe menus inspected; no shape, seating, rotation, move, duplicate or save applied.",
+        "UNVERIFIED BEHAVIOR": "Mutation, validation and persistence of table settings.",
+        "WHY IT CANNOT BE SAFELY VERIFIED": "Would change a production floorplan draft and could affect live layout if saved.",
+        "FUTURE TEST METHOD": "Use disposable floorplan in isolated venue; test selection and edits."
       }
     }
   ],
@@ -11136,7 +11629,8 @@
         "SCR-126",
         "SCR-127",
         "SCR-128",
-        "SCR-129"
+        "SCR-129",
+        "SCR-138"
       ],
       "entryPoint": "SCR-077",
       "branches": "OBSERVED naming, Settings, Tables/presets, structures, Combinations/Edit, Add Room; write outcomes UNKNOWN",
@@ -11161,15 +11655,19 @@
       "status": "PARTIALLY_INSPECTED_WITH_REASON",
       "steps": [
         "SCR-021",
-        "SCR-029"
+        "SCR-029",
+        "SCR-134",
+        "SCR-135",
+        "SCR-136",
+        "SCR-137"
       ],
       "entryPoint": "SCR-021",
-      "branches": "Date, shift, report",
+      "branches": "Shift Name, Reservation Date, Reporting Period Group Name popovers; month navigation, comparison tooltip and expanded tile view",
       "statuses": "OBSERVED populated calendar",
       "validation": "UNKNOWN",
       "successState": "OBSERVED dashboard rendered",
       "failureState": "UNKNOWN",
-      "cancelBackBehavior": "Reporting navigation",
+      "cancelBackBehavior": "Filter value picker Cancel and expanded-view Close observed; filter Update not submitted.",
       "crossModuleDependencies": [
         "SCR-021"
       ],
@@ -11471,17 +11969,17 @@
     },
     {
       "id": "U-007",
-      "description": "Remaining safe nested control coverage",
-      "reason": "DISC-002 pass has not inspected every filter, tile, menu and contextual editor; NAV_ONLY=0 does not mean coverage complete.",
-      "risk": "Missing product states or screens",
-      "futureVerificationMethod": "Continue per-screen read-only inspection in stable ID order; record new surfaces."
+      "description": "DISC-002 safe nested coverage audit",
+      "reason": "Named safe gaps in SCR-028, SCR-029, SCR-096, SCR-126/127 and SCR-132/133 were revisited; remaining live write, package and role outcomes are outside safe read-only discovery.",
+      "risk": "Additional unlisted branches may emerge during DISC-003 safe state verification.",
+      "futureVerificationMethod": "DISC-003: start with SCR-097 residual Loading... recheck, then verify remaining safe state/workflow branches using current inventory."
     },
     {
       "id": "U-008",
       "description": "Guest-language residual loading indicators",
-      "reason": "Populated grids still display Loading...; cause not observable from UI.",
+      "reason": "SCR-097 was reopened after authentication restoration; populated Reservation Confirmation and Referrals grids still showed Loading... beneath them. Cause and unseen controls cannot be established from UI.",
       "risk": "Additional editor controls may be missing",
-      "futureVerificationMethod": "Revisit settled screen and inspect screenshot/visible controls without submitting changes."
+      "futureVerificationMethod": "DISC-003: revisit SCR-097 after a settled load and compare visible controls, then check other affected language screens without sending/publishing."
     },
     {
       "id": "U-009",
@@ -11492,10 +11990,10 @@
     },
     {
       "id": "U-010",
-      "description": "SCR-029 and SCR-028 authenticated read-only access interrupted",
-      "reason": "Prior signed-in browser session expired; SevenRooms redirected to login. Secure email/password request advanced to MFA; secure verification submission returned submission_failed, and the visible page remained at verification. No browser-control fallback used.",
-      "risk": "Safe nested controls still uninspected; prior observations cannot be treated as current session verification.",
-      "futureVerificationMethod": "Resume the SevenRooms account session through supported secure/manual sign-in; then inspect the three SCR-029 filters, tile actions, drilldowns and open SCR-028 branches read-only."
+      "description": "Authenticated reporting access interruption and restoration",
+      "reason": "Earlier signed-in session expired and secure MFA submission failed; on 2026-09-27 the existing browser showed authenticated SevenRooms navigation and SCR-029/SCR-028 opened. Discovery resumed. Prior recorded discovery evidence remained in repository; none was lost.",
+      "risk": "The prior interruption delayed safe nested inspection but did not invalidate preserved observations.",
+      "futureVerificationMethod": "Completed access check and resumed read-only inspection on 2026-09-27; if access lapses again, restore through authorized browser authentication without recording secrets."
     }
   ]
 }

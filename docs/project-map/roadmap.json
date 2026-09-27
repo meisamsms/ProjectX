@@ -28,7 +28,7 @@
     {
       "id": "DISC-002",
       "name": "Inspect Reporting, Settings and nested screens",
-      "status": "IN_PROGRESS",
+      "status": "VERIFIED",
       "dependencies": [
         "DISC-001"
       ],
@@ -47,13 +47,13 @@
       "regressionChecks": [
         "No live records changed"
       ],
-      "remainingWork": "SCR-029: after authorized browser sign-in, inspect Shift Name filter popover, then Reservation Date and Reporting Period Group Name, tile actions and safe calendar drilldowns in order. SCR-028 feature/date/sort branches remain pending.",
-      "discoveryGate": "B: identifiable safe nested surfaces remain; currently interrupted by session expiration and MFA submission failure."
+      "remainingWork": "No identifiable safe nested DISC-002 control remains. Unsafe/package/other-role outcomes stay explicitly partial; U-008 residual loading remains unknown for DISC-003.",
+      "discoveryGate": "A: route opening evidence retained; safe nested controls audited; no NAV_ONLY and no production writes."
     },
     {
       "id": "DISC-003",
       "name": "Verify remaining safe state and workflow branches",
-      "status": "PLANNED",
+      "status": "READY",
       "dependencies": [
         "DISC-002"
       ],

@@ -25,9 +25,9 @@
     {
       "id": "CHK-004",
       "taskId": "DISC-002",
-      "status": "IN_PROGRESS",
+      "status": "VERIFIED",
       "method": "Safe nested workflow and state coverage",
-      "result": "IN_PROGRESS: SCR-029 three filter popovers, tile actions and calendar drilldowns remain uninspected after authenticated session expired. SCR-028 feature/date/sort branches remain. Secure MFA verification submission_failed; no direct code submission attempted."
+      "result": "PASS: SCR-029 filters, tile menu, expanded view, day tooltip and month navigation; SCR-028 feature/date/sort branches; SCR-096 table selection and presets; SCR-132 paper size; SCR-133 recurrence/format branches inspected without final actions. Residual loading and unsafe outcomes documented."
     },
     {
       "id": "CHK-005",
@@ -42,6 +42,13 @@
       "status": "VERIFIED",
       "method": "Audit copied nested references and sorting; JSON parse, unique IDs, all parent/child/workflow references and inventory/registry ID/route parity",
       "result": "PASS after removing unsupported inherited childScreenIds and sorting claims. No new screens or workflows."
+    },
+    {
+      "id": "CHK-007",
+      "taskId": "DISC-002",
+      "status": "VERIFIED",
+      "method": "Final JSON parse; unique IDs; inventory/registry IDs and routes; parent/child and workflow references; partial/unknown reasons; no NAV_ONLY or production writes",
+      "result": "PASS after new surfaces SCR-134–SCR-138; 138 screens, 0 full, 137 partial, 1 package inaccessible, 0 NAV_ONLY. DISC-003 not executed."
     }
   ],
   "unresolvedQuestions": [
@@ -59,9 +66,9 @@
   ],
   "liveChanges": "No production save/publish/delete/send/pay/invite submitted. Blank unsaved policy row removed by reload; original single row restored.",
   "discoveryCounts": {
-    "total": 133,
+    "total": 138,
     "full": 0,
-    "partial": 132,
+    "partial": 137,
     "inaccessible": 1,
     "navOnly": 0,
     "workflows": 17,
@@ -70,7 +77,7 @@
   "validationNotes": [
     "Initial document-generation check failed on non-zero-padded SCR-097 ID lookup; corrected padding and reran all document checks successfully.",
     "No application tests run: discovery documentation only.",
-    "No claim of complete route coverage beyond prior opened-route evidence; nested route/surface completeness remains IN_PROGRESS."
+    "Prior route opening evidence retained. All named safe DISC-002 nested surfaces inspected; unresolved residual Loading... and unsafe/other-role branches are explicit partial/unknown items for DISC-003 or isolated testing."
   ],
-  "accessInterruption": "Session redirected to login; secure credential submission advanced to MFA; secure verification returned submission_failed without visible site error. No filter/drilldown accessed in this turn."
+  "accessInterruption": "Prior login/MFA interruption preserved as U-010. Existing browser authenticated on 2026-09-27; SCR-029 and SCR-028 accessible, discovery resumed, no prior repository evidence lost."
 }
