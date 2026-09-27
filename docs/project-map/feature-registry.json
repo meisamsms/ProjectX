@@ -3098,13 +3098,20 @@
         "U-001",
         "U-002",
         "U-003",
-        "U-007"
+        "U-007",
+        "U-010"
       ],
       "childScreenIds": [
         "SCR-131"
       ],
       "lastObserved": "2026-09-27",
-      "taskId": "DISC-002"
+      "taskId": "DISC-002",
+      "partialBoundary": {
+        "PARTIAL REASON": "Safe nested inspection remains open because the authenticated session redirected to login on 2026-09-27; later write/role branches remain intentionally untested.",
+        "UNVERIFIED BEHAVIOR": "For SCR-029: three filter popovers, tile actions and safe drilldowns. For SCR-028: remaining feature/date/sort branches. For SCR-132/133: final export/delivery outcomes.",
+        "WHY IT CANNOT BE SAFELY VERIFIED": "The current browser is on MFA verification after session expiration; secure authentication submission failed. Export/delivery outcomes would disclose data or schedule messages; other roles unavailable.",
+        "FUTURE TEST METHOD": "After successful authorized authentication, inspect SCR-029 filters/tile/drill branches read-only, then SCR-028 branches; use isolated venue and authorized alternate accounts for unsafe/role outcomes."
+      }
     },
     {
       "id": "SCR-029",
@@ -3172,14 +3179,21 @@
         "U-001",
         "U-002",
         "U-003",
-        "U-007"
+        "U-007",
+        "U-010"
       ],
       "childScreenIds": [
         "SCR-132",
         "SCR-133"
       ],
       "lastObserved": "2026-09-27",
-      "taskId": "DISC-002"
+      "taskId": "DISC-002",
+      "partialBoundary": {
+        "PARTIAL REASON": "Safe nested inspection remains open because the authenticated session redirected to login on 2026-09-27; later write/role branches remain intentionally untested.",
+        "UNVERIFIED BEHAVIOR": "For SCR-029: three filter popovers, tile actions and safe drilldowns. For SCR-028: remaining feature/date/sort branches. For SCR-132/133: final export/delivery outcomes.",
+        "WHY IT CANNOT BE SAFELY VERIFIED": "The current browser is on MFA verification after session expiration; secure authentication submission failed. Export/delivery outcomes would disclose data or schedule messages; other roles unavailable.",
+        "FUTURE TEST METHOD": "After successful authorized authentication, inspect SCR-029 filters/tile/drill branches read-only, then SCR-028 branches; use isolated venue and authorized alternate accounts for unsafe/role outcomes."
+      }
     },
     {
       "id": "SCR-030",
@@ -9983,9 +9997,6 @@
         "U-002",
         "U-003"
       ],
-      "childScreenIds": [
-        "SCR-123"
-      ],
       "parentScreenId": "SCR-096",
       "surfaceKey": "Editor Settings",
       "lastObserved": "2026-09-27",
@@ -10049,10 +10060,6 @@
         "U-002",
         "U-003"
       ],
-      "childScreenIds": [
-        "SCR-123",
-        "SCR-124"
-      ],
       "parentScreenId": "SCR-096",
       "surfaceKey": "Keyboard Shortcuts",
       "lastObserved": "2026-09-27",
@@ -10111,11 +10118,6 @@
         "U-001",
         "U-002",
         "U-003"
-      ],
-      "childScreenIds": [
-        "SCR-123",
-        "SCR-124",
-        "SCR-125"
       ],
       "parentScreenId": "SCR-096",
       "surfaceKey": "Add Table preset panel",
@@ -10183,12 +10185,6 @@
         "U-001",
         "U-002",
         "U-003"
-      ],
-      "childScreenIds": [
-        "SCR-123",
-        "SCR-124",
-        "SCR-125",
-        "SCR-126"
       ],
       "parentScreenId": "SCR-096",
       "surfaceKey": "Add Structural Element panel",
@@ -10272,13 +10268,6 @@
         "U-002",
         "U-003"
       ],
-      "childScreenIds": [
-        "SCR-123",
-        "SCR-124",
-        "SCR-125",
-        "SCR-126",
-        "SCR-127"
-      ],
       "parentScreenId": "SCR-096",
       "surfaceKey": "Edit Table Combination",
       "lastObserved": "2026-09-27",
@@ -10360,14 +10349,6 @@
         "U-002",
         "U-003"
       ],
-      "childScreenIds": [
-        "SCR-123",
-        "SCR-124",
-        "SCR-125",
-        "SCR-126",
-        "SCR-127",
-        "SCR-128"
-      ],
       "parentScreenId": "SCR-096",
       "surfaceKey": "Add Room dialog",
       "lastObserved": "2026-09-27",
@@ -10408,7 +10389,7 @@
       "tables": [],
       "filters": [],
       "searchBehavior": "UNKNOWN",
-      "sorting": "OBSERVED Combinations offers Sort by Table and Sort by Party Size; Party Size selected without saving.",
+      "sorting": "UNKNOWN",
       "pagination": "UNKNOWN",
       "statuses": [],
       "buttons": [],
@@ -10443,15 +10424,6 @@
         "U-002",
         "U-003"
       ],
-      "childScreenIds": [
-        "SCR-123",
-        "SCR-124",
-        "SCR-125",
-        "SCR-126",
-        "SCR-127",
-        "SCR-128",
-        "SCR-129"
-      ],
       "cancelBackBehavior": "OBSERVED reload removes unsaved blank row; original one-row grid restored.",
       "lastObserved": "2026-09-27",
       "taskId": "DISC-002",
@@ -10476,7 +10448,7 @@
       "tables": [],
       "filters": [],
       "searchBehavior": "UNKNOWN",
-      "sorting": "OBSERVED Combinations offers Sort by Table and Sort by Party Size; Party Size selected without saving.",
+      "sorting": "UNKNOWN",
       "pagination": "UNKNOWN",
       "statuses": [],
       "buttons": [],
@@ -10510,15 +10482,6 @@
         "U-001",
         "U-002",
         "U-003"
-      ],
-      "childScreenIds": [
-        "SCR-123",
-        "SCR-124",
-        "SCR-125",
-        "SCR-126",
-        "SCR-127",
-        "SCR-128",
-        "SCR-129"
       ],
       "cancelBackBehavior": "OBSERVED Escape dismissed explanation.",
       "lastObserved": "2026-09-27",
@@ -10579,7 +10542,7 @@
       "tables": [],
       "filters": [],
       "searchBehavior": "UNKNOWN",
-      "sorting": "OBSERVED Combinations offers Sort by Table and Sort by Party Size; Party Size selected without saving.",
+      "sorting": "UNKNOWN",
       "pagination": "UNKNOWN",
       "statuses": [],
       "buttons": [],
@@ -10615,20 +10578,17 @@
         "U-002",
         "U-003"
       ],
-      "childScreenIds": [
-        "SCR-123",
-        "SCR-124",
-        "SCR-125",
-        "SCR-126",
-        "SCR-127",
-        "SCR-128",
-        "SCR-129"
-      ],
       "cancelBackBehavior": "OBSERVED Cancel dismisses without downloading.",
       "lastObserved": "2026-09-27",
       "taskId": "DISC-002",
       "parentScreenId": "SCR-029",
-      "surfaceKey": "Covers Calendar Download dialog"
+      "surfaceKey": "Covers Calendar Download dialog",
+      "partialBoundary": {
+        "PARTIAL REASON": "Safe nested inspection remains open because the authenticated session redirected to login on 2026-09-27; later write/role branches remain intentionally untested.",
+        "UNVERIFIED BEHAVIOR": "For SCR-029: three filter popovers, tile actions and safe drilldowns. For SCR-028: remaining feature/date/sort branches. For SCR-132/133: final export/delivery outcomes.",
+        "WHY IT CANNOT BE SAFELY VERIFIED": "The current browser is on MFA verification after session expiration; secure authentication submission failed. Export/delivery outcomes would disclose data or schedule messages; other roles unavailable.",
+        "FUTURE TEST METHOD": "After successful authorized authentication, inspect SCR-029 filters/tile/drill branches read-only, then SCR-028 branches; use isolated venue and authorized alternate accounts for unsafe/role outcomes."
+      }
     },
     {
       "id": "SCR-133",
@@ -10804,7 +10764,7 @@
         "Reporting Period Group Name"
       ],
       "searchBehavior": "UNKNOWN",
-      "sorting": "OBSERVED Combinations offers Sort by Table and Sort by Party Size; Party Size selected without saving.",
+      "sorting": "UNKNOWN",
       "pagination": "UNKNOWN",
       "statuses": [],
       "buttons": [],
@@ -10843,20 +10803,17 @@
         "U-002",
         "U-003"
       ],
-      "childScreenIds": [
-        "SCR-123",
-        "SCR-124",
-        "SCR-125",
-        "SCR-126",
-        "SCR-127",
-        "SCR-128",
-        "SCR-129"
-      ],
       "cancelBackBehavior": "OBSERVED Cancel dismisses editor; no schedule created.",
       "lastObserved": "2026-09-27",
       "taskId": "DISC-002",
       "parentScreenId": "SCR-029",
-      "surfaceKey": "Covers Calendar Scheduled Plan Editor"
+      "surfaceKey": "Covers Calendar Scheduled Plan Editor",
+      "partialBoundary": {
+        "PARTIAL REASON": "Safe nested inspection remains open because the authenticated session redirected to login on 2026-09-27; later write/role branches remain intentionally untested.",
+        "UNVERIFIED BEHAVIOR": "For SCR-029: three filter popovers, tile actions and safe drilldowns. For SCR-028: remaining feature/date/sort branches. For SCR-132/133: final export/delivery outcomes.",
+        "WHY IT CANNOT BE SAFELY VERIFIED": "The current browser is on MFA verification after session expiration; secure authentication submission failed. Export/delivery outcomes would disclose data or schedule messages; other roles unavailable.",
+        "FUTURE TEST METHOD": "After successful authorized authentication, inspect SCR-029 filters/tile/drill branches read-only, then SCR-028 branches; use isolated venue and authorized alternate accounts for unsafe/role outcomes."
+      }
     }
   ],
   "workflows": [
@@ -11532,6 +11489,13 @@
       "reason": "Guidance requires area for active table while active No Seating Area group was visible.",
       "risk": "Incorrect activation rule",
       "futureVerificationMethod": "Test activation and validation only in isolated venue with disposable table."
+    },
+    {
+      "id": "U-010",
+      "description": "SCR-029 and SCR-028 authenticated read-only access interrupted",
+      "reason": "Prior signed-in browser session expired; SevenRooms redirected to login. Secure email/password request advanced to MFA; secure verification submission returned submission_failed, and the visible page remained at verification. No browser-control fallback used.",
+      "risk": "Safe nested controls still uninspected; prior observations cannot be treated as current session verification.",
+      "futureVerificationMethod": "Resume the SevenRooms account session through supported secure/manual sign-in; then inspect the three SCR-029 filters, tile actions, drilldowns and open SCR-028 branches read-only."
     }
   ]
 }

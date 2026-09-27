@@ -27,7 +27,7 @@
       "taskId": "DISC-002",
       "status": "IN_PROGRESS",
       "method": "Safe nested workflow and state coverage",
-      "result": "INCOMPLETE: safe Reporting filter/tile/drill branches and other Settings nested controls remain; write outcomes and other roles untested."
+      "result": "IN_PROGRESS: SCR-029 three filter popovers, tile actions and calendar drilldowns remain uninspected after authenticated session expired. SCR-028 feature/date/sort branches remain. Secure MFA verification submission_failed; no direct code submission attempted."
     },
     {
       "id": "CHK-005",
@@ -35,6 +35,13 @@
       "status": "VERIFIED",
       "method": "JSON parse; unique IDs in each registry collection; inventory/registry ID-set parity; all registry routes present in inventory; parent and workflow references resolve",
       "result": "PASS: 133 unique screen IDs; matching inventory ID set; all routes and parent/workflow references resolve. Same-route nested surfaces intentionally allowed. This is document validation, not completed discovery."
+    },
+    {
+      "id": "CHK-006",
+      "taskId": "DISC-002",
+      "status": "VERIFIED",
+      "method": "Audit copied nested references and sorting; JSON parse, unique IDs, all parent/child/workflow references and inventory/registry ID/route parity",
+      "result": "PASS after removing unsupported inherited childScreenIds and sorting claims. No new screens or workflows."
     }
   ],
   "unresolvedQuestions": [
@@ -64,5 +71,6 @@
     "Initial document-generation check failed on non-zero-padded SCR-097 ID lookup; corrected padding and reran all document checks successfully.",
     "No application tests run: discovery documentation only.",
     "No claim of complete route coverage beyond prior opened-route evidence; nested route/surface completeness remains IN_PROGRESS."
-  ]
+  ],
+  "accessInterruption": "Session redirected to login; secure credential submission advanced to MFA; secure verification returned submission_failed without visible site error. No filter/drilldown accessed in this turn."
 }

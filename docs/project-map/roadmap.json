@@ -47,8 +47,8 @@
       "regressionChecks": [
         "No live records changed"
       ],
-      "remainingWork": "SCR-029 Covers Calendar: open Shift Name, Reservation Date and Reporting Period Group Name filter popovers, then tile actions and safe calendar drilldowns; inspect without scheduling or exporting. Continue remaining DISC-002 Reporting/Settings screens in stable ID order. SCR-028 remaining feature/date/sort branches also remain open.",
-      "discoveryGate": "Not passed: safe nested coverage remains incomplete."
+      "remainingWork": "SCR-029: after authorized browser sign-in, inspect Shift Name filter popover, then Reservation Date and Reporting Period Group Name, tile actions and safe calendar drilldowns in order. SCR-028 feature/date/sort branches remain pending.",
+      "discoveryGate": "B: identifiable safe nested surfaces remain; currently interrupted by session expiration and MFA submission failure."
     },
     {
       "id": "DISC-003",

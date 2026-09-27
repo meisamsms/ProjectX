@@ -728,3 +728,45 @@ Route: `/manager2/oceansatarthurs/reporting/embed/dashboards/358`. Parent: SCR-0
 DISC-002 remains IN_PROGRESS. Zero NAV_ONLY entries does not satisfy nested coverage. DISC-003 remains PLANNED pending DISC-002; no Prompt 02 work performed. decisions.json remains absent, recorded only as Q-009/U-005.
 
 SCR-029 Covers Calendar: open Shift Name, Reservation Date and Reporting Period Group Name filter popovers, then tile actions and safe calendar drilldowns; inspect without scheduling or exporting. Continue remaining DISC-002 Reporting/Settings screens in stable ID order. SCR-028 remaining feature/date/sort branches also remain open.
+
+## DISC-002 access interruption and metadata correction — 2026-09-27
+
+- OBSERVED: A read-only return to SCR-029 redirected to the SevenRooms login. Secure sign-in advanced to an emailed MFA code. The secure verification submission returned `submission_failed`; the rendered page remained at the verification form. No report filter, tile, or drilldown was accessible in this session. No lower-level code submission was attempted. This is an access interruption, not evidence that SCR-029 itself is inaccessible to the authorized account.
+- NEEDS TESTING: SCR-029 Shift Name, Reservation Date and Reporting Period Group Name filter popovers; tile actions; safe calendar drilldowns; any nested surfaces they reveal. SCR-028 remaining feature/date/sort branches also remain.
+- UNKNOWN: Cause of the secure verification submission failure; no site error was visible. U-010 records the reason, risk and future method.
+- INFERRED: None. INACCESSIBLE: SCR-094 remains package-limited; no new product screen classified inaccessible.
+- PREVIOUS FINDING: SCR-124–SCR-133 incorrectly inherited `childScreenIds` pointing at earlier floorplan dialogs; SCR-130–SCR-133 incorrectly inherited floorplan combination sorting. NEW FINDING: These copied references and sorting assertions were removed; true parent-to-child references remain on SCR-096, SCR-119, SCR-028 and SCR-029. REASON FOR CHANGE: Metadata copied from the Floorplan editor had no observation supporting those relations on sibling dialogs, policy, or Reporting surfaces. EVIDENCE: Existing `parentScreenId` and trigger observations in the prior checkpoint; registry structural audit today. This corrects documentation only, not the observed UI.
+
+### Explicit partial boundary for currently targeted Reporting surfaces
+
+#### SCR-029 Covers Calendar
+
+- PARTIAL REASON: Safe nested inspection remains open because the authenticated session redirected to login on 2026-09-27; later write/role branches remain intentionally untested.
+- UNVERIFIED BEHAVIOR: For SCR-029: three filter popovers, tile actions and safe drilldowns. For SCR-028: remaining feature/date/sort branches. For SCR-132/133: final export/delivery outcomes.
+- WHY IT CANNOT BE SAFELY VERIFIED: The current browser is on MFA verification after session expiration; secure authentication submission failed. Export/delivery outcomes would disclose data or schedule messages; other roles unavailable.
+- FUTURE TEST METHOD: After successful authorized authentication, inspect SCR-029 filters/tile/drill branches read-only, then SCR-028 branches; use isolated venue and authorized alternate accounts for unsafe/role outcomes.
+
+#### SCR-028 Revenue
+
+- PARTIAL REASON: Safe nested inspection remains open because the authenticated session redirected to login on 2026-09-27; later write/role branches remain intentionally untested.
+- UNVERIFIED BEHAVIOR: For SCR-029: three filter popovers, tile actions and safe drilldowns. For SCR-028: remaining feature/date/sort branches. For SCR-132/133: final export/delivery outcomes.
+- WHY IT CANNOT BE SAFELY VERIFIED: The current browser is on MFA verification after session expiration; secure authentication submission failed. Export/delivery outcomes would disclose data or schedule messages; other roles unavailable.
+- FUTURE TEST METHOD: After successful authorized authentication, inspect SCR-029 filters/tile/drill branches read-only, then SCR-028 branches; use isolated venue and authorized alternate accounts for unsafe/role outcomes.
+
+#### SCR-132 Covers Calendar Download dialog
+
+- PARTIAL REASON: Safe nested inspection remains open because the authenticated session redirected to login on 2026-09-27; later write/role branches remain intentionally untested.
+- UNVERIFIED BEHAVIOR: For SCR-029: three filter popovers, tile actions and safe drilldowns. For SCR-028: remaining feature/date/sort branches. For SCR-132/133: final export/delivery outcomes.
+- WHY IT CANNOT BE SAFELY VERIFIED: The current browser is on MFA verification after session expiration; secure authentication submission failed. Export/delivery outcomes would disclose data or schedule messages; other roles unavailable.
+- FUTURE TEST METHOD: After successful authorized authentication, inspect SCR-029 filters/tile/drill branches read-only, then SCR-028 branches; use isolated venue and authorized alternate accounts for unsafe/role outcomes.
+
+#### SCR-133 Covers Calendar Scheduled Plan Editor
+
+- PARTIAL REASON: Safe nested inspection remains open because the authenticated session redirected to login on 2026-09-27; later write/role branches remain intentionally untested.
+- UNVERIFIED BEHAVIOR: For SCR-029: three filter popovers, tile actions and safe drilldowns. For SCR-028: remaining feature/date/sort branches. For SCR-132/133: final export/delivery outcomes.
+- WHY IT CANNOT BE SAFELY VERIFIED: The current browser is on MFA verification after session expiration; secure authentication submission failed. Export/delivery outcomes would disclose data or schedule messages; other roles unavailable.
+- FUTURE TEST METHOD: After successful authorized authentication, inspect SCR-029 filters/tile/drill branches read-only, then SCR-028 branches; use isolated venue and authorized alternate accounts for unsafe/role outcomes.
+
+### Exact next discovery action
+
+Resume the authorized SevenRooms session in this browser. Open SCR-029; inspect the Shift Name filter popover first, then Reservation Date and Reporting Period Group Name, tile actions and safe calendar drilldowns in that order. Do not execute DISC-003.
