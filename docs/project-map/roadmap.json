@@ -53,19 +53,23 @@
     {
       "id": "DISC-003",
       "name": "Verify remaining safe state and workflow branches",
-      "status": "READY",
+      "status": "IN_PROGRESS",
       "dependencies": [
         "DISC-002"
       ],
       "acceptanceCriteria": [
-        "No missing nested screens or unexplained gaps"
+        "No missing nested screens or unexplained gaps",
+        "Classify U-001–U-010 and Q-001–Q-011 by build impact and test restriction",
+        "Preserve prior Reporting evidence; defer detailed Reporting parity",
+        "Prioritize remaining safe core workflow and cross-module checks"
       ],
       "verificationCommands": [
         "Reconcile registry and inventory"
       ],
       "regressionChecks": [
         "No irreversible action"
-      ]
+      ],
+      "remainingWork": "SCR-070 Availability Quick View: inspect date/shift availability and safe navigation to Access Rules; then SCR-080 Tables and SCR-079 Seating Areas, followed by core Requests status branches if safely observable. No production writes."
     }
   ],
   "unresolvedQuestions": [
@@ -80,5 +84,6 @@
     "Q-009",
     "Q-010",
     "Q-011"
-  ]
+  ],
+  "discoveryPriority": "Core workflows and dependencies before Reporting. Reporting unknowns can remain deferred by product owner."
 }

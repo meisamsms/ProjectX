@@ -4,7 +4,7 @@ Status: **IN PROGRESS**. Authorized Ocean’s at Arthur’s manager UI, observed
 
 ## Counts and evidence
 
-- 10 domains; 16 modules; 138 known screens; 0 fully inspected; 137 partially inspected; 1 package inaccessible; 0 navigation only.
+- 10 domains; 16 modules; 144 known screens; 0 fully inspected; 143 partially inspected; 1 package inaccessible; 0 navigation only.
 - OBSERVED means visible under the current account. UNKNOWN is unobserved. INACCESSIBLE means an explicit package notice. All other roles remain UNKNOWN.
 - Partial status alone does not block DISC-002 when the only missing behavior requires prohibited writes, other roles or unavailable permissions. Safe nested coverage gaps still block verification.
 
@@ -207,6 +207,13 @@ Home, Reservations, Requests, Clients, Marketing, Voice AI, Online Sales, Report
 | SCR-136 | Reporting Period Group Name filter popover (/manager2/oceansatarthurs/reporting/embed/dashboards/358) | SCR-029 | Condition combobox, Multi-value combobox, Add, Cancel, Done | PARTIALLY_INSPECTED_WITH_REASON: Filter UI inspected; dashboard Update was not used to alter report state. Validation, alternate roles and data-result branches remain untested. |
 | SCR-137 | Calendar expanded view (/manager2/oceansatarthurs/reporting/embed/dashboards/358) | SCR-029 | Expanded view dialog, Calendar month grid, Close, Previous slide | PARTIALLY_INSPECTED_WITH_REASON: Expanded month dialog opened and closed; other slide or data export not executed. |
 | SCR-138 | Selected floorplan table details (/app/availability/oceansatarthurs/floorplan-layouts/editor/:layoutId) | SCR-096 | Selection Details panel, Default Settings, Floorplan Specific Settings, selected-table toolbar | PARTIALLY_INSPECTED_WITH_REASON: Selected table panel and safe menus inspected; no shape, seating, rotation, move, duplicate or save applied. |
+
+| SCR-139 | Existing reservation detail panel (/manager/oceansatarthurs/reservations/day/:date (detail panel)) | SCR-002 | Reservation status menu, Table assignment, Guest profile link, Date/time/covers, Seating area, Access-rule link | PARTIALLY_INSPECTED_WITH_REASON: Read-only detail and status options observed. No status transition, guest edit, payment, comment or message submitted. |
+| SCR-140 | Existing client profile (/manager/:venueId/clients/profile/:clientId) | SCR-139 | Clients / Profile breadcrumb, Edit profile link, Contact details, Cards on file, Special occasions, Marketing opt-in | PARTIALLY_INSPECTED_WITH_REASON: Read-only profile opened in a new tab; personal values not retained. Edit, unlink, consent and payment changes untested. |
+| SCR-141 | Existing client inline edit (/manager/:venueId/clients/profile/:clientId (inline edit)) | SCR-140 | Inline contact/profile form, Tags, Address, Special occasions, Loyalty fields, Language | PARTIALLY_INSPECTED_WITH_REASON: Inline edit opened; no values entered, Save or Remove Personal Data executed. Validation and persistence need disposable profile. |
+| SCR-142 | Existing shift detail (/app/availability/oceansatarthurs/availability-settings/shifts/:shiftId?date=:date&startDate=:date) | SCR-024 | Hours of Operation, Customized Settings previews, Floorplan Layout, Seating Areas, Durations, Payment & Policy | PARTIALLY_INSPECTED_WITH_REASON: Read-only shift details and core preview accordions inspected; Edit/Clone/Delete effects and other roles untested. |
+| SCR-143 | Shift edit scope dialog (/app/availability/oceansatarthurs/availability-settings/shifts/:shiftId?date=:date&startDate=:date) | SCR-142 | Specific-date override radio, Effective-from-date radio, All present/future radio, Specific Date textbox, Cancel, Continue | PARTIALLY_INSPECTED_WITH_REASON: Scope choices inspected; Continue opened unsaved specific-date form. No scope change or save submitted. |
+| SCR-144 | Specific-date shift edit form (/app/availability/oceansatarthurs/availability-settings/shifts/:shiftId?date=:date&startDate=:date (edit panel)) | SCR-143 | Shift Name, First Reservation, Last Reservation, Date disabled, Customized Settings sections, Cancel | PARTIALLY_INSPECTED_WITH_REASON: Specific-date form inspected without changing fields. Cancel opened Unsaved Changes; Exit Without Saving closed it. No save. |
 
 ## DISC-002 detailed continuation evidence — 2026-09-27
 
@@ -813,3 +820,41 @@ Filter dialog selections were temporary UI state; no dashboard Update, schedule,
 ### DISC-002 gate
 
 Prior route-opening evidence is retained for all 41 previously assigned screens; five new nested surfaces SCR-134–SCR-138 share their parent routes and were opened. No NAV_ONLY entry. Parent/child/workflow references, unique IDs, inventory/registry IDs and routes validated. Unknown and partial reasons remain explicit. No live production save, publish, delete, send, export, schedule, charge, invitation or configuration change. `decisions.json` remains absent as U-005/Q-009 project-document gap only. DISC-002 VERIFIED; DISC-003 READY but not executed. Exact first DISC-003 action: reopen SCR-097 Reservation Confirmation after a settled load, inspect whether either residual `Loading...` line clears or exposes a safe control, and record U-008 result without editing or publishing.
+
+## DISC-003 prioritized core discovery checkpoint — 2026-09-27
+
+Status: IN_PROGRESS. Detailed Reporting parity is intentionally deferred by product owner; all prior confirmed Reporting evidence remains intact. Unknown Reporting details may remain DEFERRED / UNKNOWN / NEEDS TESTING: "Deferred by product owner; detailed Reporting parity is not required for the current discovery milestone." No application code or architecture decisions.
+
+### SCR-097 and U-008 short verification
+
+CONFIRMED: Reopened and reloaded Reservation Confirmation; after normal settling, two `Loading...` labels remained below populated Reservation Confirmation and Referrals grids. No new read-only control or explicit failure message appeared. Outcome B was observed for this short check; indefinite persistence or failed component cannot be established. STATUS: UNKNOWN / NEEDS TESTING. Stop investigating for this milestone; use a later authorized test session. No edit/publish.
+
+### Priority 1 and 2: core workflows and dependencies
+
+- CONFIRMED SCR-002 → SCR-139: an existing booked row opened a reservation detail panel. Current example status was Confirmed. Status menu offered Booked, Left Message, Hold, No Answer, Wrong Number, Confirmed, Arrived, Partially Arrived, Late, Canceled, Canceled and notify, No Show and custom Move to Arthgurs. These are visible choices, not verified allowed transitions. Detail displayed assigned table, date/time/covers, seating area, selected access-rule link, notes/tags, contact, card-related action, Comments/Messaging tabs and event history. Activity showed booking, auto-assignment and note-change entries. No status or record changed.
+- CONFIRMED SCR-139 → SCR-140 → SCR-141: the detail's guest link opened an existing Clients / Profile page in a new tab. The profile showed contact, card, special occasion, marketing opt-in, tags, history and Need to know sections. Edit profile exposed an inline form for identity, contact/address, notes, occasions, loyalty and language, with Save and Remove Personal Data. No personal values retained; tab closed without saving. The directory-to-profile route was not separately tested.
+- CONFIRMED SCR-003 from floorplan: Add Reservation displayed date/shift, duration, seating area, Show Access Rules, client lookup, payment requirement override, source, reservation tags and Book Reservation. Guest lookup text instructs starting with a phone number to search group, SevenRooms and DoorDash guest profiles. No identifier entered, reservation booked, card charged or override selected.
+- CONFIRMED SCR-004/SCR-005: Grid and floorplan for the same selected date showed Dinner Su. Grid's Cover Flow displayed 15-minute intervals with a 40-cover denominator, matching the visible pacing limit in the shift detail. Floorplan showed the same shift and room tabs with booked reservation/covers summary. This is visible alignment, not a claim about backend computation.
+- CONFIRMED SCR-024 → SCR-142: an existing Sunday dinner shift opened a detail route. Hours showed day, date range, first/last reservation, meal period and 15-minute interval. Expanded previews exposed floorplan layout/table capacity, seating-area reservability, party-size duration bands, payment/card and booking/cancellation policies, max covers per seating interval, upgrades empty state, in-house booking window and max party size. Main was described as online/in-house bookable; other listed areas were Non-Reservable, excluded from reservation inventory while still available for walk-ins/manual assignment. These are shift-specific visible settings; other shifts UNKNOWN.
+- CONFIRMED SCR-142 → SCR-143 → SCR-144: Edit opened a scope dialog offering specific-date override (selected), edit from a date forward, or all present/future days. The UI states single-day overrides persist when editing broader scope. Continue on default opened a named specific-date form with first/last reservation time, disabled date and customized setting sections. Cancel opened Unsaved Changes; Exit Without Saving discarded. No shift save, clone or delete. Other scope forms NEEDS TESTING in isolated venue.
+- CONFIRMED SCR-082: Reservation Statuses settings separated Pre-Service and In-Service statuses. In-Service includes Partially Seated, Seated, Order Placed, 1st–4th Course, Dessert, Check Dropped, Paid, Bus Table and Left. This is a configuration list, not transition evidence. UI notice says mobile changes may take six hours unless users log out/in; no setting changed.
+- CONFIRMED SCR-064: Self-Updating Table Statuses setup displayed connected POS prerequisite; menu import/upload and item/category-to-status mapping described. Current view offered Connect a point of sale. No connection initiated; mapping controls beyond the prerequisite INACCESSIBLE in current state.
+- CONFIRMED SCR-006: current Requests day showed `No requests for this day`, with filters for date/shift/source/assignment and sort options. No request transition available from this empty state; Add Request and Export not executed.
+
+### Unresolved-item classification
+
+Primary classifications and reasons are recorded on every U-001–U-010 and Q-001–Q-011 registry item. Secondary test constraints are separate, so a core item can remain important while requiring isolated data.
+
+| Classification | IDs | Reason / boundary |
+|---|---|---|
+| CRITICAL_FOR_BUILD | U-001, Q-002 | Core write outcomes and lifecycle transitions require isolated fixtures; live transitions prohibited. |
+| IMPORTANT_FOR_BUILD | U-003, U-007, U-009, Q-001, Q-006, Q-011 | Core failure/validation, seating-area rule and remaining safe workflow states; unsafe branches need test venue. |
+| REQUIRES_OTHER_ROLE | U-002, Q-003 | Current account cannot establish lower-role permissions. |
+| PACKAGE_RESTRICTED | U-004, Q-007 | Group Clients Export displays NO ACCESS; Reporting detail deferred. |
+| CAN_DEFER | U-005, U-006, U-008, U-010, Q-004, Q-005, Q-008, Q-009, Q-010 | Document gap, secondary language behavior, resolved interruption or reference backend/report detail does not block current core behavior discovery. Each registry item has its own whyBuildCanProceed reason. |
+
+No item is left unclassified. `docs/project-map/decisions.json` remains absent as a project-document gap; no architecture decision created.
+
+### Next exact DISC-003 action
+
+Open SCR-070 Availability Quick View for the current authorized date. Inspect its date/shift selection, visible slot and empty states, and read-only navigation into Access Rules. Record how it relates to SCR-024/SCR-142 without selecting inventory or changing availability. Then inspect SCR-080 Tables and SCR-079 Seating Areas for safe read-only status/relationship controls.

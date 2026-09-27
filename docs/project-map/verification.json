@@ -49,6 +49,13 @@
       "status": "VERIFIED",
       "method": "Final JSON parse; unique IDs; inventory/registry IDs and routes; parent/child and workflow references; partial/unknown reasons; no NAV_ONLY or production writes",
       "result": "PASS after new surfaces SCR-134–SCR-138; 138 screens, 0 full, 137 partial, 1 package inaccessible, 0 NAV_ONLY. DISC-003 not executed."
+    },
+    {
+      "id": "CHK-008",
+      "taskId": "DISC-003",
+      "status": "IN_PROGRESS",
+      "method": "Brief SCR-097 reload; read-only reservation/client/shift/status/POS-prerequisite inspection; classify 21 unknown/question items; document cross-module routes",
+      "result": "SCR-097 retains two Loading... labels with no explicit failure or revealed control. Reservation detail/profile and shift details/edit scope observed without writes; classification complete, further core safe coverage remains."
     }
   ],
   "unresolvedQuestions": [
@@ -64,20 +71,21 @@
     "Q-010",
     "Q-011"
   ],
-  "liveChanges": "No production save/publish/delete/send/pay/invite submitted. Blank unsaved policy row removed by reload; original single row restored.",
+  "liveChanges": "No production save/publish/delete/send/pay/invite submitted. Blank unsaved policy row removed by reload; original single row restored. DISC-003: no live changes; shift edit draft exited without saving, profile inline edit tab closed without saving, reservation status menu only read.",
   "discoveryCounts": {
-    "total": 138,
+    "total": 144,
     "full": 0,
-    "partial": 137,
+    "partial": 143,
     "inaccessible": 1,
     "navOnly": 0,
-    "workflows": 17,
+    "workflows": 18,
     "questions": 11
   },
   "validationNotes": [
     "Initial document-generation check failed on non-zero-padded SCR-097 ID lookup; corrected padding and reran all document checks successfully.",
     "No application tests run: discovery documentation only.",
-    "Prior route opening evidence retained. All named safe DISC-002 nested surfaces inspected; unresolved residual Loading... and unsafe/other-role branches are explicit partial/unknown items for DISC-003 or isolated testing."
+    "Prior route opening evidence retained. All named safe DISC-002 nested surfaces inspected; unresolved residual Loading... and unsafe/other-role branches are explicit partial/unknown items for DISC-003 or isolated testing.",
+    "DISC-003 checkpoint: Reporting detail deferred by product owner; previously confirmed Reporting evidence preserved. No booking, guest, shift, status, POS or language update submitted."
   ],
   "accessInterruption": "Prior login/MFA interruption preserved as U-010. Existing browser authenticated on 2026-09-27; SCR-029 and SCR-028 accessible, discovery resumed, no prior repository evidence lost."
 }

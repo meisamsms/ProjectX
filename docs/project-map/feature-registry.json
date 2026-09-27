@@ -212,7 +212,8 @@
       ],
       "userRoles": "Current signed-in user; other roles NEEDS TESTING",
       "observedBusinessRules": [
-        "CONFIRMED: can show canceled/no-show reservations; list aggregates reservations and covers"
+        "CONFIRMED: can show canceled/no-show reservations; list aggregates reservations and covers",
+        "Clicking an existing booked row opens SCR-139, with status menu and profile/access-rule links; no action submitted."
       ],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
@@ -233,6 +234,9 @@
         "U-001",
         "U-002",
         "U-003"
+      ],
+      "childScreenIds": [
+        "SCR-139"
       ]
     },
     {
@@ -379,7 +383,8 @@
       ],
       "userRoles": "Current signed-in user; other roles NEEDS TESTING",
       "observedBusinessRules": [
-        "CONFIRMED: defaults include 1 hr 30 min duration in observed shift; reservation phone and last name requirements shown in venue settings"
+        "CONFIRMED: defaults include 1 hr 30 min duration in observed shift; reservation phone and last name requirements shown in venue settings",
+        "Current floorplan Add Reservation prefilled date/shift and showed duration, seating area, access-rule visibility, guest lookup, payment override, source, tags and Book Reservation. Guest lookup instructs entering a phone number to search group, SevenRooms and DoorDash profiles. No input or booking submitted."
       ],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
@@ -466,7 +471,8 @@
       ],
       "userRoles": "Current signed-in user; other roles NEEDS TESTING",
       "observedBusinessRules": [
-        "CONFIRMED: area heading includes manual-assignment-only bar in observed shift"
+        "CONFIRMED: area heading includes manual-assignment-only bar in observed shift",
+        "For the observed date, grid header selected Dinner Su and displayed Cover Flow per 15-minute interval with values against 40-cover pacing limit."
       ],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
@@ -544,7 +550,9 @@
         }
       ],
       "userRoles": "Current signed-in user; other roles NEEDS TESTING",
-      "observedBusinessRules": [],
+      "observedBusinessRules": [
+        "For the same observed date/shift, floorplan header selected Dinner Su and displayed three booked reservations/11 covers and room tabs; shared shift context with grid."
+      ],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
       "unknowns": [
@@ -640,7 +648,9 @@
       "modals": [],
       "notifications": [],
       "errors": [],
-      "emptyStates": [],
+      "emptyStates": [
+        "OBSERVED on 2026-09-27: No requests for this day."
+      ],
       "dependencies": [],
       "likelyEntities": [
         {
@@ -2697,6 +2707,9 @@
         "U-001",
         "U-002",
         "U-003"
+      ],
+      "childScreenIds": [
+        "SCR-142"
       ]
     },
     {
@@ -5499,7 +5512,8 @@
       "likelyEntities": [],
       "userRoles": "Current signed-in user; other roles NEEDS TESTING",
       "observedBusinessRules": [
-        "Requires POS connection to configure mapping"
+        "Requires POS connection to configure mapping",
+        "Self-Updating Table Statuses setup screen displayed a connected-POS prerequisite and Connect a point of sale; menu import/upload and item/category mapping described. No POS connection attempted."
       ],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
@@ -7012,7 +7026,9 @@
       "likelyEntities": [],
       "userRoles": "Current signed-in user; other roles NEEDS TESTING",
       "observedBusinessRules": [
-        "Mobile changes may take six hours; relogin refreshes immediately"
+        "Mobile changes may take six hours; relogin refreshes immediately",
+        "Settings displayed Pre-Service statuses Booked, Left Message, Hold, No Answer, Wrong Number, Confirmed, Arrived, Partially Arrived, Late, Canceled, No Show and a custom Move To Arthgurs; In-Service statuses included Partially Seated, Seated, Order Placed, 1st–4th Course, Dessert, Check Dropped, Paid, Bus Table and Left. This is configuration visibility, not allowed-transition evidence.",
+        "UI notice says changes appear in mobile apps within 6 hours; logging out and back in reflects them immediately. No change made."
       ],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
@@ -8035,7 +8051,8 @@
       "partialReason": "Clicking description and English value cells did not expose an editor. Loading indicator remained; further control availability UNKNOWN. No publish/delivery tested.",
       "unknowns": [
         "UNKNOWN: whether residual Loading... prevents additional controls",
-        "UNKNOWN_REQUIRES_SAFE_TEST_DATA: editing, translation, publish and delivery"
+        "UNKNOWN_REQUIRES_SAFE_TEST_DATA: editing, translation, publish and delivery",
+        "UNKNOWN / NEEDS TESTING: two Loading... labels persisted beneath populated grids after a normal reload and settling; no new safe control or explicit failure message appeared."
       ],
       "evidence": "Visible authorized UI 2026-09-26; private records and protected text omitted",
       "layout": "OBSERVED: Description and English language grid",
@@ -11307,6 +11324,646 @@
         "WHY IT CANNOT BE SAFELY VERIFIED": "Would change a production floorplan draft and could affect live layout if saved.",
         "FUTURE TEST METHOD": "Use disposable floorplan in isolated venue; test selection and edits."
       }
+    },
+    {
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "statuses": [
+        "Current Confirmed observed; menu labels Booked, Left Message, Hold, No Answer, Wrong Number, Confirmed, Arrived, Partially Arrived, Late, Canceled, Canceled and notify, No Show, Move to Arthgurs"
+      ],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [
+        "SCR-002"
+      ],
+      "likelyEntities": [],
+      "observedBusinessRules": [
+        "A confirmed reservation row opens detail panel without top-level route change beyond selected shift query.",
+        "Detail links to a client profile and selected access rule; activity history displayed booking, assignment and note events.",
+        "Status options were listed; permitted transitions and effects are UNKNOWN because none was selected."
+      ],
+      "unknowns": [],
+      "tabs": [],
+      "cards": [],
+      "id": "SCR-139",
+      "name": "Existing reservation detail panel",
+      "route": "/manager/oceansatarthurs/reservations/day/:date (detail panel)",
+      "parentNavigation": "Reservations day",
+      "parentScreenId": "SCR-002",
+      "domainId": "DOM-02",
+      "purpose": "Existing reservation detail panel",
+      "visibleComponents": [
+        "Reservation status menu",
+        "Table assignment",
+        "Guest profile link",
+        "Date/time/covers",
+        "Seating area",
+        "Access-rule link",
+        "Notes/tags",
+        "Contact",
+        "Payment-related action",
+        "Activity history",
+        "Comments and Messaging tabs"
+      ],
+      "triggerAction": "Click an existing booked row",
+      "surfaceKey": "Existing reservation detail panel",
+      "parentWorkflowId": "FLOW-018",
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "userRoles": "Current authorized account OBSERVED; other roles UNKNOWN",
+      "evidenceStatus": "OBSERVED",
+      "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
+      "evidence": "Visible authenticated read-only UI, 2026-09-27; no guest values retained",
+      "partialReason": "Read-only detail and status options observed. No status transition, guest edit, payment, comment or message submitted.",
+      "layout": "Nested page, panel or dialog",
+      "loadingState": "UNKNOWN",
+      "populatedState": "OBSERVED",
+      "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "disabledState": "UNKNOWN",
+      "visiblePermissionBehavior": "Current account OBSERVED; other roles UNKNOWN",
+      "unknownBehaviorIds": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-003",
+      "partialBoundary": {
+        "PARTIAL REASON": "Read-only detail and status options observed. No status transition, guest edit, payment, comment or message submitted.",
+        "UNVERIFIED BEHAVIOR": "Status transitions, card/charge, guest/notes/tags modifications and messaging.",
+        "WHY IT CANNOT BE SAFELY VERIFIED": "Actions could affect a live reservation, personal data or payment.",
+        "FUTURE TEST METHOD": "Use isolated reservation and authorized test guest; exercise each transition and cancel/failure path."
+      },
+      "childScreenIds": [
+        "SCR-140"
+      ]
+    },
+    {
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [
+        "SCR-139",
+        "SCR-008"
+      ],
+      "likelyEntities": [],
+      "observedBusinessRules": [
+        "Reservation detail guest link opened this client profile in a new tab.",
+        "Profile displays cross-module history and links back to Clients."
+      ],
+      "unknowns": [],
+      "tabs": [],
+      "cards": [],
+      "id": "SCR-140",
+      "name": "Existing client profile",
+      "route": "/manager/:venueId/clients/profile/:clientId",
+      "parentNavigation": "Existing reservation detail panel",
+      "parentScreenId": "SCR-139",
+      "domainId": "DOM-02",
+      "purpose": "Existing client profile",
+      "visibleComponents": [
+        "Clients / Profile breadcrumb",
+        "Edit profile link",
+        "Contact details",
+        "Cards on file",
+        "Special occasions",
+        "Marketing opt-in",
+        "Tags",
+        "History",
+        "Need to know"
+      ],
+      "triggerAction": "Click guest profile link in reservation detail",
+      "surfaceKey": "Existing client profile",
+      "parentWorkflowId": "FLOW-018",
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "userRoles": "Current authorized account OBSERVED; other roles UNKNOWN",
+      "evidenceStatus": "OBSERVED",
+      "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
+      "evidence": "Visible authenticated read-only UI, 2026-09-27; no guest values retained",
+      "partialReason": "Read-only profile opened in a new tab; personal values not retained. Edit, unlink, consent and payment changes untested.",
+      "layout": "Nested page, panel or dialog",
+      "loadingState": "UNKNOWN",
+      "populatedState": "OBSERVED",
+      "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "disabledState": "UNKNOWN",
+      "visiblePermissionBehavior": "Current account OBSERVED; other roles UNKNOWN",
+      "unknownBehaviorIds": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-003",
+      "partialBoundary": {
+        "PARTIAL REASON": "Read-only profile opened in a new tab; personal values not retained. Edit, unlink, consent and payment changes untested.",
+        "UNVERIFIED BEHAVIOR": "Profile updates, unlink, card and consent changes.",
+        "WHY IT CANNOT BE SAFELY VERIFIED": "Would modify live personal or payment data.",
+        "FUTURE TEST METHOD": "Use authorized disposable guest and test venue."
+      },
+      "childScreenIds": [
+        "SCR-141"
+      ]
+    },
+    {
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "First name",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Last Name",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Job Title",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Company",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Profile notes",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Private notes",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Email",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Alt email",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Address",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "City",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "State",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Postal code",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Country",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Loyalty ID",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Loyalty Tier",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Loyalty Rank",
+          "type": "textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Salutation",
+          "type": "combobox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Gender",
+          "type": "radio group",
+          "options": [
+            "Male",
+            "Female"
+          ],
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Language",
+          "type": "combobox",
+          "observedValue": "English",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
+      "tables": [],
+      "filters": [],
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [
+        "SCR-140"
+      ],
+      "likelyEntities": [],
+      "observedBusinessRules": [],
+      "unknowns": [],
+      "tabs": [],
+      "cards": [],
+      "id": "SCR-141",
+      "name": "Existing client inline edit",
+      "route": "/manager/:venueId/clients/profile/:clientId (inline edit)",
+      "parentNavigation": "Existing client profile",
+      "parentScreenId": "SCR-140",
+      "domainId": "DOM-02",
+      "purpose": "Existing client inline edit",
+      "visibleComponents": [
+        "Inline contact/profile form",
+        "Tags",
+        "Address",
+        "Special occasions",
+        "Loyalty fields",
+        "Language",
+        "Save",
+        "Remove Personal Data"
+      ],
+      "triggerAction": "Edit profile link",
+      "surfaceKey": "Existing client inline edit",
+      "parentWorkflowId": "FLOW-018",
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "userRoles": "Current authorized account OBSERVED; other roles UNKNOWN",
+      "evidenceStatus": "OBSERVED",
+      "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
+      "evidence": "Visible authenticated read-only UI, 2026-09-27; no guest values retained",
+      "partialReason": "Inline edit opened; no values entered, Save or Remove Personal Data executed. Validation and persistence need disposable profile.",
+      "layout": "Nested page, panel or dialog",
+      "loadingState": "UNKNOWN",
+      "populatedState": "OBSERVED",
+      "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "disabledState": "UNKNOWN",
+      "visiblePermissionBehavior": "Current account OBSERVED; other roles UNKNOWN",
+      "unknownBehaviorIds": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-003",
+      "partialBoundary": {
+        "PARTIAL REASON": "Inline edit opened; no values entered, Save or Remove Personal Data executed. Validation and persistence need disposable profile.",
+        "UNVERIFIED BEHAVIOR": "Validation, consent, saving, removal and cross-venue effects.",
+        "WHY IT CANNOT BE SAFELY VERIFIED": "Would change or delete live personal data.",
+        "FUTURE TEST METHOD": "Use disposable test client and authorized role."
+      }
+    },
+    {
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [],
+      "tables": [],
+      "filters": [],
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [
+        "SCR-024",
+        "SCR-077",
+        "SCR-079",
+        "SCR-080",
+        "SCR-081",
+        "SCR-087"
+      ],
+      "likelyEntities": [],
+      "observedBusinessRules": [
+        "Selected Sunday dinner shift lists its date range, first/last reservation, meal period and 15-minute time interval.",
+        "Floorplan preview shows layout, table count, combinations and maximum table/combination capacity.",
+        "Seating preview labels Main online/in-house bookable and other areas non-reservable for reservation inventory, while tables remain for walk-ins/manual assignment.",
+        "Duration preview maps party-size bands to lengths.",
+        "Payment & Policy preview shows card requirement, online modify/cancel window and booking/cancellation policies.",
+        "Pacing preview shows max covers per seating interval; Advanced preview shows in-house booking window and max party size.",
+        "Upgrades preview showed None for this shift."
+      ],
+      "unknowns": [],
+      "tabs": [],
+      "cards": [],
+      "id": "SCR-142",
+      "name": "Existing shift detail",
+      "route": "/app/availability/oceansatarthurs/availability-settings/shifts/:shiftId?date=:date&startDate=:date",
+      "parentNavigation": "Availability Settings",
+      "parentScreenId": "SCR-024",
+      "domainId": "DOM-08",
+      "purpose": "Existing shift detail",
+      "visibleComponents": [
+        "Hours of Operation",
+        "Customized Settings previews",
+        "Floorplan Layout",
+        "Seating Areas",
+        "Durations",
+        "Payment & Policy",
+        "Pacing Restrictions",
+        "Upgrades",
+        "Reporting Groups",
+        "Advanced",
+        "View Activity Log",
+        "Close",
+        "Edit",
+        "Clone",
+        "Delete"
+      ],
+      "triggerAction": "Click existing shift card in Shifts week calendar",
+      "surfaceKey": "Existing shift detail",
+      "parentWorkflowId": "FLOW-007",
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "userRoles": "Current authorized account OBSERVED; other roles UNKNOWN",
+      "evidenceStatus": "OBSERVED",
+      "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
+      "evidence": "Visible authenticated read-only UI, 2026-09-27; no guest values retained",
+      "partialReason": "Read-only shift details and core preview accordions inspected; Edit/Clone/Delete effects and other roles untested.",
+      "layout": "Nested page, panel or dialog",
+      "loadingState": "UNKNOWN",
+      "populatedState": "OBSERVED",
+      "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "disabledState": "UNKNOWN",
+      "visiblePermissionBehavior": "Current account OBSERVED; other roles UNKNOWN",
+      "unknownBehaviorIds": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-003",
+      "partialBoundary": {
+        "PARTIAL REASON": "Read-only shift details and core preview accordions inspected; Edit/Clone/Delete effects and other roles untested.",
+        "UNVERIFIED BEHAVIOR": "Persistence, role limits, clone/delete and exact availability calculation.",
+        "WHY IT CANNOT BE SAFELY VERIFIED": "Live shift mutation or destructive action prohibited.",
+        "FUTURE TEST METHOD": "Use isolated shift, floorplan and booking fixture."
+      },
+      "childScreenIds": [
+        "SCR-143"
+      ]
+    },
+    {
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Edit scope",
+          "type": "radio group",
+          "options": [
+            "Override a specific date only",
+            "Edit from a specific date moving forward",
+            "Edit all present and future days"
+          ],
+          "observedValue": "Override a specific date only",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Specific Date",
+          "type": "textbox/date picker",
+          "observedValue": "09/27/2026",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
+      "tables": [],
+      "filters": [],
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [
+        "SCR-142"
+      ],
+      "likelyEntities": [],
+      "observedBusinessRules": [
+        "Dialog states a single-date override leaves other days unchanged; effective-from and all-present/future paths preserve single-day overrides.",
+        "Continue on default scope opened edit form; no server-side change confirmed."
+      ],
+      "unknowns": [],
+      "tabs": [],
+      "cards": [],
+      "id": "SCR-143",
+      "name": "Shift edit scope dialog",
+      "route": "/app/availability/oceansatarthurs/availability-settings/shifts/:shiftId?date=:date&startDate=:date",
+      "parentNavigation": "Existing shift detail",
+      "parentScreenId": "SCR-142",
+      "domainId": "DOM-08",
+      "purpose": "Shift edit scope dialog",
+      "visibleComponents": [
+        "Specific-date override radio",
+        "Effective-from-date radio",
+        "All present/future radio",
+        "Specific Date textbox",
+        "Cancel",
+        "Continue"
+      ],
+      "triggerAction": "Edit existing shift",
+      "surfaceKey": "Shift edit scope dialog",
+      "parentWorkflowId": "FLOW-007",
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "userRoles": "Current authorized account OBSERVED; other roles UNKNOWN",
+      "evidenceStatus": "OBSERVED",
+      "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
+      "evidence": "Visible authenticated read-only UI, 2026-09-27; no guest values retained",
+      "partialReason": "Scope choices inspected; Continue opened unsaved specific-date form. No scope change or save submitted.",
+      "layout": "Nested page, panel or dialog",
+      "loadingState": "UNKNOWN",
+      "populatedState": "OBSERVED",
+      "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "disabledState": "UNKNOWN",
+      "visiblePermissionBehavior": "Current account OBSERVED; other roles UNKNOWN",
+      "unknownBehaviorIds": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-003",
+      "partialBoundary": {
+        "PARTIAL REASON": "Scope choices inspected; Continue opened unsaved specific-date form. No scope change or save submitted.",
+        "UNVERIFIED BEHAVIOR": "Other scope branches, persistence and override precedence.",
+        "WHY IT CANNOT BE SAFELY VERIFIED": "Saving would change live availability.",
+        "FUTURE TEST METHOD": "Use isolated recurring shift and single-day overrides."
+      },
+      "childScreenIds": [
+        "SCR-144"
+      ]
+    },
+    {
+      "primaryActions": [],
+      "secondaryActions": [],
+      "forms": [],
+      "fields": [
+        {
+          "name": "Shift Name",
+          "type": "textbox",
+          "observedValue": "Dinner Su 09/27/2026",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "First Reservation",
+          "type": "time combobox",
+          "observedValue": "4:30 PM",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Last Reservation",
+          "type": "time combobox",
+          "observedValue": "8:15 PM",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Date",
+          "type": "date textbox",
+          "observedValue": "09/27/2026",
+          "disabled": true,
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        }
+      ],
+      "tables": [],
+      "filters": [],
+      "statuses": [],
+      "buttons": [],
+      "menus": [],
+      "modals": [],
+      "notifications": [],
+      "errors": [],
+      "emptyStates": [],
+      "dependencies": [
+        "SCR-143"
+      ],
+      "likelyEntities": [],
+      "observedBusinessRules": [
+        "Default override form is named for selected date and disables Date field.",
+        "Cancel prompted Back to Editing or Exit Without Saving; latter discarded draft."
+      ],
+      "unknowns": [],
+      "tabs": [],
+      "cards": [],
+      "id": "SCR-144",
+      "name": "Specific-date shift edit form",
+      "route": "/app/availability/oceansatarthurs/availability-settings/shifts/:shiftId?date=:date&startDate=:date (edit panel)",
+      "parentNavigation": "Shift edit scope dialog",
+      "parentScreenId": "SCR-143",
+      "domainId": "DOM-08",
+      "purpose": "Specific-date shift edit form",
+      "visibleComponents": [
+        "Shift Name",
+        "First Reservation",
+        "Last Reservation",
+        "Date disabled",
+        "Customized Settings sections",
+        "Cancel",
+        "Save",
+        "Unsaved Changes confirmation"
+      ],
+      "triggerAction": "Continue with specific-date override selected",
+      "surfaceKey": "Specific-date shift edit form",
+      "parentWorkflowId": "FLOW-007",
+      "searchBehavior": "UNKNOWN",
+      "sorting": "UNKNOWN",
+      "pagination": "UNKNOWN",
+      "userRoles": "Current authorized account OBSERVED; other roles UNKNOWN",
+      "evidenceStatus": "OBSERVED",
+      "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
+      "evidence": "Visible authenticated read-only UI, 2026-09-27; no guest values retained",
+      "partialReason": "Specific-date form inspected without changing fields. Cancel opened Unsaved Changes; Exit Without Saving closed it. No save.",
+      "layout": "Nested page, panel or dialog",
+      "loadingState": "UNKNOWN",
+      "populatedState": "OBSERVED",
+      "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "disabledState": "UNKNOWN",
+      "visiblePermissionBehavior": "Current account OBSERVED; other roles UNKNOWN",
+      "unknownBehaviorIds": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-003",
+      "partialBoundary": {
+        "PARTIAL REASON": "Specific-date form inspected without changing fields. Cancel opened Unsaved Changes; Exit Without Saving closed it. No save.",
+        "UNVERIFIED BEHAVIOR": "Saved override, validation, future/all-day scope form and downstream reservations.",
+        "WHY IT CANNOT BE SAFELY VERIFIED": "Would alter live availability.",
+        "FUTURE TEST METHOD": "Use isolated shift and test reservations."
+      }
     }
   ],
   "workflows": [
@@ -11342,11 +11999,12 @@
       "status": "NEEDS TESTING",
       "steps": [
         "SCR-002",
-        "SCR-003"
+        "SCR-003",
+        "SCR-139"
       ],
       "result": "Form inspected; booking not submitted",
       "entryPoint": "SCR-002",
-      "branches": "UNKNOWN",
+      "branches": "OBSERVED Add Reservation form dependencies and existing-reservation detail. Status changes and booking not submitted.",
       "statuses": "UNKNOWN",
       "validation": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "successState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
@@ -11471,18 +12129,26 @@
       "name": "Shift and Mode configuration",
       "status": "NEEDS TESTING",
       "steps": [
-        "SCR-024"
+        "SCR-024",
+        "SCR-142",
+        "SCR-143",
+        "SCR-144"
       ],
       "result": "Calendar and Modes tab inspected; no change saved",
       "entryPoint": "SCR-024",
-      "branches": "UNKNOWN",
+      "branches": "Observed weekly shift card to detail previews, Edit scope dialog (specific date, from date, all future), default specific-date draft and discard. Clone/Delete not activated.",
       "statuses": "UNKNOWN",
       "validation": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "successState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
       "failureState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
-      "cancelBackBehavior": "UNKNOWN",
+      "cancelBackBehavior": "OBSERVED Cancel on edit form opens Unsaved Changes; Exit Without Saving discards draft. Other scope branches not submitted.",
       "crossModuleDependencies": [
-        "SCR-024"
+        "SCR-024",
+        "SCR-077",
+        "SCR-079",
+        "SCR-080",
+        "SCR-081",
+        "SCR-087"
       ],
       "unknownBehaviorIds": [
         "U-001",
@@ -11750,6 +12416,36 @@
         "U-003"
       ],
       "result": "No final action submitted"
+    },
+    {
+      "id": "FLOW-018",
+      "name": "Reservation detail to client profile",
+      "status": "PARTIALLY_INSPECTED_WITH_REASON",
+      "entryPoint": "SCR-002",
+      "steps": [
+        "SCR-002",
+        "SCR-139",
+        "SCR-140",
+        "SCR-141"
+      ],
+      "branches": "Existing booked row > detail > guest profile link opens new tab > Edit profile opens inline form",
+      "statuses": "OBSERVED one Confirmed reservation and status choices; no transition performed",
+      "validation": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "successState": "OBSERVED linked profile opened; no write success observed",
+      "failureState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
+      "cancelBackBehavior": "Profile tab closed without saving; reservation detail status menu dismissed",
+      "crossModuleDependencies": [
+        "SCR-002",
+        "SCR-008",
+        "SCR-139",
+        "SCR-140"
+      ],
+      "unknownBehaviorIds": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
+      "result": "Read-only cross-module navigation observed; no record changed"
     }
   ],
   "unresolvedQuestions": [
@@ -11759,7 +12455,12 @@
       "question": "What are the full validation and error messages for booking, request, client, offer, and user forms?",
       "reason": "Requires unobserved state or safe test data",
       "risk": "Incorrect product behavior assumption",
-      "futureVerificationMethod": "Revisit with isolated test records"
+      "futureVerificationMethod": "Revisit with isolated test records",
+      "buildPriorityClassification": "IMPORTANT_FOR_BUILD",
+      "classificationReason": "Core booking/request/client/user validation needs isolated test data for exact messages.",
+      "testConstraints": [
+        "UNSAFE_TO_TEST"
+      ]
     },
     {
       "id": "Q-002",
@@ -11767,7 +12468,12 @@
       "question": "How do statuses change across reservation, request, table, and payment lifecycles?",
       "reason": "Requires unobserved state or safe test data",
       "risk": "Incorrect product behavior assumption",
-      "futureVerificationMethod": "Revisit with isolated test records"
+      "futureVerificationMethod": "Revisit with isolated test records",
+      "buildPriorityClassification": "CRITICAL_FOR_BUILD",
+      "classificationReason": "Reservation, request, table and payment state model is central; live transitions are prohibited.",
+      "testConstraints": [
+        "UNSAFE_TO_TEST"
+      ]
     },
     {
       "id": "Q-003",
@@ -11775,7 +12481,9 @@
       "question": "Which actions and screens differ under lower permission roles?",
       "reason": "Requires unobserved state or safe test data",
       "risk": "Incorrect product behavior assumption",
-      "futureVerificationMethod": "Revisit with isolated test records"
+      "futureVerificationMethod": "Revisit with isolated test records",
+      "buildPriorityClassification": "REQUIRES_OTHER_ROLE",
+      "classificationReason": "Current account does not establish lower-role permissions."
     },
     {
       "id": "Q-004",
@@ -11783,7 +12491,10 @@
       "question": "What are the exact settings and report behaviors in navigation-only entries?",
       "reason": "Requires unobserved state or safe test data",
       "risk": "Incorrect product behavior assumption",
-      "futureVerificationMethod": "Revisit with isolated test records"
+      "futureVerificationMethod": "Revisit with isolated test records",
+      "buildPriorityClassification": "CAN_DEFER",
+      "classificationReason": "NAV_ONLY is zero and detailed Reporting parity is not required for the current milestone; preserve existing findings.",
+      "whyBuildCanProceed": "NAV_ONLY is zero and detailed Reporting parity is not required for the current milestone; preserve existing findings."
     },
     {
       "id": "Q-005",
@@ -11791,7 +12502,10 @@
       "question": "What network contracts and data model exist behind observed UI? No API/network audit performed.",
       "reason": "Requires unobserved state or safe test data",
       "risk": "Incorrect product behavior assumption",
-      "futureVerificationMethod": "Revisit with isolated test records"
+      "futureVerificationMethod": "Revisit with isolated test records",
+      "buildPriorityClassification": "CAN_DEFER",
+      "classificationReason": "Reference network/data model is not needed to document observable product behavior; internal design must be independent.",
+      "whyBuildCanProceed": "Reference network/data model is not needed to document observable product behavior; internal design must be independent."
     },
     {
       "id": "Q-006",
@@ -11799,7 +12513,12 @@
       "question": "How do zero results, loading, unavailable slots, payment failure, duplicate reservations, and expired requests appear?",
       "reason": "Requires unobserved state or safe test data",
       "risk": "Incorrect product behavior assumption",
-      "futureVerificationMethod": "Revisit with isolated test records"
+      "futureVerificationMethod": "Revisit with isolated test records",
+      "buildPriorityClassification": "IMPORTANT_FOR_BUILD",
+      "classificationReason": "Core empty/loading/unavailable states matter; failure/duplicate/payment branches require safe fixtures.",
+      "testConstraints": [
+        "UNSAFE_TO_TEST"
+      ]
     },
     {
       "id": "Q-007",
@@ -11807,7 +12526,9 @@
       "question": "Group Clients Export contents",
       "reason": "Package NO ACCESS",
       "risk": "Discovery gap",
-      "futureVerificationMethod": "Use authorized test account or repository history"
+      "futureVerificationMethod": "Use authorized test account or repository history",
+      "buildPriorityClassification": "PACKAGE_RESTRICTED",
+      "classificationReason": "Group Clients Export shows package NO ACCESS and Reporting export details are low priority."
     },
     {
       "id": "Q-008",
@@ -11815,7 +12536,13 @@
       "question": "Guest language editing and publish behavior",
       "reason": "No live publish or protected copy",
       "risk": "Discovery gap",
-      "futureVerificationMethod": "Use authorized test account or repository history"
+      "futureVerificationMethod": "Use authorized test account or repository history",
+      "buildPriorityClassification": "CAN_DEFER",
+      "classificationReason": "Guest-language editing and publish behavior is secondary and would require live write or isolated fixture.",
+      "testConstraints": [
+        "UNSAFE_TO_TEST"
+      ],
+      "whyBuildCanProceed": "Guest-language editing and publish behavior is secondary and would require live write or isolated fixture."
     },
     {
       "id": "Q-009",
@@ -11823,7 +12550,10 @@
       "question": "Location of decisions record",
       "reason": "File absent",
       "risk": "Discovery gap",
-      "futureVerificationMethod": "Use authorized test account or repository history"
+      "futureVerificationMethod": "Use authorized test account or repository history",
+      "buildPriorityClassification": "CAN_DEFER",
+      "classificationReason": "Absent decisions.json is a project-document gap, not a PHASE-01 reference UI behavior; locate before architecture decisions.",
+      "whyBuildCanProceed": "Absent decisions.json is a project-document gap, not a PHASE-01 reference UI behavior; locate before architecture decisions."
     },
     {
       "id": "Q-010",
@@ -11831,7 +12561,13 @@
       "question": "Do residual Loading indicators hide guest-language controls?",
       "reason": "Populated grid and loading label coexist.",
       "risk": "Incomplete controls inventory",
-      "futureVerificationMethod": "Safe revisit and visual inspection"
+      "futureVerificationMethod": "Safe revisit and visual inspection",
+      "buildPriorityClassification": "CAN_DEFER",
+      "classificationReason": "SCR-097 still shows residual Loading... without a safe revealed control; core flows can proceed.",
+      "testConstraints": [
+        "NEEDS TESTING"
+      ],
+      "whyBuildCanProceed": "SCR-097 still shows residual Loading... without a safe revealed control; core flows can proceed."
     },
     {
       "id": "Q-011",
@@ -11839,7 +12575,12 @@
       "question": "How is seating-area assignment enforced in floorplan?",
       "reason": "Guidance and active unassigned group coexist.",
       "risk": "Incorrect business rule",
-      "futureVerificationMethod": "Isolated test venue validation"
+      "futureVerificationMethod": "Isolated test venue validation",
+      "buildPriorityClassification": "IMPORTANT_FOR_BUILD",
+      "classificationReason": "Seating-area requirement may affect table activation and floorplan inventory; validate in isolated layout.",
+      "testConstraints": [
+        "UNSAFE_TO_TEST"
+      ]
     }
   ],
   "modules": [
@@ -11930,70 +12671,108 @@
       "description": "Live write outcomes",
       "reason": "No production booking, payment, message, publish or import submitted",
       "risk": "Success and validation unverified",
-      "futureVerificationMethod": "Use isolated test venue and disposable records"
+      "futureVerificationMethod": "Use isolated test venue and disposable records",
+      "buildPriorityClassification": "CRITICAL_FOR_BUILD",
+      "classificationReason": "Write outcomes define core lifecycle but production writes are prohibited.",
+      "testConstraints": [
+        "UNSAFE_TO_TEST"
+      ]
     },
     {
       "id": "U-002",
       "description": "Other role permissions",
       "reason": "Only current signed-in account available",
       "risk": "Access may differ",
-      "futureVerificationMethod": "Use authorized test accounts for each role"
+      "futureVerificationMethod": "Use authorized test accounts for each role",
+      "buildPriorityClassification": "REQUIRES_OTHER_ROLE",
+      "classificationReason": "Only current account is observable; lower-role access cannot be asserted."
     },
     {
       "id": "U-003",
       "description": "Failures, pagination, sorting and branch details",
       "reason": "Only bounded read-only interactions/current live data available",
       "risk": "Hidden states remain",
-      "futureVerificationMethod": "Exercise safe test data and filters"
+      "futureVerificationMethod": "Exercise safe test data and filters",
+      "buildPriorityClassification": "IMPORTANT_FOR_BUILD",
+      "classificationReason": "Core failures and branches affect UX; sample safely and use isolated fixtures for deliberate failures.",
+      "testConstraints": [
+        "UNSAFE_TO_TEST"
+      ]
     },
     {
       "id": "U-004",
       "description": "Group Clients Export content",
       "reason": "NO ACCESS package notice",
       "risk": "Export fields unknown",
-      "futureVerificationMethod": "Inspect with enabled package"
+      "futureVerificationMethod": "Inspect with enabled package",
+      "buildPriorityClassification": "PACKAGE_RESTRICTED",
+      "classificationReason": "Package explicitly denies Group Clients Export; Reporting export parity is deferred."
     },
     {
       "id": "U-005",
       "description": "Missing decisions.json",
       "reason": "Referenced file absent from repository checkpoint",
       "risk": "Decision memory gap",
-      "futureVerificationMethod": "Locate in history or create blank register later"
+      "futureVerificationMethod": "Locate in history or create blank register later",
+      "buildPriorityClassification": "CAN_DEFER",
+      "classificationReason": "Missing decisions register is a document gap, not a reference behavior needed for the current discovery milestone; resolve before recording architecture decisions.",
+      "whyBuildCanProceed": "Missing decisions register is a document gap, not a reference behavior needed for the current discovery milestone; resolve before recording architecture decisions."
     },
     {
       "id": "U-006",
       "description": "Message template publish/translation",
       "reason": "Protected text avoided; no live publish",
       "risk": "Workflow unknown",
-      "futureVerificationMethod": "Use isolated test venue and locale"
+      "futureVerificationMethod": "Use isolated test venue and locale",
+      "buildPriorityClassification": "CAN_DEFER",
+      "classificationReason": "Guest-language publish/translation is secondary to reservation and availability workflows; safe read-only grids suffice for current milestone.",
+      "testConstraints": [
+        "UNSAFE_TO_TEST"
+      ],
+      "whyBuildCanProceed": "Guest-language publish/translation is secondary to reservation and availability workflows; safe read-only grids suffice for current milestone."
     },
     {
       "id": "U-007",
       "description": "DISC-002 safe nested coverage audit",
       "reason": "Named safe gaps in SCR-028, SCR-029, SCR-096, SCR-126/127 and SCR-132/133 were revisited; remaining live write, package and role outcomes are outside safe read-only discovery.",
       "risk": "Additional unlisted branches may emerge during DISC-003 safe state verification.",
-      "futureVerificationMethod": "DISC-003: start with SCR-097 residual Loading... recheck, then verify remaining safe state/workflow branches using current inventory."
+      "futureVerificationMethod": "DISC-003: start with SCR-097 residual Loading... recheck, then verify remaining safe state/workflow branches using current inventory.",
+      "buildPriorityClassification": "IMPORTANT_FOR_BUILD",
+      "classificationReason": "Continue targeted safe state and cross-module checks in core modules; detailed Reporting is deferred."
     },
     {
       "id": "U-008",
       "description": "Guest-language residual loading indicators",
-      "reason": "SCR-097 was reopened after authentication restoration; populated Reservation Confirmation and Referrals grids still showed Loading... beneath them. Cause and unseen controls cannot be established from UI.",
+      "reason": "SCR-097 was reopened and reloaded on 2026-09-27. Two Loading... labels remained beneath populated Reservation Confirmation and Referrals grids after normal page settling. No new safe control or explicit failure message appeared; A/C not observed, D not established.",
       "risk": "Additional editor controls may be missing",
-      "futureVerificationMethod": "DISC-003: revisit SCR-097 after a settled load and compare visible controls, then check other affected language screens without sending/publishing."
+      "futureVerificationMethod": "UNKNOWN / NEEDS TESTING: use an authorized test account or later normal session to see whether component completes; do not edit or publish live language.",
+      "buildPriorityClassification": "CAN_DEFER",
+      "classificationReason": "Residual guest-language loading shows no identifiable core control; current build discovery can proceed while it remains UNKNOWN / NEEDS TESTING.",
+      "whyBuildCanProceed": "Residual guest-language loading shows no identifiable core control; current build discovery can proceed while it remains UNKNOWN / NEEDS TESTING."
     },
     {
       "id": "U-009",
       "description": "Floorplan seating-area guidance enforcement",
       "reason": "Guidance requires area for active table while active No Seating Area group was visible.",
       "risk": "Incorrect activation rule",
-      "futureVerificationMethod": "Test activation and validation only in isolated venue with disposable table."
+      "futureVerificationMethod": "Test activation and validation only in isolated venue with disposable table.",
+      "buildPriorityClassification": "IMPORTANT_FOR_BUILD",
+      "classificationReason": "Seating-area enforcement affects floorplan and reservable inventory; validation needs isolated venue.",
+      "testConstraints": [
+        "UNSAFE_TO_TEST"
+      ]
     },
     {
       "id": "U-010",
       "description": "Authenticated reporting access interruption and restoration",
       "reason": "Earlier signed-in session expired and secure MFA submission failed; on 2026-09-27 the existing browser showed authenticated SevenRooms navigation and SCR-029/SCR-028 opened. Discovery resumed. Prior recorded discovery evidence remained in repository; none was lost.",
       "risk": "The prior interruption delayed safe nested inspection but did not invalidate preserved observations.",
-      "futureVerificationMethod": "Completed access check and resumed read-only inspection on 2026-09-27; if access lapses again, restore through authorized browser authentication without recording secrets."
+      "futureVerificationMethod": "Completed access check and resumed read-only inspection on 2026-09-27; if access lapses again, restore through authorized browser authentication without recording secrets.",
+      "buildPriorityClassification": "CAN_DEFER",
+      "classificationReason": "Historical access interruption is resolved and no evidence was lost; no product behavior question blocks build.",
+      "whyBuildCanProceed": "Historical access interruption is resolved and no evidence was lost; no product behavior question blocks build."
     }
-  ]
+  ],
+  "discoveryPriority": "Core navigation, reservations, clients, floorplan/tables, shifts/availability and operational settings first. Detailed Reporting parity deferred by product owner.",
+  "reportingDeferralReason": "Deferred by product owner; detailed Reporting parity is not required for the current discovery milestone."
 }
