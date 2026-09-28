@@ -112,6 +112,13 @@
       "status": "IN_PROGRESS",
       "method": "Local format/lint/type/map and full foundation verification; GitHub Actions PostgreSQL 16 service pending actual run inspection",
       "result": "Local pnpm verify PASS; db:check without DATABASE_URL correctly fails. Real database tests pending CI. No People schema or RLS."
+    },
+    {
+      "id": "CHK-017",
+      "taskId": "DB-HARNESS-001",
+      "status": "VERIFIED",
+      "method": "GitHub Actions run 36483977809, job 109136223922, PostgreSQL 16 service; inspect job steps and logs; local pnpm verify and format/lint/type/map checks",
+      "result": "PASS: pnpm verify and pnpm verify:db; test migration runner applied empty migration set and 3 real PostgreSQL tests passed (version/database, pool reuse, rollback). Missing DATABASE_URL fails clearly locally. Prior run 36483792138 failed formatting; fixed before verified run. No People tables or RLS."
     }
   ],
   "unresolvedQuestions": [

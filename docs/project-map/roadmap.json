@@ -634,7 +634,7 @@
       "id": "DB-HARNESS-001",
       "name": "Disposable PostgreSQL test runtime and database verification harness",
       "phaseId": "PHASE-04",
-      "status": "IN_PROGRESS",
+      "status": "VERIFIED",
       "dependencies": [
         "FOUND-TASK-004"
       ],
@@ -658,14 +658,15 @@
         "Previous VERIFIED gates remain VERIFIED",
         "No People or other domain implementation"
       ],
-      "unknownsToResolve": []
+      "unknownsToResolve": [],
+      "verificationEvidence": "GitHub Actions run 36483977809, job 109136223922: pnpm verify and pnpm verify:db passed against PostgreSQL 16; 3 real database tests passed."
     },
     {
       "id": "PEOPLE-01",
       "name": "People core persistence and domain contracts",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "BLOCKED",
+      "status": "READY",
       "dependencies": [
         "FOUND-TASK-004",
         "DB-HARNESS-001"
@@ -707,8 +708,8 @@
         "ENT-044"
       ],
       "moduleId": "MOD-14",
-      "blocker": "Awaiting verified DB-HARNESS-001 real disposable PostgreSQL CI gate.",
-      "unblockCondition": "DB-HARNESS-001 VERIFIED with inspected passing PostgreSQL CI run."
+      "blocker": "RESOLVED: DB-HARNESS-001 verified in GitHub Actions run 36483977809.",
+      "unblockCondition": "Satisfied by DB-HARNESS-001 VERIFIED; PEOPLE-01 may use the test harness."
     },
     {
       "id": "PEOPLE-01B",
@@ -1525,5 +1526,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "DB-HARNESS-001 — inspect the GitHub Actions PostgreSQL database gate; fix harness-only failures and verify before resuming PEOPLE-01."
+  "nextExactTask": "PEOPLE-01 — resume core People persistence using the verified PostgreSQL harness: implement only User/identity/Organization/Venue/Membership/VenueAccess migration and isolated fixtures, then real constraint/migration tests. Do not execute PEOPLE-01B."
 }
