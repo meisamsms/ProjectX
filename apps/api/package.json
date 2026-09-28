@@ -1,0 +1,19 @@
+{
+  "name": "@projectx/api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@projectx/contracts": "workspace:*",
+    "ajv": "8.17.1",
+    "fastify": "5.12.5"
+  },
+  "devDependencies": {
+    "tsx": "4.20.6"
+  }
+}

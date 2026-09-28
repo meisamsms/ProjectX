@@ -1,0 +1,14 @@
+{
+  "name": "@projectx/contracts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./routes": "./src/routes.ts",
+    "./api": "./generated/api.ts",
+    "./foundation": "./src/foundation.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  }
+}

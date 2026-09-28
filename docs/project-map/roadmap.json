@@ -16,7 +16,7 @@
     {
       "id": "PHASE-03",
       "name": "Architecture decisions and secure foundations",
-      "status": "IN_PROGRESS"
+      "status": "VERIFIED"
     },
     {
       "id": "PHASE-04",
@@ -204,25 +204,27 @@
       "id": "FOUND-TASK-004",
       "name": "Navigation shell and verification harness",
       "phaseId": "PHASE-03",
-      "status": "READY",
+      "status": "VERIFIED",
       "dependencies": [
         "FOUND-TASK-002",
         "FOUND-TASK-003"
       ],
-      "scope": "Route shell, accessibility, test and contract gates; separate from data-driven Home dashboard.",
+      "scope": "Minimal React/Vite navigation placeholder shell, Fastify infrastructure, generated OpenAPI seam and deterministic foundation verification only; no MOD-01–MOD-16 business behavior.",
       "acceptanceCriteria": [
-        "Foundation contract and focused verification pass",
-        "Security and recovery expectations documented"
+        "All 144 mapped screen IDs have registry entries marked NOT_IMPLEMENTED and references validated",
+        "Web shell provides semantic navigation, title, error/not-found and accessibility baseline with no domain data",
+        "Fastify health and safe error boundary plus typed config/logging; no domain endpoints",
+        "Frozen workspace install and deterministic format/lint/type/unit/contract/map/integration/web/E2E/accessibility/build verification passes",
+        "No production migrations, OIDC or domain implementation"
       ],
       "verificationCommands": [
-        "Run relevant lint and typecheck",
-        "Run focused unit/integration/contract tests on this task scope",
-        "Run affected regression checks; record exact commands and results in verification.json"
+        "pnpm install --frozen-lockfile",
+        "pnpm contract:generate",
+        "PROJECTX_CHROMIUM_PATH=<local compatible Chromium> pnpm verify"
       ],
       "regressionChecks": [
-        "Preserve previously verified workflows",
-        "Verify tenant and permission boundaries where applicable",
-        "Do not change unrelated modules"
+        "Previous VERIFIED tasks remain VERIFIED; discovery and ADRs unchanged",
+        "Review file list for MOD-01–MOD-16 business logic, secrets, migrations and endpoint leakage"
       ],
       "unknownsToResolve": []
     },
@@ -589,7 +591,7 @@
       "id": "IMPL-MOD-14",
       "name": "People scoped implementation",
       "phaseId": "PHASE-04",
-      "status": "PLANNED",
+      "status": "READY",
       "dependencies": [
         "FOUND-TASK-004"
       ],
@@ -741,5 +743,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "FOUND-TASK-004 — Navigation shell and verification harness: first read persistence-model.md, tenant-isolation.md, rls-policy-model.md, database-test-plan.md and approved foundation contracts; implement only its scoped shell and harness. Do not start within FOUND-TASK-003."
+  "nextExactTask": "IMPL-MOD-14 — People scoped implementation. Begin with the mapped People screens and FOUND-TASK-002 identity/access contracts; define isolated scope/acceptance and build no other domain module in the same task."
 }

@@ -1,6 +1,38 @@
 {
-  "name": "project-x",
-  "version": "0.0.0",
+  "name": "projectx",
   "private": true,
-  "description": "Project scaffold; stack and scripts pending architecture decisions."
+  "packageManager": "pnpm@11.25.0",
+  "engines": {"node": ">=24 <25"},
+  "scripts": {
+    "install:check": "node tooling/check-env.mjs",
+    "format": "biome format --write apps packages tooling tests",
+    "format:check": "biome format apps packages tooling tests",
+    "lint": "biome lint apps packages tooling tests",
+    "typecheck": "pnpm --recursive --if-present typecheck",
+    "test": "pnpm test:unit && pnpm test:integration && pnpm test:web",
+    "test:unit": "vitest run apps/api/tests/config.test.ts packages/contracts/src/routes.test.ts",
+    "test:integration": "vitest run apps/api/tests/api.test.ts",
+    "test:web": "vitest run apps/web/tests/shell.test.tsx",
+    "test:e2e": "playwright test",
+    "contract:generate": "openapi-typescript packages/contracts/openapi.json -o packages/contracts/generated/api.ts",
+    "contract:check": "node tooling/validate-contract.mjs",
+    "map:check": "node tooling/validate-map.mjs",
+    "build": "pnpm --recursive --if-present build",
+    "verify": "node tooling/verify.mjs"
+  },
+  "devDependencies": {
+    "@apidevtools/swagger-parser": "13.1.0",
+    "@axe-core/playwright": "4.13.0",
+    "@biomejs/biome": "2.5.14",
+    "@playwright/test": "1.63.0",
+    "@testing-library/react": "16.3.0",
+    "@types/node": "24.10.1",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
+    "jsdom": "26.1.0",
+    "openapi-typescript": "7.13.0",
+    "typescript": "5.9.3",
+    "vite": "8.3.1",
+    "vitest": "5.0.2"
+  }
 }

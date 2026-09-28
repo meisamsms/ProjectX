@@ -1,0 +1,17 @@
+# FOUND-TASK-004 implementation and verification
+
+The monorepo has three workspace packages: `apps/web` (React/Vite shell), `apps/api` (Fastify infrastructure), and `packages/contracts` (screen-route metadata, API spec/generated types, common error/auth state types). `tooling` holds cross-platform Node verification scripts; `tests/e2e` holds Playwright smoke tests. There are no domain business packages. `docs/project-map/app-map.json` remains the authority for 144 screen IDs, names, module references and observed route strings. `packages/contracts/routes.json` is a derived shell registry of all mapped screens, each marked `NOT_IMPLEMENTED`; nested non-URL surfaces are not navigable and remain placeholders. Routes with venue-specific observed slugs are metadata, not user-authorized tenant selections.
+
+Web: semantic header/nav/main, skip link, visible focus, responsive layout, route title, explicit not-found and error boundaries. The Home route and all mapped paths show `Feature not implemented yet`; no product data or authentication is simulated. The `AuthState` seam starts `UNAVAILABLE`; browser-selected Organization/Venue IDs cannot establish authority. `apps/web/src/api-client.ts` demonstrates only a generated-type health response. Later modules must use OpenAPI-generated DTOs and server authorization.
+
+API: `GET /health` is unauthenticated process liveness outside the future `/api/v1` business namespace. Unknown `/api/v1/*` paths return a safe 404. Fastify generates server request IDs, redacts sensitive log fields and emits stable safe errors. Config validates `NODE_ENV`, bind host, port and log level; `.env.example` contains no secrets. The future `ScopedTransaction` interface accepts only server-validated values, and **does not open PostgreSQL or claim RLS enforcement**. OIDC, sessions, domain endpoints and schema migrations are deferred to their roadmap tasks.
+
+## Commands and gates
+
+Use Node.js 24 and pnpm 11.25.0. `pnpm install --frozen-lockfile` uses the committed lockfile; only `esbuild` build scripts are allowlisted. Run `pnpm contract:generate` after editing the OpenAPI specification. `pnpm verify` runs environment check, format check, lint, typecheck, focused unit, OpenAPI validation/generation freshness, project-map validation, Fastify integration, web behavior, Playwright E2E and accessibility smoke, then builds both apps. CI installs Chromium separately before verification. On a local environment whose Playwright CDN is unavailable, set `PROJECTX_CHROMIUM_PATH` to a compatible local Chromium binary for `pnpm test:e2e` / `pnpm verify`; browser tests still run. The Playwright binary path is a local test environment override, not a production dependency.
+
+Database integration/RLS/restore tests are `NOT_APPLICABLE_FOR_THIS_TASK`: there is no physical database schema or live connection. Unit/integration/browser tests do not prove OIDC, RLS, role grants or WCAG conformance. Those are later implementation and manual review gates.
+
+## Scope audit
+
+No MOD-01–MOD-16 domain behavior, Home business data, reservation/client form, migration, OIDC provider, production deployment or third-party integration exists. Existing discovery and architecture documents remain authoritative. Vite's bundler emits a React Router `use client` directive advisory during the production build; the build succeeds and browser smoke exercises the resulting shell. Treat any future import/type/build failure as a failing gate.

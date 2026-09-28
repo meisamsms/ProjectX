@@ -1,0 +1,8 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.14/schema.json",
+  "files": {"includes": ["apps/**", "packages/**", "tooling/**", "tests/**", "!**/dist/**", "!**/generated/**", "!**/routes.json", "!**/openapi.json"]},
+  "formatter": {"indentStyle": "space", "indentWidth": 2},
+  "javascript": {"formatter": {"quoteStyle": "double"}},
+  "linter": {"rules": {"recommended": true}},
+  "assist": {"actions": {"source": {"organizeImports": "on"}}}
+}
