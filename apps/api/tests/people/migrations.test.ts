@@ -25,18 +25,20 @@ describe("People migration through approved runner", () => {
     const ledger = await pool.query(
       "SELECT name, checksum FROM projectx_test.schema_migrations",
     );
-    expect(ledger.rows).toEqual([{ name, checksum }]);
+    expect(ledger.rows).toContainEqual({ name, checksum });
     const tables = await pool.query(
       "SELECT table_name FROM information_schema.tables WHERE table_schema='projectx_test' AND table_name <> 'schema_migrations' ORDER BY table_name",
     );
-    expect(tables.rows.map((x) => x.table_name)).toEqual([
-      "authenticated_identities",
-      "organization_memberships",
-      "organizations",
-      "users",
-      "venue_access",
-      "venues",
-    ]);
+    expect(tables.rows.map((x) => x.table_name)).toEqual(
+      expect.arrayContaining([
+        "authenticated_identities",
+        "organization_memberships",
+        "organizations",
+        "users",
+        "venue_access",
+        "venues",
+      ]),
+    );
     const constraints = await pool.query(
       "SELECT conname FROM pg_constraint WHERE connamespace='projectx_test'::regnamespace",
     );

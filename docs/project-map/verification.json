@@ -133,6 +133,13 @@
       "status": "VERIFIED",
       "method": "GitHub Actions run 36487404857, job 109147542616, PostgreSQL 16.15 service; pnpm verify and pnpm verify:db; migration ledger, clean install and repeated migration, fixture graph, positive and negative constraints, UUIDv7, independent lifecycle states, static and foundation regression",
       "result": "PASS: both CI gates successful. 4 database test files, 9 tests passed; People core 5 and migration 1. PostgreSQL rejected invalid Venue Organization, duplicate issuer/subject, duplicate active membership/access, invalid FKs and cross-organization VenueAccess. No RLS, grant, API, UI, OIDC or sessions. Earlier CHK-018 was blocked pending this run."
+    },
+    {
+      "id": "CHK-020",
+      "taskId": "PEOPLE-01B",
+      "status": "BLOCKED",
+      "method": "Local format/lint/type/map/full foundation verification and scope audit; remote Git data upload attempted for PostgreSQL CI",
+      "result": "Local static/foundation checks PASS. Real PostgreSQL grant and upgrade tests NOT RUN; automatic approval review rejected uploading PEOPLE-01B code to GitHub. No database constraints claimed PASS, no RLS/API/UI/OIDC implementation."
     }
   ],
   "unresolvedQuestions": [

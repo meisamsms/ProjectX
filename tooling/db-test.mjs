@@ -11,6 +11,8 @@ const result = spawnSync(
     "apps/api/tests/database/transaction.test.ts",
     "apps/api/tests/people/migrations.test.ts",
     "apps/api/tests/people/core-persistence.test.ts",
+    "apps/api/tests/people/grants-migrations.test.ts",
+    "apps/api/tests/people/grants.test.ts",
     "--no-file-parallelism",
   ],
   {
