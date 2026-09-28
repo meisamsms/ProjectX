@@ -147,6 +147,13 @@
       "status": "VERIFIED",
       "method": "GitHub Actions run 36491895677, job 109162226378, PostgreSQL 16.15; pnpm verify and pnpm verify:db; registry parity, grant scope/tenant constraints, active-parent triggers, independent grant version/revocation, clean and PEOPLE-01 upgrade migration/checksum/repeatability, foundation regression and scope audit",
       "result": "PASS: both CI gates; six database test files and 17 tests passed, including six grant and two grants-migration tests. Initial run 36491659521 failed two SQLSTATE assertions because active-parent/check constraints fired before FK checks; fixed test expectations and reran. No RLS, runtime authorization, API, UI, OIDC or sessions. U-002 remains unresolved."
+    },
+    {
+      "id": "CHK-022",
+      "taskId": "PEOPLE-02",
+      "status": "BLOCKED",
+      "method": "Local format, lint, typecheck, map and full foundation verification; PostgreSQL 16 migration, authorization and RLS tests require approved branch publication for CI",
+      "result": "Local static/foundation checks PASS. pnpm verify:db NOT RUN because DATABASE_URL is unavailable locally. No PostgreSQL 16 CI or migration-upgrade result is claimed; PEOPLE-02 remains BLOCKED pending explicit publication approval and passing CI."
     }
   ],
   "unresolvedQuestions": [

@@ -25,10 +25,12 @@ async function snapshot() {
   const ledger = await pool.query(
     "SELECT name,checksum FROM projectx_test.schema_migrations ORDER BY name",
   );
-  expect(ledger.rows).toEqual([
-    { name: core, checksum: await checksum(core) },
-    { name: grants, checksum: await checksum(grants) },
-  ]);
+  expect(ledger.rows).toEqual(
+    expect.arrayContaining([
+      { name: core, checksum: await checksum(core) },
+      { name: grants, checksum: await checksum(grants) },
+    ]),
+  );
   const tables = await pool.query(
     "SELECT table_name FROM information_schema.tables WHERE table_schema='projectx_test'",
   );

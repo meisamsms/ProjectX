@@ -1,11 +1,11 @@
 CURRENT PHASE: PHASE-04 Core domain implementation — IN_PROGRESS.
-CURRENT TASK: PEOPLE-01B — People role and permission persistence.
-STATUS: VERIFIED — GitHub Actions run 36491895677, job 109162226378, PostgreSQL 16.15. PEOPLE-02 READY and not started.
-COMPLETED: Forward migration with all 22 registered permissions, organization-owned Roles, explicit RolePermission mapping, separate scoped grants, composite ownership/scope constraints, active-parent insertion/reactivation triggers, independent grant revocation/version, synthetic grant and clean/PEOPLE-01 upgrade tests.
-FILES CREATED: apps/api/migrations/people-grants/20260928000200_people_grants.sql; apps/api/tests/people/grants.test.ts; grants-migrations.test.ts; docs/data/people-grants-persistence.md.
-FILES MODIFIED: apps/api/tests/people/migrations.test.ts; tooling/db-test.mjs; docs/project-map/people-implementation-plan.md; roadmap.json; verification.json; handoff.md.
-TESTS EXECUTED: local pnpm format:check, lint, typecheck, map:check, pnpm verify with Chromium; CI pnpm verify and pnpm verify:db against PostgreSQL 16.15.
-TEST RESULTS: PASS, six database files, 17 tests including six grant and two grant-migration tests. Initial CI run 36491659521 failed two expected SQLSTATE assertions; corrected trigger/check precedence and reran successfully. No audit runtime claimed.
-UNRESOLVED ISSUES: U-002 alternate-role reference behavior UNKNOWN / REQUIRES_OTHER_ROLE; FLOW-006 outcomes unknown. Durable grant audit, RLS and runtime authorization remain downstream. Schema is ProjectX implementation, not reference internals.
-NEXT EXACT TASK: PEOPLE-02 — People authorization, tenant isolation and RLS. Do not execute as part of PEOPLE-01B.
-FILES NEXT AGENT MUST READ: AGENTS.md; docs/project-map/{roadmap.json,verification.json,handoff.md,people-implementation-plan.md}; docs/security/{permission-registry.json,authorization-contract.md}; docs/data/{people-core-persistence.md,people-grants-persistence.md,rls-policy-model.md}; PEOPLE-01 and PEOPLE-01B migrations and tests.
+CURRENT TASK: PEOPLE-02 — People authorization, tenant isolation and RLS.
+STATUS: BLOCKED — local branch people-02-authorization; real PostgreSQL 16 CI has not run. Publishing PEOPLE-02 requires explicit owner approval under prompt section 41. PEOPLE-01/01B remain VERIFIED; PEOPLE-03/04 remain PLANNED.
+COMPLETED: Restricted NOLOGIN runtime role, People table RLS, current capability lookup, transaction-local server-bound authorization context, synthetic authorization/isolation/upgrade tests and bounded documentation. This is an INFERRED ProjectX implementation, not reference internals.
+FILES CREATED: apps/api/migrations/people-rls/20260928000300_people_rls.sql; apps/api/src/people/authorization/context.ts; apps/api/tests/people/{fixtures/runtime.ts,authorization.test.ts,rls.test.ts,rls-migrations.test.ts}; docs/security/people-authorization-rls.md.
+FILES MODIFIED: apps/api/tests/people/grants-migrations.test.ts; tooling/db-test.mjs; docs/project-map/{roadmap.json,verification.json,handoff.md}.
+TESTS EXECUTED: local pnpm format:check, lint, typecheck, map:check and pnpm verify with Chromium PASS. Local pnpm verify:db attempted; DATABASE_URL unavailable.
+TEST RESULTS: Static/foundation PASS. PostgreSQL 16 tests and migration-upgrade tests NOT RUN; no CI pass or PEOPLE-02 verification claimed.
+UNRESOLVED ISSUES: U-002 alternate-role reference behavior UNKNOWN / REQUIRES_OTHER_ROLE; FLOW-006 outcomes unknown. No People HTTP/OIDC/session, durable audit or production privileged path. CI may uncover PEOPLE-02 migration or policy failures.
+NEXT EXACT TASK: Obtain explicit approval to publish only the committed people-02-authorization branch for PostgreSQL 16 CI; run pnpm verify and pnpm verify:db, fix only PEOPLE-02 failures, then mark VERIFIED only after real database and migration-upgrade tests pass. Do not modify main or start PEOPLE-03/04.
+FILES NEXT AGENT MUST READ: AGENTS.md; docs/project-map/{roadmap.json,verification.json,handoff.md,people-implementation-plan.md}; docs/security/{permission-registry.json,authorization-contract.md,people-authorization-rls.md}; docs/data/{people-core-persistence.md,people-grants-persistence.md,rls-policy-model.md}; all three People migrations and database tests.
