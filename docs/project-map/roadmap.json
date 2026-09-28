@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "currentPhase": "PHASE-03",
+  "currentPhase": "PHASE-04",
   "orderingBasis": "Proposed technical prerequisites, not navigation order. Hard edges must be verified; optional integrations do not block core modules.",
   "phases": [
     {
@@ -666,7 +666,7 @@
       "name": "People core persistence and domain contracts",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "BLOCKED",
+      "status": "VERIFIED",
       "dependencies": [
         "FOUND-TASK-004",
         "DB-HARNESS-001"
@@ -707,16 +707,14 @@
         "ENT-043",
         "ENT-044"
       ],
-      "moduleId": "MOD-14",
-      "blocker": "Implementation committed locally; PostgreSQL 16 CI verification blocked because automated approval rejected pushing ProjectX source to the GitHub remote. No local DATABASE_URL.",
-      "unblockCondition": "Explicit approval to publish the review branch to meisamsms/ProjectX, then run and inspect PostgreSQL 16 CI; resolve failures before verification."
+      "moduleId": "MOD-14"
     },
     {
       "id": "PEOPLE-01B",
       "name": "People role and permission persistence",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "PLANNED",
+      "status": "READY",
       "dependencies": [
         "PEOPLE-01"
       ],
@@ -1526,5 +1524,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "Publish the locally committed PEOPLE-01 branch to the authorized ProjectX repository after approval, inspect PostgreSQL 16 CI and correct any failures. Do not start PEOPLE-01B."
+  "nextExactTask": "PEOPLE-01B \u2014 Role, Permission and scoped grant persistence. Do not execute in the PEOPLE-01 task."
 }
