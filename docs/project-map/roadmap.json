@@ -21,7 +21,7 @@
     {
       "id": "PHASE-04",
       "name": "Core domain implementation",
-      "status": "PLANNED"
+      "status": "IN_PROGRESS"
     },
     {
       "id": "PHASE-05",
@@ -591,14 +591,15 @@
       "id": "IMPL-MOD-14",
       "name": "People scoped implementation",
       "phaseId": "PHASE-04",
-      "status": "READY",
+      "status": "IN_PROGRESS",
       "dependencies": [
         "FOUND-TASK-004"
       ],
-      "scope": "Implement only the mapped People screens and workflows once dependencies are verified.",
+      "scope": "People implementation container only; child tasks own non-overlapping persistence, RLS, APIs, screens and verification. Planning has introduced no People code.",
       "acceptanceCriteria": [
-        "Mapped acceptance paths pass with isolated test data",
-        "Every unresolved unsafe behavior either verified in isolation or tracked as a blocker before release"
+        "PEOPLE-01 through PEOPLE-10 required children VERIFIED (including justified split tasks); Export gate resolved or explicit owner-approved milestone exception",
+        "Four mapped People screens and FLOW-006 verified against ProjectX contracts; reference unknowns preserved",
+        "Real PostgreSQL/RLS, OpenAPI, E2E/accessibility and regression gates pass"
       ],
       "verificationCommands": [
         "Run relevant lint and typecheck",
@@ -610,7 +611,740 @@
         "Verify tenant and permission boundaries where applicable",
         "Do not change unrelated modules"
       ],
-      "unknownsToResolve": []
+      "unknownsToResolve": [],
+      "childTaskIds": [
+        "PEOPLE-01",
+        "PEOPLE-01B",
+        "PEOPLE-02",
+        "PEOPLE-03",
+        "PEOPLE-04",
+        "PEOPLE-05",
+        "PEOPLE-06",
+        "PEOPLE-07A",
+        "PEOPLE-07B",
+        "PEOPLE-08A",
+        "PEOPLE-08B",
+        "PEOPLE-09",
+        "PEOPLE-09B",
+        "PEOPLE-10"
+      ],
+      "remainingWork": "Plan only. PEOPLE-01 READY. PEOPLE-09 blocked on export evidence/specification; PEOPLE-09B frontend follows. Parent cannot be VERIFIED until export gate resolves or owner-approved narrower milestone is recorded."
+    },
+    {
+      "id": "PEOPLE-01",
+      "name": "People core persistence and domain contracts",
+      "phaseId": "PHASE-04",
+      "parentTask": "IMPL-MOD-14",
+      "status": "READY",
+      "dependencies": [
+        "FOUND-TASK-004"
+      ],
+      "scope": "One reviewed PostgreSQL migration for User, verified external identity binding, Organization, Venue, Membership and explicit VenueAccess; tenant keys/FKs, UUIDv7, lifecycle/version fields and isolated fixture builder.",
+      "outOfScope": "Roles/grants, RLS policy, APIs, OIDC, UI, names, domain entities of other modules.",
+      "acceptanceCriteria": [
+        "Composite Venue/Organization and Membership/VenueAccess ownership constraints reject mismatches",
+        "Issuer+subject identity mapping is unique; membership and VenueAccess may be revoked independently",
+        "ORG-A/A1/A2 and ORG-B/B1 fixtures plus disabled/revoked identities load only in tests",
+        "Migration upgrades clean and previous schema and preserves existing foundation tests"
+      ],
+      "verificationCommands": [
+        "pnpm format:check",
+        "pnpm lint",
+        "pnpm typecheck",
+        "pnpm exec vitest run apps/api/tests/people/core-persistence.test.ts",
+        "pnpm exec vitest run apps/api/tests/people/migrations.test.ts"
+      ],
+      "regressionChecks": [
+        "pnpm map:check",
+        "Previously verified foundation/discovery gates remain VERIFIED",
+        "No unrelated MOD-01–MOD-16 business behavior changed"
+      ],
+      "filesExpectedToChange": [
+        "apps/api/migrations/people-core/*",
+        "apps/api/src/people/persistence/*",
+        "apps/api/tests/people/core-persistence.test.ts",
+        "apps/api/tests/people/fixtures/*"
+      ],
+      "unknownsToResolve": [
+        "U-002"
+      ],
+      "evidenceClassification": "INFERRED ProjectX contract",
+      "screenIds": [],
+      "actionIds": [],
+      "entityIds": [
+        "ENT-043",
+        "ENT-044"
+      ],
+      "moduleId": "MOD-14"
+    },
+    {
+      "id": "PEOPLE-01B",
+      "name": "People role and permission persistence",
+      "phaseId": "PHASE-04",
+      "parentTask": "IMPL-MOD-14",
+      "status": "PLANNED",
+      "dependencies": [
+        "PEOPLE-01"
+      ],
+      "scope": "One reviewed migration and repository contract for Role, stable Permission registry, role-permission mapping and scoped grants bound to active Membership or VenueAccess.",
+      "outOfScope": "RLS policy, request authorization, account list/create APIs, UI or editing roles outside mapped People scope.",
+      "acceptanceCriteria": [
+        "All 22 existing permission IDs load once and scope mismatch grants are rejected",
+        "Role names confer no rights; organization and venue grants cannot be cross-linked",
+        "Grant revocation/version changes are atomic and audited by the later access audit path",
+        "Clean/upgrade migration and negative FK/unique tests pass"
+      ],
+      "verificationCommands": [
+        "pnpm format:check",
+        "pnpm lint",
+        "pnpm typecheck",
+        "pnpm exec vitest run apps/api/tests/people/grants.test.ts"
+      ],
+      "regressionChecks": [
+        "pnpm map:check",
+        "Previously verified foundation/discovery gates remain VERIFIED",
+        "No unrelated MOD-01–MOD-16 business behavior changed"
+      ],
+      "filesExpectedToChange": [
+        "apps/api/migrations/people-grants/*",
+        "apps/api/src/people/grants/*",
+        "apps/api/tests/people/grants.test.ts"
+      ],
+      "unknownsToResolve": [
+        "U-002"
+      ],
+      "evidenceClassification": "INFERRED ProjectX contract",
+      "screenIds": [],
+      "actionIds": [],
+      "entityIds": [
+        "ENT-024",
+        "ENT-032"
+      ],
+      "moduleId": "MOD-14"
+    },
+    {
+      "id": "PEOPLE-02",
+      "name": "People authorization, tenant isolation and RLS",
+      "phaseId": "PHASE-04",
+      "parentTask": "IMPL-MOD-14",
+      "status": "PLANNED",
+      "dependencies": [
+        "PEOPLE-01B"
+      ],
+      "scope": "Implement server-validated transaction-local context, scoped RLS for People records, permission/object checks, runtime DB role and denial tests.",
+      "outOfScope": "Browser OIDC, User Accounts API/UI, other modules, production admin bypass.",
+      "acceptanceCriteria": [
+        "Missing context fails closed; runtime role lacks BYPASSRLS and DDL",
+        "ORG-A/A1 cannot read/write ORG-B/B1 or A2-only records; known foreign IDs deny",
+        "Revoked membership/access, disabled User and missing capability deny on next protected operation",
+        "Pooled connection does not retain context after COMMIT/ROLLBACK; audited privileged path is separate"
+      ],
+      "verificationCommands": [
+        "pnpm format:check",
+        "pnpm lint",
+        "pnpm typecheck",
+        "pnpm exec vitest run apps/api/tests/people/authorization.test.ts",
+        "pnpm exec vitest run apps/api/tests/people/rls.test.ts"
+      ],
+      "regressionChecks": [
+        "pnpm map:check",
+        "Previously verified foundation/discovery gates remain VERIFIED",
+        "No unrelated MOD-01–MOD-16 business behavior changed"
+      ],
+      "filesExpectedToChange": [
+        "apps/api/src/people/authorization/*",
+        "apps/api/src/people/rls/*",
+        "apps/api/tests/people/authorization.test.ts",
+        "apps/api/tests/people/rls.test.ts"
+      ],
+      "unknownsToResolve": [
+        "U-002"
+      ],
+      "evidenceClassification": "INFERRED ProjectX contract",
+      "screenIds": [],
+      "actionIds": [],
+      "entityIds": [],
+      "moduleId": "MOD-14"
+    },
+    {
+      "id": "PEOPLE-03",
+      "name": "User Accounts read/list backend",
+      "phaseId": "PHASE-04",
+      "parentTask": "IMPL-MOD-14",
+      "status": "PLANNED",
+      "dependencies": [
+        "PEOPLE-02"
+      ],
+      "scope": "Versioned OpenAPI read/list contract for SCR-025 scoped user summaries and observed access-level filter; server validation, generated types and list security.",
+      "outOfScope": "User creation/export, web screen, undocumented search/sort or alternate-role claims.",
+      "acceptanceCriteria": [
+        "A1 actor reads only explicitly authorized People summaries; denied org/venue/permission cases return safe responses",
+        "Filter by documented access-level display value without trusting caller-provided tenant IDs",
+        "No sensitive identity credentials/session secrets in response; empty list and pagination behavior documented as ProjectX choices",
+        "OpenAPI spec validation, generated freshness and API/database tests pass"
+      ],
+      "verificationCommands": [
+        "pnpm format:check",
+        "pnpm lint",
+        "pnpm typecheck",
+        "pnpm contract:generate",
+        "pnpm contract:check",
+        "pnpm exec vitest run apps/api/tests/people/accounts-read.test.ts"
+      ],
+      "regressionChecks": [
+        "pnpm map:check",
+        "Previously verified foundation/discovery gates remain VERIFIED",
+        "No unrelated MOD-01–MOD-16 business behavior changed"
+      ],
+      "filesExpectedToChange": [
+        "apps/api/src/people/accounts-read/*",
+        "apps/api/tests/people/accounts-read.test.ts",
+        "packages/contracts/openapi.json",
+        "packages/contracts/generated/api.ts"
+      ],
+      "unknownsToResolve": [
+        "U-002",
+        "U-003"
+      ],
+      "evidenceClassification": "INFERRED ProjectX contract",
+      "screenIds": [
+        "SCR-025"
+      ],
+      "actionIds": [
+        "ACT-0055"
+      ],
+      "entityIds": [],
+      "moduleId": "MOD-14"
+    },
+    {
+      "id": "PEOPLE-04",
+      "name": "Add User command/backend",
+      "phaseId": "PHASE-04",
+      "parentTask": "IMPL-MOD-14",
+      "status": "PLANNED",
+      "dependencies": [
+        "PEOPLE-02"
+      ],
+      "scope": "Validated ProjectX User creation/membership/venue-grant command for SCR-026/FLOW-006 with atomic audit/idempotency and safe duplicate errors.",
+      "outOfScope": "Web form, email invitation/delivery, OIDC provider provisioning, other settings or roles outside approved scope.",
+      "acceptanceCriteria": [
+        "Server rejects self-escalation, cross-tenant grant, wrong Venue parent and revoked actor",
+        "One transaction commits user/membership/grants/audit or rolls back; idempotent retry yields one effect",
+        "Duplicate verified identity/email policy and success/error contract explicitly labeled ProjectX decisions, not reference parity",
+        "OpenAPI types are regenerated; isolated database/API/security tests pass"
+      ],
+      "verificationCommands": [
+        "pnpm format:check",
+        "pnpm lint",
+        "pnpm typecheck",
+        "pnpm contract:generate",
+        "pnpm contract:check",
+        "pnpm exec vitest run apps/api/tests/people/add-user.test.ts"
+      ],
+      "regressionChecks": [
+        "pnpm map:check",
+        "Previously verified foundation/discovery gates remain VERIFIED",
+        "No unrelated MOD-01–MOD-16 business behavior changed"
+      ],
+      "filesExpectedToChange": [
+        "apps/api/src/people/add-user/*",
+        "apps/api/tests/people/add-user.test.ts",
+        "packages/contracts/openapi.json",
+        "packages/contracts/generated/api.ts"
+      ],
+      "unknownsToResolve": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
+      "evidenceClassification": "INFERRED ProjectX contract",
+      "screenIds": [
+        "SCR-026"
+      ],
+      "actionIds": [
+        "ACT-0057",
+        "ACT-0058"
+      ],
+      "entityIds": [
+        "ENT-043",
+        "ENT-024",
+        "ENT-032",
+        "ENT-044"
+      ],
+      "moduleId": "MOD-14"
+    },
+    {
+      "id": "PEOPLE-05",
+      "name": "User Accounts frontend",
+      "phaseId": "PHASE-04",
+      "parentTask": "IMPL-MOD-14",
+      "status": "PLANNED",
+      "dependencies": [
+        "PEOPLE-03"
+      ],
+      "scope": "Implement SCR-025 on its mapped route using generated read contract; loading, loaded, empty, denied, error and keyboard states.",
+      "outOfScope": "Add User form, Export execution, changing grants or other People screens.",
+      "acceptanceCriteria": [
+        "Mapped roster columns and access grouping render only authorized API data",
+        "Loading/empty/error/403 states are distinct and accessible; no simulated production identities",
+        "Add new routes to SCR-026 placeholder or implemented destination as appropriate; Export remains visibly unavailable",
+        "Route registry changes only SCR-025; focused web/E2E/axe checks pass"
+      ],
+      "verificationCommands": [
+        "pnpm format:check",
+        "pnpm lint",
+        "pnpm typecheck",
+        "pnpm exec vitest run apps/web/tests/people/accounts.test.tsx",
+        "pnpm exec playwright test tests/e2e/people-accounts.spec.ts"
+      ],
+      "regressionChecks": [
+        "pnpm map:check",
+        "Previously verified foundation/discovery gates remain VERIFIED",
+        "No unrelated MOD-01–MOD-16 business behavior changed"
+      ],
+      "filesExpectedToChange": [
+        "apps/web/src/people/accounts/*",
+        "apps/web/tests/people/accounts.test.tsx",
+        "packages/contracts/routes.json",
+        "tests/e2e/people-accounts.spec.ts"
+      ],
+      "unknownsToResolve": [
+        "U-002",
+        "U-003"
+      ],
+      "evidenceClassification": "INFERRED ProjectX contract",
+      "screenIds": [
+        "SCR-025"
+      ],
+      "actionIds": [
+        "ACT-0054",
+        "ACT-0055",
+        "ACT-0056"
+      ],
+      "entityIds": [],
+      "moduleId": "MOD-14"
+    },
+    {
+      "id": "PEOPLE-06",
+      "name": "Add User frontend",
+      "phaseId": "PHASE-04",
+      "parentTask": "IMPL-MOD-14",
+      "status": "PLANNED",
+      "dependencies": [
+        "PEOPLE-04"
+      ],
+      "scope": "Implement SCR-026 form against generated command types, mapped visible fields and ProjectX security validation; support documented success/clear-for-another behavior.",
+      "outOfScope": "Reference success/failure parity claim, email delivery, real OIDC, User Accounts list code.",
+      "acceptanceCriteria": [
+        "Mapped fields and access controls use generated API contract with server errors surfaced safely",
+        "ProjectX required fields/duplicate/success/create-another behavior is documented as independent behavior",
+        "Submission disables duplicate mutation; cancel/back chosen as ProjectX behavior without reference claim",
+        "Route status SCR-026 only; keyboard, error, E2E and accessible form tests pass"
+      ],
+      "verificationCommands": [
+        "pnpm format:check",
+        "pnpm lint",
+        "pnpm typecheck",
+        "pnpm exec vitest run apps/web/tests/people/add-user.test.tsx",
+        "pnpm exec playwright test tests/e2e/people-add-user.spec.ts"
+      ],
+      "regressionChecks": [
+        "pnpm map:check",
+        "Previously verified foundation/discovery gates remain VERIFIED",
+        "No unrelated MOD-01–MOD-16 business behavior changed"
+      ],
+      "filesExpectedToChange": [
+        "apps/web/src/people/add-user/*",
+        "apps/web/tests/people/add-user.test.tsx",
+        "packages/contracts/routes.json",
+        "tests/e2e/people-add-user.spec.ts"
+      ],
+      "unknownsToResolve": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
+      "evidenceClassification": "INFERRED ProjectX contract",
+      "screenIds": [
+        "SCR-026"
+      ],
+      "actionIds": [
+        "ACT-0057",
+        "ACT-0058"
+      ],
+      "entityIds": [],
+      "moduleId": "MOD-14"
+    },
+    {
+      "id": "PEOPLE-07A",
+      "name": "Booked By Names backend",
+      "phaseId": "PHASE-04",
+      "parentTask": "IMPL-MOD-14",
+      "status": "PLANNED",
+      "dependencies": [
+        "PEOPLE-02"
+      ],
+      "scope": "Define a minimal Venue-scoped display-name record separate from User; migration, scoped list/add/save contract, authorization, audit and isolated tests for SCR-083.",
+      "outOfScope": "Authenticated User mapping, Server Names, web screen, reference save parity claims.",
+      "acceptanceCriteria": [
+        "A1 names cannot be read/written by A2-only or ORG-B actor; composite Venue key and RLS apply",
+        "Add/save validates bounded name and uniqueness only as an explicit ProjectX decision after reviewing duplicate needs",
+        "No implicit FK to User or OIDC identity; API and migration tests pass"
+      ],
+      "verificationCommands": [
+        "pnpm format:check",
+        "pnpm lint",
+        "pnpm typecheck",
+        "pnpm contract:generate",
+        "pnpm contract:check",
+        "pnpm exec vitest run apps/api/tests/people/booked-by.test.ts"
+      ],
+      "regressionChecks": [
+        "pnpm map:check",
+        "Previously verified foundation/discovery gates remain VERIFIED",
+        "No unrelated MOD-01–MOD-16 business behavior changed"
+      ],
+      "filesExpectedToChange": [
+        "apps/api/migrations/people-booked-by/*",
+        "apps/api/src/people/booked-by/*",
+        "apps/api/tests/people/booked-by.test.ts",
+        "packages/contracts/openapi.json",
+        "packages/contracts/generated/api.ts"
+      ],
+      "unknownsToResolve": [
+        "U-001",
+        "U-003"
+      ],
+      "evidenceClassification": "INFERRED ProjectX contract",
+      "screenIds": [
+        "SCR-083"
+      ],
+      "actionIds": [
+        "ACT-0167",
+        "ACT-0168"
+      ],
+      "entityIds": [],
+      "moduleId": "MOD-14"
+    },
+    {
+      "id": "PEOPLE-07B",
+      "name": "Booked By Names frontend",
+      "phaseId": "PHASE-04",
+      "parentTask": "IMPL-MOD-14",
+      "status": "PLANNED",
+      "dependencies": [
+        "PEOPLE-07A"
+      ],
+      "scope": "Implement only SCR-083 row editor against generated scoped backend contract.",
+      "outOfScope": "Server Names, User identities, other People screen.",
+      "acceptanceCriteria": [
+        "Read/add/save states reflect API outcomes without fake persistence",
+        "Empty/error/denied/loading and unsaved-change handling explicitly chosen for ProjectX",
+        "SCR-083 route only advances after focused web/E2E/axe pass"
+      ],
+      "verificationCommands": [
+        "pnpm format:check",
+        "pnpm lint",
+        "pnpm typecheck",
+        "pnpm exec vitest run apps/web/tests/people/booked-by.test.tsx",
+        "pnpm exec playwright test tests/e2e/people-booked-by.spec.ts"
+      ],
+      "regressionChecks": [
+        "pnpm map:check",
+        "Previously verified foundation/discovery gates remain VERIFIED",
+        "No unrelated MOD-01–MOD-16 business behavior changed"
+      ],
+      "filesExpectedToChange": [
+        "apps/web/src/people/booked-by/*",
+        "apps/web/tests/people/booked-by.test.tsx",
+        "packages/contracts/routes.json",
+        "tests/e2e/people-booked-by.spec.ts"
+      ],
+      "unknownsToResolve": [
+        "U-001",
+        "U-003"
+      ],
+      "evidenceClassification": "INFERRED ProjectX contract",
+      "screenIds": [
+        "SCR-083"
+      ],
+      "actionIds": [
+        "ACT-0167",
+        "ACT-0168"
+      ],
+      "entityIds": [],
+      "moduleId": "MOD-14"
+    },
+    {
+      "id": "PEOPLE-08A",
+      "name": "Server Names backend",
+      "phaseId": "PHASE-04",
+      "parentTask": "IMPL-MOD-14",
+      "status": "PLANNED",
+      "dependencies": [
+        "PEOPLE-02"
+      ],
+      "scope": "Define minimal Venue-scoped display-name record independent of User and Booked By Names; scoped migration/API/audit tests for SCR-084.",
+      "outOfScope": "Authenticated User identity, Booked By Names web/backend, other settings.",
+      "acceptanceCriteria": [
+        "A1 write and A2/ORG-B denial verified under RLS and object scope",
+        "No implicit identity equivalence; bounded name and save behavior documented as ProjectX choices",
+        "API contract, migration and audit tests pass"
+      ],
+      "verificationCommands": [
+        "pnpm format:check",
+        "pnpm lint",
+        "pnpm typecheck",
+        "pnpm contract:generate",
+        "pnpm contract:check",
+        "pnpm exec vitest run apps/api/tests/people/server-names.test.ts"
+      ],
+      "regressionChecks": [
+        "pnpm map:check",
+        "Previously verified foundation/discovery gates remain VERIFIED",
+        "No unrelated MOD-01–MOD-16 business behavior changed"
+      ],
+      "filesExpectedToChange": [
+        "apps/api/migrations/people-server-names/*",
+        "apps/api/src/people/server-names/*",
+        "apps/api/tests/people/server-names.test.ts",
+        "packages/contracts/openapi.json",
+        "packages/contracts/generated/api.ts"
+      ],
+      "unknownsToResolve": [
+        "U-001",
+        "U-003"
+      ],
+      "evidenceClassification": "INFERRED ProjectX contract",
+      "screenIds": [
+        "SCR-084"
+      ],
+      "actionIds": [
+        "ACT-0169",
+        "ACT-0170"
+      ],
+      "entityIds": [],
+      "moduleId": "MOD-14"
+    },
+    {
+      "id": "PEOPLE-08B",
+      "name": "Server Names frontend",
+      "phaseId": "PHASE-04",
+      "parentTask": "IMPL-MOD-14",
+      "status": "PLANNED",
+      "dependencies": [
+        "PEOPLE-08A"
+      ],
+      "scope": "Implement only SCR-084 row editor against generated backend contract.",
+      "outOfScope": "Booked By Names, authenticated account editor or other screens.",
+      "acceptanceCriteria": [
+        "List/add/save and empty/denied/loading/error states are distinct and accessible",
+        "No simulated save or identity linkage; unsaved behavior documented as ProjectX choice",
+        "SCR-084 route only advances after focused web/E2E/axe pass"
+      ],
+      "verificationCommands": [
+        "pnpm format:check",
+        "pnpm lint",
+        "pnpm typecheck",
+        "pnpm exec vitest run apps/web/tests/people/server-names.test.tsx",
+        "pnpm exec playwright test tests/e2e/people-server-names.spec.ts"
+      ],
+      "regressionChecks": [
+        "pnpm map:check",
+        "Previously verified foundation/discovery gates remain VERIFIED",
+        "No unrelated MOD-01–MOD-16 business behavior changed"
+      ],
+      "filesExpectedToChange": [
+        "apps/web/src/people/server-names/*",
+        "apps/web/tests/people/server-names.test.tsx",
+        "packages/contracts/routes.json",
+        "tests/e2e/people-server-names.spec.ts"
+      ],
+      "unknownsToResolve": [
+        "U-001",
+        "U-003"
+      ],
+      "evidenceClassification": "INFERRED ProjectX contract",
+      "screenIds": [
+        "SCR-084"
+      ],
+      "actionIds": [
+        "ACT-0169",
+        "ACT-0170"
+      ],
+      "entityIds": [],
+      "moduleId": "MOD-14"
+    },
+    {
+      "id": "PEOPLE-09",
+      "name": "People export evidence and scoped backend",
+      "phaseId": "PHASE-04",
+      "parentTask": "IMPL-MOD-14",
+      "status": "BLOCKED",
+      "dependencies": [
+        "PEOPLE-03"
+      ],
+      "scope": "First resolve observed-only Export behavior through safe evidence or explicit ProjectX owner specification, then implement only a scoped, audited export backend with format/field allowlist and privacy controls. Remain BLOCKED until evidence/specification exists.",
+      "outOfScope": "Guessing CSV/XLSX/PDF, running live reference export, frontend action, other module exports.",
+      "acceptanceCriteria": [
+        "Observed reference outcome remains UNKNOWN unless safely verified; ProjectX format, fields, delivery and privacy are explicitly specified before implementation",
+        "Authorized backend export enforces tenant/venue scope, dedicated permission, field allowlist, audit and retention",
+        "Cross-tenant and lower-role attempts deny without revealing existence; output, cancellation/failure and contract tests pass"
+      ],
+      "verificationCommands": [
+        "pnpm format:check",
+        "pnpm lint",
+        "pnpm typecheck",
+        "pnpm contract:check",
+        "pnpm exec vitest run apps/api/tests/people/export.test.ts"
+      ],
+      "regressionChecks": [
+        "pnpm map:check",
+        "Previously verified foundation/discovery gates remain VERIFIED",
+        "No unrelated MOD-01–MOD-16 business behavior changed"
+      ],
+      "filesExpectedToChange": [
+        "docs/project-map/people-implementation-plan.md",
+        "apps/api/src/people/export/*",
+        "apps/api/tests/people/export.test.ts",
+        "packages/contracts/openapi.json",
+        "packages/contracts/generated/api.ts"
+      ],
+      "unknownsToResolve": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
+      "evidenceClassification": "NEEDS TESTING — observed action only",
+      "screenIds": [
+        "SCR-025"
+      ],
+      "actionIds": [
+        "ACT-0056"
+      ],
+      "entityIds": [],
+      "moduleId": "MOD-14"
+    },
+    {
+      "id": "PEOPLE-09B",
+      "name": "People export frontend action",
+      "phaseId": "PHASE-04",
+      "parentTask": "IMPL-MOD-14",
+      "status": "PLANNED",
+      "dependencies": [
+        "PEOPLE-09",
+        "PEOPLE-05"
+      ],
+      "scope": "Connect only SCR-025 Export action to verified PEOPLE-09 contract with safe pending/denied/error/download handling.",
+      "outOfScope": "Changing User Accounts list model, choosing export format/fields, other module exports.",
+      "acceptanceCriteria": [
+        "Export is available only under explicit generated contract and capability gate",
+        "Denied/error/cancel handling reveals no sensitive fields or false success",
+        "Focused web/E2E/axe tests pass while SCR-025 route status stays tied to PEOPLE-05/10"
+      ],
+      "verificationCommands": [
+        "pnpm format:check",
+        "pnpm lint",
+        "pnpm typecheck",
+        "pnpm exec vitest run apps/web/tests/people/export.test.tsx",
+        "pnpm exec playwright test tests/e2e/people-export.spec.ts"
+      ],
+      "regressionChecks": [
+        "pnpm map:check",
+        "People Accounts list and Add User verified paths unchanged",
+        "No unrelated module UI changed"
+      ],
+      "filesExpectedToChange": [
+        "apps/web/src/people/export/*",
+        "apps/web/tests/people/export.test.tsx",
+        "tests/e2e/people-export.spec.ts"
+      ],
+      "unknownsToResolve": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
+      "evidenceClassification": "NEEDS TESTING — observed action only",
+      "screenIds": [
+        "SCR-025"
+      ],
+      "actionIds": [
+        "ACT-0056"
+      ],
+      "entityIds": [],
+      "moduleId": "MOD-14"
+    },
+    {
+      "id": "PEOPLE-10",
+      "name": "People integration, authorization and regression verification",
+      "phaseId": "PHASE-04",
+      "parentTask": "IMPL-MOD-14",
+      "status": "PLANNED",
+      "dependencies": [
+        "PEOPLE-02",
+        "PEOPLE-05",
+        "PEOPLE-06",
+        "PEOPLE-07B",
+        "PEOPLE-08B",
+        "PEOPLE-09B"
+      ],
+      "scope": "Run whole People module acceptance against disposable PostgreSQL with four mapped routes, FLOW-006, audit and negative authorization matrix; update only People route statuses backed by tests.",
+      "outOfScope": "New People feature, other module implementation, unapproved Export assumption.",
+      "acceptanceCriteria": [
+        "Real PostgreSQL constraints, RLS all verbs, pool isolation, cross-tenant IDOR and revocation pass",
+        "OpenAPI/generated client, all four screen states, keyboard/axe/E2E and audit tests pass",
+        "pnpm verify plus database/People security suite exit 0; no prior verified gate regresses",
+        "Reference UNKNOWN outcomes remain labeled; export backend/UI gate verified or an explicit owner-approved narrower milestone is recorded"
+      ],
+      "verificationCommands": [
+        "pnpm format:check",
+        "pnpm lint",
+        "pnpm typecheck",
+        "pnpm verify",
+        "pnpm exec vitest run apps/api/tests/people",
+        "pnpm exec playwright test tests/e2e/people-accounts.spec.ts tests/e2e/people-add-user.spec.ts tests/e2e/people-booked-by.spec.ts tests/e2e/people-server-names.spec.ts"
+      ],
+      "regressionChecks": [
+        "pnpm map:check",
+        "Previously verified foundation/discovery gates remain VERIFIED",
+        "No unrelated MOD-01–MOD-16 business behavior changed"
+      ],
+      "filesExpectedToChange": [
+        "docs/project-map/verification.json",
+        "docs/project-map/roadmap.json",
+        "docs/project-map/handoff.md",
+        "packages/contracts/routes.json"
+      ],
+      "unknownsToResolve": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
+      "evidenceClassification": "INFERRED ProjectX contract",
+      "screenIds": [
+        "SCR-025",
+        "SCR-026",
+        "SCR-083",
+        "SCR-084"
+      ],
+      "actionIds": [
+        "ACT-0054",
+        "ACT-0055",
+        "ACT-0056",
+        "ACT-0057",
+        "ACT-0058",
+        "ACT-0167",
+        "ACT-0168",
+        "ACT-0169",
+        "ACT-0170"
+      ],
+      "entityIds": [
+        "ENT-024",
+        "ENT-032",
+        "ENT-043",
+        "ENT-044"
+      ],
+      "moduleId": "MOD-14"
     },
     {
       "id": "IMPL-MOD-15",
@@ -725,6 +1459,20 @@
     "FOUND-TASK-002",
     "FOUND-TASK-003",
     "FOUND-TASK-004",
+    "PEOPLE-01",
+    "PEOPLE-01B",
+    "PEOPLE-02",
+    "PEOPLE-03",
+    "PEOPLE-04",
+    "PEOPLE-05",
+    "PEOPLE-06",
+    "PEOPLE-07A",
+    "PEOPLE-07B",
+    "PEOPLE-08A",
+    "PEOPLE-08B",
+    "PEOPLE-09",
+    "PEOPLE-09B",
+    "PEOPLE-10",
     "IMPL-MOD-14",
     "IMPL-MOD-09",
     "IMPL-MOD-13",
@@ -743,5 +1491,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "IMPL-MOD-14 — People scoped implementation. Begin with the mapped People screens and FOUND-TASK-002 identity/access contracts; define isolated scope/acceptance and build no other domain module in the same task."
+  "nextExactTask": "PEOPLE-01 — People core persistence and domain contracts: implement only User/identity/Organization/Venue/Membership/VenueAccess migration and isolated fixtures, verify composite keys and lifecycle; do not begin PEOPLE-01B or other child tasks."
 }
