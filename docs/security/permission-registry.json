@@ -1,0 +1,240 @@
+{
+  "schemaVersion": 1,
+  "status": "INFERRED ProjectX minimum foundation vocabulary; roles are not assigned by this registry",
+  "scopeValues": [
+    "SELF",
+    "ORGANIZATION",
+    "VENUE"
+  ],
+  "riskValues": [
+    "NORMAL",
+    "SENSITIVE",
+    "HIGH_RISK"
+  ],
+  "permissions": [
+    {
+      "id": "session.read.self",
+      "description": "Read own session and selected context",
+      "scope": "SELF",
+      "risk": "NORMAL",
+      "modules": [
+        "MOD-14"
+      ],
+      "evidence": "INFERRED"
+    },
+    {
+      "id": "user.read.self",
+      "description": "Read own account summary",
+      "scope": "SELF",
+      "risk": "NORMAL",
+      "modules": [
+        "MOD-14"
+      ],
+      "evidence": "INFERRED"
+    },
+    {
+      "id": "user.read",
+      "description": "Read authorized user roster",
+      "scope": "ORGANIZATION",
+      "risk": "SENSITIVE",
+      "modules": [
+        "MOD-14"
+      ],
+      "evidence": "INFERRED"
+    },
+    {
+      "id": "user.manage",
+      "description": "Manage membership, venue access and user status within granted scope",
+      "scope": "ORGANIZATION",
+      "risk": "HIGH_RISK",
+      "modules": [
+        "MOD-14"
+      ],
+      "evidence": "INFERRED"
+    },
+    {
+      "id": "organization.manage",
+      "description": "Manage organization security and organization settings",
+      "scope": "ORGANIZATION",
+      "risk": "HIGH_RISK",
+      "modules": [
+        "MOD-14",
+        "MOD-09"
+      ],
+      "evidence": "INFERRED"
+    },
+    {
+      "id": "venue.read",
+      "description": "Read authorized venue context",
+      "scope": "VENUE",
+      "risk": "NORMAL",
+      "modules": [
+        "MOD-14",
+        "MOD-09"
+      ],
+      "evidence": "INFERRED"
+    },
+    {
+      "id": "venue.manage",
+      "description": "Manage explicitly authorized venue settings",
+      "scope": "VENUE",
+      "risk": "HIGH_RISK",
+      "modules": [
+        "MOD-14",
+        "MOD-09"
+      ],
+      "evidence": "INFERRED"
+    },
+    {
+      "id": "reservation.read",
+      "description": "Read reservations for granted venue",
+      "scope": "VENUE",
+      "risk": "SENSITIVE",
+      "modules": [
+        "MOD-02"
+      ],
+      "evidence": "INFERRED"
+    },
+    {
+      "id": "reservation.create",
+      "description": "Create reservation for granted venue",
+      "scope": "VENUE",
+      "risk": "SENSITIVE",
+      "modules": [
+        "MOD-02"
+      ],
+      "evidence": "INFERRED"
+    },
+    {
+      "id": "reservation.update",
+      "description": "Update authorized venue reservation",
+      "scope": "VENUE",
+      "risk": "SENSITIVE",
+      "modules": [
+        "MOD-02"
+      ],
+      "evidence": "INFERRED"
+    },
+    {
+      "id": "reservation.cancel",
+      "description": "Cancel authorized venue reservation",
+      "scope": "VENUE",
+      "risk": "HIGH_RISK",
+      "modules": [
+        "MOD-02"
+      ],
+      "evidence": "INFERRED"
+    },
+    {
+      "id": "client.read",
+      "description": "Read minimum client identity and own-venue service details",
+      "scope": "VENUE",
+      "risk": "SENSITIVE",
+      "modules": [
+        "MOD-04"
+      ],
+      "evidence": "INFERRED"
+    },
+    {
+      "id": "client.create",
+      "description": "Create organization-scoped client within authorized venue workflow",
+      "scope": "VENUE",
+      "risk": "SENSITIVE",
+      "modules": [
+        "MOD-04"
+      ],
+      "evidence": "INFERRED"
+    },
+    {
+      "id": "client.update",
+      "description": "Change authorized venue client details subject to field policy",
+      "scope": "VENUE",
+      "risk": "SENSITIVE",
+      "modules": [
+        "MOD-04"
+      ],
+      "evidence": "INFERRED"
+    },
+    {
+      "id": "client.history.read.organization",
+      "description": "Read authorized cross-venue client history",
+      "scope": "ORGANIZATION",
+      "risk": "HIGH_RISK",
+      "modules": [
+        "MOD-04",
+        "MOD-02"
+      ],
+      "evidence": "INFERRED"
+    },
+    {
+      "id": "floorplan.read",
+      "description": "Read venue rooms and layouts",
+      "scope": "VENUE",
+      "risk": "NORMAL",
+      "modules": [
+        "MOD-13"
+      ],
+      "evidence": "INFERRED"
+    },
+    {
+      "id": "floorplan.manage",
+      "description": "Manage venue layout and table configuration",
+      "scope": "VENUE",
+      "risk": "SENSITIVE",
+      "modules": [
+        "MOD-13"
+      ],
+      "evidence": "INFERRED"
+    },
+    {
+      "id": "availability.read",
+      "description": "Read shifts and availability for venue",
+      "scope": "VENUE",
+      "risk": "NORMAL",
+      "modules": [
+        "MOD-11"
+      ],
+      "evidence": "INFERRED"
+    },
+    {
+      "id": "availability.manage",
+      "description": "Manage venue shifts and access rules",
+      "scope": "VENUE",
+      "risk": "SENSITIVE",
+      "modules": [
+        "MOD-11"
+      ],
+      "evidence": "INFERRED"
+    },
+    {
+      "id": "import.manage",
+      "description": "Stage and commit scoped imports",
+      "scope": "VENUE",
+      "risk": "HIGH_RISK",
+      "modules": [
+        "MOD-16"
+      ],
+      "evidence": "INFERRED"
+    },
+    {
+      "id": "client.export",
+      "description": "Export permitted client fields from authorized scope",
+      "scope": "ORGANIZATION",
+      "risk": "HIGH_RISK",
+      "modules": [
+        "MOD-04"
+      ],
+      "evidence": "INFERRED"
+    },
+    {
+      "id": "audit.read",
+      "description": "Read privileged organization audit trail",
+      "scope": "ORGANIZATION",
+      "risk": "HIGH_RISK",
+      "modules": [
+        "MOD-14"
+      ],
+      "evidence": "INFERRED"
+    }
+  ]
+}

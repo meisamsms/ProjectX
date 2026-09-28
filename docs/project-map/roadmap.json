@@ -152,24 +152,25 @@
       "id": "FOUND-TASK-002",
       "name": "Identity, access and venue context",
       "phaseId": "PHASE-03",
-      "status": "READY",
+      "status": "VERIFIED",
       "dependencies": [
         "ARCH-001"
       ],
-      "scope": "Secure account/venue boundary and permission contract.",
+      "scope": "Documentation-only ProjectX identity, tenant context, authorization, permission and future test contracts; no OIDC, API, migration or scaffold.",
       "acceptanceCriteria": [
-        "Foundation contract and focused verification pass",
-        "Security and recovery expectations documented"
+        "Identity, membership, venue access, scope-specific grants and session concepts distinguished",
+        "Server-verified organization and venue context; deny by default, object ownership and client visibility defined",
+        "Unique machine-readable minimum permission registry and future negative authorization test matrix",
+        "Document handoff to FOUND-TASK-003 without persistence implementation",
+        "JSON, module reference, scope/risk, roadmap and documentation consistency validation passes"
       ],
       "verificationCommands": [
-        "Run relevant lint and typecheck",
-        "Run focused unit/integration/contract tests on this task scope",
-        "Run affected regression checks; record exact commands and results in verification.json"
+        "Parse JSON; check unique permission IDs, valid module IDs, scope/risk enumerations",
+        "Check previous VERIFIED tasks, dependency-valid next task and document terminology"
       ],
       "regressionChecks": [
-        "Preserve previously verified workflows",
-        "Verify tenant and permission boundaries where applicable",
-        "Do not change unrelated modules"
+        "Previous DISC-001/002/003/MAP-001/ARCH-001 remain VERIFIED",
+        "No production application code, migration, package install, API, OIDC connection or UI"
       ],
       "unknownsToResolve": []
     },
@@ -177,7 +178,7 @@
       "id": "FOUND-TASK-003",
       "name": "Data contracts and persistence foundations",
       "phaseId": "PHASE-03",
-      "status": "PLANNED",
+      "status": "READY",
       "dependencies": [
         "ARCH-001",
         "FOUND-TASK-002"
@@ -740,5 +741,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "FOUND-TASK-002 — Identity, access and venue context. Begin by defining scoped identity/session and explicit organization/venue authorization contracts with isolated verification; do not implement in ARCH-001."
+  "nextExactTask": "FOUND-TASK-003 — Data contracts and persistence foundations: use identity-access-model.md and authorization-contract.md to define independent data keys, tenancy constraints and transaction-local RLS policy/test approach; do not start under FOUND-TASK-002."
 }
