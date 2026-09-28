@@ -714,7 +714,7 @@
       "name": "People role and permission persistence",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "BLOCKED",
+      "status": "VERIFIED",
       "dependencies": [
         "PEOPLE-01"
       ],
@@ -752,16 +752,14 @@
         "ENT-024",
         "ENT-032"
       ],
-      "moduleId": "MOD-14",
-      "blocker": "Implementation committed locally; real PostgreSQL 16 CI not run. Automatic approval review rejected uploading the PEOPLE-01B migration/tests to the ProjectX branch because prior publishing approval was limited to PEOPLE-01.",
-      "unblockCondition": "Explicit approval to publish the people-01b-grants branch to meisamsms/ProjectX for CI, then inspect pnpm verify and pnpm verify:db and fix any PEOPLE-01B failures."
+      "moduleId": "MOD-14"
     },
     {
       "id": "PEOPLE-02",
       "name": "People authorization, tenant isolation and RLS",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "PLANNED",
+      "status": "READY",
       "dependencies": [
         "PEOPLE-01B"
       ],
@@ -1526,5 +1524,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "With explicit owner approval, publish the PEOPLE-01B branch, run real PostgreSQL 16 CI and correct only PEOPLE-01B failures. Do not execute PEOPLE-02."
+  "nextExactTask": "PEOPLE-02 \u2014 People authorization, tenant isolation and RLS. Do not execute in the PEOPLE-01B task."
 }

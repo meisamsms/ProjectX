@@ -1,11 +1,11 @@
 CURRENT PHASE: PHASE-04 Core domain implementation — IN_PROGRESS.
 CURRENT TASK: PEOPLE-01B — People role and permission persistence.
-STATUS: BLOCKED — PostgreSQL 16 CI not run; automatic approval review rejected uploading new PEOPLE-01B code to GitHub. PEOPLE-01 remains VERIFIED; PEOPLE-02 remains PLANNED.
-COMPLETED: Locally committed forward grants migration with 22 registry permission seeds, organization-owned roles, explicit role-permission mappings, scoped grants, composite tenant/scope keys, active-parent insertion triggers, independent revocation/version fields, synthetic grant and clean/upgrade migration tests. No runtime authorization or RLS.
-FILES CREATED: apps/api/migrations/people-grants/20260928000200_people_grants.sql; apps/api/tests/people/grants.test.ts; apps/api/tests/people/grants-migrations.test.ts; docs/data/people-grants-persistence.md.
-FILES MODIFIED: apps/api/tests/people/migrations.test.ts; tooling/db-test.mjs; docs/project-map/roadmap.json; verification.json; handoff.md.
-TESTS EXECUTED: pnpm format:check; pnpm lint; pnpm typecheck; pnpm map:check; local pnpm verify with Chromium. No real PostgreSQL execution for PEOPLE-01B.
-TEST RESULTS: Local foundation checks PASS. PostgreSQL constraint/migration tests require CI and remain NOT RUN. GitHub branch exists at verified PEOPLE-01 commit; no PEOPLE-01B payload pushed.
-UNRESOLVED ISSUES: U-002 alternate-role reference behavior UNKNOWN / REQUIRES_OTHER_ROLE. Durable grant audit and runtime permission/object checks remain for PEOPLE-02 or later access path. Remote publication of this task needs explicit approval because automatic review rejected it.
-NEXT EXACT TASK: With explicit approval for the new PEOPLE-01B payload, publish people-01b-grants to meisamsms/ProjectX, inspect PostgreSQL 16 CI, fix only PEOPLE-01B failures, then mark VERIFIED only if all gates pass. Do not execute PEOPLE-02.
-FILES NEXT AGENT MUST READ: AGENTS.md; docs/project-map/{roadmap.json,verification.json,handoff.md,people-implementation-plan.md}; docs/security/permission-registry.json; docs/data/people-grants-persistence.md; PEOPLE-01 and PEOPLE-01B migrations and tests.
+STATUS: VERIFIED — GitHub Actions run 36491895677, job 109162226378, PostgreSQL 16.15. PEOPLE-02 READY and not started.
+COMPLETED: Forward migration with all 22 registered permissions, organization-owned Roles, explicit RolePermission mapping, separate scoped grants, composite ownership/scope constraints, active-parent insertion/reactivation triggers, independent grant revocation/version, synthetic grant and clean/PEOPLE-01 upgrade tests.
+FILES CREATED: apps/api/migrations/people-grants/20260928000200_people_grants.sql; apps/api/tests/people/grants.test.ts; grants-migrations.test.ts; docs/data/people-grants-persistence.md.
+FILES MODIFIED: apps/api/tests/people/migrations.test.ts; tooling/db-test.mjs; docs/project-map/people-implementation-plan.md; roadmap.json; verification.json; handoff.md.
+TESTS EXECUTED: local pnpm format:check, lint, typecheck, map:check, pnpm verify with Chromium; CI pnpm verify and pnpm verify:db against PostgreSQL 16.15.
+TEST RESULTS: PASS, six database files, 17 tests including six grant and two grant-migration tests. Initial CI run 36491659521 failed two expected SQLSTATE assertions; corrected trigger/check precedence and reran successfully. No audit runtime claimed.
+UNRESOLVED ISSUES: U-002 alternate-role reference behavior UNKNOWN / REQUIRES_OTHER_ROLE; FLOW-006 outcomes unknown. Durable grant audit, RLS and runtime authorization remain downstream. Schema is ProjectX implementation, not reference internals.
+NEXT EXACT TASK: PEOPLE-02 — People authorization, tenant isolation and RLS. Do not execute as part of PEOPLE-01B.
+FILES NEXT AGENT MUST READ: AGENTS.md; docs/project-map/{roadmap.json,verification.json,handoff.md,people-implementation-plan.md}; docs/security/{permission-registry.json,authorization-contract.md}; docs/data/{people-core-persistence.md,people-grants-persistence.md,rls-policy-model.md}; PEOPLE-01 and PEOPLE-01B migrations and tests.
