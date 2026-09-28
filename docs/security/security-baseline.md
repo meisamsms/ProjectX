@@ -4,9 +4,9 @@ Status: PROPOSED security requirements for ProjectX; no implementation or refere
 
 ## Architectural protections
 
-- Authentication: choose identity/session owner in ARCH-D008; use MFA support for privileged users, secure recovery, session rotation/revocation, short idle limits appropriate to service operations, and no credentials in browser storage/logs.
+- Authentication: managed OIDC identity provider and server-managed browser session per ADR-0004; use MFA support for privileged users, secure recovery, session rotation/revocation, short idle limits appropriate to service operations, and no credentials in browser storage/logs.
 - Authorization: server-side deny by default on every route, command, resource and export; resolve actor, organization and venue separately; never trust a route parameter or client-supplied role as authorization.
-- Tenant isolation: choose ARCH-D004/D006/D007. Scope all queries, jobs, search, imports, reports, storage keys and audit events; assert object ownership after lookup. Test two tenants and two venues with matching object-shaped IDs.
+- Tenant isolation: PostgreSQL shared schema with RLS plus application authorization per ADR-0003. Scope all queries, jobs, search, imports, reports, storage keys and audit events; assert object ownership after lookup. Test two tenants and two venues with matching object-shaped IDs.
 - PII: minimize collection, field-level access, encryption in transit and at rest, redacted logs, retention and verified deletion/anonymization process. Never copy live guest data into fixtures.
 - Secrets: managed secret storage, least-privilege service identities, rotation and leak detection; no secrets in git, client bundles, URLs, exports or trace fields.
 - Audit: append-only actor/venue/object/event metadata with tamper-evident retention controls; never treat mutable comments as the sole security audit trail. Restrict read access and record privileged audit queries.
@@ -15,7 +15,7 @@ Status: PROPOSED security requirements for ProjectX; no implementation or refere
 - Integrations/webhooks: verify provider signatures and timestamps, replay windows, idempotency keys and scoped credentials; quarantine unknown payloads and never trust provider claims for authorization.
 - Logging: structured correlation IDs without tokens, payment information, full guest contact details or raw import rows; access-controlled retention.
 - Import/export: preflight file type/size, scan and quarantine, staged validation, tenant ownership, dry-run/summary, duplicate handling, transactional or compensating commit, authorization and audit; exports require explicit scope, privacy checks and expiry.
-- Backup/recovery: encrypted backups with separate credentials, access control, restore rehearsals and owner-approved RPO/RTO (ARCH-D016); deletion and retention policy must account for backups.
+- Backup/recovery: encrypted backups with separate credentials, access control, restore rehearsals and owner-approved target RPO 1 hour/RTO 4 hours (ADR-0006); deletion and retention policy must account for backups.
 - Browser: content security policy, output encoding, same-site secure cookies and CSRF defense for cookie-authenticated mutations; accessibility and error states verified without leaking data.
 
 ## Preliminary threat-boundary analysis

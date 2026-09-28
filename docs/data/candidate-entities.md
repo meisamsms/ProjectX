@@ -1,12 +1,12 @@
 # Candidate data boundaries — ARCH-001
 
-These 46 names came from the discovery map's likely-entity index. They are **candidate concepts**, not database tables or a reconstruction of SevenRooms' schema. Grouping and aggregate ownership below are INFERRED. No migration or persistence technology is selected.
+These 46 names came from the discovery map's likely-entity index. They are **candidate concepts**, not database tables or a reconstruction of SevenRooms' schema. Grouping and aggregate ownership below are INFERRED. PostgreSQL shared schema, explicit tenant keys and RLS are approved in ADR-0003; these names are still not approved tables or migrations.
 
 | Category (INFERRED) | Candidate entities | Ownership and boundary questions |
 |---|---|---|
-| Identity and access | User, Role, Permission, Staff, Concierge | Account identity versus venue membership and staff association UNKNOWN; confirm cross-venue grants. |
-| Venue/configuration | Venue, Tax Rate, Reservation Policy, Operating Hours, Mode | Venue-owned configuration likely; organization/account ownership and inheritance UNKNOWN. |
-| Clients and preferences | Client, Client Tag, Tag, Consent | PII and marketing consent; client sharing across venues UNKNOWN. |
+| Identity and access | User, Role, Permission, Staff, Concierge | User is one identity, venue grants are explicit; staff association remains UNKNOWN. |
+| Venue/configuration | Venue, Tax Rate, Reservation Policy, Operating Hours, Mode | Venue belongs to exactly one Organization; configuration inheritance remains UNKNOWN. |
+| Clients and preferences | Client, Client Tag, Tag, Consent | PII and marketing consent; Client identities are Organization scoped; venue history remains scoped and cross-Organization sharing is prohibited. |
 | Reservation and financial context | Reservation, Request, Payment, Charge | Reservation links guest, shift, table and area; payment custody/provider responsibility UNKNOWN. |
 | Availability | Shift, Access Rule, Pacing | Date/shift/rule/area interplay visible; exact slot formula and write conflict guards NEEDS TESTING. |
 | Floorplan | Room, Seating Area, Table, Floorplan Layout | Layout/table membership and activation enforcement NEEDS TESTING. |
@@ -18,9 +18,9 @@ All 46 are classified once. An Audit Event is a **proposed new implementation co
 
 ## Ownership and aggregate hypotheses
 
-- INFERRED: A venue owns shifts, rules, layouts, tables, seating areas and policies; account/organization sharing must be decided in ARCH-D004/D006/D007.
+- INFERRED: A venue owns shifts, rules, layouts, tables, seating areas and policies; ProjectX Organization/Venue sharing follows ADR-0003; reference behavior remains UNKNOWN.
 - INFERRED: A reservation is a transactional boundary for guest reference, date/time, shift, party size, status, assigned table/area and payment-related references. Status options are visible; allowed transitions and writes NEEDS TESTING.
-- INFERRED: Client identity/profile/consent needs a separate ownership boundary so deduplication and removal can be controlled. Group/global client search wording is observed; sharing rules UNKNOWN.
+- INFERRED: Client identity/profile/consent needs a separate ownership boundary so deduplication and removal can be controlled. Group/global client search wording is observed; ProjectX sharing rules are approved in ADR-0003; reference sharing semantics remain UNKNOWN.
 - INFERRED: Layout and table configuration is distinct from a live seating assignment; whether edits become active immediately is UNKNOWN.
 - INFERRED: Requests may convert to reservations, but the conversion effect is UNKNOWN; avoid hard database coupling before isolated verification.
 

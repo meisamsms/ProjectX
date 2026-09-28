@@ -1,6 +1,6 @@
 # Architecture requirements — ARCH-001
 
-Status: **requirements documented; owner choices unresolved**. Source: verified ProjectX discovery, app-map.json, dependencies.json. CONFIRMED denotes visible product behavior; INFERRED denotes a proposed implementation requirement; UNKNOWN/NEEDS TESTING remain open. No statement below describes SevenRooms internals.
+Status: **owner architecture choices approved in ADR-0001–ADR-0006**. Source: verified ProjectX discovery, app-map.json, dependencies.json. CONFIRMED denotes visible product behavior; INFERRED denotes a proposed implementation requirement; UNKNOWN/NEEDS TESTING remain open. No statement below describes SevenRooms internals.
 
 ## Product-driven constraints
 
@@ -11,7 +11,7 @@ Status: **requirements documented; owner choices unresolved**. Source: verified 
 
 ## Decision gates
 
-Six combined owner questions in decisions.json cover ARCH-D001–D011 and D015/D016/D018. No option is APPROVED. Architecture choices for deployment, stack, repository, primary data/tenant isolation, identity/permissions, API contracts, recovery targets and environment spending must be answered before FOUND-TASK-002. The remaining ARCH-D012–D014, D017, D019/D020 are proposed technical defaults or deferred work.
+Six combined owner questions in decisions.json cover ARCH-D001–D011 and D015/D016/D018. All six owner choices and dependent decision topics are APPROVED in ADR-0001–ADR-0006; FOUND-TASK-002 may now proceed. Cloud vendor and operating budget remain later selections. The remaining ARCH-D012–D014, D017, D019/D020 are proposed technical defaults or deferred work.
 
 ## Requirement register
 
@@ -21,9 +21,9 @@ Six combined owner questions in decisions.json cover ARCH-D001–D011 and D015/D
 | Frontend architecture | Support forms, calendar/grid/floorplan, nested panels, keyboard and responsive access; select framework/runtime in ARCH-D002. | CONFIRMED UI; framework UNKNOWN |
 | Backend architecture | Enforce authorization and invariants server-side across modules; choose language/framework in ARCH-D003. | INFERRED; reference backend UNKNOWN |
 | Repository structure | Stable module contracts and small reviewable tasks; monorepo/multiple repos in ARCH-D005. | INFERRED |
-| Runtime/language | Supported, maintained runtime and reproducible builds; no runtime selected. | UNKNOWN owner choice |
+| Runtime/language | Supported, maintained runtime and reproducible builds; Node.js LTS + Fastify + TypeScript approved. | UNKNOWN owner choice |
 | Primary database | Relational links and transactional booking constraints favor a transactional store, but selection is ARCH-D004. | INFERRED, not schema evidence |
-| Account, organization, venue | Venue URLs/selector and multi-venue user access are visible; exact hierarchy and client sharing rules must be settled before keys. | CONFIRMED surfaces; hierarchy UNKNOWN |
+| Account, organization, venue | Venue URLs/selector and multi-venue user access are visible; ProjectX Organization/Venue/Client hierarchy approved in ADR-0003; reference internals remain unknown. | CONFIRMED surfaces; hierarchy UNKNOWN |
 | Tenant isolation | Explicit scope on every read/write/job/export and object authorization; enforcement model ARCH-D007. | INFERRED security requirement |
 | Authentication/session | MFA option visible; secure sign-in/session lifetime and credential ownership require ARCH-D008. | CONFIRMED option; behavior UNKNOWN |
 | Authorization | Venue-scoped role and granular permission checks for UI and API; alternative roles untested; ARCH-D009. | CONFIRMED controls; grants UNKNOWN |
@@ -45,7 +45,7 @@ Six combined owner questions in decisions.json cover ARCH-D001–D011 and D015/D
 
 - Testing: mandatory focused unit, database, integration, API contract, tenant isolation/authorization, E2E, accessibility, security, migration and regression gates by change type (see security-baseline.md).
 - Migration: versioned, reversible where possible, dry-run and rollback/forward plan with production backup; no migrations in ARCH-001.
-- Backup/recovery/disaster recovery: owner sets RPO/RTO and environment envelope in ARCH-D016; verify restores and operational ownership before launch.
+- Backup/recovery/disaster recovery: owner-approved RPO 1 hour/RTO 4 hours and separate development/staging/production in ADR-0006; verify restores and operational ownership before launch.
 - CI/CD and environment separation: isolate development, staging and production data/credentials; peer review, gated deploy, rollback and audit release provenance. Number of environments/cost is owner decision.
 - Security: deny by default, object-level venue authorization, abuse limits, import quarantine, verified webhooks, safe exports and PII minimization. No vulnerability is asserted in the reference.
 - Dates/time zones: store absolute instants with venue time zone and local service date; DST boundaries need tests. Do not infer SevenRooms storage representation.

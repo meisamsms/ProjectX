@@ -5,8 +5,8 @@
     {
       "id": "ARCH-D001",
       "title": "Deployment topology and hosting",
-      "status": "OWNER_DECISION_REQUIRED",
-      "category": "OWNER DECISION REQUIRED NOW",
+      "status": "APPROVED",
+      "category": "OWNER APPROVED",
       "question": "Which independently designed deployment and hosting model should ProjectX use for the first production milestone?",
       "options": [
         {
@@ -42,7 +42,12 @@
         "optionId": "A",
         "reason": "The visible flows have strong cross-module transactions and no measured need for distributed deployment. Hosting provider remains a separate selection after requirements and cost approval."
       },
-      "ownerDecision": null,
+      "ownerDecision": {
+        "optionId": "A",
+        "approvedBy": "Product owner",
+        "basis": "Explicit approval in current ARCH-001 instruction",
+        "leadDecisionId": "ARCH-D001"
+      },
       "rationale": "Deployment model and hosting account shape operating cost, recovery, and how many moving parts every small task must verify.",
       "evidence": [
         "16 mapped product modules; 144 screens; reservation, availability and client journeys cross module boundaries.",
@@ -54,14 +59,15 @@
         "FOUND-TASK-004"
       ],
       "reversibility": "HIGH_COST",
-      "notes": "Future test/data may refine implementation; not approved.",
-      "coveredByDecisionId": null
+      "notes": "Approved by product owner; ADR records decision and scope.",
+      "coveredByDecisionId": null,
+      "adr": "docs/architecture/ADR-0001-deployment-topology.md"
     },
     {
       "id": "ARCH-D002",
       "title": "Frontend framework and runtime",
-      "status": "OWNER_DECISION_REQUIRED",
-      "category": "OWNER DECISION REQUIRED NOW",
+      "status": "APPROVED",
+      "category": "OWNER APPROVED",
       "question": "Which frontend/backend/runtime and repository combination should be the starting implementation contract?",
       "options": [
         {
@@ -97,7 +103,12 @@
         "optionId": "A",
         "reason": "Form-heavy web UI and many bounded tasks benefit from an explicit typed client/API seam and one reviewable repository; no stack is inferred from SevenRooms."
       },
-      "ownerDecision": null,
+      "ownerDecision": {
+        "optionId": "A",
+        "approvedBy": "Product owner",
+        "basis": "Explicit approval in current ARCH-001 instruction",
+        "leadDecisionId": "ARCH-D002"
+      },
       "rationale": "The stack determines developer workflow, shared contracts, deployment toolchain and the cost of changing frameworks later.",
       "evidence": [
         "144 screens with editable forms, calendar, floorplan and nested panels; 16 modules intended as small independently verifiable tasks.",
@@ -109,14 +120,15 @@
         "FOUND-TASK-004"
       ],
       "reversibility": "HIGH_COST",
-      "notes": "Future test/data may refine implementation; not approved.",
-      "coveredByDecisionId": null
+      "notes": "Approved by product owner; ADR records decision and scope.",
+      "coveredByDecisionId": null,
+      "adr": "docs/architecture/ADR-0002-stack-and-repository.md"
     },
     {
       "id": "ARCH-D003",
       "title": "Backend language, runtime and framework",
-      "status": "OWNER_DECISION_REQUIRED",
-      "category": "OWNER DECISION REQUIRED NOW",
+      "status": "APPROVED",
+      "category": "OWNER APPROVED",
       "question": "Which frontend/backend/runtime and repository combination should be the starting implementation contract?",
       "options": [
         {
@@ -152,7 +164,12 @@
         "optionId": "A",
         "reason": "Form-heavy web UI and many bounded tasks benefit from an explicit typed client/API seam and one reviewable repository; no stack is inferred from SevenRooms."
       },
-      "ownerDecision": null,
+      "ownerDecision": {
+        "optionId": "A",
+        "approvedBy": "Product owner",
+        "basis": "Explicit approval in current ARCH-001 instruction",
+        "leadDecisionId": "ARCH-D002"
+      },
       "rationale": "The stack determines developer workflow, shared contracts, deployment toolchain and the cost of changing frameworks later.",
       "evidence": [
         "144 screens with editable forms, calendar, floorplan and nested panels; 16 modules intended as small independently verifiable tasks.",
@@ -164,14 +181,15 @@
         "FOUND-TASK-004"
       ],
       "reversibility": "HIGH_COST",
-      "notes": "Owner question combined with ARCH-D002; answer once for all covered IDs.",
-      "coveredByDecisionId": "ARCH-D002"
+      "notes": "Approved by product owner; covered by ARCH-D002.",
+      "coveredByDecisionId": "ARCH-D002",
+      "adr": "docs/architecture/ADR-0002-stack-and-repository.md"
     },
     {
       "id": "ARCH-D004",
       "title": "Primary database and tenant storage",
-      "status": "OWNER_DECISION_REQUIRED",
-      "category": "OWNER DECISION REQUIRED NOW",
+      "status": "APPROVED",
+      "category": "OWNER APPROVED",
       "question": "What data store and account/organization/venue isolation model should ProjectX enforce?",
       "options": [
         {
@@ -207,7 +225,12 @@
         "optionId": "A",
         "reason": "Observed relationships and reservation concurrency call for transactions and explicit scoped queries. The hierarchy and client-sharing rules must be confirmed before finalizing keys."
       },
-      "ownerDecision": null,
+      "ownerDecision": {
+        "optionId": "A",
+        "approvedBy": "Product owner",
+        "basis": "Explicit approval in current ARCH-001 instruction",
+        "leadDecisionId": "ARCH-D004"
+      },
       "rationale": "Tenant hierarchy and isolation determine every data key, authorization query, backup scope and the consequences of an access bug.",
       "evidence": [
         "Venue selector; user form mentions the same access at other venues; venue-scoped routes; reservation links to client, shift, area and table.",
@@ -218,14 +241,15 @@
         "FOUND-TASK-003"
       ],
       "reversibility": "HIGH_COST",
-      "notes": "Future test/data may refine implementation; not approved.",
-      "coveredByDecisionId": null
+      "notes": "Approved by product owner; ADR records decision and scope.",
+      "coveredByDecisionId": null,
+      "adr": "docs/architecture/ADR-0003-tenancy-and-isolation.md"
     },
     {
       "id": "ARCH-D005",
       "title": "Repository strategy",
-      "status": "OWNER_DECISION_REQUIRED",
-      "category": "OWNER DECISION REQUIRED NOW",
+      "status": "APPROVED",
+      "category": "OWNER APPROVED",
       "question": "Which frontend/backend/runtime and repository combination should be the starting implementation contract?",
       "options": [
         {
@@ -261,7 +285,12 @@
         "optionId": "A",
         "reason": "Form-heavy web UI and many bounded tasks benefit from an explicit typed client/API seam and one reviewable repository; no stack is inferred from SevenRooms."
       },
-      "ownerDecision": null,
+      "ownerDecision": {
+        "optionId": "A",
+        "approvedBy": "Product owner",
+        "basis": "Explicit approval in current ARCH-001 instruction",
+        "leadDecisionId": "ARCH-D002"
+      },
       "rationale": "The stack determines developer workflow, shared contracts, deployment toolchain and the cost of changing frameworks later.",
       "evidence": [
         "144 screens with editable forms, calendar, floorplan and nested panels; 16 modules intended as small independently verifiable tasks.",
@@ -273,14 +302,15 @@
         "FOUND-TASK-004"
       ],
       "reversibility": "HIGH_COST",
-      "notes": "Owner question combined with ARCH-D002; answer once for all covered IDs.",
-      "coveredByDecisionId": "ARCH-D002"
+      "notes": "Approved by product owner; covered by ARCH-D002.",
+      "coveredByDecisionId": "ARCH-D002",
+      "adr": "docs/architecture/ADR-0002-stack-and-repository.md"
     },
     {
       "id": "ARCH-D006",
       "title": "Account/organization/venue model",
-      "status": "OWNER_DECISION_REQUIRED",
-      "category": "OWNER DECISION REQUIRED NOW",
+      "status": "APPROVED",
+      "category": "OWNER APPROVED",
       "question": "What data store and account/organization/venue isolation model should ProjectX enforce?",
       "options": [
         {
@@ -316,7 +346,12 @@
         "optionId": "A",
         "reason": "Observed relationships and reservation concurrency call for transactions and explicit scoped queries. The hierarchy and client-sharing rules must be confirmed before finalizing keys."
       },
-      "ownerDecision": null,
+      "ownerDecision": {
+        "optionId": "A",
+        "approvedBy": "Product owner",
+        "basis": "Explicit approval in current ARCH-001 instruction",
+        "leadDecisionId": "ARCH-D004"
+      },
       "rationale": "Tenant hierarchy and isolation determine every data key, authorization query, backup scope and the consequences of an access bug.",
       "evidence": [
         "Venue selector; user form mentions the same access at other venues; venue-scoped routes; reservation links to client, shift, area and table.",
@@ -327,14 +362,15 @@
         "FOUND-TASK-003"
       ],
       "reversibility": "HIGH_COST",
-      "notes": "Owner question combined with ARCH-D004; answer once for all covered IDs.",
-      "coveredByDecisionId": "ARCH-D004"
+      "notes": "Approved by product owner; covered by ARCH-D004.",
+      "coveredByDecisionId": "ARCH-D004",
+      "adr": "docs/architecture/ADR-0003-tenancy-and-isolation.md"
     },
     {
       "id": "ARCH-D007",
       "title": "Tenant isolation enforcement",
-      "status": "OWNER_DECISION_REQUIRED",
-      "category": "OWNER DECISION REQUIRED NOW",
+      "status": "APPROVED",
+      "category": "OWNER APPROVED",
       "question": "What data store and account/organization/venue isolation model should ProjectX enforce?",
       "options": [
         {
@@ -370,7 +406,12 @@
         "optionId": "A",
         "reason": "Observed relationships and reservation concurrency call for transactions and explicit scoped queries. The hierarchy and client-sharing rules must be confirmed before finalizing keys."
       },
-      "ownerDecision": null,
+      "ownerDecision": {
+        "optionId": "A",
+        "approvedBy": "Product owner",
+        "basis": "Explicit approval in current ARCH-001 instruction",
+        "leadDecisionId": "ARCH-D004"
+      },
       "rationale": "Tenant hierarchy and isolation determine every data key, authorization query, backup scope and the consequences of an access bug.",
       "evidence": [
         "Venue selector; user form mentions the same access at other venues; venue-scoped routes; reservation links to client, shift, area and table.",
@@ -381,14 +422,15 @@
         "FOUND-TASK-003"
       ],
       "reversibility": "HIGH_COST",
-      "notes": "Owner question combined with ARCH-D004; answer once for all covered IDs.",
-      "coveredByDecisionId": "ARCH-D004"
+      "notes": "Approved by product owner; covered by ARCH-D004.",
+      "coveredByDecisionId": "ARCH-D004",
+      "adr": "docs/architecture/ADR-0003-tenancy-and-isolation.md"
     },
     {
       "id": "ARCH-D008",
       "title": "Authentication and session strategy",
-      "status": "OWNER_DECISION_REQUIRED",
-      "category": "OWNER DECISION REQUIRED NOW",
+      "status": "APPROVED",
+      "category": "OWNER APPROVED",
       "question": "How should users authenticate, hold sessions, and receive venue-scoped privileges?",
       "options": [
         {
@@ -424,7 +466,12 @@
         "optionId": "A",
         "reason": "It separates identity proofing from app-owned, per-object and per-venue authorization and avoids storing passwords in the first milestone."
       },
-      "ownerDecision": null,
+      "ownerDecision": {
+        "optionId": "A",
+        "approvedBy": "Product owner",
+        "basis": "Explicit approval in current ARCH-001 instruction",
+        "leadDecisionId": "ARCH-D008"
+      },
       "rationale": "The account exposes guest PII, payment-related controls and cross-venue access; credential ownership and permission scope are security boundaries.",
       "evidence": [
         "User Accounts displays access levels, granular permissions, MFA option and multi-venue assignment; only one account role was observed.",
@@ -435,14 +482,15 @@
         "FOUND-TASK-004"
       ],
       "reversibility": "HIGH_COST",
-      "notes": "Future test/data may refine implementation; not approved.",
-      "coveredByDecisionId": null
+      "notes": "Approved by product owner; ADR records decision and scope.",
+      "coveredByDecisionId": null,
+      "adr": "docs/architecture/ADR-0004-identity-and-authorization.md"
     },
     {
       "id": "ARCH-D009",
       "title": "Authorization and venue-scoped permissions",
-      "status": "OWNER_DECISION_REQUIRED",
-      "category": "OWNER DECISION REQUIRED NOW",
+      "status": "APPROVED",
+      "category": "OWNER APPROVED",
       "question": "How should users authenticate, hold sessions, and receive venue-scoped privileges?",
       "options": [
         {
@@ -478,7 +526,12 @@
         "optionId": "A",
         "reason": "It separates identity proofing from app-owned, per-object and per-venue authorization and avoids storing passwords in the first milestone."
       },
-      "ownerDecision": null,
+      "ownerDecision": {
+        "optionId": "A",
+        "approvedBy": "Product owner",
+        "basis": "Explicit approval in current ARCH-001 instruction",
+        "leadDecisionId": "ARCH-D008"
+      },
       "rationale": "The account exposes guest PII, payment-related controls and cross-venue access; credential ownership and permission scope are security boundaries.",
       "evidence": [
         "User Accounts displays access levels, granular permissions, MFA option and multi-venue assignment; only one account role was observed.",
@@ -489,14 +542,15 @@
         "FOUND-TASK-004"
       ],
       "reversibility": "HIGH_COST",
-      "notes": "Owner question combined with ARCH-D008; answer once for all covered IDs.",
-      "coveredByDecisionId": "ARCH-D008"
+      "notes": "Approved by product owner; covered by ARCH-D008.",
+      "coveredByDecisionId": "ARCH-D008",
+      "adr": "docs/architecture/ADR-0004-identity-and-authorization.md"
     },
     {
       "id": "ARCH-D010",
       "title": "API contract model",
-      "status": "OWNER_DECISION_REQUIRED",
-      "category": "OWNER DECISION REQUIRED NOW",
+      "status": "APPROVED",
+      "category": "OWNER APPROVED",
       "question": "Which API style and validation/contract authority should connect the web client and domain modules?",
       "options": [
         {
@@ -532,7 +586,12 @@
         "optionId": "A",
         "reason": "It offers explicit versioned, testable boundaries and reduces the chance that one screen change forces broad module edits."
       },
-      "ownerDecision": null,
+      "ownerDecision": {
+        "optionId": "A",
+        "approvedBy": "Product owner",
+        "basis": "Explicit approval in current ARCH-001 instruction",
+        "leadDecisionId": "ARCH-D010"
+      },
       "rationale": "Contract shape controls independent task ownership, integration verification and future client compatibility.",
       "evidence": [
         "Many form fields, sortable lists, calendars and state changes; no reference API implementation or schema is evidenced.",
@@ -543,14 +602,15 @@
         "FOUND-TASK-004"
       ],
       "reversibility": "HIGH_COST",
-      "notes": "Future test/data may refine implementation; not approved.",
-      "coveredByDecisionId": null
+      "notes": "Approved by product owner; ADR records decision and scope.",
+      "coveredByDecisionId": null,
+      "adr": "docs/architecture/ADR-0005-api-contracts.md"
     },
     {
       "id": "ARCH-D011",
       "title": "Runtime validation and shared contracts",
-      "status": "OWNER_DECISION_REQUIRED",
-      "category": "OWNER DECISION REQUIRED NOW",
+      "status": "APPROVED",
+      "category": "OWNER APPROVED",
       "question": "Which API style and validation/contract authority should connect the web client and domain modules?",
       "options": [
         {
@@ -586,7 +646,12 @@
         "optionId": "A",
         "reason": "It offers explicit versioned, testable boundaries and reduces the chance that one screen change forces broad module edits."
       },
-      "ownerDecision": null,
+      "ownerDecision": {
+        "optionId": "A",
+        "approvedBy": "Product owner",
+        "basis": "Explicit approval in current ARCH-001 instruction",
+        "leadDecisionId": "ARCH-D010"
+      },
       "rationale": "Contract shape controls independent task ownership, integration verification and future client compatibility.",
       "evidence": [
         "Many form fields, sortable lists, calendars and state changes; no reference API implementation or schema is evidenced.",
@@ -597,8 +662,9 @@
         "FOUND-TASK-004"
       ],
       "reversibility": "HIGH_COST",
-      "notes": "Owner question combined with ARCH-D010; answer once for all covered IDs.",
-      "coveredByDecisionId": "ARCH-D010"
+      "notes": "Approved by product owner; covered by ARCH-D010.",
+      "coveredByDecisionId": "ARCH-D010",
+      "adr": "docs/architecture/ADR-0005-api-contracts.md"
     },
     {
       "id": "ARCH-D012",
@@ -670,8 +736,8 @@
     {
       "id": "ARCH-D015",
       "title": "Hosting/cloud provider and boundaries",
-      "status": "OWNER_DECISION_REQUIRED",
-      "category": "OWNER DECISION REQUIRED NOW",
+      "status": "APPROVED",
+      "category": "OWNER APPROVED",
       "question": "Which independently designed deployment and hosting model should ProjectX use for the first production milestone?",
       "options": [
         {
@@ -707,7 +773,12 @@
         "optionId": "A",
         "reason": "The visible flows have strong cross-module transactions and no measured need for distributed deployment. Hosting provider remains a separate selection after requirements and cost approval."
       },
-      "ownerDecision": null,
+      "ownerDecision": {
+        "optionId": "A",
+        "approvedBy": "Product owner",
+        "basis": "Explicit approval in current ARCH-001 instruction",
+        "leadDecisionId": "ARCH-D001"
+      },
       "rationale": "Deployment model and hosting account shape operating cost, recovery, and how many moving parts every small task must verify.",
       "evidence": [
         "16 mapped product modules; 144 screens; reservation, availability and client journeys cross module boundaries.",
@@ -719,14 +790,15 @@
         "FOUND-TASK-004"
       ],
       "reversibility": "HIGH_COST",
-      "notes": "Owner question combined with ARCH-D001; answer once for all covered IDs.",
-      "coveredByDecisionId": "ARCH-D001"
+      "notes": "Approved by product owner; covered by ARCH-D001.",
+      "coveredByDecisionId": "ARCH-D001",
+      "adr": "docs/architecture/ADR-0001-deployment-topology.md"
     },
     {
       "id": "ARCH-D016",
       "title": "Backup and recovery objectives",
-      "status": "OWNER_DECISION_REQUIRED",
-      "category": "OWNER DECISION REQUIRED NOW",
+      "status": "APPROVED",
+      "category": "OWNER APPROVED",
       "question": "What production recovery target and environment/CI spending envelope should guide infrastructure design?",
       "options": [
         {
@@ -762,7 +834,12 @@
         "optionId": "B",
         "reason": "Live reservations warrant a recoverable staging-to-production process, while no evidence justifies high-availability infrastructure yet. Targets are recommendations, not guarantees."
       },
-      "ownerDecision": null,
+      "ownerDecision": {
+        "optionId": "B",
+        "approvedBy": "Product owner",
+        "basis": "Explicit approval in current ARCH-001 instruction",
+        "leadDecisionId": "ARCH-D016"
+      },
       "rationale": "Reservation operations can affect active service; recovery expectations determine backup frequency, restore rehearsal and staging cost.",
       "evidence": [
         "The product handles reservations, clients and operational shift settings, but no traffic, budget, RPO, RTO or regulatory retention target is documented.",
@@ -773,8 +850,9 @@
         "FOUND-TASK-004"
       ],
       "reversibility": "HIGH_COST",
-      "notes": "Future test/data may refine implementation; not approved.",
-      "coveredByDecisionId": null
+      "notes": "Approved by product owner; ADR records decision and scope.",
+      "coveredByDecisionId": null,
+      "adr": "docs/architecture/ADR-0006-recovery-and-environments.md"
     },
     {
       "id": "ARCH-D017",
@@ -802,8 +880,8 @@
     {
       "id": "ARCH-D018",
       "title": "CI/CD and environments",
-      "status": "OWNER_DECISION_REQUIRED",
-      "category": "OWNER DECISION REQUIRED NOW",
+      "status": "APPROVED",
+      "category": "OWNER APPROVED",
       "question": "What production recovery target and environment/CI spending envelope should guide infrastructure design?",
       "options": [
         {
@@ -839,7 +917,12 @@
         "optionId": "B",
         "reason": "Live reservations warrant a recoverable staging-to-production process, while no evidence justifies high-availability infrastructure yet. Targets are recommendations, not guarantees."
       },
-      "ownerDecision": null,
+      "ownerDecision": {
+        "optionId": "B",
+        "approvedBy": "Product owner",
+        "basis": "Explicit approval in current ARCH-001 instruction",
+        "leadDecisionId": "ARCH-D016"
+      },
       "rationale": "Reservation operations can affect active service; recovery expectations determine backup frequency, restore rehearsal and staging cost.",
       "evidence": [
         "The product handles reservations, clients and operational shift settings, but no traffic, budget, RPO, RTO or regulatory retention target is documented.",
@@ -850,8 +933,9 @@
         "FOUND-TASK-004"
       ],
       "reversibility": "HIGH_COST",
-      "notes": "Owner question combined with ARCH-D016; answer once for all covered IDs.",
-      "coveredByDecisionId": "ARCH-D016"
+      "notes": "Approved by product owner; covered by ARCH-D016.",
+      "coveredByDecisionId": "ARCH-D016",
+      "adr": "docs/architecture/ADR-0006-recovery-and-environments.md"
     },
     {
       "id": "ARCH-D019",
@@ -927,7 +1011,11 @@
         "ARCH-D001",
         "ARCH-D015"
       ],
-      "status": "OWNER_DECISION_REQUIRED"
+      "status": "RESOLVED",
+      "ownerDecision": {
+        "optionId": "A",
+        "approvedBy": "Product owner"
+      }
     },
     {
       "id": "ARCH-D002",
@@ -956,7 +1044,11 @@
         "ARCH-D003",
         "ARCH-D005"
       ],
-      "status": "OWNER_DECISION_REQUIRED"
+      "status": "RESOLVED",
+      "ownerDecision": {
+        "optionId": "A",
+        "approvedBy": "Product owner"
+      }
     },
     {
       "id": "ARCH-D004",
@@ -984,7 +1076,11 @@
         "ARCH-D006",
         "ARCH-D007"
       ],
-      "status": "OWNER_DECISION_REQUIRED"
+      "status": "RESOLVED",
+      "ownerDecision": {
+        "optionId": "A",
+        "approvedBy": "Product owner"
+      }
     },
     {
       "id": "ARCH-D008",
@@ -1011,7 +1107,11 @@
         "ARCH-D008",
         "ARCH-D009"
       ],
-      "status": "OWNER_DECISION_REQUIRED"
+      "status": "RESOLVED",
+      "ownerDecision": {
+        "optionId": "A",
+        "approvedBy": "Product owner"
+      }
     },
     {
       "id": "ARCH-D010",
@@ -1038,7 +1138,11 @@
         "ARCH-D010",
         "ARCH-D011"
       ],
-      "status": "OWNER_DECISION_REQUIRED"
+      "status": "RESOLVED",
+      "ownerDecision": {
+        "optionId": "A",
+        "approvedBy": "Product owner"
+      }
     },
     {
       "id": "ARCH-D016",
@@ -1065,19 +1169,31 @@
         "ARCH-D016",
         "ARCH-D018"
       ],
-      "status": "OWNER_DECISION_REQUIRED"
+      "status": "RESOLVED",
+      "ownerDecision": {
+        "optionId": "B",
+        "approvedBy": "Product owner"
+      }
     }
   ],
-  "ownerApprovalRequiredBeforeImplementation": [
+  "ownerApprovalRequiredBeforeImplementation": [],
+  "approvedDecisions": [
     "ARCH-D001",
     "ARCH-D002",
+    "ARCH-D003",
     "ARCH-D004",
+    "ARCH-D005",
+    "ARCH-D006",
+    "ARCH-D007",
     "ARCH-D008",
+    "ARCH-D009",
     "ARCH-D010",
-    "ARCH-D016"
+    "ARCH-D011",
+    "ARCH-D015",
+    "ARCH-D016",
+    "ARCH-D018"
   ],
-  "approvedDecisions": [],
-  "projectDocumentGap": "decisions.json was absent before ARCH-001; created here. No architecture decision has been approved.",
+  "projectDocumentGap": "decisions.json was absent before ARCH-001; created in the previous checkpoint. Owner approvals and corresponding ADRs are now recorded.",
   "evidenceLabels": [
     "CONFIRMED",
     "INFERRED",

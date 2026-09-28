@@ -16,7 +16,7 @@
     {
       "id": "PHASE-03",
       "name": "Architecture decisions and secure foundations",
-      "status": "BLOCKED"
+      "status": "IN_PROGRESS"
     },
     {
       "id": "PHASE-04",
@@ -126,7 +126,7 @@
       "id": "ARCH-001",
       "name": "Resolve architecture and document gaps",
       "phaseId": "PHASE-03",
-      "status": "BLOCKED",
+      "status": "VERIFIED",
       "dependencies": [
         "MAP-001"
       ],
@@ -146,13 +146,13 @@
         "Do not change unrelated modules"
       ],
       "unknownsToResolve": [],
-      "remainingWork": "Owner answers combined ARCH-D001, ARCH-D002, ARCH-D004, ARCH-D008, ARCH-D010, ARCH-D016 decision questions; then record approval and ADRs. Do not start FOUND-TASK-002."
+      "remainingWork": "Owner decisions recorded and six ADRs verified; no architecture implementation performed."
     },
     {
       "id": "FOUND-TASK-002",
       "name": "Identity, access and venue context",
       "phaseId": "PHASE-03",
-      "status": "PLANNED",
+      "status": "READY",
       "dependencies": [
         "ARCH-001"
       ],
@@ -740,5 +740,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "ARCH-001 — Product owner answers ARCH-D001, ARCH-D002, ARCH-D004, ARCH-D008, ARCH-D010 and ARCH-D016 in decisions.json; then write approved ADRs and validate before FOUND-TASK-002."
+  "nextExactTask": "FOUND-TASK-002 — Identity, access and venue context. Begin by defining scoped identity/session and explicit organization/venue authorization contracts with isolated verification; do not implement in ARCH-001."
 }

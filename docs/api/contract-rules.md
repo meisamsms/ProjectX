@@ -1,12 +1,12 @@
 # API and shared-contract rules — ARCH-001
 
-Status: PROPOSED requirements. API style and validation authority await owner answer to ARCH-D010/D011. No endpoint, schema, runtime validator, framework or generated client is implemented.
+Status: Owner-approved API model in ADR-0005; individual endpoints and validation library remain future implementation choices. No endpoint, schema, runtime validator, framework or generated client is implemented.
 
 | Contract concern | Rule for future implementation |
 |---|---|
 | Versioning | Explicit compatible contract version and documented breaking-change policy; never silently change field meaning. |
 | Authentication context | Resolve identity from verified server-side session/token, never request body or URL. |
-| Tenant context | Derive authorized organization/venue scope and compare with selected venue and object ownership; reject mismatches. Exact hierarchy awaits ARCH-D004/D006. |
+| Tenant context | Derive authorized organization/venue scope and compare with selected venue and object ownership; reject mismatches. ProjectX hierarchy follows ADR-0003. |
 | Authorization | Check action permission plus resource/venue ownership on each command, query, export and background job. |
 | Request validation | Strict schema, bounded sizes, allowlisted fields and explicit unknown-field policy; error responses include safe field references. |
 | Response envelope | Keep success representation consistent within selected API model; do not add redundant envelope without a proven need. |
@@ -26,4 +26,4 @@ Status: PROPOSED requirements. API style and validation authority await owner an
 
 Every API-related roadmap task must own a narrow resource or workflow: contract/schema → data boundary → domain invariant → handler → client → screen → isolated integration verification. Its acceptance report must identify dependencies, affected roles/venues, error paths, verification commands and regressions. This is a proposed work decomposition, not an assertion about SevenRooms' endpoints.
 
-UNKNOWN / NEEDS TESTING: allowed status transitions, actual reservation and payment success/failure, cross-venue client sharing and alternate-role permissions. Keep placeholders explicit until test fixtures or owner policy provide evidence.
+UNKNOWN / NEEDS TESTING: allowed status transitions, actual reservation and payment success/failure, reference cross-venue client sharing and alternate-role permissions. Keep placeholders explicit until test fixtures or owner policy provide evidence.
