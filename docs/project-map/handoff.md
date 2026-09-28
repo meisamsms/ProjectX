@@ -1,11 +1,11 @@
-CURRENT PHASE: PHASE-01 Product Discovery — VERIFIED
-CURRENT TASK: DISC-003 — Verify remaining safe state and workflow branches
+CURRENT PHASE: PHASE-03 Architecture decisions and secure foundations — READY; PHASE-01 and PHASE-02 VERIFIED.
+CURRENT TASK: MAP-001 — Build authoritative application map
 STATUS: VERIFIED
-COMPLETED: SCR-070 date/area/rule/matrix and SCR-066 navigation; SCR-080 Tables and SCR-079 Seating Areas; core mapping gate. 144 screens, 18 workflows, 0 NAV_ONLY. Reporting detail deferred; confirmed findings preserved.
-FILES CREATED: None.
-FILES MODIFIED: docs/discovery/application-inventory.md; docs/project-map/feature-registry.json; docs/project-map/roadmap.json; docs/project-map/verification.json; docs/project-map/handoff.md.
-TESTS EXECUTED: JSON parse; screen/workflow/unknown ID uniqueness; inventory/registry ID and route parity; parent/child/workflow references; 21 unresolved classifications; phase gate and no-live-write audit.
-TEST RESULTS: PASS. No reservation, guest, shift, table, area, access-rule, payment, message, export, report, or permission write.
-UNRESOLVED ISSUES: U-001/Q-002 lifecycle write outcomes require isolated fixtures; U-009/Q-011 area activation enforcement requires isolated layout; other roles and SCR-094 package inaccessible; Reporting detail deferred; decisions.json absent document gap only. No critical application-mapping blocker identified.
-NEXT EXACT TASK: Prompt 02 — Build Complete Application Map. Do not execute automatically.
-FILES NEXT AGENT MUST READ: AGENTS.md; docs/discovery/application-inventory.md; docs/project-map/feature-registry.json; docs/project-map/roadmap.json; docs/project-map/app-map.json; docs/project-map/verification.json; docs/project-map/handoff.md. decisions.json absent.
+COMPLETED: 10 domains, 16 modules, 144 screens, 1,115 components, 186 actions, 18 workflows, 46 candidate entities and 160 features mapped. Five Mermaid diagrams, 20-node dependency DAG and 25-task roadmap. Reporting detail deferred.
+FILES CREATED: docs/project-map/dependencies.json; docs/project-map/diagrams/01-module-map.md through 05-data-flow.md.
+FILES MODIFIED: docs/project-map/app-map.json; docs/project-map/roadmap.json; docs/project-map/verification.json; docs/project-map/handoff.md.
+TESTS EXECUTED: JSON parse; global ID uniqueness; 144-screen/18-workflow registry parity; entity/component/action/parent/workflow references; route parity; feature required fields; DAG cycle/topological order; five Mermaid fences; documentation-only scope audit.
+TEST RESULTS: PASS. No application code, production data, or architecture decisions changed.
+UNRESOLVED ISSUES: decisions.json absent. Architecture/toolchain, tenant isolation and contract choices require owner decisions in ARCH-001. U-001/Q-002 write/transition outcomes and U-009/Q-011 area enforcement require isolated test data; alternate roles/package and detailed Reporting deferred.
+NEXT EXACT TASK: ARCH-001 — Review mapped requirements and propose owner decision options for architecture/toolchain, tenancy/persistence and API/validation contracts; then record approved decisions in decisions.json and ADRs before scaffolding.
+FILES NEXT AGENT MUST READ: AGENTS.md; docs/discovery/application-inventory.md; docs/project-map/feature-registry.json; docs/project-map/app-map.json; docs/project-map/dependencies.json; docs/project-map/roadmap.json; docs/project-map/verification.json; docs/project-map/handoff.md. decisions.json absent.

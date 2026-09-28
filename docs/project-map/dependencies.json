@@ -1,5 +1,692 @@
 {
   "schemaVersion": 1,
-  "dependencies": [],
-  "unresolvedQuestions": []
+  "scope": "Proposed implementation prerequisites inferred from observed product relationships, not the reference implementation. No framework/database/service topology chosen.",
+  "nodes": [
+    {
+      "id": "FOUND-001",
+      "name": "Resolve architecture and document gaps",
+      "kind": "foundationWorkPackage",
+      "dependsOn": [],
+      "reason": "Owner decisions and ADRs before technology choices or scaffolding.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "FOUND-002",
+      "name": "Identity, access and venue context",
+      "kind": "foundationWorkPackage",
+      "dependsOn": [
+        "FOUND-001"
+      ],
+      "reason": "Secure account/venue boundary and permission contract.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "FOUND-003",
+      "name": "Data contracts and persistence foundations",
+      "kind": "foundationWorkPackage",
+      "dependsOn": [
+        "FOUND-001",
+        "FOUND-002"
+      ],
+      "reason": "Define independent schema and migration/test approach; no reference backend inference.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "FOUND-004",
+      "name": "Navigation shell and verification harness",
+      "kind": "foundationWorkPackage",
+      "dependsOn": [
+        "FOUND-002",
+        "FOUND-003"
+      ],
+      "reason": "Route shell, accessibility, test and contract gates; separate from data-driven Home dashboard.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "MOD-01",
+      "name": "Home",
+      "kind": "productModule",
+      "dependsOn": [
+        "FOUND-004",
+        "MOD-02",
+        "MOD-03"
+      ],
+      "optionalIntegrations": [],
+      "reason": "Home summaries consume reservation and request read models; navigation shell is separate foundation work.",
+      "evidence": "PROPOSED_IMPLEMENTATION_DEPENDENCY",
+      "status": "PLANNED"
+    },
+    {
+      "id": "MOD-02",
+      "name": "Reservations",
+      "kind": "productModule",
+      "dependsOn": [
+        "FOUND-004",
+        "MOD-04",
+        "MOD-11",
+        "MOD-13",
+        "MOD-14"
+      ],
+      "optionalIntegrations": [],
+      "reason": "Reservation lifecycle and table assignment precede dependent widget, sales and reporting journeys.",
+      "evidence": "PROPOSED_IMPLEMENTATION_DEPENDENCY",
+      "status": "PLANNED"
+    },
+    {
+      "id": "MOD-03",
+      "name": "Requests",
+      "kind": "productModule",
+      "dependsOn": [
+        "FOUND-004",
+        "MOD-04",
+        "MOD-11",
+        "MOD-14"
+      ],
+      "optionalIntegrations": [
+        "MOD-02"
+      ],
+      "reason": "Request intake uses client and availability context; conversion to reservation is optional pending safe validation.",
+      "evidence": "PROPOSED_IMPLEMENTATION_DEPENDENCY",
+      "status": "PLANNED"
+    },
+    {
+      "id": "MOD-04",
+      "name": "Clients",
+      "kind": "productModule",
+      "dependsOn": [
+        "FOUND-004",
+        "MOD-09",
+        "MOD-14"
+      ],
+      "optionalIntegrations": [],
+      "reason": "Client identity and profile linkage precede a unified reservation or request journey.",
+      "evidence": "PROPOSED_IMPLEMENTATION_DEPENDENCY",
+      "status": "PLANNED"
+    },
+    {
+      "id": "MOD-05",
+      "name": "Marketing",
+      "kind": "productModule",
+      "dependsOn": [
+        "FOUND-004",
+        "MOD-04",
+        "MOD-02",
+        "MOD-15"
+      ],
+      "optionalIntegrations": [
+        "MOD-10"
+      ],
+      "reason": "Marketing uses client, reservation and guest-facing communication context.",
+      "evidence": "PROPOSED_IMPLEMENTATION_DEPENDENCY",
+      "status": "PLANNED"
+    },
+    {
+      "id": "MOD-06",
+      "name": "Voice AI",
+      "kind": "productModule",
+      "dependsOn": [
+        "FOUND-004",
+        "MOD-02",
+        "MOD-11"
+      ],
+      "optionalIntegrations": [
+        "MOD-10"
+      ],
+      "reason": "Voice-assisted booking needs reservation and availability contracts; external service remains optional.",
+      "evidence": "PROPOSED_IMPLEMENTATION_DEPENDENCY",
+      "status": "PLANNED"
+    },
+    {
+      "id": "MOD-07",
+      "name": "Online Sales",
+      "kind": "productModule",
+      "dependsOn": [
+        "FOUND-004",
+        "MOD-02",
+        "MOD-04"
+      ],
+      "optionalIntegrations": [
+        "MOD-10"
+      ],
+      "reason": "Offers and upgrades attach to reservation/client context; payment integration remains separately gated.",
+      "evidence": "PROPOSED_IMPLEMENTATION_DEPENDENCY",
+      "status": "PLANNED"
+    },
+    {
+      "id": "MOD-08",
+      "name": "Reporting",
+      "kind": "productModule",
+      "dependsOn": [
+        "FOUND-004",
+        "MOD-02",
+        "MOD-03",
+        "MOD-04"
+      ],
+      "optionalIntegrations": [
+        "MOD-05",
+        "MOD-06",
+        "MOD-07",
+        "MOD-10"
+      ],
+      "reason": "Core reports consume verified transactional records; detailed parity remains deferred.",
+      "evidence": "PROPOSED_IMPLEMENTATION_DEPENDENCY",
+      "status": "PLANNED"
+    },
+    {
+      "id": "MOD-09",
+      "name": "General Settings",
+      "kind": "productModule",
+      "dependsOn": [
+        "FOUND-004",
+        "MOD-14"
+      ],
+      "optionalIntegrations": [],
+      "reason": "Venue context and configuration are needed for venue-scoped records.",
+      "evidence": "PROPOSED_IMPLEMENTATION_DEPENDENCY",
+      "status": "PLANNED"
+    },
+    {
+      "id": "MOD-10",
+      "name": "Integrations",
+      "kind": "productModule",
+      "dependsOn": [
+        "FOUND-004",
+        "MOD-09",
+        "MOD-14"
+      ],
+      "optionalIntegrations": [],
+      "reason": "External connectors are separately gated and must not determine core reservation correctness.",
+      "evidence": "PROPOSED_IMPLEMENTATION_DEPENDENCY",
+      "status": "PLANNED"
+    },
+    {
+      "id": "MOD-11",
+      "name": "Availability",
+      "kind": "productModule",
+      "dependsOn": [
+        "FOUND-004",
+        "MOD-09",
+        "MOD-13"
+      ],
+      "optionalIntegrations": [
+        "MOD-10"
+      ],
+      "reason": "Shifts, access rules, party-size/time availability and pacing precede booking eligibility.",
+      "evidence": "PROPOSED_IMPLEMENTATION_DEPENDENCY",
+      "status": "PLANNED"
+    },
+    {
+      "id": "MOD-12",
+      "name": "Widgets",
+      "kind": "productModule",
+      "dependsOn": [
+        "FOUND-004",
+        "MOD-11",
+        "MOD-02",
+        "MOD-15"
+      ],
+      "optionalIntegrations": [
+        "MOD-10"
+      ],
+      "reason": "Booking widget consumes availability, reservation handling and guest-facing language.",
+      "evidence": "PROPOSED_IMPLEMENTATION_DEPENDENCY",
+      "status": "PLANNED"
+    },
+    {
+      "id": "MOD-13",
+      "name": "Floorplan",
+      "kind": "productModule",
+      "dependsOn": [
+        "FOUND-004",
+        "MOD-09",
+        "MOD-14"
+      ],
+      "optionalIntegrations": [],
+      "reason": "Rooms, tables, seating areas and layout selection are inputs to shift seating and assignment.",
+      "evidence": "PROPOSED_IMPLEMENTATION_DEPENDENCY",
+      "status": "PLANNED"
+    },
+    {
+      "id": "MOD-14",
+      "name": "People",
+      "kind": "productModule",
+      "dependsOn": [
+        "FOUND-004"
+      ],
+      "optionalIntegrations": [],
+      "reason": "Identity and current-account access gates precede restricted settings and guest data.",
+      "evidence": "PROPOSED_IMPLEMENTATION_DEPENDENCY",
+      "status": "PLANNED"
+    },
+    {
+      "id": "MOD-15",
+      "name": "Guest-Facing Language",
+      "kind": "productModule",
+      "dependsOn": [
+        "FOUND-004",
+        "MOD-09"
+      ],
+      "optionalIntegrations": [],
+      "reason": "Guest-facing policies and language are displayed in dependent communication and widget journeys.",
+      "evidence": "PROPOSED_IMPLEMENTATION_DEPENDENCY",
+      "status": "PLANNED"
+    },
+    {
+      "id": "MOD-16",
+      "name": "Imports",
+      "kind": "productModule",
+      "dependsOn": [
+        "FOUND-004",
+        "MOD-04",
+        "MOD-02"
+      ],
+      "optionalIntegrations": [],
+      "reason": "Imports target client and reservation concepts with safe reconciliation.",
+      "evidence": "PROPOSED_IMPLEMENTATION_DEPENDENCY",
+      "status": "PLANNED"
+    }
+  ],
+  "edges": [
+    {
+      "from": "FOUND-001",
+      "to": "FOUND-002",
+      "type": "MUST_PRECEDE",
+      "reason": "Secure account/venue boundary and permission contract."
+    },
+    {
+      "from": "FOUND-001",
+      "to": "FOUND-003",
+      "type": "MUST_PRECEDE",
+      "reason": "Define independent schema and migration/test approach; no reference backend inference."
+    },
+    {
+      "from": "FOUND-002",
+      "to": "FOUND-003",
+      "type": "MUST_PRECEDE",
+      "reason": "Define independent schema and migration/test approach; no reference backend inference."
+    },
+    {
+      "from": "FOUND-002",
+      "to": "FOUND-004",
+      "type": "MUST_PRECEDE",
+      "reason": "Route shell, accessibility, test and contract gates; separate from data-driven Home dashboard."
+    },
+    {
+      "from": "FOUND-003",
+      "to": "FOUND-004",
+      "type": "MUST_PRECEDE",
+      "reason": "Route shell, accessibility, test and contract gates; separate from data-driven Home dashboard."
+    },
+    {
+      "from": "FOUND-004",
+      "to": "MOD-01",
+      "type": "MUST_PRECEDE",
+      "reason": "Home summaries consume reservation and request read models; navigation shell is separate foundation work."
+    },
+    {
+      "from": "MOD-02",
+      "to": "MOD-01",
+      "type": "MUST_PRECEDE",
+      "reason": "Home summaries consume reservation and request read models; navigation shell is separate foundation work."
+    },
+    {
+      "from": "MOD-03",
+      "to": "MOD-01",
+      "type": "MUST_PRECEDE",
+      "reason": "Home summaries consume reservation and request read models; navigation shell is separate foundation work."
+    },
+    {
+      "from": "FOUND-004",
+      "to": "MOD-02",
+      "type": "MUST_PRECEDE",
+      "reason": "Reservation lifecycle and table assignment precede dependent widget, sales and reporting journeys."
+    },
+    {
+      "from": "MOD-04",
+      "to": "MOD-02",
+      "type": "MUST_PRECEDE",
+      "reason": "Reservation lifecycle and table assignment precede dependent widget, sales and reporting journeys."
+    },
+    {
+      "from": "MOD-11",
+      "to": "MOD-02",
+      "type": "MUST_PRECEDE",
+      "reason": "Reservation lifecycle and table assignment precede dependent widget, sales and reporting journeys."
+    },
+    {
+      "from": "MOD-13",
+      "to": "MOD-02",
+      "type": "MUST_PRECEDE",
+      "reason": "Reservation lifecycle and table assignment precede dependent widget, sales and reporting journeys."
+    },
+    {
+      "from": "MOD-14",
+      "to": "MOD-02",
+      "type": "MUST_PRECEDE",
+      "reason": "Reservation lifecycle and table assignment precede dependent widget, sales and reporting journeys."
+    },
+    {
+      "from": "FOUND-004",
+      "to": "MOD-03",
+      "type": "MUST_PRECEDE",
+      "reason": "Request intake uses client and availability context; conversion to reservation is optional pending safe validation."
+    },
+    {
+      "from": "MOD-04",
+      "to": "MOD-03",
+      "type": "MUST_PRECEDE",
+      "reason": "Request intake uses client and availability context; conversion to reservation is optional pending safe validation."
+    },
+    {
+      "from": "MOD-11",
+      "to": "MOD-03",
+      "type": "MUST_PRECEDE",
+      "reason": "Request intake uses client and availability context; conversion to reservation is optional pending safe validation."
+    },
+    {
+      "from": "MOD-14",
+      "to": "MOD-03",
+      "type": "MUST_PRECEDE",
+      "reason": "Request intake uses client and availability context; conversion to reservation is optional pending safe validation."
+    },
+    {
+      "from": "MOD-02",
+      "to": "MOD-03",
+      "type": "OPTIONAL_INTEGRATION",
+      "reason": "Feature-specific integration; does not block core module."
+    },
+    {
+      "from": "FOUND-004",
+      "to": "MOD-04",
+      "type": "MUST_PRECEDE",
+      "reason": "Client identity and profile linkage precede a unified reservation or request journey."
+    },
+    {
+      "from": "MOD-09",
+      "to": "MOD-04",
+      "type": "MUST_PRECEDE",
+      "reason": "Client identity and profile linkage precede a unified reservation or request journey."
+    },
+    {
+      "from": "MOD-14",
+      "to": "MOD-04",
+      "type": "MUST_PRECEDE",
+      "reason": "Client identity and profile linkage precede a unified reservation or request journey."
+    },
+    {
+      "from": "FOUND-004",
+      "to": "MOD-05",
+      "type": "MUST_PRECEDE",
+      "reason": "Marketing uses client, reservation and guest-facing communication context."
+    },
+    {
+      "from": "MOD-04",
+      "to": "MOD-05",
+      "type": "MUST_PRECEDE",
+      "reason": "Marketing uses client, reservation and guest-facing communication context."
+    },
+    {
+      "from": "MOD-02",
+      "to": "MOD-05",
+      "type": "MUST_PRECEDE",
+      "reason": "Marketing uses client, reservation and guest-facing communication context."
+    },
+    {
+      "from": "MOD-15",
+      "to": "MOD-05",
+      "type": "MUST_PRECEDE",
+      "reason": "Marketing uses client, reservation and guest-facing communication context."
+    },
+    {
+      "from": "MOD-10",
+      "to": "MOD-05",
+      "type": "OPTIONAL_INTEGRATION",
+      "reason": "Feature-specific integration; does not block core module."
+    },
+    {
+      "from": "FOUND-004",
+      "to": "MOD-06",
+      "type": "MUST_PRECEDE",
+      "reason": "Voice-assisted booking needs reservation and availability contracts; external service remains optional."
+    },
+    {
+      "from": "MOD-02",
+      "to": "MOD-06",
+      "type": "MUST_PRECEDE",
+      "reason": "Voice-assisted booking needs reservation and availability contracts; external service remains optional."
+    },
+    {
+      "from": "MOD-11",
+      "to": "MOD-06",
+      "type": "MUST_PRECEDE",
+      "reason": "Voice-assisted booking needs reservation and availability contracts; external service remains optional."
+    },
+    {
+      "from": "MOD-10",
+      "to": "MOD-06",
+      "type": "OPTIONAL_INTEGRATION",
+      "reason": "Feature-specific integration; does not block core module."
+    },
+    {
+      "from": "FOUND-004",
+      "to": "MOD-07",
+      "type": "MUST_PRECEDE",
+      "reason": "Offers and upgrades attach to reservation/client context; payment integration remains separately gated."
+    },
+    {
+      "from": "MOD-02",
+      "to": "MOD-07",
+      "type": "MUST_PRECEDE",
+      "reason": "Offers and upgrades attach to reservation/client context; payment integration remains separately gated."
+    },
+    {
+      "from": "MOD-04",
+      "to": "MOD-07",
+      "type": "MUST_PRECEDE",
+      "reason": "Offers and upgrades attach to reservation/client context; payment integration remains separately gated."
+    },
+    {
+      "from": "MOD-10",
+      "to": "MOD-07",
+      "type": "OPTIONAL_INTEGRATION",
+      "reason": "Feature-specific integration; does not block core module."
+    },
+    {
+      "from": "FOUND-004",
+      "to": "MOD-08",
+      "type": "MUST_PRECEDE",
+      "reason": "Core reports consume verified transactional records; detailed parity remains deferred."
+    },
+    {
+      "from": "MOD-02",
+      "to": "MOD-08",
+      "type": "MUST_PRECEDE",
+      "reason": "Core reports consume verified transactional records; detailed parity remains deferred."
+    },
+    {
+      "from": "MOD-03",
+      "to": "MOD-08",
+      "type": "MUST_PRECEDE",
+      "reason": "Core reports consume verified transactional records; detailed parity remains deferred."
+    },
+    {
+      "from": "MOD-04",
+      "to": "MOD-08",
+      "type": "MUST_PRECEDE",
+      "reason": "Core reports consume verified transactional records; detailed parity remains deferred."
+    },
+    {
+      "from": "MOD-05",
+      "to": "MOD-08",
+      "type": "OPTIONAL_INTEGRATION",
+      "reason": "Feature-specific integration; does not block core module."
+    },
+    {
+      "from": "MOD-06",
+      "to": "MOD-08",
+      "type": "OPTIONAL_INTEGRATION",
+      "reason": "Feature-specific integration; does not block core module."
+    },
+    {
+      "from": "MOD-07",
+      "to": "MOD-08",
+      "type": "OPTIONAL_INTEGRATION",
+      "reason": "Feature-specific integration; does not block core module."
+    },
+    {
+      "from": "MOD-10",
+      "to": "MOD-08",
+      "type": "OPTIONAL_INTEGRATION",
+      "reason": "Feature-specific integration; does not block core module."
+    },
+    {
+      "from": "FOUND-004",
+      "to": "MOD-09",
+      "type": "MUST_PRECEDE",
+      "reason": "Venue context and configuration are needed for venue-scoped records."
+    },
+    {
+      "from": "MOD-14",
+      "to": "MOD-09",
+      "type": "MUST_PRECEDE",
+      "reason": "Venue context and configuration are needed for venue-scoped records."
+    },
+    {
+      "from": "FOUND-004",
+      "to": "MOD-10",
+      "type": "MUST_PRECEDE",
+      "reason": "External connectors are separately gated and must not determine core reservation correctness."
+    },
+    {
+      "from": "MOD-09",
+      "to": "MOD-10",
+      "type": "MUST_PRECEDE",
+      "reason": "External connectors are separately gated and must not determine core reservation correctness."
+    },
+    {
+      "from": "MOD-14",
+      "to": "MOD-10",
+      "type": "MUST_PRECEDE",
+      "reason": "External connectors are separately gated and must not determine core reservation correctness."
+    },
+    {
+      "from": "FOUND-004",
+      "to": "MOD-11",
+      "type": "MUST_PRECEDE",
+      "reason": "Shifts, access rules, party-size/time availability and pacing precede booking eligibility."
+    },
+    {
+      "from": "MOD-09",
+      "to": "MOD-11",
+      "type": "MUST_PRECEDE",
+      "reason": "Shifts, access rules, party-size/time availability and pacing precede booking eligibility."
+    },
+    {
+      "from": "MOD-13",
+      "to": "MOD-11",
+      "type": "MUST_PRECEDE",
+      "reason": "Shifts, access rules, party-size/time availability and pacing precede booking eligibility."
+    },
+    {
+      "from": "MOD-10",
+      "to": "MOD-11",
+      "type": "OPTIONAL_INTEGRATION",
+      "reason": "Feature-specific integration; does not block core module."
+    },
+    {
+      "from": "FOUND-004",
+      "to": "MOD-12",
+      "type": "MUST_PRECEDE",
+      "reason": "Booking widget consumes availability, reservation handling and guest-facing language."
+    },
+    {
+      "from": "MOD-11",
+      "to": "MOD-12",
+      "type": "MUST_PRECEDE",
+      "reason": "Booking widget consumes availability, reservation handling and guest-facing language."
+    },
+    {
+      "from": "MOD-02",
+      "to": "MOD-12",
+      "type": "MUST_PRECEDE",
+      "reason": "Booking widget consumes availability, reservation handling and guest-facing language."
+    },
+    {
+      "from": "MOD-15",
+      "to": "MOD-12",
+      "type": "MUST_PRECEDE",
+      "reason": "Booking widget consumes availability, reservation handling and guest-facing language."
+    },
+    {
+      "from": "MOD-10",
+      "to": "MOD-12",
+      "type": "OPTIONAL_INTEGRATION",
+      "reason": "Feature-specific integration; does not block core module."
+    },
+    {
+      "from": "FOUND-004",
+      "to": "MOD-13",
+      "type": "MUST_PRECEDE",
+      "reason": "Rooms, tables, seating areas and layout selection are inputs to shift seating and assignment."
+    },
+    {
+      "from": "MOD-09",
+      "to": "MOD-13",
+      "type": "MUST_PRECEDE",
+      "reason": "Rooms, tables, seating areas and layout selection are inputs to shift seating and assignment."
+    },
+    {
+      "from": "MOD-14",
+      "to": "MOD-13",
+      "type": "MUST_PRECEDE",
+      "reason": "Rooms, tables, seating areas and layout selection are inputs to shift seating and assignment."
+    },
+    {
+      "from": "FOUND-004",
+      "to": "MOD-14",
+      "type": "MUST_PRECEDE",
+      "reason": "Identity and current-account access gates precede restricted settings and guest data."
+    },
+    {
+      "from": "FOUND-004",
+      "to": "MOD-15",
+      "type": "MUST_PRECEDE",
+      "reason": "Guest-facing policies and language are displayed in dependent communication and widget journeys."
+    },
+    {
+      "from": "MOD-09",
+      "to": "MOD-15",
+      "type": "MUST_PRECEDE",
+      "reason": "Guest-facing policies and language are displayed in dependent communication and widget journeys."
+    },
+    {
+      "from": "FOUND-004",
+      "to": "MOD-16",
+      "type": "MUST_PRECEDE",
+      "reason": "Imports target client and reservation concepts with safe reconciliation."
+    },
+    {
+      "from": "MOD-04",
+      "to": "MOD-16",
+      "type": "MUST_PRECEDE",
+      "reason": "Imports target client and reservation concepts with safe reconciliation."
+    },
+    {
+      "from": "MOD-02",
+      "to": "MOD-16",
+      "type": "MUST_PRECEDE",
+      "reason": "Imports target client and reservation concepts with safe reconciliation."
+    }
+  ],
+  "deferred": [
+    "Detailed Reporting calculations, filters, export and delivery parity",
+    "Alternate-role permissions until authorized test accounts",
+    "External connector outcomes",
+    "Unsafe production write and payment outcomes"
+  ],
+  "notes": [
+    "Hard edges determine prerequisites; optional integrations are separately gated and do not enter the DAG.",
+    "SCR-140/141 are mapped to Clients despite registry domain DOM-02 because the guest link opens the client profile; the original classification is retained as registryDomainId.",
+    "External payment execution, scheduling and messages require isolated test fixtures; no production write is used to validate mapping."
+  ]
 }

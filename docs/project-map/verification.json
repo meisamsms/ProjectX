@@ -56,6 +56,13 @@
       "status": "VERIFIED",
       "method": "Brief SCR-097 reload; read-only reservation/client/shift/status/POS-prerequisite inspection; classify 21 unknown/question items; document cross-module routes; SCR-070 date/area/rule state and SCR-066 navigation; SCR-080/079 row structure; Phase-01 mapping gate and structural audit",
       "result": "PASS: 144 screens, 18 workflows, 0 NAV_ONLY. Core model/route links sufficient for application mapping; U-001/Q-002 write outcomes and U-009/Q-011 enforcement remain isolated-test obligations, not mapping blockers. Detailed Reporting deferred; no production write."
+    },
+    {
+      "id": "CHK-009",
+      "taskId": "MAP-001",
+      "status": "VERIFIED",
+      "method": "JSON parse, stable global IDs, 144-screen/18-workflow registry parity, feature fields, parent/child/entity/action/workflow references, DAG cycle and topo order, Mermaid diagram count, no application code changes",
+      "result": "PASS: 10 domains, 16 modules, 144 screens, 1,115 components, 186 actions, 18 workflows, 46 candidate entities, 160 features and one current-account role. Unique global IDs and valid refs; 20-node hard dependency DAG has no cycle; 25-task roadmap topological order; five Mermaid files. Discovery preserved, no application code or architecture decision created."
     }
   ],
   "unresolvedQuestions": [
@@ -85,7 +92,8 @@
     "Initial document-generation check failed on non-zero-padded SCR-097 ID lookup; corrected padding and reran all document checks successfully.",
     "No application tests run: discovery documentation only.",
     "Prior route opening evidence retained. All named safe DISC-002 nested surfaces inspected; unresolved residual Loading... and unsafe/other-role branches are explicit partial/unknown items for DISC-003 or isolated testing.",
-    "DISC-003 checkpoint: Reporting detail deferred by product owner; previously confirmed Reporting evidence preserved. No booking, guest, shift, status, POS or language update submitted."
+    "DISC-003 checkpoint: Reporting detail deferred by product owner; previously confirmed Reporting evidence preserved. No booking, guest, shift, status, POS or language update submitted.",
+    "MAP-001 documentation-only: candidate entities and hard module edges are proposed implementation planning, not claims about reference internals. decisions.json remains absent; ARCH-001 is next."
   ],
   "accessInterruption": "Prior login/MFA interruption preserved as U-010. Existing browser authenticated on 2026-09-27; SCR-029 and SCR-028 accessible, discovery resumed, no prior repository evidence lost.",
   "phase01Gate": {
@@ -106,5 +114,17 @@
     "routeParity": "PASS",
     "productionWrites": 0,
     "nextTask": "Prompt 02 — Build Complete Application Map"
+  },
+  "mapCounts": {
+    "domains": 10,
+    "modules": 16,
+    "screens": 144,
+    "components": 1115,
+    "actions": 186,
+    "workflows": 18,
+    "candidateEntities": 46,
+    "features": 160,
+    "hardDependencyEdges": 55,
+    "mermaidFiles": 5
   }
 }

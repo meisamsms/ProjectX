@@ -1,11 +1,37 @@
 {
-  "schemaVersion": 1,
-  "currentPhase": "DISCOVERY",
+  "schemaVersion": 2,
+  "currentPhase": "PHASE-03",
+  "orderingBasis": "Proposed technical prerequisites, not navigation order. Hard edges must be verified; optional integrations do not block core modules.",
   "phases": [
     {
       "id": "PHASE-01",
       "name": "Product discovery",
       "status": "VERIFIED"
+    },
+    {
+      "id": "PHASE-02",
+      "name": "Application map and implementation dependency planning",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "PHASE-03",
+      "name": "Architecture decisions and secure foundations",
+      "status": "READY"
+    },
+    {
+      "id": "PHASE-04",
+      "name": "Core domain implementation",
+      "status": "PLANNED"
+    },
+    {
+      "id": "PHASE-05",
+      "name": "Dependent experiences and deferred reporting",
+      "status": "PLANNED"
+    },
+    {
+      "id": "PHASE-06",
+      "name": "Integrated verification and release readiness",
+      "status": "PLANNED"
     }
   ],
   "tasks": [
@@ -71,6 +97,608 @@
       ],
       "remainingWork": "No safe critical mapping blocker identified. Unsafe lifecycle outcomes and seating-area activation validation remain tracked for isolated implementation verification; detailed Reporting deferred by product owner. Prompt 02 is next, not executed.",
       "discoveryGate": "PASS: core navigation, reservations, clients, availability, shifts, tables, areas and floorplan links documented; 0 NAV_ONLY; 21 U/Q classified; no production writes; structural audit passes."
+    },
+    {
+      "id": "MAP-001",
+      "name": "Build authoritative application map",
+      "phaseId": "PHASE-02",
+      "status": "VERIFIED",
+      "dependencies": [
+        "DISC-003"
+      ],
+      "scope": "Documentation only: complete map, five diagrams, dependency graph, ordered roadmap and handoff.",
+      "acceptanceCriteria": [
+        "All 144 screens and 18 workflows represented with stable unique IDs",
+        "Every module and screen feature has required fields",
+        "All dependency hard edges form an acyclic graph",
+        "Five Mermaid diagrams and registry parity checked",
+        "No application code changed"
+      ],
+      "verificationCommands": [
+        "Parse all project-map JSON",
+        "Check IDs and references, module coverage, DAG and Mermaid fences"
+      ],
+      "regressionChecks": [
+        "Preserve verified discovery evidence and Reporting deferral"
+      ]
+    },
+    {
+      "id": "ARCH-001",
+      "name": "Resolve architecture and document gaps",
+      "phaseId": "PHASE-03",
+      "status": "READY",
+      "dependencies": [
+        "MAP-001"
+      ],
+      "scope": "Owner decisions and ADRs before technology choices or scaffolding.",
+      "acceptanceCriteria": [
+        "Owner-approved decisions recorded before implementation",
+        "Security and recovery expectations documented"
+      ],
+      "verificationCommands": [
+        "Run relevant lint and typecheck",
+        "Run focused unit/integration/contract tests on this task scope",
+        "Run affected regression checks; record exact commands and results in verification.json"
+      ],
+      "regressionChecks": [
+        "Preserve previously verified workflows",
+        "Verify tenant and permission boundaries where applicable",
+        "Do not change unrelated modules"
+      ],
+      "unknownsToResolve": []
+    },
+    {
+      "id": "FOUND-TASK-002",
+      "name": "Identity, access and venue context",
+      "phaseId": "PHASE-03",
+      "status": "PLANNED",
+      "dependencies": [
+        "ARCH-001"
+      ],
+      "scope": "Secure account/venue boundary and permission contract.",
+      "acceptanceCriteria": [
+        "Foundation contract and focused verification pass",
+        "Security and recovery expectations documented"
+      ],
+      "verificationCommands": [
+        "Run relevant lint and typecheck",
+        "Run focused unit/integration/contract tests on this task scope",
+        "Run affected regression checks; record exact commands and results in verification.json"
+      ],
+      "regressionChecks": [
+        "Preserve previously verified workflows",
+        "Verify tenant and permission boundaries where applicable",
+        "Do not change unrelated modules"
+      ],
+      "unknownsToResolve": []
+    },
+    {
+      "id": "FOUND-TASK-003",
+      "name": "Data contracts and persistence foundations",
+      "phaseId": "PHASE-03",
+      "status": "PLANNED",
+      "dependencies": [
+        "ARCH-001",
+        "FOUND-TASK-002"
+      ],
+      "scope": "Define independent schema and migration/test approach; no reference backend inference.",
+      "acceptanceCriteria": [
+        "Foundation contract and focused verification pass",
+        "Security and recovery expectations documented"
+      ],
+      "verificationCommands": [
+        "Run relevant lint and typecheck",
+        "Run focused unit/integration/contract tests on this task scope",
+        "Run affected regression checks; record exact commands and results in verification.json"
+      ],
+      "regressionChecks": [
+        "Preserve previously verified workflows",
+        "Verify tenant and permission boundaries where applicable",
+        "Do not change unrelated modules"
+      ],
+      "unknownsToResolve": []
+    },
+    {
+      "id": "FOUND-TASK-004",
+      "name": "Navigation shell and verification harness",
+      "phaseId": "PHASE-03",
+      "status": "PLANNED",
+      "dependencies": [
+        "FOUND-TASK-002",
+        "FOUND-TASK-003"
+      ],
+      "scope": "Route shell, accessibility, test and contract gates; separate from data-driven Home dashboard.",
+      "acceptanceCriteria": [
+        "Foundation contract and focused verification pass",
+        "Security and recovery expectations documented"
+      ],
+      "verificationCommands": [
+        "Run relevant lint and typecheck",
+        "Run focused unit/integration/contract tests on this task scope",
+        "Run affected regression checks; record exact commands and results in verification.json"
+      ],
+      "regressionChecks": [
+        "Preserve previously verified workflows",
+        "Verify tenant and permission boundaries where applicable",
+        "Do not change unrelated modules"
+      ],
+      "unknownsToResolve": []
+    },
+    {
+      "id": "IMPL-MOD-01",
+      "name": "Home scoped implementation",
+      "phaseId": "PHASE-05",
+      "status": "PLANNED",
+      "dependencies": [
+        "FOUND-TASK-004",
+        "IMPL-MOD-02",
+        "IMPL-MOD-03"
+      ],
+      "scope": "Implement only the mapped Home screens and workflows once dependencies are verified.",
+      "acceptanceCriteria": [
+        "Mapped acceptance paths pass with isolated test data",
+        "Every unresolved unsafe behavior either verified in isolation or tracked as a blocker before release"
+      ],
+      "verificationCommands": [
+        "Run relevant lint and typecheck",
+        "Run focused unit/integration/contract tests on this task scope",
+        "Run affected regression checks; record exact commands and results in verification.json"
+      ],
+      "regressionChecks": [
+        "Preserve previously verified workflows",
+        "Verify tenant and permission boundaries where applicable",
+        "Do not change unrelated modules"
+      ],
+      "unknownsToResolve": []
+    },
+    {
+      "id": "IMPL-MOD-02",
+      "name": "Reservations scoped implementation",
+      "phaseId": "PHASE-04",
+      "status": "PLANNED",
+      "dependencies": [
+        "FOUND-TASK-004",
+        "IMPL-MOD-04",
+        "IMPL-MOD-11",
+        "IMPL-MOD-13",
+        "IMPL-MOD-14"
+      ],
+      "scope": "Implement only the mapped Reservations screens and workflows once dependencies are verified.",
+      "acceptanceCriteria": [
+        "Mapped acceptance paths pass with isolated test data",
+        "Every unresolved unsafe behavior either verified in isolation or tracked as a blocker before release"
+      ],
+      "verificationCommands": [
+        "Run relevant lint and typecheck",
+        "Run focused unit/integration/contract tests on this task scope",
+        "Run affected regression checks; record exact commands and results in verification.json"
+      ],
+      "regressionChecks": [
+        "Preserve previously verified workflows",
+        "Verify tenant and permission boundaries where applicable",
+        "Do not change unrelated modules"
+      ],
+      "unknownsToResolve": [
+        "U-001",
+        "Q-002"
+      ]
+    },
+    {
+      "id": "IMPL-MOD-03",
+      "name": "Requests scoped implementation",
+      "phaseId": "PHASE-04",
+      "status": "PLANNED",
+      "dependencies": [
+        "FOUND-TASK-004",
+        "IMPL-MOD-04",
+        "IMPL-MOD-11",
+        "IMPL-MOD-14"
+      ],
+      "scope": "Implement only the mapped Requests screens and workflows once dependencies are verified.",
+      "acceptanceCriteria": [
+        "Mapped acceptance paths pass with isolated test data",
+        "Every unresolved unsafe behavior either verified in isolation or tracked as a blocker before release"
+      ],
+      "verificationCommands": [
+        "Run relevant lint and typecheck",
+        "Run focused unit/integration/contract tests on this task scope",
+        "Run affected regression checks; record exact commands and results in verification.json"
+      ],
+      "regressionChecks": [
+        "Preserve previously verified workflows",
+        "Verify tenant and permission boundaries where applicable",
+        "Do not change unrelated modules"
+      ],
+      "unknownsToResolve": []
+    },
+    {
+      "id": "IMPL-MOD-04",
+      "name": "Clients scoped implementation",
+      "phaseId": "PHASE-04",
+      "status": "PLANNED",
+      "dependencies": [
+        "FOUND-TASK-004",
+        "IMPL-MOD-09",
+        "IMPL-MOD-14"
+      ],
+      "scope": "Implement only the mapped Clients screens and workflows once dependencies are verified.",
+      "acceptanceCriteria": [
+        "Mapped acceptance paths pass with isolated test data",
+        "Every unresolved unsafe behavior either verified in isolation or tracked as a blocker before release"
+      ],
+      "verificationCommands": [
+        "Run relevant lint and typecheck",
+        "Run focused unit/integration/contract tests on this task scope",
+        "Run affected regression checks; record exact commands and results in verification.json"
+      ],
+      "regressionChecks": [
+        "Preserve previously verified workflows",
+        "Verify tenant and permission boundaries where applicable",
+        "Do not change unrelated modules"
+      ],
+      "unknownsToResolve": []
+    },
+    {
+      "id": "IMPL-MOD-05",
+      "name": "Marketing scoped implementation",
+      "phaseId": "PHASE-05",
+      "status": "PLANNED",
+      "dependencies": [
+        "FOUND-TASK-004",
+        "IMPL-MOD-04",
+        "IMPL-MOD-02",
+        "IMPL-MOD-15"
+      ],
+      "scope": "Implement only the mapped Marketing screens and workflows once dependencies are verified.",
+      "acceptanceCriteria": [
+        "Mapped acceptance paths pass with isolated test data",
+        "Every unresolved unsafe behavior either verified in isolation or tracked as a blocker before release"
+      ],
+      "verificationCommands": [
+        "Run relevant lint and typecheck",
+        "Run focused unit/integration/contract tests on this task scope",
+        "Run affected regression checks; record exact commands and results in verification.json"
+      ],
+      "regressionChecks": [
+        "Preserve previously verified workflows",
+        "Verify tenant and permission boundaries where applicable",
+        "Do not change unrelated modules"
+      ],
+      "unknownsToResolve": []
+    },
+    {
+      "id": "IMPL-MOD-06",
+      "name": "Voice AI scoped implementation",
+      "phaseId": "PHASE-05",
+      "status": "PLANNED",
+      "dependencies": [
+        "FOUND-TASK-004",
+        "IMPL-MOD-02",
+        "IMPL-MOD-11"
+      ],
+      "scope": "Implement only the mapped Voice AI screens and workflows once dependencies are verified.",
+      "acceptanceCriteria": [
+        "Mapped acceptance paths pass with isolated test data",
+        "Every unresolved unsafe behavior either verified in isolation or tracked as a blocker before release"
+      ],
+      "verificationCommands": [
+        "Run relevant lint and typecheck",
+        "Run focused unit/integration/contract tests on this task scope",
+        "Run affected regression checks; record exact commands and results in verification.json"
+      ],
+      "regressionChecks": [
+        "Preserve previously verified workflows",
+        "Verify tenant and permission boundaries where applicable",
+        "Do not change unrelated modules"
+      ],
+      "unknownsToResolve": []
+    },
+    {
+      "id": "IMPL-MOD-07",
+      "name": "Online Sales scoped implementation",
+      "phaseId": "PHASE-05",
+      "status": "PLANNED",
+      "dependencies": [
+        "FOUND-TASK-004",
+        "IMPL-MOD-02",
+        "IMPL-MOD-04"
+      ],
+      "scope": "Implement only the mapped Online Sales screens and workflows once dependencies are verified.",
+      "acceptanceCriteria": [
+        "Mapped acceptance paths pass with isolated test data",
+        "Every unresolved unsafe behavior either verified in isolation or tracked as a blocker before release"
+      ],
+      "verificationCommands": [
+        "Run relevant lint and typecheck",
+        "Run focused unit/integration/contract tests on this task scope",
+        "Run affected regression checks; record exact commands and results in verification.json"
+      ],
+      "regressionChecks": [
+        "Preserve previously verified workflows",
+        "Verify tenant and permission boundaries where applicable",
+        "Do not change unrelated modules"
+      ],
+      "unknownsToResolve": []
+    },
+    {
+      "id": "IMPL-MOD-08",
+      "name": "Reporting scoped implementation",
+      "phaseId": "PHASE-05",
+      "status": "PLANNED",
+      "dependencies": [
+        "FOUND-TASK-004",
+        "IMPL-MOD-02",
+        "IMPL-MOD-03",
+        "IMPL-MOD-04"
+      ],
+      "scope": "Implement only the mapped Reporting screens and workflows once dependencies are verified.",
+      "acceptanceCriteria": [
+        "Mapped acceptance paths pass with isolated test data",
+        "Every unresolved unsafe behavior either verified in isolation or tracked as a blocker before release"
+      ],
+      "verificationCommands": [
+        "Run relevant lint and typecheck",
+        "Run focused unit/integration/contract tests on this task scope",
+        "Run affected regression checks; record exact commands and results in verification.json"
+      ],
+      "regressionChecks": [
+        "Preserve previously verified workflows",
+        "Verify tenant and permission boundaries where applicable",
+        "Do not change unrelated modules"
+      ],
+      "unknownsToResolve": []
+    },
+    {
+      "id": "IMPL-MOD-09",
+      "name": "General Settings scoped implementation",
+      "phaseId": "PHASE-04",
+      "status": "PLANNED",
+      "dependencies": [
+        "FOUND-TASK-004",
+        "IMPL-MOD-14"
+      ],
+      "scope": "Implement only the mapped General Settings screens and workflows once dependencies are verified.",
+      "acceptanceCriteria": [
+        "Mapped acceptance paths pass with isolated test data",
+        "Every unresolved unsafe behavior either verified in isolation or tracked as a blocker before release"
+      ],
+      "verificationCommands": [
+        "Run relevant lint and typecheck",
+        "Run focused unit/integration/contract tests on this task scope",
+        "Run affected regression checks; record exact commands and results in verification.json"
+      ],
+      "regressionChecks": [
+        "Preserve previously verified workflows",
+        "Verify tenant and permission boundaries where applicable",
+        "Do not change unrelated modules"
+      ],
+      "unknownsToResolve": []
+    },
+    {
+      "id": "IMPL-MOD-10",
+      "name": "Integrations scoped implementation",
+      "phaseId": "PHASE-05",
+      "status": "PLANNED",
+      "dependencies": [
+        "FOUND-TASK-004",
+        "IMPL-MOD-09",
+        "IMPL-MOD-14"
+      ],
+      "scope": "Implement only the mapped Integrations screens and workflows once dependencies are verified.",
+      "acceptanceCriteria": [
+        "Mapped acceptance paths pass with isolated test data",
+        "Every unresolved unsafe behavior either verified in isolation or tracked as a blocker before release"
+      ],
+      "verificationCommands": [
+        "Run relevant lint and typecheck",
+        "Run focused unit/integration/contract tests on this task scope",
+        "Run affected regression checks; record exact commands and results in verification.json"
+      ],
+      "regressionChecks": [
+        "Preserve previously verified workflows",
+        "Verify tenant and permission boundaries where applicable",
+        "Do not change unrelated modules"
+      ],
+      "unknownsToResolve": []
+    },
+    {
+      "id": "IMPL-MOD-11",
+      "name": "Availability scoped implementation",
+      "phaseId": "PHASE-04",
+      "status": "PLANNED",
+      "dependencies": [
+        "FOUND-TASK-004",
+        "IMPL-MOD-09",
+        "IMPL-MOD-13"
+      ],
+      "scope": "Implement only the mapped Availability screens and workflows once dependencies are verified.",
+      "acceptanceCriteria": [
+        "Mapped acceptance paths pass with isolated test data",
+        "Every unresolved unsafe behavior either verified in isolation or tracked as a blocker before release"
+      ],
+      "verificationCommands": [
+        "Run relevant lint and typecheck",
+        "Run focused unit/integration/contract tests on this task scope",
+        "Run affected regression checks; record exact commands and results in verification.json"
+      ],
+      "regressionChecks": [
+        "Preserve previously verified workflows",
+        "Verify tenant and permission boundaries where applicable",
+        "Do not change unrelated modules"
+      ],
+      "unknownsToResolve": []
+    },
+    {
+      "id": "IMPL-MOD-12",
+      "name": "Widgets scoped implementation",
+      "phaseId": "PHASE-05",
+      "status": "PLANNED",
+      "dependencies": [
+        "FOUND-TASK-004",
+        "IMPL-MOD-11",
+        "IMPL-MOD-02",
+        "IMPL-MOD-15"
+      ],
+      "scope": "Implement only the mapped Widgets screens and workflows once dependencies are verified.",
+      "acceptanceCriteria": [
+        "Mapped acceptance paths pass with isolated test data",
+        "Every unresolved unsafe behavior either verified in isolation or tracked as a blocker before release"
+      ],
+      "verificationCommands": [
+        "Run relevant lint and typecheck",
+        "Run focused unit/integration/contract tests on this task scope",
+        "Run affected regression checks; record exact commands and results in verification.json"
+      ],
+      "regressionChecks": [
+        "Preserve previously verified workflows",
+        "Verify tenant and permission boundaries where applicable",
+        "Do not change unrelated modules"
+      ],
+      "unknownsToResolve": []
+    },
+    {
+      "id": "IMPL-MOD-13",
+      "name": "Floorplan scoped implementation",
+      "phaseId": "PHASE-04",
+      "status": "PLANNED",
+      "dependencies": [
+        "FOUND-TASK-004",
+        "IMPL-MOD-09",
+        "IMPL-MOD-14"
+      ],
+      "scope": "Implement only the mapped Floorplan screens and workflows once dependencies are verified.",
+      "acceptanceCriteria": [
+        "Mapped acceptance paths pass with isolated test data",
+        "Every unresolved unsafe behavior either verified in isolation or tracked as a blocker before release"
+      ],
+      "verificationCommands": [
+        "Run relevant lint and typecheck",
+        "Run focused unit/integration/contract tests on this task scope",
+        "Run affected regression checks; record exact commands and results in verification.json"
+      ],
+      "regressionChecks": [
+        "Preserve previously verified workflows",
+        "Verify tenant and permission boundaries where applicable",
+        "Do not change unrelated modules"
+      ],
+      "unknownsToResolve": []
+    },
+    {
+      "id": "IMPL-MOD-14",
+      "name": "People scoped implementation",
+      "phaseId": "PHASE-04",
+      "status": "PLANNED",
+      "dependencies": [
+        "FOUND-TASK-004"
+      ],
+      "scope": "Implement only the mapped People screens and workflows once dependencies are verified.",
+      "acceptanceCriteria": [
+        "Mapped acceptance paths pass with isolated test data",
+        "Every unresolved unsafe behavior either verified in isolation or tracked as a blocker before release"
+      ],
+      "verificationCommands": [
+        "Run relevant lint and typecheck",
+        "Run focused unit/integration/contract tests on this task scope",
+        "Run affected regression checks; record exact commands and results in verification.json"
+      ],
+      "regressionChecks": [
+        "Preserve previously verified workflows",
+        "Verify tenant and permission boundaries where applicable",
+        "Do not change unrelated modules"
+      ],
+      "unknownsToResolve": []
+    },
+    {
+      "id": "IMPL-MOD-15",
+      "name": "Guest-Facing Language scoped implementation",
+      "phaseId": "PHASE-04",
+      "status": "PLANNED",
+      "dependencies": [
+        "FOUND-TASK-004",
+        "IMPL-MOD-09"
+      ],
+      "scope": "Implement only the mapped Guest-Facing Language screens and workflows once dependencies are verified.",
+      "acceptanceCriteria": [
+        "Mapped acceptance paths pass with isolated test data",
+        "Every unresolved unsafe behavior either verified in isolation or tracked as a blocker before release"
+      ],
+      "verificationCommands": [
+        "Run relevant lint and typecheck",
+        "Run focused unit/integration/contract tests on this task scope",
+        "Run affected regression checks; record exact commands and results in verification.json"
+      ],
+      "regressionChecks": [
+        "Preserve previously verified workflows",
+        "Verify tenant and permission boundaries where applicable",
+        "Do not change unrelated modules"
+      ],
+      "unknownsToResolve": []
+    },
+    {
+      "id": "IMPL-MOD-16",
+      "name": "Imports scoped implementation",
+      "phaseId": "PHASE-05",
+      "status": "PLANNED",
+      "dependencies": [
+        "FOUND-TASK-004",
+        "IMPL-MOD-04",
+        "IMPL-MOD-02"
+      ],
+      "scope": "Implement only the mapped Imports screens and workflows once dependencies are verified.",
+      "acceptanceCriteria": [
+        "Mapped acceptance paths pass with isolated test data",
+        "Every unresolved unsafe behavior either verified in isolation or tracked as a blocker before release"
+      ],
+      "verificationCommands": [
+        "Run relevant lint and typecheck",
+        "Run focused unit/integration/contract tests on this task scope",
+        "Run affected regression checks; record exact commands and results in verification.json"
+      ],
+      "regressionChecks": [
+        "Preserve previously verified workflows",
+        "Verify tenant and permission boundaries where applicable",
+        "Do not change unrelated modules"
+      ],
+      "unknownsToResolve": []
+    },
+    {
+      "id": "RELEASE-001",
+      "name": "Integrated security, regression and release verification",
+      "phaseId": "PHASE-06",
+      "status": "PLANNED",
+      "dependencies": [
+        "IMPL-MOD-01",
+        "IMPL-MOD-02",
+        "IMPL-MOD-03",
+        "IMPL-MOD-04",
+        "IMPL-MOD-05",
+        "IMPL-MOD-06",
+        "IMPL-MOD-07",
+        "IMPL-MOD-09",
+        "IMPL-MOD-10",
+        "IMPL-MOD-11",
+        "IMPL-MOD-12",
+        "IMPL-MOD-13",
+        "IMPL-MOD-14",
+        "IMPL-MOD-15",
+        "IMPL-MOD-16"
+      ],
+      "scope": "Verify core product journeys and deferred-feature boundaries with isolated fixtures.",
+      "acceptanceCriteria": [
+        "Core E2E, security, integration, database and API contracts pass",
+        "No known critical unsafe/tenant/permission gap remains untested"
+      ],
+      "verificationCommands": [
+        "Run relevant lint and typecheck",
+        "Run focused unit/integration/contract tests on this task scope",
+        "Run affected regression checks; record exact commands and results in verification.json"
+      ],
+      "regressionChecks": [
+        "Preserve previously verified workflows",
+        "Verify tenant and permission boundaries where applicable",
+        "Do not change unrelated modules"
+      ],
+      "unknownsToResolve": []
     }
   ],
   "unresolvedQuestions": [
@@ -86,5 +714,30 @@
     "Q-010",
     "Q-011"
   ],
-  "discoveryPriority": "Core workflows and dependencies before Reporting. Reporting unknowns can remain deferred by product owner."
+  "discoveryPriority": "Core workflows and dependencies before Reporting. Reporting unknowns can remain deferred by product owner.",
+  "implementationOrder": [
+    "MAP-001",
+    "ARCH-001",
+    "FOUND-TASK-002",
+    "FOUND-TASK-003",
+    "FOUND-TASK-004",
+    "IMPL-MOD-14",
+    "IMPL-MOD-09",
+    "IMPL-MOD-13",
+    "IMPL-MOD-11",
+    "IMPL-MOD-04",
+    "IMPL-MOD-15",
+    "IMPL-MOD-02",
+    "IMPL-MOD-03",
+    "IMPL-MOD-10",
+    "IMPL-MOD-12",
+    "IMPL-MOD-07",
+    "IMPL-MOD-16",
+    "IMPL-MOD-01",
+    "IMPL-MOD-05",
+    "IMPL-MOD-06",
+    "IMPL-MOD-08",
+    "RELEASE-001"
+  ],
+  "nextExactTask": "ARCH-001 — Resolve architecture decisions and create decisions.json / ADRs with owner input; no application scaffolding before verification."
 }
