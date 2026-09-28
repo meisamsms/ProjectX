@@ -5977,11 +5977,14 @@
       "domainId": "DOM-08",
       "purpose": "Inspect booking health",
       "visibleComponents": [
-        "Date",
-        "audience",
-        "access rule",
-        "seating area",
-        "party-size-by-time matrix"
+        "Date picker",
+        "Audience, Access Rules and Seating Area filters",
+        "Disabled Duration Picker",
+        "Available / Not Available / Inactive legend",
+        "Party size 1–15 by hourly time matrix with four quarter-hour blocks per hour",
+        "Covers per page and pagination",
+        "Booked covers and shift summaries",
+        "View Reservation Widget"
       ],
       "primaryActions": [
         "Select date/audience/area",
@@ -5992,31 +5995,49 @@
       "fields": [
         {
           "name": "Date",
-          "type": "UNKNOWN",
+          "type": "date textbox and calendar button",
           "required": "UNKNOWN",
           "validation": "UNKNOWN"
         },
         {
           "name": "Audience",
-          "type": "UNKNOWN",
+          "type": "searchable single-choice combobox",
           "required": "UNKNOWN",
           "validation": "UNKNOWN"
         },
         {
-          "name": "Access Rule",
-          "type": "UNKNOWN",
+          "name": "Access Rules",
+          "type": "multi-select checkbox combobox",
           "required": "UNKNOWN",
           "validation": "UNKNOWN"
         },
         {
           "name": "Seating Area",
-          "type": "UNKNOWN",
+          "type": "multi-select checkbox combobox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Duration Picker",
+          "type": "disabled combobox in observed state",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "Covers per page",
+          "type": "combobox",
           "required": "UNKNOWN",
           "validation": "UNKNOWN"
         }
       ],
       "tables": [],
-      "filters": [],
+      "filters": [
+        "Date",
+        "Audience",
+        "Access Rules",
+        "Seating Area",
+        "Duration Picker (disabled)"
+      ],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
       "pagination": "UNKNOWN",
@@ -6025,38 +6046,65 @@
         "Not Available",
         "Inactive"
       ],
-      "buttons": [],
+      "buttons": [
+        "Choose date",
+        "View Reservation Widget",
+        "Go to previous page (disabled on first page)",
+        "Go to next page"
+      ],
       "menus": [],
       "modals": [],
       "notifications": [],
       "errors": [],
-      "emptyStates": [],
-      "dependencies": [],
+      "emptyStates": [
+        "West Wing filter on 2026-09-28: no Available matrix cell visible; Not Available and Inactive cells remained. No dedicated empty message observed."
+      ],
+      "dependencies": [
+        "SCR-024",
+        "SCR-066",
+        "SCR-079",
+        "SCR-080",
+        "SCR-142"
+      ],
       "likelyEntities": [],
       "userRoles": "Current signed-in user; other roles NEEDS TESTING",
       "observedBusinessRules": [
-        "Slot detail NEEDS TESTING"
+        "CONFIRMED: Default date 09/27/2026. Calendar picker showed September 2026 with past dates and Previous month disabled; selecting 09/28 changed textbox and URL to ?date=2026-09-28&audience=SEVENROOMS_WIDGET after loading.",
+        "CONFIRMED: 09/27 matrix showed 4–8 PM; 09/28 showed 11 AM–8 PM. Party sizes 1–15 displayed with hourly labels and four sub-blocks per hour; Available, Not Available and Inactive labels shown.",
+        "CONFIRMED: No separate shift selector appeared; footer showed Dinner Su on 09/27 and Lunch Mo-Fr plus Dinner Mo-Th on 09/28. Those summaries are date-dependent; exact shift-to-slot derivation UNKNOWN.",
+        "CONFIRMED: Audience default Reservation Widget; selector grouped direct booking channels, custom audiences and many other channels. Access Rules offered Lunch and Week Day on 09/28; Seating Area offered Main, West Wing, VIP, BAR, bar booth.",
+        "CONFIRMED: Selecting West Wing on 09/28 appended seatingAreaIds to URL and replaced available matrix cells with Not Available or Inactive; legend still displayed Available. Selecting Lunch appended accessPersistentIds; no further visible status change in West Wing selection. No backend calculation inferred.",
+        "CONFIRMED: Sidebar Access Rules navigated to SCR-066 base route and displayed current week Sep 27–Oct 3 and rule cards, without carrying 09/28, audience, seating area or rule filter in the destination URL. Browser Back restored the 09/28 and Main filtered Quick View URL/state.",
+        "CONFIRMED: One matrix Available-block click produced no visible dialog, drawer or route change in the observed state; slot detail remains UNKNOWN."
       ],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
       "unknowns": [
-        "Validation, save result, and role differences NEEDS TESTING"
+        "Exact slot drilldown, shift-to-slot causality, booking logic, error behavior and other roles NEEDS TESTING."
       ],
       "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied",
-      "partialReason": "Observed the page; live write, error, alternate-role and all filter branches were not tested.",
+      "partialReason": "Read-only date, audience/rule/area filters, slot states and Access Rules navigation inspected. Slot detail did not visibly open from one Available cell; booking effects, other roles, remaining dates and validation untested.",
       "layout": "OBSERVED: Date",
       "tabs": [],
       "cards": [],
-      "loadingState": "UNKNOWN",
-      "populatedState": "UNKNOWN",
+      "loadingState": "Initial route displayed loading progressbars; date selection re-rendered matrix after a brief delay.",
+      "populatedState": "OBSERVED: 2026-09-27 Dinner Su summary; 2026-09-28 Lunch Mo-Fr and Dinner Mo-Th summaries.",
       "errorState": "UNKNOWN_REQUIRES_SAFE_TEST_DATA",
-      "disabledState": "UNKNOWN",
+      "disabledState": "Duration Picker and first-page Previous disabled; calendar dates before 2026-09-27 and Previous month disabled in September 2026 picker.",
       "visiblePermissionBehavior": "OBSERVED current account; other roles UNKNOWN",
       "unknownBehaviorIds": [
         "U-001",
         "U-002",
         "U-003"
-      ]
+      ],
+      "partialBoundary": {
+        "PARTIAL REASON": "Read-only date, audience/rule/area filters, slot states and Access Rules navigation inspected. Slot detail did not visibly open from one Available cell; booking effects, other roles, remaining dates and validation untested.",
+        "UNVERIFIED BEHAVIOR": "Slot drilldown contents, exact capacity calculation, booking outcomes, additional date/shift states and other roles.",
+        "WHY IT CANNOT BE SAFELY VERIFIED": "No production reservation or inventory action; one safe Available-cell click produced no visible detail in this session.",
+        "FUTURE TEST METHOD": "Use isolated venue with controlled shifts, areas, access rules, covers and booking fixtures; compare visible matrix and drilldown."
+      },
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-003"
     },
     {
       "id": "SCR-071",
@@ -6772,8 +6820,11 @@
       "domainId": "DOM-08",
       "purpose": "Seating Areas",
       "visibleComponents": [
-        "Abbreviation/name grid",
-        "seating areas"
+        "Five seating-area rows: Main, West Wing, VIP, BAR, bar booth",
+        "List Order help",
+        "Add seating area",
+        "Save changes",
+        "Remove × per row"
       ],
       "primaryActions": [
         "Add seating area",
@@ -6784,18 +6835,34 @@
       "fields": [
         {
           "name": "Abbreviation",
-          "type": "UNKNOWN",
+          "type": "editable textbox",
           "required": "UNKNOWN",
           "validation": "UNKNOWN"
         },
         {
           "name": "Name",
-          "type": "UNKNOWN",
+          "type": "editable textbox",
+          "required": "UNKNOWN",
+          "validation": "UNKNOWN"
+        },
+        {
+          "name": "List Order",
+          "type": "editable textbox",
           "required": "UNKNOWN",
           "validation": "UNKNOWN"
         }
       ],
-      "tables": [],
+      "tables": [
+        {
+          "description": "Five editable seating-area rows",
+          "columns": [
+            "Abbreviation",
+            "Name",
+            "List Order",
+            "remove ×"
+          ]
+        }
+      ],
       "filters": [],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
@@ -6807,17 +6874,27 @@
       "notifications": [],
       "errors": [],
       "emptyStates": [],
-      "dependencies": [],
+      "dependencies": [
+        "SCR-070",
+        "SCR-080",
+        "SCR-096",
+        "SCR-142"
+      ],
       "likelyEntities": [],
       "userRoles": "Current signed-in user; other roles NEEDS TESTING",
-      "observedBusinessRules": [],
+      "observedBusinessRules": [
+        "CONFIRMED: Main, West Wing, VIP, BAR and bar booth have list order 1–5 in the visible rows.",
+        "CONFIRMED: List Order help states the ordering applies across the system, notably staff summary print-out.",
+        "CONFIRMED: These five names appear as seating-area choices in SCR-080 and SCR-070 and in SCR-142 seating-area preview; table membership, active status and aggregate capacity are not shown on this page.",
+        "UNKNOWN: Whether floorplan table assignment enforces a required seating area. Prior active unassigned group and required-area guidance coexist; isolated validation still needed."
+      ],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
       "unknowns": [
-        "Page content and interactions not yet inspected"
+        "Area activation and floorplan enforcement, row removal, validation, persistence and other roles NEEDS TESTING."
       ],
       "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied",
-      "partialReason": "Observed the page; live write, error, alternate-role and all filter branches were not tested.",
+      "partialReason": "Five rows, fields and list-order help inspected without editing; no active/inactive state, table membership or capacity on this page. Save/add/remove and validation untested.",
       "layout": "OBSERVED: Abbreviation/name grid",
       "tabs": [],
       "cards": [],
@@ -6830,7 +6907,9 @@
         "U-001",
         "U-002",
         "U-003"
-      ]
+      ],
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-003"
     },
     {
       "id": "SCR-080",
@@ -6840,9 +6919,10 @@
       "domainId": "DOM-08",
       "purpose": "Tables",
       "visibleComponents": [
-        "125 table rows",
-        "party size min/max",
-        "seating area"
+        "125 editable rows",
+        "Four columns and two unlabeled per-row action icons",
+        "Add table",
+        "Save changes"
       ],
       "primaryActions": [
         "Save changes"
@@ -6852,30 +6932,41 @@
       "fields": [
         {
           "name": "Table Number",
-          "type": "UNKNOWN",
+          "type": "editable textbox",
           "required": "UNKNOWN",
           "validation": "UNKNOWN"
         },
         {
           "name": "Party Size Min",
-          "type": "UNKNOWN",
+          "type": "editable textbox",
           "required": "UNKNOWN",
           "validation": "UNKNOWN"
         },
         {
           "name": "Party Size Max",
-          "type": "UNKNOWN",
+          "type": "editable textbox",
           "required": "UNKNOWN",
           "validation": "UNKNOWN"
         },
         {
           "name": "Seating Area",
-          "type": "UNKNOWN",
+          "type": "native single-select combobox; blank or five area names",
           "required": "UNKNOWN",
           "validation": "UNKNOWN"
         }
       ],
-      "tables": [],
+      "tables": [
+        {
+          "description": "Edit Tables (125 tables)",
+          "columns": [
+            "Table No.",
+            "Party Size Min",
+            "Party Size Max",
+            "Seating Area",
+            "two unlabeled per-row action icons"
+          ]
+        }
+      ],
       "filters": [],
       "searchBehavior": "UNKNOWN",
       "sorting": "UNKNOWN",
@@ -6887,17 +6978,26 @@
       "notifications": [],
       "errors": [],
       "emptyStates": [],
-      "dependencies": [],
+      "dependencies": [
+        "SCR-079",
+        "SCR-070",
+        "SCR-096",
+        "SCR-139"
+      ],
       "likelyEntities": [],
       "userRoles": "Current signed-in user; other roles NEEDS TESTING",
-      "observedBusinessRules": [],
+      "observedBusinessRules": [
+        "CONFIRMED: Rows have distinct table numbers, editable min/max party sizes and optional blank or named seating area. Main, West Wing, VIP, BAR and bar booth are options.",
+        "CONFIRMED: Same area names occur in SCR-079 and SCR-070. Table 124 appeared in prior floorplan editor evidence; this page does not expose booking occupancy or reservation status.",
+        "UNKNOWN: Whether these values automatically synchronize with a floorplan layout, capacity calculation or reservations; no save or row action activated."
+      ],
       "evidenceStatus": "OBSERVED",
       "inspectionLevel": "PARTIALLY_INSPECTED_WITH_REASON",
       "unknowns": [
-        "Page content and interactions not yet inspected"
+        "Live persistence, row icon effects, validation, floorplan synchronization and role differences NEEDS TESTING."
       ],
       "evidence": "Visible authorized SevenRooms UI, 2026-09-26; no production data copied",
-      "partialReason": "Observed the page; live write, error, alternate-role and all filter branches were not tested.",
+      "partialReason": "125-row editable form inspected without changing values; no active/inactive or live reservation status, search, sort, filter, pagination or separate detail route appeared. Save/add/row actions untested.",
       "layout": "OBSERVED: 125 table rows",
       "tabs": [],
       "cards": [],
@@ -6910,7 +7010,9 @@
         "U-001",
         "U-002",
         "U-003"
-      ]
+      ],
+      "lastObserved": "2026-09-27",
+      "taskId": "DISC-003"
     },
     {
       "id": "SCR-081",
@@ -12473,7 +12575,9 @@
       "classificationReason": "Reservation, request, table and payment state model is central; live transitions are prohibited.",
       "testConstraints": [
         "UNSAFE_TO_TEST"
-      ]
+      ],
+      "mappingBlocker": false,
+      "mappingRationale": "Visible status vocabulary and reservation/client/shift/table/area links are enough to map entities and observed branches. Transition guards and final write outcomes remain NEEDS TESTING with isolated fixtures before implementation verification; no production mutation is authorized."
     },
     {
       "id": "Q-003",
@@ -12580,7 +12684,9 @@
       "classificationReason": "Seating-area requirement may affect table activation and floorplan inventory; validate in isolated layout.",
       "testConstraints": [
         "UNSAFE_TO_TEST"
-      ]
+      ],
+      "mappingBlocker": false,
+      "mappingRationale": "Area identity, table reference, shift reservability and area-scoped availability are directly observed; exact activation enforcement is deferred to isolated validation."
     }
   ],
   "modules": [
@@ -12676,7 +12782,9 @@
       "classificationReason": "Write outcomes define core lifecycle but production writes are prohibited.",
       "testConstraints": [
         "UNSAFE_TO_TEST"
-      ]
+      ],
+      "mappingBlocker": false,
+      "mappingRationale": "Visible status vocabulary and reservation/client/shift/table/area links are enough to map entities and observed branches. Transition guards and final write outcomes remain NEEDS TESTING with isolated fixtures before implementation verification; no production mutation is authorized."
     },
     {
       "id": "U-002",
@@ -12760,7 +12868,9 @@
       "classificationReason": "Seating-area enforcement affects floorplan and reservable inventory; validation needs isolated venue.",
       "testConstraints": [
         "UNSAFE_TO_TEST"
-      ]
+      ],
+      "mappingBlocker": false,
+      "mappingRationale": "Area identity, table reference, shift reservability and area-scoped availability are directly observed; exact activation enforcement is deferred to isolated validation."
     },
     {
       "id": "U-010",

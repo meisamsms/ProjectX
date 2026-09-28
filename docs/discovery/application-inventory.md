@@ -858,3 +858,29 @@ No item is left unclassified. `docs/project-map/decisions.json` remains absent a
 ### Next exact DISC-003 action
 
 Open SCR-070 Availability Quick View for the current authorized date. Inspect its date/shift selection, visible slot and empty states, and read-only navigation into Access Rules. Record how it relates to SCR-024/SCR-142 without selecting inventory or changing availability. Then inspect SCR-080 Tables and SCR-079 Seating Areas for safe read-only status/relationship controls.
+
+
+## DISC-003 core availability, table and seating-area verification — 2026-09-27
+
+### SCR-070 Availability Quick View
+
+- CONFIRMED date: Default 09/27/2026; editable MM/DD/YYYY textbox and calendar button. September picker showed dates before 27 and Previous month disabled, Next month enabled, selected 27. Selecting 28 re-rendered the matrix after a short loading interval and set `?date=2026-09-28&audience=SEVENROOMS_WIDGET`. No standalone previous/next day or Today shortcut was visible on Quick View.
+- CONFIRMED shift/date state: No shift selector appeared. Footer showed Dinner Su and 11 booked covers on 27; Lunch Mo-Fr (14) and Dinner Mo-Th (5), 19 total, on 28. Matrix hour labels changed from 4–8 PM to 11 AM–8 PM. Relation to SCR-024 weekly shifts and SCR-142 selected shift configuration is a visible domain overlap; causal calculation and naming correspondence UNKNOWN.
+- CONFIRMED matrix: Party sizes 1–15 across time, with four quarter-hour sub-blocks per hour; labels Available, Not Available, Inactive. Duration Picker was disabled. Covers-per-page default 15, first-page Previous disabled, Next enabled. No tooltip or warning indicator surfaced in the safe check. One Available matrix-block click produced no visible panel or route change, so detailed drilldown remains UNKNOWN / NEEDS TESTING. No inventory was selected or booked.
+- CONFIRMED filters: Audience default Reservation Widget, with grouped direct channels (including Google Reserve, SevenRooms Voice, DoorDash), custom and other audiences. Access Rules on 28 offered Lunch and Week Day checkboxes. Seating Area offered Main, West Wing, VIP, BAR, bar booth. Selecting West Wing changed the URL to include `seatingAreaIds` and the settled matrix showed no Available data cells (only Not Available and Inactive; Available persisted in legend). Selecting Lunch added `accessPersistentIds` while West Wing remained selected and did not visibly change this settled state. This confirms view scoping, not a backend booking-enforcement formula.
+- CONFIRMED navigation to existing SCR-066: SOURCE SCR-070 sidebar Access Rules; TRIGGER link; DESTINATION SCR-066; ROUTE `/manager2/oceansatarthurs/settings/availability/accessrules`; CONTEXT: same venue; DATE: Quick View 28 not carried in destination URL; SHIFT: no selector context to carry; RULE CONTEXT: selected filter not carried in URL; BACK: browser Back restored Quick View's date, audience and selected Main area filter. SCR-066 loaded current week Sep 27–Oct 3 with Sunday dinner, Lunch and Week Day rule cards. No rule changed.
+- UNKNOWN / NEEDS TESTING: Exact slot capacity formula, drilldown details, no-schedule date state, waitlist indicators, failure states and other-role visibility. Future method: isolated venue with controlled shifts, area/rule variants and disposable reservation fixtures.
+
+### SCR-080 Tables
+
+- CONFIRMED: Edit Tables showed 125 rows, Table No., Party Size Min, Party Size Max and Seating Area; each row had editable textboxes, a native area selector with blank plus five names, and two unlabeled action icons. Add table and Save changes present. No search, sort, filter, pagination, active/inactive or live occupancy status was visible in this configuration screen. No separate detail route opened. No edits, add, removal, clone or save.
+- CONFIRMED cross-reference: same five seating-area names as SCR-079/SCR-070; earlier SCR-096 floorplan selection included a table also listed here. SCR-139 reservation detail showed an assigned table. Synchronization or enforcement between these surfaces is UNKNOWN.
+
+### SCR-079 Seating Areas
+
+- CONFIRMED: Five editable rows Main, West Wing, VIP, BAR, bar booth. Columns Abbreviation, Name, List Order (visible order 1–5), and remove ×. Add seating area and Save changes present. Help says list order affects display across the system, notably the staff summary print-out. No table membership, capacity, search, filter or active/inactive status shown here. No change saved.
+- CONFIRMED relationship: Same names in Tables and Quick View filters and SCR-142 shift seating preview; shift preview marks Main online/in-house bookable while other listed areas are non-reservable for reservation inventory but available for manual/walk-in assignment on that shift. Quick View West Wing selection had no available cells on 28. Exact enforcement, default behavior on other dates/shifts and floorplan activation validation remain UNKNOWN / NEEDS TESTING; use isolated venue.
+
+### PHASE-01 gate
+
+Major domains/screens, core reservation and client linkage, availability/shift/table/area/floorplan relationships and route links are sufficiently documented for application mapping. 144 unique screens, 18 workflows, 0 NAV_ONLY. U-001/Q-002 stay CRITICAL_FOR_BUILD as implementation verification obligations for unsafe live writes and state guards; they do not block mapping observed entities and states. U-009/Q-011 area activation enforcement remains IMPORTANT_FOR_BUILD and requires isolated fixtures. Other-role, package, Reporting detail, external integration and error branches retain their classifications. Detailed Reporting parity is deferred by product owner; existing confirmed evidence retained. No production writes. JSON, ID, inventory/registry, route, parent/child and workflow audits passed. DISC-003 and PHASE-01 VERIFIED. Next exact task: Prompt 02 — Build Complete Application Map; not executed here.
