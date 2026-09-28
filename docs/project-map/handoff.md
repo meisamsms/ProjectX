@@ -1,11 +1,11 @@
 CURRENT PHASE: PHASE-03 Architecture decisions and secure foundations — IN_PROGRESS.
-CURRENT TASK: FOUND-TASK-002 — Identity, access and venue context
-STATUS: VERIFIED — documentation contract validated; FOUND-TASK-003 READY.
-COMPLETED: Defined User/OIDC identity, Organization, membership, Venue Access, scope grants, server session/context, object and Client visibility, failures, audit, minimum permission vocabulary and future test matrix.
-FILES CREATED: docs/security/identity-access-model.md; docs/security/authorization-contract.md; docs/security/permission-registry.json; docs/security/access-test-matrix.md.
+CURRENT TASK: FOUND-TASK-003 — Data contracts and persistence foundations
+STATUS: VERIFIED — documentation contracts validated; FOUND-TASK-004 READY.
+COMPLETED: Classified 46 discovered entities and nine ProjectX-only foundation concepts; documented IDs, tenant keys, logical relationships, RLS/context/roles, transactions, concurrency, idempotency, migration, fixture, database test and restore contracts.
+FILES CREATED: docs/data/persistence-model.md; docs/data/entity-registry.json; docs/data/tenant-isolation.md; docs/data/rls-policy-model.md; docs/data/migration-strategy.md; docs/data/database-test-plan.md; docs/data/transaction-boundaries.md.
 FILES MODIFIED: docs/project-map/roadmap.json; docs/project-map/verification.json; docs/project-map/handoff.md.
-TESTS EXECUTED: JSON parse; permission ID uniqueness and enums; module references; ADR and roadmap prerequisite checks; terminology and documentation-only scope review.
-TEST RESULTS: PASS — 22 unique permission IDs; no application code, migration, scaffold, package installation, API, UI or OIDC integration. Runtime behavior not tested.
-UNRESOLVED ISSUES: Reference alternate-role behavior, exact Client field policy, IdP provider, session/MFA timeouts and provider events need policy or isolated testing; reference internals remain UNKNOWN. Reporting detail deferred.
-NEXT EXACT TASK: FOUND-TASK-003 — Data contracts and persistence foundations: define tenant keys, membership/Venue Access persistence boundaries, transaction-local RLS context and isolation tests from this contract. Do not execute in FOUND-TASK-002.
-FILES NEXT AGENT MUST READ: AGENTS.md; docs/project-map/roadmap.json; docs/project-map/app-map.json; docs/project-map/dependencies.json; docs/project-map/decisions.json; docs/project-map/verification.json; docs/project-map/handoff.md; docs/architecture/ADR-0001-deployment-topology.md through ADR-0006-recovery-and-environments.md; docs/security/identity-access-model.md; docs/security/authorization-contract.md; docs/security/permission-registry.json; docs/security/access-test-matrix.md.
+TESTS EXECUTED: JSON parse; unique entity IDs; 46-candidate parity; module/enum/reference checks; permission terminology; policy/tenant consistency; Mermaid fence; roadmap dependencies; documentation-only scope.
+TEST RESULTS: PASS documentation checks; no PostgreSQL runtime tests, migrations, package installs, API, UI, OIDC or domain application code.
+UNRESOLVED ISSUES: Physical policy/constraints, OIDC provider, exact privacy retention, optional entity scope, reservation contention and measured indexes require later isolated implementation testing. Reporting detail deferred.
+NEXT EXACT TASK: FOUND-TASK-004 — Navigation shell and verification harness: read persistence and identity contracts, then implement only scoped route shell and test/contract gates. Do not execute in FOUND-TASK-003.
+FILES NEXT AGENT MUST READ: AGENTS.md; docs/project-map/roadmap.json; docs/project-map/app-map.json; docs/project-map/dependencies.json; docs/project-map/decisions.json; docs/project-map/verification.json; docs/project-map/handoff.md; all ADR-0001–0006; docs/security/identity-access-model.md; docs/security/authorization-contract.md; docs/security/permission-registry.json; docs/data/persistence-model.md; docs/data/entity-registry.json; docs/data/tenant-isolation.md; docs/data/rls-policy-model.md; docs/data/migration-strategy.md; docs/data/database-test-plan.md; docs/data/transaction-boundaries.md.

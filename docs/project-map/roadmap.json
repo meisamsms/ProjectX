@@ -178,25 +178,25 @@
       "id": "FOUND-TASK-003",
       "name": "Data contracts and persistence foundations",
       "phaseId": "PHASE-03",
-      "status": "READY",
+      "status": "VERIFIED",
       "dependencies": [
         "ARCH-001",
         "FOUND-TASK-002"
       ],
-      "scope": "Define independent schema and migration/test approach; no reference backend inference.",
+      "scope": "Documentation-only independent persistence boundaries, keys, RLS, transaction/migration contracts and future database tests. No migrations or feature implementation.",
       "acceptanceCriteria": [
-        "Foundation contract and focused verification pass",
-        "Security and recovery expectations documented"
+        "All 46 candidate entities classified exactly once and foundation concepts separate",
+        "Tenant keys, composite ownership, transaction-local RLS context, policy categories and restricted DB roles defined",
+        "ID, timestamps, lifecycle, transactions, concurrency, idempotency, migration/fixture/backup strategy defined",
+        "Documentation and security validation pass; no code, API, migration, package or UI introduced"
       ],
       "verificationCommands": [
-        "Run relevant lint and typecheck",
-        "Run focused unit/integration/contract tests on this task scope",
-        "Run affected regression checks; record exact commands and results in verification.json"
+        "Parse project-map, entity and permission JSON; verify unique IDs and enums, mapped 46 candidates and valid modules",
+        "Check roadmap dependencies, policy categories, Mermaid fences and tenant/document consistency"
       ],
       "regressionChecks": [
-        "Preserve previously verified workflows",
-        "Verify tenant and permission boundaries where applicable",
-        "Do not change unrelated modules"
+        "DISC-001/002/003, MAP-001, ARCH-001 and FOUND-TASK-002 remain VERIFIED",
+        "No reference-internal schema claims or application changes"
       ],
       "unknownsToResolve": []
     },
@@ -204,7 +204,7 @@
       "id": "FOUND-TASK-004",
       "name": "Navigation shell and verification harness",
       "phaseId": "PHASE-03",
-      "status": "PLANNED",
+      "status": "READY",
       "dependencies": [
         "FOUND-TASK-002",
         "FOUND-TASK-003"
@@ -741,5 +741,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "FOUND-TASK-003 — Data contracts and persistence foundations: use identity-access-model.md and authorization-contract.md to define independent data keys, tenancy constraints and transaction-local RLS policy/test approach; do not start under FOUND-TASK-002."
+  "nextExactTask": "FOUND-TASK-004 — Navigation shell and verification harness: first read persistence-model.md, tenant-isolation.md, rls-policy-model.md, database-test-plan.md and approved foundation contracts; implement only its scoped shell and harness. Do not start within FOUND-TASK-003."
 }
