@@ -98,6 +98,13 @@
       "status": "VERIFIED",
       "method": "Planning-only audit: MOD-14 screen/action/entity/FLOW-006 parity, unique child IDs, dependency DAG, first READY child, blocked Export gate, prior VERIFIED history, no code/migration/API/UI changes",
       "result": "PASS: 14 bounded People child tasks; PEOPLE-01 READY, PEOPLE-09 BLOCKED on observed-only Export, other children PLANNED. Parent IN_PROGRESS and not module-verified. No application implementation."
+    },
+    {
+      "id": "CHK-015",
+      "taskId": "PEOPLE-01",
+      "status": "BLOCKED",
+      "method": "Precondition and runtime availability audit: verified roadmap scope/status and repository migration guidance; checked PostgreSQL server/client binaries, container runtime, configured database connection and existing harness.",
+      "result": "BLOCKED: no isolated PostgreSQL runtime or approved deterministic launch path. No migration, fixture, persistence code or database tests executed; no production connection. Previous verified checks preserved."
     }
   ],
   "unresolvedQuestions": [
