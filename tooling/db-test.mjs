@@ -9,6 +9,9 @@ const result = spawnSync(
     "run",
     "apps/api/tests/database/postgres-runtime.test.ts",
     "apps/api/tests/database/transaction.test.ts",
+    "apps/api/tests/people/migrations.test.ts",
+    "apps/api/tests/people/core-persistence.test.ts",
+    "--no-file-parallelism",
   ],
   {
     stdio: "inherit",

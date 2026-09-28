@@ -1,11 +1,11 @@
 CURRENT PHASE: PHASE-04 Core domain implementation — IN_PROGRESS.
-CURRENT TASK: DB-HARNESS-001 — Disposable PostgreSQL test runtime and database verification harness.
-STATUS: VERIFIED — GitHub Actions run 36483977809, job 109136223922.
-COMPLETED: PostgreSQL 16 ephemeral CI service; DATABASE_URL guard; pg driver; bounded pool; test schema reset; ordered/checksum transactional SQL migration seam; smoke, rollback and pool reuse tests. PEOPLE-01 READY; PEOPLE-01B PLANNED.
-FILES CREATED: apps/api/tests/database/harness.ts; postgres-runtime.test.ts; transaction.test.ts; migrate.ts; apps/api/migrations/.gitkeep; tooling/db-check.mjs; db-test.mjs; db-migrate.mjs; verify-db.mjs; docs/foundation/database-test-harness.md.
-FILES MODIFIED: .github/workflows/verify.yml; package.json; apps/api/package.json; pnpm-lock.yaml; tooling/verify.mjs; docs/project-map/roadmap.json; verification.json; handoff.md.
-TESTS EXECUTED: pnpm format:check; pnpm lint; pnpm typecheck; pnpm map:check; local pnpm verify; CI pnpm verify and pnpm verify:db on PostgreSQL 16. Missing-URL db:check and db:migrate:test fail as intended.
-TEST RESULTS: CI foundation and database gates PASS; 3 PostgreSQL tests PASS. Earlier formatting failure fixed and rerun. No People persistence or RLS tests claimed.
-UNRESOLVED ISSUES: U-002 alternate-role reference permissions unresolved. People persistence and RLS remain future tasks. No production database or credentials used.
-NEXT EXACT TASK: PEOPLE-01 — implement only core User/identity/Organization/Venue/Membership/VenueAccess migration and fixtures using the verified PostgreSQL harness; prove constraints and lifecycle. Do not execute PEOPLE-01B.
-FILES NEXT AGENT MUST READ: AGENTS.md; docs/project-map/roadmap.json; docs/project-map/people-implementation-plan.md; docs/project-map/app-map.json; docs/project-map/feature-registry.json; docs/project-map/dependencies.json; docs/project-map/decisions.json; docs/project-map/verification.json; docs/project-map/handoff.md; docs/foundation/database-test-harness.md; docs/architecture/ADR-0002, ADR-0003, ADR-0004, ADR-0007; docs/security/identity-access-model.md; docs/security/authorization-contract.md; docs/data/persistence-model.md; docs/data/tenant-isolation.md; docs/data/migration-strategy.md; docs/data/database-test-plan.md; apps/api/tests/database/*.
+CURRENT TASK: PEOPLE-01 — People core persistence and domain contracts.
+STATUS: BLOCKED pending PostgreSQL 16 CI and approval to push ProjectX branch.
+COMPLETED: Locally committed six-table migration, UUIDv7 ID generator, synthetic ORG-A/A1/A2 and ORG-B/B1 fixtures, positive/negative constraint tests, migration ledger tests; database test command includes People suites serially. No RLS, grants, API or UI.
+FILES CREATED: apps/api/migrations/people-core/20260928000100_people_core.sql; apps/api/src/people/persistence/id.ts; apps/api/tests/people/fixtures/core.ts; apps/api/tests/people/core-persistence.test.ts; apps/api/tests/people/migrations.test.ts.
+FILES MODIFIED: tooling/db-test.mjs; docs/project-map/roadmap.json; verification.json; handoff.md; docs/data/people-core-persistence.md.
+TESTS EXECUTED: pnpm format:check; pnpm lint; pnpm typecheck; pnpm map:check; PROJECTX_CHROMIUM_PATH=/tmp/projectx-chromium/chromium pnpm verify; pnpm verify:db without DATABASE_URL.
+TEST RESULTS: Static/foundation suite PASS. Database gate BLOCKED: no local disposable PostgreSQL URL; push to GitHub rejected by automatic approval review. No constraint or migration behavior reported PASS.
+UNRESOLVED ISSUES: U-002 alternate role reference behavior and FLOW-006 outcomes remain unknown. PostgreSQL 16 execution and CI inspection required. Auto-review rejected direct main and review-branch pushes to https://github.com/meisamsms/ProjectX.git as consequential remote export; no further push attempted.
+NEXT EXACT TASK: With explicit owner approval to publish the review branch, push local PEOPLE-01 commit, run and inspect PostgreSQL 16 CI, fix failures, then mark VERIFIED only if all gates pass. PEOPLE-01B remains PLANNED.
+FILES NEXT AGENT MUST READ: AGENTS.md; docs/project-map/{roadmap.json,verification.json,handoff.md,people-implementation-plan.md}; docs/foundation/database-test-harness.md; migration, fixture and focused test files.

@@ -85,7 +85,7 @@
       ],
       "acceptanceCriteria": [
         "No missing nested screens or unexplained gaps",
-        "Classify U-001–U-010 and Q-001–Q-011 by build impact and test restriction",
+        "Classify U-001\u2013U-010 and Q-001\u2013Q-011 by build impact and test restriction",
         "Preserve prior Reporting evidence; defer detailed Reporting parity",
         "Prioritize remaining safe core workflow and cross-module checks"
       ],
@@ -209,7 +209,7 @@
         "FOUND-TASK-002",
         "FOUND-TASK-003"
       ],
-      "scope": "Minimal React/Vite navigation placeholder shell, Fastify infrastructure, generated OpenAPI seam and deterministic foundation verification only; no MOD-01–MOD-16 business behavior.",
+      "scope": "Minimal React/Vite navigation placeholder shell, Fastify infrastructure, generated OpenAPI seam and deterministic foundation verification only; no MOD-01\u2013MOD-16 business behavior.",
       "acceptanceCriteria": [
         "All 144 mapped screen IDs have registry entries marked NOT_IMPLEMENTED and references validated",
         "Web shell provides semantic navigation, title, error/not-found and accessibility baseline with no domain data",
@@ -224,7 +224,7 @@
       ],
       "regressionChecks": [
         "Previous VERIFIED tasks remain VERIFIED; discovery and ADRs unchanged",
-        "Review file list for MOD-01–MOD-16 business logic, secrets, migrations and endpoint leakage"
+        "Review file list for MOD-01\u2013MOD-16 business logic, secrets, migrations and endpoint leakage"
       ],
       "unknownsToResolve": []
     },
@@ -666,7 +666,7 @@
       "name": "People core persistence and domain contracts",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "READY",
+      "status": "BLOCKED",
       "dependencies": [
         "FOUND-TASK-004",
         "DB-HARNESS-001"
@@ -689,7 +689,7 @@
       "regressionChecks": [
         "pnpm map:check",
         "Previously verified foundation/discovery gates remain VERIFIED",
-        "No unrelated MOD-01–MOD-16 business behavior changed"
+        "No unrelated MOD-01\u2013MOD-16 business behavior changed"
       ],
       "filesExpectedToChange": [
         "apps/api/migrations/people-core/*",
@@ -708,8 +708,8 @@
         "ENT-044"
       ],
       "moduleId": "MOD-14",
-      "blocker": "RESOLVED: DB-HARNESS-001 verified in GitHub Actions run 36483977809.",
-      "unblockCondition": "Satisfied by DB-HARNESS-001 VERIFIED; PEOPLE-01 may use the test harness."
+      "blocker": "Implementation committed locally; PostgreSQL 16 CI verification blocked because automated approval rejected pushing ProjectX source to the GitHub remote. No local DATABASE_URL.",
+      "unblockCondition": "Explicit approval to publish the review branch to meisamsms/ProjectX, then run and inspect PostgreSQL 16 CI; resolve failures before verification."
     },
     {
       "id": "PEOPLE-01B",
@@ -737,7 +737,7 @@
       "regressionChecks": [
         "pnpm map:check",
         "Previously verified foundation/discovery gates remain VERIFIED",
-        "No unrelated MOD-01–MOD-16 business behavior changed"
+        "No unrelated MOD-01\u2013MOD-16 business behavior changed"
       ],
       "filesExpectedToChange": [
         "apps/api/migrations/people-grants/*",
@@ -783,7 +783,7 @@
       "regressionChecks": [
         "pnpm map:check",
         "Previously verified foundation/discovery gates remain VERIFIED",
-        "No unrelated MOD-01–MOD-16 business behavior changed"
+        "No unrelated MOD-01\u2013MOD-16 business behavior changed"
       ],
       "filesExpectedToChange": [
         "apps/api/src/people/authorization/*",
@@ -828,7 +828,7 @@
       "regressionChecks": [
         "pnpm map:check",
         "Previously verified foundation/discovery gates remain VERIFIED",
-        "No unrelated MOD-01–MOD-16 business behavior changed"
+        "No unrelated MOD-01\u2013MOD-16 business behavior changed"
       ],
       "filesExpectedToChange": [
         "apps/api/src/people/accounts-read/*",
@@ -878,7 +878,7 @@
       "regressionChecks": [
         "pnpm map:check",
         "Previously verified foundation/discovery gates remain VERIFIED",
-        "No unrelated MOD-01–MOD-16 business behavior changed"
+        "No unrelated MOD-01\u2013MOD-16 business behavior changed"
       ],
       "filesExpectedToChange": [
         "apps/api/src/people/add-user/*",
@@ -934,7 +934,7 @@
       "regressionChecks": [
         "pnpm map:check",
         "Previously verified foundation/discovery gates remain VERIFIED",
-        "No unrelated MOD-01–MOD-16 business behavior changed"
+        "No unrelated MOD-01\u2013MOD-16 business behavior changed"
       ],
       "filesExpectedToChange": [
         "apps/web/src/people/accounts/*",
@@ -985,7 +985,7 @@
       "regressionChecks": [
         "pnpm map:check",
         "Previously verified foundation/discovery gates remain VERIFIED",
-        "No unrelated MOD-01–MOD-16 business behavior changed"
+        "No unrelated MOD-01\u2013MOD-16 business behavior changed"
       ],
       "filesExpectedToChange": [
         "apps/web/src/people/add-user/*",
@@ -1036,7 +1036,7 @@
       "regressionChecks": [
         "pnpm map:check",
         "Previously verified foundation/discovery gates remain VERIFIED",
-        "No unrelated MOD-01–MOD-16 business behavior changed"
+        "No unrelated MOD-01\u2013MOD-16 business behavior changed"
       ],
       "filesExpectedToChange": [
         "apps/api/migrations/people-booked-by/*",
@@ -1086,7 +1086,7 @@
       "regressionChecks": [
         "pnpm map:check",
         "Previously verified foundation/discovery gates remain VERIFIED",
-        "No unrelated MOD-01–MOD-16 business behavior changed"
+        "No unrelated MOD-01\u2013MOD-16 business behavior changed"
       ],
       "filesExpectedToChange": [
         "apps/web/src/people/booked-by/*",
@@ -1136,7 +1136,7 @@
       "regressionChecks": [
         "pnpm map:check",
         "Previously verified foundation/discovery gates remain VERIFIED",
-        "No unrelated MOD-01–MOD-16 business behavior changed"
+        "No unrelated MOD-01\u2013MOD-16 business behavior changed"
       ],
       "filesExpectedToChange": [
         "apps/api/migrations/people-server-names/*",
@@ -1186,7 +1186,7 @@
       "regressionChecks": [
         "pnpm map:check",
         "Previously verified foundation/discovery gates remain VERIFIED",
-        "No unrelated MOD-01–MOD-16 business behavior changed"
+        "No unrelated MOD-01\u2013MOD-16 business behavior changed"
       ],
       "filesExpectedToChange": [
         "apps/web/src/people/server-names/*",
@@ -1235,7 +1235,7 @@
       "regressionChecks": [
         "pnpm map:check",
         "Previously verified foundation/discovery gates remain VERIFIED",
-        "No unrelated MOD-01–MOD-16 business behavior changed"
+        "No unrelated MOD-01\u2013MOD-16 business behavior changed"
       ],
       "filesExpectedToChange": [
         "docs/project-map/people-implementation-plan.md",
@@ -1249,7 +1249,7 @@
         "U-002",
         "U-003"
       ],
-      "evidenceClassification": "NEEDS TESTING — observed action only",
+      "evidenceClassification": "NEEDS TESTING \u2014 observed action only",
       "screenIds": [
         "SCR-025"
       ],
@@ -1298,7 +1298,7 @@
         "U-002",
         "U-003"
       ],
-      "evidenceClassification": "NEEDS TESTING — observed action only",
+      "evidenceClassification": "NEEDS TESTING \u2014 observed action only",
       "screenIds": [
         "SCR-025"
       ],
@@ -1341,7 +1341,7 @@
       "regressionChecks": [
         "pnpm map:check",
         "Previously verified foundation/discovery gates remain VERIFIED",
-        "No unrelated MOD-01–MOD-16 business behavior changed"
+        "No unrelated MOD-01\u2013MOD-16 business behavior changed"
       ],
       "filesExpectedToChange": [
         "docs/project-map/verification.json",
@@ -1526,5 +1526,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "PEOPLE-01 — resume core People persistence using the verified PostgreSQL harness: implement only User/identity/Organization/Venue/Membership/VenueAccess migration and isolated fixtures, then real constraint/migration tests. Do not execute PEOPLE-01B."
+  "nextExactTask": "Publish the locally committed PEOPLE-01 branch to the authorized ProjectX repository after approval, inspect PostgreSQL 16 CI and correct any failures. Do not start PEOPLE-01B."
 }
