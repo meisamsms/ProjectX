@@ -22,7 +22,7 @@
     "build": "pnpm --recursive --if-present build",
     "verify": "node tooling/verify.mjs",
     "db:check": "node tooling/db-check.mjs",
-    "db:migrate:test": "pnpm --filter @projectx/api exec tsx tests/database/migrate.ts",
+    "db:migrate:test": "node tooling/db-migrate.mjs",
     "test:database": "node tooling/db-test.mjs",
     "verify:db": "node tooling/verify-db.mjs"
   },
