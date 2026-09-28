@@ -16,7 +16,7 @@
     {
       "id": "PHASE-03",
       "name": "Architecture decisions and secure foundations",
-      "status": "READY"
+      "status": "BLOCKED"
     },
     {
       "id": "PHASE-04",
@@ -126,7 +126,7 @@
       "id": "ARCH-001",
       "name": "Resolve architecture and document gaps",
       "phaseId": "PHASE-03",
-      "status": "READY",
+      "status": "BLOCKED",
       "dependencies": [
         "MAP-001"
       ],
@@ -145,7 +145,8 @@
         "Verify tenant and permission boundaries where applicable",
         "Do not change unrelated modules"
       ],
-      "unknownsToResolve": []
+      "unknownsToResolve": [],
+      "remainingWork": "Owner answers combined ARCH-D001, ARCH-D002, ARCH-D004, ARCH-D008, ARCH-D010, ARCH-D016 decision questions; then record approval and ADRs. Do not start FOUND-TASK-002."
     },
     {
       "id": "FOUND-TASK-002",
@@ -739,5 +740,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "ARCH-001 — Resolve architecture decisions and create decisions.json / ADRs with owner input; no application scaffolding before verification."
+  "nextExactTask": "ARCH-001 — Product owner answers ARCH-D001, ARCH-D002, ARCH-D004, ARCH-D008, ARCH-D010 and ARCH-D016 in decisions.json; then write approved ADRs and validate before FOUND-TASK-002."
 }

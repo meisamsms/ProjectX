@@ -63,6 +63,13 @@
       "status": "VERIFIED",
       "method": "JSON parse, stable global IDs, 144-screen/18-workflow registry parity, feature fields, parent/child/entity/action/workflow references, DAG cycle and topo order, Mermaid diagram count, no application code changes",
       "result": "PASS: 10 domains, 16 modules, 144 screens, 1,115 components, 186 actions, 18 workflows, 46 candidate entities, 160 features and one current-account role. Unique global IDs and valid refs; 20-node hard dependency DAG has no cycle; 25-task roadmap topological order; five Mermaid files. Discovery preserved, no application code or architecture decision created."
+    },
+    {
+      "id": "CHK-010",
+      "taskId": "ARCH-001",
+      "status": "BLOCKED",
+      "method": "Precondition check; JSON parse; 20 unique decision IDs; six four-option owner questions; owner approvals/ADR parity; valid roadmap task references; verified-history preservation; documentation-only scope and reference-internals audit",
+      "result": "Document package prepared; six owner choices remain unresolved. No APPROVED decision or ADR. FOUND-TASK-002 not started."
     }
   ],
   "unresolvedQuestions": [
@@ -93,7 +100,8 @@
     "No application tests run: discovery documentation only.",
     "Prior route opening evidence retained. All named safe DISC-002 nested surfaces inspected; unresolved residual Loading... and unsafe/other-role branches are explicit partial/unknown items for DISC-003 or isolated testing.",
     "DISC-003 checkpoint: Reporting detail deferred by product owner; previously confirmed Reporting evidence preserved. No booking, guest, shift, status, POS or language update submitted.",
-    "MAP-001 documentation-only: candidate entities and hard module edges are proposed implementation planning, not claims about reference internals. decisions.json remains absent; ARCH-001 is next."
+    "MAP-001 documentation-only: candidate entities and hard module edges are proposed implementation planning, not claims about reference internals. decisions.json remains absent; ARCH-001 is next.",
+    "ARCH-001 is BLOCKED on owner decisions. docs/project-map/decisions.json was absent and has been created; no product discovery evidence changed."
   ],
   "accessInterruption": "Prior login/MFA interruption preserved as U-010. Existing browser authenticated on 2026-09-27; SCR-029 and SCR-028 accessible, discovery resumed, no prior repository evidence lost.",
   "phase01Gate": {

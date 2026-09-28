@@ -1,11 +1,11 @@
-CURRENT PHASE: PHASE-03 Architecture decisions and secure foundations — READY; PHASE-01 and PHASE-02 VERIFIED.
-CURRENT TASK: MAP-001 — Build authoritative application map
-STATUS: VERIFIED
-COMPLETED: 10 domains, 16 modules, 144 screens, 1,115 components, 186 actions, 18 workflows, 46 candidate entities and 160 features mapped. Five Mermaid diagrams, 20-node dependency DAG and 25-task roadmap. Reporting detail deferred.
-FILES CREATED: docs/project-map/dependencies.json; docs/project-map/diagrams/01-module-map.md through 05-data-flow.md.
-FILES MODIFIED: docs/project-map/app-map.json; docs/project-map/roadmap.json; docs/project-map/verification.json; docs/project-map/handoff.md.
-TESTS EXECUTED: JSON parse; global ID uniqueness; 144-screen/18-workflow registry parity; entity/component/action/parent/workflow references; route parity; feature required fields; DAG cycle/topological order; five Mermaid fences; documentation-only scope audit.
-TEST RESULTS: PASS. No application code, production data, or architecture decisions changed.
-UNRESOLVED ISSUES: decisions.json absent. Architecture/toolchain, tenant isolation and contract choices require owner decisions in ARCH-001. U-001/Q-002 write/transition outcomes and U-009/Q-011 area enforcement require isolated test data; alternate roles/package and detailed Reporting deferred.
-NEXT EXACT TASK: ARCH-001 — Review mapped requirements and propose owner decision options for architecture/toolchain, tenancy/persistence and API/validation contracts; then record approved decisions in decisions.json and ADRs before scaffolding.
-FILES NEXT AGENT MUST READ: AGENTS.md; docs/discovery/application-inventory.md; docs/project-map/feature-registry.json; docs/project-map/app-map.json; docs/project-map/dependencies.json; docs/project-map/roadmap.json; docs/project-map/verification.json; docs/project-map/handoff.md. decisions.json absent.
+CURRENT PHASE: PHASE-03 Architecture decisions and secure foundations — BLOCKED; PHASE-01/02 VERIFIED.
+CURRENT TASK: ARCH-001 — Resolve architecture and document gaps
+STATUS: BLOCKED — six owner decisions required; no approved ADR.
+COMPLETED: Requirements, security threat boundaries, 46 candidate-entity categories, API rules and 20 decision topics documented. Owner questions grouped into ARCH-D001/D002/D004/D008/D010/D016, four options each.
+FILES CREATED: docs/project-map/decisions.json; docs/architecture/architecture-requirements.md; docs/security/security-baseline.md; docs/data/candidate-entities.md; docs/api/contract-rules.md.
+FILES MODIFIED: docs/project-map/roadmap.json; docs/project-map/verification.json; docs/project-map/handoff.md.
+TESTS EXECUTED: JSON parse, decision/ADR uniqueness and approval parity, owner question coverage, roadmap task references, verified history, entity-category coverage, documentation-only scope.
+TEST RESULTS: Decision package prepared; owner decision gate BLOCKED. No production application code, scaffold, migration, package install, API, auth or ADR created.
+UNRESOLVED ISSUES: Owner choices ARCH-D001/D002/D004/D008/D010/D016; exact account/organization/venue hierarchy; U-001/Q-002 write outcomes, U-009/Q-011 area enforcement and alternate roles need isolated testing; Reporting detail deferred.
+NEXT EXACT TASK: Product owner answers ARCH-D001, ARCH-D002, ARCH-D004, ARCH-D008, ARCH-D010 and ARCH-D016; record choices in decisions.json, then create approved ADRs, validate and only then resume ARCH-001. Do not begin FOUND-TASK-002.
+FILES NEXT AGENT MUST READ: AGENTS.md; docs/project-map/decisions.json; docs/architecture/architecture-requirements.md; docs/security/security-baseline.md; docs/data/candidate-entities.md; docs/api/contract-rules.md; docs/project-map/app-map.json; docs/project-map/dependencies.json; docs/project-map/roadmap.json; docs/project-map/verification.json; docs/project-map/handoff.md.

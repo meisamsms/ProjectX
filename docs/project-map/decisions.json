@@ -1,5 +1,1087 @@
 {
   "schemaVersion": 1,
-  "decisions": [],
-  "unresolvedQuestions": []
+  "scope": "Independent ProjectX architecture decision package, grounded in product discovery, not inferred from SevenRooms internals.",
+  "decisions": [
+    {
+      "id": "ARCH-D001",
+      "title": "Deployment topology and hosting",
+      "status": "OWNER_DECISION_REQUIRED",
+      "category": "OWNER DECISION REQUIRED NOW",
+      "question": "Which independently designed deployment and hosting model should ProjectX use for the first production milestone?",
+      "options": [
+        {
+          "id": "A",
+          "description": "Managed modular monolith: one backend deployable, separately served web client and managed supporting services.",
+          "pros": "Few operational boundaries, simple transactions and incremental tasks.",
+          "cons": "The backend must maintain clear module boundaries; deploy cadence is shared.",
+          "bestWhen": "First production release with a small team."
+        },
+        {
+          "id": "B",
+          "description": "Hybrid: core modular backend plus independently deployed integrations and background workers.",
+          "pros": "Isolates optional external work.",
+          "cons": "More deployment and tracing surfaces from day one.",
+          "bestWhen": "Integrations already demand independent scale or ownership."
+        },
+        {
+          "id": "C",
+          "description": "Microservices per major domain on managed infrastructure.",
+          "pros": "Independent scaling and team ownership.",
+          "cons": "Distributed transactions, operations and testing cost rise sharply.",
+          "bestWhen": "Multiple domain teams and proven scale demand."
+        },
+        {
+          "id": "D",
+          "description": "Self-hosted/on-premises application with owner-managed infrastructure.",
+          "pros": "Direct infrastructure control.",
+          "cons": "Highest patching, recovery and monitoring burden.",
+          "bestWhen": "Contractual hosting restrictions require it."
+        }
+      ],
+      "recommendedDefault": {
+        "optionId": "A",
+        "reason": "The visible flows have strong cross-module transactions and no measured need for distributed deployment. Hosting provider remains a separate selection after requirements and cost approval."
+      },
+      "ownerDecision": null,
+      "rationale": "Deployment model and hosting account shape operating cost, recovery, and how many moving parts every small task must verify.",
+      "evidence": [
+        "16 mapped product modules; 144 screens; reservation, availability and client journeys cross module boundaries.",
+        "No evidence of reference deployment topology or cloud provider."
+      ],
+      "affectedRoadmapTasks": [
+        "FOUND-TASK-002",
+        "FOUND-TASK-003",
+        "FOUND-TASK-004"
+      ],
+      "reversibility": "HIGH_COST",
+      "notes": "Future test/data may refine implementation; not approved.",
+      "coveredByDecisionId": null
+    },
+    {
+      "id": "ARCH-D002",
+      "title": "Frontend framework and runtime",
+      "status": "OWNER_DECISION_REQUIRED",
+      "category": "OWNER DECISION REQUIRED NOW",
+      "question": "Which frontend/backend/runtime and repository combination should be the starting implementation contract?",
+      "options": [
+        {
+          "id": "A",
+          "description": "React + TypeScript web client, Node.js LTS + Fastify backend, one workspace monorepo.",
+          "pros": "Shared language/types and explicit API boundary; small task slices.",
+          "cons": "Requires discipline to keep shared types and modules decoupled.",
+          "bestWhen": "A compact team wants typed end-to-end delivery."
+        },
+        {
+          "id": "B",
+          "description": "Next.js + TypeScript web application, Node.js LTS + NestJS modular backend, monorepo.",
+          "pros": "Integrated web workflow and strong backend conventions.",
+          "cons": "More framework conventions and runtime surface.",
+          "bestWhen": "Team favors framework structure and server rendering."
+        },
+        {
+          "id": "C",
+          "description": "React + TypeScript web client, Python + FastAPI backend, monorepo.",
+          "pros": "Clear frontend/backend separation and mature Python ecosystem.",
+          "cons": "Two-language contract generation and tooling.",
+          "bestWhen": "Python expertise or analytical workloads dominate."
+        },
+        {
+          "id": "D",
+          "description": "React + TypeScript web client, Java + Spring backend, separate repositories.",
+          "pros": "Mature backend tooling and independent release governance.",
+          "cons": "Higher setup and cross-repo contract coordination cost.",
+          "bestWhen": "Large organization with established JVM operations."
+        }
+      ],
+      "recommendedDefault": {
+        "optionId": "A",
+        "reason": "Form-heavy web UI and many bounded tasks benefit from an explicit typed client/API seam and one reviewable repository; no stack is inferred from SevenRooms."
+      },
+      "ownerDecision": null,
+      "rationale": "The stack determines developer workflow, shared contracts, deployment toolchain and the cost of changing frameworks later.",
+      "evidence": [
+        "144 screens with editable forms, calendar, floorplan and nested panels; 16 modules intended as small independently verifiable tasks.",
+        "No reference framework, language or repository structure is observable."
+      ],
+      "affectedRoadmapTasks": [
+        "FOUND-TASK-002",
+        "FOUND-TASK-003",
+        "FOUND-TASK-004"
+      ],
+      "reversibility": "HIGH_COST",
+      "notes": "Future test/data may refine implementation; not approved.",
+      "coveredByDecisionId": null
+    },
+    {
+      "id": "ARCH-D003",
+      "title": "Backend language, runtime and framework",
+      "status": "OWNER_DECISION_REQUIRED",
+      "category": "OWNER DECISION REQUIRED NOW",
+      "question": "Which frontend/backend/runtime and repository combination should be the starting implementation contract?",
+      "options": [
+        {
+          "id": "A",
+          "description": "React + TypeScript web client, Node.js LTS + Fastify backend, one workspace monorepo.",
+          "pros": "Shared language/types and explicit API boundary; small task slices.",
+          "cons": "Requires discipline to keep shared types and modules decoupled.",
+          "bestWhen": "A compact team wants typed end-to-end delivery."
+        },
+        {
+          "id": "B",
+          "description": "Next.js + TypeScript web application, Node.js LTS + NestJS modular backend, monorepo.",
+          "pros": "Integrated web workflow and strong backend conventions.",
+          "cons": "More framework conventions and runtime surface.",
+          "bestWhen": "Team favors framework structure and server rendering."
+        },
+        {
+          "id": "C",
+          "description": "React + TypeScript web client, Python + FastAPI backend, monorepo.",
+          "pros": "Clear frontend/backend separation and mature Python ecosystem.",
+          "cons": "Two-language contract generation and tooling.",
+          "bestWhen": "Python expertise or analytical workloads dominate."
+        },
+        {
+          "id": "D",
+          "description": "React + TypeScript web client, Java + Spring backend, separate repositories.",
+          "pros": "Mature backend tooling and independent release governance.",
+          "cons": "Higher setup and cross-repo contract coordination cost.",
+          "bestWhen": "Large organization with established JVM operations."
+        }
+      ],
+      "recommendedDefault": {
+        "optionId": "A",
+        "reason": "Form-heavy web UI and many bounded tasks benefit from an explicit typed client/API seam and one reviewable repository; no stack is inferred from SevenRooms."
+      },
+      "ownerDecision": null,
+      "rationale": "The stack determines developer workflow, shared contracts, deployment toolchain and the cost of changing frameworks later.",
+      "evidence": [
+        "144 screens with editable forms, calendar, floorplan and nested panels; 16 modules intended as small independently verifiable tasks.",
+        "No reference framework, language or repository structure is observable."
+      ],
+      "affectedRoadmapTasks": [
+        "FOUND-TASK-002",
+        "FOUND-TASK-003",
+        "FOUND-TASK-004"
+      ],
+      "reversibility": "HIGH_COST",
+      "notes": "Owner question combined with ARCH-D002; answer once for all covered IDs.",
+      "coveredByDecisionId": "ARCH-D002"
+    },
+    {
+      "id": "ARCH-D004",
+      "title": "Primary database and tenant storage",
+      "status": "OWNER_DECISION_REQUIRED",
+      "category": "OWNER DECISION REQUIRED NOW",
+      "question": "What data store and account/organization/venue isolation model should ProjectX enforce?",
+      "options": [
+        {
+          "id": "A",
+          "description": "PostgreSQL shared schema with explicit organization/venue scope and database row-level policies plus application authorization.",
+          "pros": "Strong relational transactions and layered isolation at moderate cost.",
+          "cons": "Policy context and cross-venue reporting require disciplined testing.",
+          "bestWhen": "Multi-venue SaaS with controlled sharing."
+        },
+        {
+          "id": "B",
+          "description": "PostgreSQL schema per organization, venue keys inside each schema.",
+          "pros": "Coarse organization boundary.",
+          "cons": "Migrations and pooled connections multiply with tenant count.",
+          "bestWhen": "Few large organizations need schema-level separation."
+        },
+        {
+          "id": "C",
+          "description": "PostgreSQL database per organization or venue.",
+          "pros": "Strong physical separation and tailored recovery.",
+          "cons": "Cost and migration/analytics operations grow substantially.",
+          "bestWhen": "Isolation contracts require dedicated data stores."
+        },
+        {
+          "id": "D",
+          "description": "Managed document store with application-enforced tenant predicates.",
+          "pros": "Flexible documents and rapid schema evolution.",
+          "cons": "Cross-entity transactions and omission of a scope filter become harder to control.",
+          "bestWhen": "Data relationships prove document-oriented and isolation requirements allow it."
+        }
+      ],
+      "recommendedDefault": {
+        "optionId": "A",
+        "reason": "Observed relationships and reservation concurrency call for transactions and explicit scoped queries. The hierarchy and client-sharing rules must be confirmed before finalizing keys."
+      },
+      "ownerDecision": null,
+      "rationale": "Tenant hierarchy and isolation determine every data key, authorization query, backup scope and the consequences of an access bug.",
+      "evidence": [
+        "Venue selector; user form mentions the same access at other venues; venue-scoped routes; reservation links to client, shift, area and table.",
+        "The exact account→organization→venue hierarchy and cross-venue sharing semantics are UNKNOWN."
+      ],
+      "affectedRoadmapTasks": [
+        "FOUND-TASK-002",
+        "FOUND-TASK-003"
+      ],
+      "reversibility": "HIGH_COST",
+      "notes": "Future test/data may refine implementation; not approved.",
+      "coveredByDecisionId": null
+    },
+    {
+      "id": "ARCH-D005",
+      "title": "Repository strategy",
+      "status": "OWNER_DECISION_REQUIRED",
+      "category": "OWNER DECISION REQUIRED NOW",
+      "question": "Which frontend/backend/runtime and repository combination should be the starting implementation contract?",
+      "options": [
+        {
+          "id": "A",
+          "description": "React + TypeScript web client, Node.js LTS + Fastify backend, one workspace monorepo.",
+          "pros": "Shared language/types and explicit API boundary; small task slices.",
+          "cons": "Requires discipline to keep shared types and modules decoupled.",
+          "bestWhen": "A compact team wants typed end-to-end delivery."
+        },
+        {
+          "id": "B",
+          "description": "Next.js + TypeScript web application, Node.js LTS + NestJS modular backend, monorepo.",
+          "pros": "Integrated web workflow and strong backend conventions.",
+          "cons": "More framework conventions and runtime surface.",
+          "bestWhen": "Team favors framework structure and server rendering."
+        },
+        {
+          "id": "C",
+          "description": "React + TypeScript web client, Python + FastAPI backend, monorepo.",
+          "pros": "Clear frontend/backend separation and mature Python ecosystem.",
+          "cons": "Two-language contract generation and tooling.",
+          "bestWhen": "Python expertise or analytical workloads dominate."
+        },
+        {
+          "id": "D",
+          "description": "React + TypeScript web client, Java + Spring backend, separate repositories.",
+          "pros": "Mature backend tooling and independent release governance.",
+          "cons": "Higher setup and cross-repo contract coordination cost.",
+          "bestWhen": "Large organization with established JVM operations."
+        }
+      ],
+      "recommendedDefault": {
+        "optionId": "A",
+        "reason": "Form-heavy web UI and many bounded tasks benefit from an explicit typed client/API seam and one reviewable repository; no stack is inferred from SevenRooms."
+      },
+      "ownerDecision": null,
+      "rationale": "The stack determines developer workflow, shared contracts, deployment toolchain and the cost of changing frameworks later.",
+      "evidence": [
+        "144 screens with editable forms, calendar, floorplan and nested panels; 16 modules intended as small independently verifiable tasks.",
+        "No reference framework, language or repository structure is observable."
+      ],
+      "affectedRoadmapTasks": [
+        "FOUND-TASK-002",
+        "FOUND-TASK-003",
+        "FOUND-TASK-004"
+      ],
+      "reversibility": "HIGH_COST",
+      "notes": "Owner question combined with ARCH-D002; answer once for all covered IDs.",
+      "coveredByDecisionId": "ARCH-D002"
+    },
+    {
+      "id": "ARCH-D006",
+      "title": "Account/organization/venue model",
+      "status": "OWNER_DECISION_REQUIRED",
+      "category": "OWNER DECISION REQUIRED NOW",
+      "question": "What data store and account/organization/venue isolation model should ProjectX enforce?",
+      "options": [
+        {
+          "id": "A",
+          "description": "PostgreSQL shared schema with explicit organization/venue scope and database row-level policies plus application authorization.",
+          "pros": "Strong relational transactions and layered isolation at moderate cost.",
+          "cons": "Policy context and cross-venue reporting require disciplined testing.",
+          "bestWhen": "Multi-venue SaaS with controlled sharing."
+        },
+        {
+          "id": "B",
+          "description": "PostgreSQL schema per organization, venue keys inside each schema.",
+          "pros": "Coarse organization boundary.",
+          "cons": "Migrations and pooled connections multiply with tenant count.",
+          "bestWhen": "Few large organizations need schema-level separation."
+        },
+        {
+          "id": "C",
+          "description": "PostgreSQL database per organization or venue.",
+          "pros": "Strong physical separation and tailored recovery.",
+          "cons": "Cost and migration/analytics operations grow substantially.",
+          "bestWhen": "Isolation contracts require dedicated data stores."
+        },
+        {
+          "id": "D",
+          "description": "Managed document store with application-enforced tenant predicates.",
+          "pros": "Flexible documents and rapid schema evolution.",
+          "cons": "Cross-entity transactions and omission of a scope filter become harder to control.",
+          "bestWhen": "Data relationships prove document-oriented and isolation requirements allow it."
+        }
+      ],
+      "recommendedDefault": {
+        "optionId": "A",
+        "reason": "Observed relationships and reservation concurrency call for transactions and explicit scoped queries. The hierarchy and client-sharing rules must be confirmed before finalizing keys."
+      },
+      "ownerDecision": null,
+      "rationale": "Tenant hierarchy and isolation determine every data key, authorization query, backup scope and the consequences of an access bug.",
+      "evidence": [
+        "Venue selector; user form mentions the same access at other venues; venue-scoped routes; reservation links to client, shift, area and table.",
+        "The exact account→organization→venue hierarchy and cross-venue sharing semantics are UNKNOWN."
+      ],
+      "affectedRoadmapTasks": [
+        "FOUND-TASK-002",
+        "FOUND-TASK-003"
+      ],
+      "reversibility": "HIGH_COST",
+      "notes": "Owner question combined with ARCH-D004; answer once for all covered IDs.",
+      "coveredByDecisionId": "ARCH-D004"
+    },
+    {
+      "id": "ARCH-D007",
+      "title": "Tenant isolation enforcement",
+      "status": "OWNER_DECISION_REQUIRED",
+      "category": "OWNER DECISION REQUIRED NOW",
+      "question": "What data store and account/organization/venue isolation model should ProjectX enforce?",
+      "options": [
+        {
+          "id": "A",
+          "description": "PostgreSQL shared schema with explicit organization/venue scope and database row-level policies plus application authorization.",
+          "pros": "Strong relational transactions and layered isolation at moderate cost.",
+          "cons": "Policy context and cross-venue reporting require disciplined testing.",
+          "bestWhen": "Multi-venue SaaS with controlled sharing."
+        },
+        {
+          "id": "B",
+          "description": "PostgreSQL schema per organization, venue keys inside each schema.",
+          "pros": "Coarse organization boundary.",
+          "cons": "Migrations and pooled connections multiply with tenant count.",
+          "bestWhen": "Few large organizations need schema-level separation."
+        },
+        {
+          "id": "C",
+          "description": "PostgreSQL database per organization or venue.",
+          "pros": "Strong physical separation and tailored recovery.",
+          "cons": "Cost and migration/analytics operations grow substantially.",
+          "bestWhen": "Isolation contracts require dedicated data stores."
+        },
+        {
+          "id": "D",
+          "description": "Managed document store with application-enforced tenant predicates.",
+          "pros": "Flexible documents and rapid schema evolution.",
+          "cons": "Cross-entity transactions and omission of a scope filter become harder to control.",
+          "bestWhen": "Data relationships prove document-oriented and isolation requirements allow it."
+        }
+      ],
+      "recommendedDefault": {
+        "optionId": "A",
+        "reason": "Observed relationships and reservation concurrency call for transactions and explicit scoped queries. The hierarchy and client-sharing rules must be confirmed before finalizing keys."
+      },
+      "ownerDecision": null,
+      "rationale": "Tenant hierarchy and isolation determine every data key, authorization query, backup scope and the consequences of an access bug.",
+      "evidence": [
+        "Venue selector; user form mentions the same access at other venues; venue-scoped routes; reservation links to client, shift, area and table.",
+        "The exact account→organization→venue hierarchy and cross-venue sharing semantics are UNKNOWN."
+      ],
+      "affectedRoadmapTasks": [
+        "FOUND-TASK-002",
+        "FOUND-TASK-003"
+      ],
+      "reversibility": "HIGH_COST",
+      "notes": "Owner question combined with ARCH-D004; answer once for all covered IDs.",
+      "coveredByDecisionId": "ARCH-D004"
+    },
+    {
+      "id": "ARCH-D008",
+      "title": "Authentication and session strategy",
+      "status": "OWNER_DECISION_REQUIRED",
+      "category": "OWNER DECISION REQUIRED NOW",
+      "question": "How should users authenticate, hold sessions, and receive venue-scoped privileges?",
+      "options": [
+        {
+          "id": "A",
+          "description": "Managed OIDC identity provider with secure server-managed sessions; internal venue-scoped RBAC plus explicit permission checks.",
+          "pros": "Reduces credential storage burden and supports MFA; app keeps object authorization.",
+          "cons": "Provider cost and migration/availability dependency.",
+          "bestWhen": "A secure first release without running a credential service."
+        },
+        {
+          "id": "B",
+          "description": "First-party credential and MFA service with server sessions plus scoped RBAC.",
+          "pros": "Maximum control over sign-in.",
+          "cons": "Highest credential recovery, abuse and security operations burden.",
+          "bestWhen": "Strong in-house identity expertise and special constraints."
+        },
+        {
+          "id": "C",
+          "description": "Enterprise SSO only with externally asserted roles and local venue grants.",
+          "pros": "Central organization identity.",
+          "cons": "Excludes users without supported enterprise IdP; mapping claims needs care.",
+          "bestWhen": "Only enterprise customers are in scope."
+        },
+        {
+          "id": "D",
+          "description": "External identity provider and stateless access tokens with scoped RBAC/ABAC checks.",
+          "pros": "Good for multiple clients and APIs.",
+          "cons": "Refresh/revocation and browser token storage require care.",
+          "bestWhen": "Several trusted client types require token exchange."
+        }
+      ],
+      "recommendedDefault": {
+        "optionId": "A",
+        "reason": "It separates identity proofing from app-owned, per-object and per-venue authorization and avoids storing passwords in the first milestone."
+      },
+      "ownerDecision": null,
+      "rationale": "The account exposes guest PII, payment-related controls and cross-venue access; credential ownership and permission scope are security boundaries.",
+      "evidence": [
+        "User Accounts displays access levels, granular permissions, MFA option and multi-venue assignment; only one account role was observed.",
+        "Alternate-role authorization and actual sign-in/session semantics remain UNKNOWN."
+      ],
+      "affectedRoadmapTasks": [
+        "FOUND-TASK-002",
+        "FOUND-TASK-004"
+      ],
+      "reversibility": "HIGH_COST",
+      "notes": "Future test/data may refine implementation; not approved.",
+      "coveredByDecisionId": null
+    },
+    {
+      "id": "ARCH-D009",
+      "title": "Authorization and venue-scoped permissions",
+      "status": "OWNER_DECISION_REQUIRED",
+      "category": "OWNER DECISION REQUIRED NOW",
+      "question": "How should users authenticate, hold sessions, and receive venue-scoped privileges?",
+      "options": [
+        {
+          "id": "A",
+          "description": "Managed OIDC identity provider with secure server-managed sessions; internal venue-scoped RBAC plus explicit permission checks.",
+          "pros": "Reduces credential storage burden and supports MFA; app keeps object authorization.",
+          "cons": "Provider cost and migration/availability dependency.",
+          "bestWhen": "A secure first release without running a credential service."
+        },
+        {
+          "id": "B",
+          "description": "First-party credential and MFA service with server sessions plus scoped RBAC.",
+          "pros": "Maximum control over sign-in.",
+          "cons": "Highest credential recovery, abuse and security operations burden.",
+          "bestWhen": "Strong in-house identity expertise and special constraints."
+        },
+        {
+          "id": "C",
+          "description": "Enterprise SSO only with externally asserted roles and local venue grants.",
+          "pros": "Central organization identity.",
+          "cons": "Excludes users without supported enterprise IdP; mapping claims needs care.",
+          "bestWhen": "Only enterprise customers are in scope."
+        },
+        {
+          "id": "D",
+          "description": "External identity provider and stateless access tokens with scoped RBAC/ABAC checks.",
+          "pros": "Good for multiple clients and APIs.",
+          "cons": "Refresh/revocation and browser token storage require care.",
+          "bestWhen": "Several trusted client types require token exchange."
+        }
+      ],
+      "recommendedDefault": {
+        "optionId": "A",
+        "reason": "It separates identity proofing from app-owned, per-object and per-venue authorization and avoids storing passwords in the first milestone."
+      },
+      "ownerDecision": null,
+      "rationale": "The account exposes guest PII, payment-related controls and cross-venue access; credential ownership and permission scope are security boundaries.",
+      "evidence": [
+        "User Accounts displays access levels, granular permissions, MFA option and multi-venue assignment; only one account role was observed.",
+        "Alternate-role authorization and actual sign-in/session semantics remain UNKNOWN."
+      ],
+      "affectedRoadmapTasks": [
+        "FOUND-TASK-002",
+        "FOUND-TASK-004"
+      ],
+      "reversibility": "HIGH_COST",
+      "notes": "Owner question combined with ARCH-D008; answer once for all covered IDs.",
+      "coveredByDecisionId": "ARCH-D008"
+    },
+    {
+      "id": "ARCH-D010",
+      "title": "API contract model",
+      "status": "OWNER_DECISION_REQUIRED",
+      "category": "OWNER DECISION REQUIRED NOW",
+      "question": "Which API style and validation/contract authority should connect the web client and domain modules?",
+      "options": [
+        {
+          "id": "A",
+          "description": "Versioned REST resources with OpenAPI as reviewed contract, generated client types and server runtime validation.",
+          "pros": "Clear HTTP semantics and diffable contracts for small tasks.",
+          "cons": "Some complex composed reads need dedicated projections.",
+          "bestWhen": "Standard CRUD and workflow commands dominate."
+        },
+        {
+          "id": "B",
+          "description": "GraphQL schema with typed operations and runtime input validation.",
+          "pros": "Flexible composite reads.",
+          "cons": "Field-level authorization/cost limits and caching are more complex.",
+          "bestWhen": "Many distinct clients need independently selected data."
+        },
+        {
+          "id": "C",
+          "description": "Typed RPC over HTTP with schema-owned client/server contracts.",
+          "pros": "Fast type-safe iteration in one repository.",
+          "cons": "Public integration and versioning require extra discipline.",
+          "bestWhen": "Only controlled first-party clients exist."
+        },
+        {
+          "id": "D",
+          "description": "Hybrid REST commands plus GraphQL read layer and shared schema definitions.",
+          "pros": "Optimizes different read/write shapes.",
+          "cons": "Two contract models from the start.",
+          "bestWhen": "Measured composite read needs justify it."
+        }
+      ],
+      "recommendedDefault": {
+        "optionId": "A",
+        "reason": "It offers explicit versioned, testable boundaries and reduces the chance that one screen change forces broad module edits."
+      },
+      "ownerDecision": null,
+      "rationale": "Contract shape controls independent task ownership, integration verification and future client compatibility.",
+      "evidence": [
+        "Many form fields, sortable lists, calendars and state changes; no reference API implementation or schema is evidenced.",
+        "Roadmap requires focused API contract tests for each module."
+      ],
+      "affectedRoadmapTasks": [
+        "FOUND-TASK-003",
+        "FOUND-TASK-004"
+      ],
+      "reversibility": "HIGH_COST",
+      "notes": "Future test/data may refine implementation; not approved.",
+      "coveredByDecisionId": null
+    },
+    {
+      "id": "ARCH-D011",
+      "title": "Runtime validation and shared contracts",
+      "status": "OWNER_DECISION_REQUIRED",
+      "category": "OWNER DECISION REQUIRED NOW",
+      "question": "Which API style and validation/contract authority should connect the web client and domain modules?",
+      "options": [
+        {
+          "id": "A",
+          "description": "Versioned REST resources with OpenAPI as reviewed contract, generated client types and server runtime validation.",
+          "pros": "Clear HTTP semantics and diffable contracts for small tasks.",
+          "cons": "Some complex composed reads need dedicated projections.",
+          "bestWhen": "Standard CRUD and workflow commands dominate."
+        },
+        {
+          "id": "B",
+          "description": "GraphQL schema with typed operations and runtime input validation.",
+          "pros": "Flexible composite reads.",
+          "cons": "Field-level authorization/cost limits and caching are more complex.",
+          "bestWhen": "Many distinct clients need independently selected data."
+        },
+        {
+          "id": "C",
+          "description": "Typed RPC over HTTP with schema-owned client/server contracts.",
+          "pros": "Fast type-safe iteration in one repository.",
+          "cons": "Public integration and versioning require extra discipline.",
+          "bestWhen": "Only controlled first-party clients exist."
+        },
+        {
+          "id": "D",
+          "description": "Hybrid REST commands plus GraphQL read layer and shared schema definitions.",
+          "pros": "Optimizes different read/write shapes.",
+          "cons": "Two contract models from the start.",
+          "bestWhen": "Measured composite read needs justify it."
+        }
+      ],
+      "recommendedDefault": {
+        "optionId": "A",
+        "reason": "It offers explicit versioned, testable boundaries and reduces the chance that one screen change forces broad module edits."
+      },
+      "ownerDecision": null,
+      "rationale": "Contract shape controls independent task ownership, integration verification and future client compatibility.",
+      "evidence": [
+        "Many form fields, sortable lists, calendars and state changes; no reference API implementation or schema is evidenced.",
+        "Roadmap requires focused API contract tests for each module."
+      ],
+      "affectedRoadmapTasks": [
+        "FOUND-TASK-003",
+        "FOUND-TASK-004"
+      ],
+      "reversibility": "HIGH_COST",
+      "notes": "Owner question combined with ARCH-D010; answer once for all covered IDs.",
+      "coveredByDecisionId": "ARCH-D010"
+    },
+    {
+      "id": "ARCH-D012",
+      "title": "Background jobs and events",
+      "status": "DEFERRED",
+      "category": "CAN BE DEFERRED",
+      "question": "When and how should background jobs and events be implemented?",
+      "options": [],
+      "recommendedDefault": {
+        "proposal": "No queue or event broker chosen before a workflow requires asynchronous work. Design outbox/worker and retry contract before first irreversible delivery."
+      },
+      "ownerDecision": null,
+      "rationale": "No queue or event broker chosen before a workflow requires asynchronous work. Design outbox/worker and retry contract before first irreversible delivery.",
+      "evidence": [
+        "Potential communication, export and import work is visible; delivery execution unobserved."
+      ],
+      "affectedRoadmapTasks": [
+        "IMPL-MOD-10"
+      ],
+      "reversibility": "MODERATE",
+      "notes": "Future test/data may refine implementation; not approved.",
+      "coveredByDecisionId": null
+    },
+    {
+      "id": "ARCH-D013",
+      "title": "Cache strategy",
+      "status": "DEFERRED",
+      "category": "CAN BE DEFERRED",
+      "question": "When and how should cache strategy be implemented?",
+      "options": [],
+      "recommendedDefault": {
+        "proposal": "No shared cache until measured reads justify it; any future cache must be scoped by tenant/venue and invalidated on writes."
+      },
+      "ownerDecision": null,
+      "rationale": "No shared cache until measured reads justify it; any future cache must be scoped by tenant/venue and invalidated on writes.",
+      "evidence": [
+        "Availability is time-sensitive and correctness is more important than speculative caching."
+      ],
+      "affectedRoadmapTasks": [
+        "IMPL-MOD-10"
+      ],
+      "reversibility": "MODERATE",
+      "notes": "Future test/data may refine implementation; not approved.",
+      "coveredByDecisionId": null
+    },
+    {
+      "id": "ARCH-D014",
+      "title": "Audit and event history",
+      "status": "PROPOSED",
+      "category": "TECHNICAL DEFAULT SAFE TO CHOOSE",
+      "question": "When and how should audit and event history be implemented?",
+      "options": [],
+      "recommendedDefault": {
+        "proposal": "Append-only actor/venue/object/action audit metadata for security and lifecycle changes; segregate from editable comments and minimize PII."
+      },
+      "ownerDecision": null,
+      "rationale": "Append-only actor/venue/object/action audit metadata for security and lifecycle changes; segregate from editable comments and minimize PII.",
+      "evidence": [
+        "Reservation detail showed activity events and user/permission settings are visible."
+      ],
+      "affectedRoadmapTasks": [
+        "FOUND-TASK-003",
+        "FOUND-TASK-004"
+      ],
+      "reversibility": "MODERATE",
+      "notes": "Future test/data may refine implementation; not approved.",
+      "coveredByDecisionId": null
+    },
+    {
+      "id": "ARCH-D015",
+      "title": "Hosting/cloud provider and boundaries",
+      "status": "OWNER_DECISION_REQUIRED",
+      "category": "OWNER DECISION REQUIRED NOW",
+      "question": "Which independently designed deployment and hosting model should ProjectX use for the first production milestone?",
+      "options": [
+        {
+          "id": "A",
+          "description": "Managed modular monolith: one backend deployable, separately served web client and managed supporting services.",
+          "pros": "Few operational boundaries, simple transactions and incremental tasks.",
+          "cons": "The backend must maintain clear module boundaries; deploy cadence is shared.",
+          "bestWhen": "First production release with a small team."
+        },
+        {
+          "id": "B",
+          "description": "Hybrid: core modular backend plus independently deployed integrations and background workers.",
+          "pros": "Isolates optional external work.",
+          "cons": "More deployment and tracing surfaces from day one.",
+          "bestWhen": "Integrations already demand independent scale or ownership."
+        },
+        {
+          "id": "C",
+          "description": "Microservices per major domain on managed infrastructure.",
+          "pros": "Independent scaling and team ownership.",
+          "cons": "Distributed transactions, operations and testing cost rise sharply.",
+          "bestWhen": "Multiple domain teams and proven scale demand."
+        },
+        {
+          "id": "D",
+          "description": "Self-hosted/on-premises application with owner-managed infrastructure.",
+          "pros": "Direct infrastructure control.",
+          "cons": "Highest patching, recovery and monitoring burden.",
+          "bestWhen": "Contractual hosting restrictions require it."
+        }
+      ],
+      "recommendedDefault": {
+        "optionId": "A",
+        "reason": "The visible flows have strong cross-module transactions and no measured need for distributed deployment. Hosting provider remains a separate selection after requirements and cost approval."
+      },
+      "ownerDecision": null,
+      "rationale": "Deployment model and hosting account shape operating cost, recovery, and how many moving parts every small task must verify.",
+      "evidence": [
+        "16 mapped product modules; 144 screens; reservation, availability and client journeys cross module boundaries.",
+        "No evidence of reference deployment topology or cloud provider."
+      ],
+      "affectedRoadmapTasks": [
+        "FOUND-TASK-002",
+        "FOUND-TASK-003",
+        "FOUND-TASK-004"
+      ],
+      "reversibility": "HIGH_COST",
+      "notes": "Owner question combined with ARCH-D001; answer once for all covered IDs.",
+      "coveredByDecisionId": "ARCH-D001"
+    },
+    {
+      "id": "ARCH-D016",
+      "title": "Backup and recovery objectives",
+      "status": "OWNER_DECISION_REQUIRED",
+      "category": "OWNER DECISION REQUIRED NOW",
+      "question": "What production recovery target and environment/CI spending envelope should guide infrastructure design?",
+      "options": [
+        {
+          "id": "A",
+          "description": "Pilot: daily backups, target RPO 24 hours/RTO 24 hours; development and production plus ephemeral CI.",
+          "pros": "Lowest recurring cost.",
+          "cons": "Large potential data-loss/service interruption window.",
+          "bestWhen": "Disposable pilot with low operational dependence."
+        },
+        {
+          "id": "B",
+          "description": "Operational baseline: target RPO 1 hour/RTO 4 hours; separate dev, staging, production and restore drills.",
+          "pros": "Balanced service continuity and repeatable release checks.",
+          "cons": "Higher managed backup/staging cost.",
+          "bestWhen": "Restaurant operations depend on the app during service."
+        },
+        {
+          "id": "C",
+          "description": "High availability: target RPO 5 minutes/RTO 1 hour with failover and frequent restore rehearsals.",
+          "pros": "Short disruption and data loss.",
+          "cons": "Significantly higher cost and operational complexity.",
+          "bestWhen": "Contractual uptime commitments justify it."
+        },
+        {
+          "id": "D",
+          "description": "Owner-defined custom targets and environment constraints.",
+          "pros": "Fits existing hosting contracts or unusual operations.",
+          "cons": "Requires explicit numbers and operational ownership before design.",
+          "bestWhen": "There are binding organizational requirements."
+        }
+      ],
+      "recommendedDefault": {
+        "optionId": "B",
+        "reason": "Live reservations warrant a recoverable staging-to-production process, while no evidence justifies high-availability infrastructure yet. Targets are recommendations, not guarantees."
+      },
+      "ownerDecision": null,
+      "rationale": "Reservation operations can affect active service; recovery expectations determine backup frequency, restore rehearsal and staging cost.",
+      "evidence": [
+        "The product handles reservations, clients and operational shift settings, but no traffic, budget, RPO, RTO or regulatory retention target is documented.",
+        "Production write behavior has not been tested."
+      ],
+      "affectedRoadmapTasks": [
+        "FOUND-TASK-003",
+        "FOUND-TASK-004"
+      ],
+      "reversibility": "HIGH_COST",
+      "notes": "Future test/data may refine implementation; not approved.",
+      "coveredByDecisionId": null
+    },
+    {
+      "id": "ARCH-D017",
+      "title": "Observability baseline",
+      "status": "PROPOSED",
+      "category": "TECHNICAL DEFAULT SAFE TO CHOOSE",
+      "question": "When and how should observability baseline be implemented?",
+      "options": [],
+      "recommendedDefault": {
+        "proposal": "Structured redacted logs, metrics and trace/correlation IDs across requests and jobs; alert on auth, tenant and booking failures."
+      },
+      "ownerDecision": null,
+      "rationale": "Structured redacted logs, metrics and trace/correlation IDs across requests and jobs; alert on auth, tenant and booking failures.",
+      "evidence": [
+        "Cross-module reservation and access paths require incident diagnosis."
+      ],
+      "affectedRoadmapTasks": [
+        "FOUND-TASK-003",
+        "FOUND-TASK-004"
+      ],
+      "reversibility": "MODERATE",
+      "notes": "Future test/data may refine implementation; not approved.",
+      "coveredByDecisionId": null
+    },
+    {
+      "id": "ARCH-D018",
+      "title": "CI/CD and environments",
+      "status": "OWNER_DECISION_REQUIRED",
+      "category": "OWNER DECISION REQUIRED NOW",
+      "question": "What production recovery target and environment/CI spending envelope should guide infrastructure design?",
+      "options": [
+        {
+          "id": "A",
+          "description": "Pilot: daily backups, target RPO 24 hours/RTO 24 hours; development and production plus ephemeral CI.",
+          "pros": "Lowest recurring cost.",
+          "cons": "Large potential data-loss/service interruption window.",
+          "bestWhen": "Disposable pilot with low operational dependence."
+        },
+        {
+          "id": "B",
+          "description": "Operational baseline: target RPO 1 hour/RTO 4 hours; separate dev, staging, production and restore drills.",
+          "pros": "Balanced service continuity and repeatable release checks.",
+          "cons": "Higher managed backup/staging cost.",
+          "bestWhen": "Restaurant operations depend on the app during service."
+        },
+        {
+          "id": "C",
+          "description": "High availability: target RPO 5 minutes/RTO 1 hour with failover and frequent restore rehearsals.",
+          "pros": "Short disruption and data loss.",
+          "cons": "Significantly higher cost and operational complexity.",
+          "bestWhen": "Contractual uptime commitments justify it."
+        },
+        {
+          "id": "D",
+          "description": "Owner-defined custom targets and environment constraints.",
+          "pros": "Fits existing hosting contracts or unusual operations.",
+          "cons": "Requires explicit numbers and operational ownership before design.",
+          "bestWhen": "There are binding organizational requirements."
+        }
+      ],
+      "recommendedDefault": {
+        "optionId": "B",
+        "reason": "Live reservations warrant a recoverable staging-to-production process, while no evidence justifies high-availability infrastructure yet. Targets are recommendations, not guarantees."
+      },
+      "ownerDecision": null,
+      "rationale": "Reservation operations can affect active service; recovery expectations determine backup frequency, restore rehearsal and staging cost.",
+      "evidence": [
+        "The product handles reservations, clients and operational shift settings, but no traffic, budget, RPO, RTO or regulatory retention target is documented.",
+        "Production write behavior has not been tested."
+      ],
+      "affectedRoadmapTasks": [
+        "FOUND-TASK-003",
+        "FOUND-TASK-004"
+      ],
+      "reversibility": "HIGH_COST",
+      "notes": "Owner question combined with ARCH-D016; answer once for all covered IDs.",
+      "coveredByDecisionId": "ARCH-D016"
+    },
+    {
+      "id": "ARCH-D019",
+      "title": "Layered test strategy",
+      "status": "PROPOSED",
+      "category": "TECHNICAL DEFAULT SAFE TO CHOOSE",
+      "question": "When and how should layered test strategy be implemented?",
+      "options": [],
+      "recommendedDefault": {
+        "proposal": "Focused unit, database, API-contract, authorization/tenant, integration, E2E, accessibility, migration and regression gates according to task risk."
+      },
+      "ownerDecision": null,
+      "rationale": "Focused unit, database, API-contract, authorization/tenant, integration, E2E, accessibility, migration and regression gates according to task risk.",
+      "evidence": [
+        "Roadmap requires independently verifiable tasks and preservation of working paths."
+      ],
+      "affectedRoadmapTasks": [
+        "FOUND-TASK-003",
+        "FOUND-TASK-004"
+      ],
+      "reversibility": "MODERATE",
+      "notes": "Future test/data may refine implementation; not approved.",
+      "coveredByDecisionId": null
+    },
+    {
+      "id": "ARCH-D020",
+      "title": "Security baseline",
+      "status": "PROPOSED",
+      "category": "TECHNICAL DEFAULT SAFE TO CHOOSE",
+      "question": "When and how should security baseline be implemented?",
+      "options": [],
+      "recommendedDefault": {
+        "proposal": "Deny by default, server-side object authorization and venue scope, parameterized queries, strict validation, secure sessions, secret isolation and import/webhook hardening."
+      },
+      "ownerDecision": null,
+      "rationale": "Deny by default, server-side object authorization and venue scope, parameterized queries, strict validation, secure sessions, secret isolation and import/webhook hardening.",
+      "evidence": [
+        "Guest PII, permissions, payment-adjacent actions and imports are visible."
+      ],
+      "affectedRoadmapTasks": [
+        "FOUND-TASK-003",
+        "FOUND-TASK-004"
+      ],
+      "reversibility": "MODERATE",
+      "notes": "Future test/data may refine implementation; not approved.",
+      "coveredByDecisionId": null
+    }
+  ],
+  "unresolvedQuestions": [
+    {
+      "id": "ARCH-D001",
+      "question": "Which independently designed deployment and hosting model should ProjectX use for the first production milestone?",
+      "whyItMatters": "Deployment model and hosting account shape operating cost, recovery, and how many moving parts every small task must verify.",
+      "projectEvidence": [
+        "16 mapped product modules; 144 screens; reservation, availability and client journeys cross module boundaries.",
+        "No evidence of reference deployment topology or cloud provider."
+      ],
+      "optionIds": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "recommendedTechnicalDefault": "A",
+      "whyRecommended": "The visible flows have strong cross-module transactions and no measured need for distributed deployment. Hosting provider remains a separate selection after requirements and cost approval.",
+      "whatBecomesHarderToChangeLater": "Deployment boundaries and operational ownership.",
+      "blocks": [
+        "FOUND-TASK-002",
+        "FOUND-TASK-003",
+        "FOUND-TASK-004"
+      ],
+      "coversDecisionIds": [
+        "ARCH-D001",
+        "ARCH-D015"
+      ],
+      "status": "OWNER_DECISION_REQUIRED"
+    },
+    {
+      "id": "ARCH-D002",
+      "question": "Which frontend/backend/runtime and repository combination should be the starting implementation contract?",
+      "whyItMatters": "The stack determines developer workflow, shared contracts, deployment toolchain and the cost of changing frameworks later.",
+      "projectEvidence": [
+        "144 screens with editable forms, calendar, floorplan and nested panels; 16 modules intended as small independently verifiable tasks.",
+        "No reference framework, language or repository structure is observable."
+      ],
+      "optionIds": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "recommendedTechnicalDefault": "A",
+      "whyRecommended": "Form-heavy web UI and many bounded tasks benefit from an explicit typed client/API seam and one reviewable repository; no stack is inferred from SevenRooms.",
+      "whatBecomesHarderToChangeLater": "Framework-specific UI components, backend libraries, build scripts and cross-repo contracts.",
+      "blocks": [
+        "FOUND-TASK-002",
+        "FOUND-TASK-003",
+        "FOUND-TASK-004"
+      ],
+      "coversDecisionIds": [
+        "ARCH-D002",
+        "ARCH-D003",
+        "ARCH-D005"
+      ],
+      "status": "OWNER_DECISION_REQUIRED"
+    },
+    {
+      "id": "ARCH-D004",
+      "question": "What data store and account/organization/venue isolation model should ProjectX enforce?",
+      "whyItMatters": "Tenant hierarchy and isolation determine every data key, authorization query, backup scope and the consequences of an access bug.",
+      "projectEvidence": [
+        "Venue selector; user form mentions the same access at other venues; venue-scoped routes; reservation links to client, shift, area and table.",
+        "The exact account→organization→venue hierarchy and cross-venue sharing semantics are UNKNOWN."
+      ],
+      "optionIds": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "recommendedTechnicalDefault": "A",
+      "whyRecommended": "Observed relationships and reservation concurrency call for transactions and explicit scoped queries. The hierarchy and client-sharing rules must be confirmed before finalizing keys.",
+      "whatBecomesHarderToChangeLater": "Tenant keys, foreign keys, policy coverage and migration/backup model.",
+      "blocks": [
+        "FOUND-TASK-002",
+        "FOUND-TASK-003"
+      ],
+      "coversDecisionIds": [
+        "ARCH-D004",
+        "ARCH-D006",
+        "ARCH-D007"
+      ],
+      "status": "OWNER_DECISION_REQUIRED"
+    },
+    {
+      "id": "ARCH-D008",
+      "question": "How should users authenticate, hold sessions, and receive venue-scoped privileges?",
+      "whyItMatters": "The account exposes guest PII, payment-related controls and cross-venue access; credential ownership and permission scope are security boundaries.",
+      "projectEvidence": [
+        "User Accounts displays access levels, granular permissions, MFA option and multi-venue assignment; only one account role was observed.",
+        "Alternate-role authorization and actual sign-in/session semantics remain UNKNOWN."
+      ],
+      "optionIds": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "recommendedTechnicalDefault": "A",
+      "whyRecommended": "It separates identity proofing from app-owned, per-object and per-venue authorization and avoids storing passwords in the first milestone.",
+      "whatBecomesHarderToChangeLater": "User identity IDs, session migration and permission vocabulary.",
+      "blocks": [
+        "FOUND-TASK-002",
+        "FOUND-TASK-004"
+      ],
+      "coversDecisionIds": [
+        "ARCH-D008",
+        "ARCH-D009"
+      ],
+      "status": "OWNER_DECISION_REQUIRED"
+    },
+    {
+      "id": "ARCH-D010",
+      "question": "Which API style and validation/contract authority should connect the web client and domain modules?",
+      "whyItMatters": "Contract shape controls independent task ownership, integration verification and future client compatibility.",
+      "projectEvidence": [
+        "Many form fields, sortable lists, calendars and state changes; no reference API implementation or schema is evidenced.",
+        "Roadmap requires focused API contract tests for each module."
+      ],
+      "optionIds": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "recommendedTechnicalDefault": "A",
+      "whyRecommended": "It offers explicit versioned, testable boundaries and reduces the chance that one screen change forces broad module edits.",
+      "whatBecomesHarderToChangeLater": "Client SDK, pagination, errors, version policy and integration contracts.",
+      "blocks": [
+        "FOUND-TASK-003",
+        "FOUND-TASK-004"
+      ],
+      "coversDecisionIds": [
+        "ARCH-D010",
+        "ARCH-D011"
+      ],
+      "status": "OWNER_DECISION_REQUIRED"
+    },
+    {
+      "id": "ARCH-D016",
+      "question": "What production recovery target and environment/CI spending envelope should guide infrastructure design?",
+      "whyItMatters": "Reservation operations can affect active service; recovery expectations determine backup frequency, restore rehearsal and staging cost.",
+      "projectEvidence": [
+        "The product handles reservations, clients and operational shift settings, but no traffic, budget, RPO, RTO or regulatory retention target is documented.",
+        "Production write behavior has not been tested."
+      ],
+      "optionIds": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "recommendedTechnicalDefault": "B",
+      "whyRecommended": "Live reservations warrant a recoverable staging-to-production process, while no evidence justifies high-availability infrastructure yet. Targets are recommendations, not guarantees.",
+      "whatBecomesHarderToChangeLater": "Backup design, hosting tiers, restore process and recurring cost.",
+      "blocks": [
+        "FOUND-TASK-003",
+        "FOUND-TASK-004"
+      ],
+      "coversDecisionIds": [
+        "ARCH-D016",
+        "ARCH-D018"
+      ],
+      "status": "OWNER_DECISION_REQUIRED"
+    }
+  ],
+  "ownerApprovalRequiredBeforeImplementation": [
+    "ARCH-D001",
+    "ARCH-D002",
+    "ARCH-D004",
+    "ARCH-D008",
+    "ARCH-D010",
+    "ARCH-D016"
+  ],
+  "approvedDecisions": [],
+  "projectDocumentGap": "decisions.json was absent before ARCH-001; created here. No architecture decision has been approved.",
+  "evidenceLabels": [
+    "CONFIRMED",
+    "INFERRED",
+    "UNKNOWN",
+    "NEEDS TESTING"
+  ]
 }
