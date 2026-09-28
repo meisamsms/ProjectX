@@ -26,5 +26,5 @@ for (const step of steps) {
   console.log(`${step}: PASS`);
 }
 console.log(
-  "database integration / RLS: NOT_APPLICABLE_FOR_THIS_TASK (no physical schema or database harness)",
+  "Database verification is a separate required CI gate: pnpm verify:db",
 );

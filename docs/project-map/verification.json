@@ -105,6 +105,13 @@
       "status": "BLOCKED",
       "method": "Precondition and runtime availability audit: verified roadmap scope/status and repository migration guidance; checked PostgreSQL server/client binaries, container runtime, configured database connection and existing harness.",
       "result": "BLOCKED: no isolated PostgreSQL runtime or approved deterministic launch path. No migration, fixture, persistence code or database tests executed; no production connection. Previous verified checks preserved."
+    },
+    {
+      "id": "CHK-016",
+      "taskId": "DB-HARNESS-001",
+      "status": "IN_PROGRESS",
+      "method": "Local format/lint/type/map and full foundation verification; GitHub Actions PostgreSQL 16 service pending actual run inspection",
+      "result": "Local pnpm verify PASS; db:check without DATABASE_URL correctly fails. Real database tests pending CI. No People schema or RLS."
     }
   ],
   "unresolvedQuestions": [

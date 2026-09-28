@@ -631,13 +631,44 @@
       "remainingWork": "Plan only. PEOPLE-01 READY. PEOPLE-09 blocked on export evidence/specification; PEOPLE-09B frontend follows. Parent cannot be VERIFIED until export gate resolves or owner-approved narrower milestone is recorded."
     },
     {
+      "id": "DB-HARNESS-001",
+      "name": "Disposable PostgreSQL test runtime and database verification harness",
+      "phaseId": "PHASE-04",
+      "status": "IN_PROGRESS",
+      "dependencies": [
+        "FOUND-TASK-004"
+      ],
+      "scope": "PostgreSQL 16 ephemeral CI service, DATABASE_URL test safety boundary, pg driver, ordered SQL migration test runner, isolated test schema, cross-platform commands, smoke/rollback/pool tests; no People schema or RLS.",
+      "acceptanceCriteria": [
+        "Real PostgreSQL 16 disposable CI service executes and passes smoke, transaction rollback and pool reuse tests",
+        "DATABASE_URL guard rejects unsafe destructive targets and missing connection",
+        "Ordered checksum-tracked migration test seam and reset utility exist",
+        "CI database verification is blocking; foundation verification remains passing",
+        "No People schema, RLS, OIDC, API or UI introduced"
+      ],
+      "verificationCommands": [
+        "pnpm format:check",
+        "pnpm lint",
+        "pnpm typecheck",
+        "pnpm map:check",
+        "pnpm verify",
+        "pnpm verify:db in GitHub Actions PostgreSQL service"
+      ],
+      "regressionChecks": [
+        "Previous VERIFIED gates remain VERIFIED",
+        "No People or other domain implementation"
+      ],
+      "unknownsToResolve": []
+    },
+    {
       "id": "PEOPLE-01",
       "name": "People core persistence and domain contracts",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
       "status": "BLOCKED",
       "dependencies": [
-        "FOUND-TASK-004"
+        "FOUND-TASK-004",
+        "DB-HARNESS-001"
       ],
       "scope": "One reviewed PostgreSQL migration for User, verified external identity binding, Organization, Venue, Membership and explicit VenueAccess; tenant keys/FKs, UUIDv7, lifecycle/version fields and isolated fixture builder.",
       "outOfScope": "Roles/grants, RLS policy, APIs, OIDC, UI, names, domain entities of other modules.",
@@ -676,8 +707,8 @@
         "ENT-044"
       ],
       "moduleId": "MOD-14",
-      "blocker": "Isolated PostgreSQL runtime unavailable in the execution environment; no postgres/initdb/pg_ctl/psql or container runtime, configured database connection, or approved repository database harness. The task requires real disposable PostgreSQL constraint and migration tests. No persistence changes started.",
-      "unblockCondition": "Provide an approved deterministic isolated PostgreSQL test runtime or run in an environment with disposable PostgreSQL; then resume PEOPLE-01 and execute its required focused verification."
+      "blocker": "Awaiting verified DB-HARNESS-001 real disposable PostgreSQL CI gate.",
+      "unblockCondition": "DB-HARNESS-001 VERIFIED with inspected passing PostgreSQL CI run."
     },
     {
       "id": "PEOPLE-01B",
@@ -1461,6 +1492,7 @@
     "FOUND-TASK-002",
     "FOUND-TASK-003",
     "FOUND-TASK-004",
+    "DB-HARNESS-001",
     "PEOPLE-01",
     "PEOPLE-01B",
     "PEOPLE-02",
@@ -1493,5 +1525,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "PEOPLE-01 — establish an approved disposable PostgreSQL runtime, then implement and verify only core People persistence. PEOPLE-01B remains PLANNED until PEOPLE-01 is VERIFIED."
+  "nextExactTask": "DB-HARNESS-001 — inspect the GitHub Actions PostgreSQL database gate; fix harness-only failures and verify before resuming PEOPLE-01."
 }
