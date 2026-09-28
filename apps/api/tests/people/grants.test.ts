@@ -208,7 +208,7 @@ describe("People grants on real PostgreSQL", () => {
         client,
         mapSql,
         [f.orgA, venueRole, "VENUE", "venue.read", "ORGANIZATION"],
-        "23503",
+        "23514",
       );
     }));
   it("rejects cross-organization roles, wrong scope, foreign venue and duplicate grants", async () =>
@@ -221,7 +221,7 @@ describe("People grants on real PostgreSQL", () => {
         client,
         orgSql,
         [newPeopleId(), f.orgA, f.identities.orgB.membership, orgRole],
-        "23503",
+        "23514",
       );
       await rejected(
         client,
@@ -233,7 +233,7 @@ describe("People grants on real PostgreSQL", () => {
         client,
         venueSql,
         [newPeopleId(), f.orgA, f.a1, f.identities.orgB.access[0], venueRole],
-        "23503",
+        "23514",
       );
       await rejected(
         client,
@@ -245,13 +245,13 @@ describe("People grants on real PostgreSQL", () => {
         client,
         venueSql,
         [newPeopleId(), f.orgA, f.a2, f.identities.a1Only.access[0], venueRole],
-        "23503",
+        "23514",
       );
       await rejected(
         client,
         venueSql,
         [newPeopleId(), f.orgA, f.a1, newPeopleId(), venueRole],
-        "23503",
+        "23514",
       );
       await client.query(orgSql, [
         newPeopleId(),
