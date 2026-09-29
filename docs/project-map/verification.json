@@ -182,6 +182,13 @@
       "status": "BLOCKED",
       "method": "Owner-approved ProjectX field contract and local forward migration; synthetic clean/PEOPLE-02 upgrade and restricted RLS tests authored. Local pnpm format:check, lint, typecheck, map:check and contract:check passed; pnpm verify reached E2E, pnpm verify:db stopped before migration.",
       "result": "Local static/contract/map and unit/integration/web checks PASS. pnpm verify E2E NOT RUN successfully because Playwright Chromium executable is absent; pnpm verify:db NOT RUN because DATABASE_URL is missing. PostgreSQL 16 migration, tri-state, upgrade and RLS tests NOT RUN. Do not mark PEOPLE-03P VERIFIED or unblock PEOPLE-03 until real database CI passes. No read API, Add User, UI, OIDC, sessions or Export implementation; SevenRooms unknowns unchanged."
+    },
+    {
+      "id": "CHK-027",
+      "taskId": "PEOPLE-03P",
+      "status": "VERIFIED",
+      "method": "GitHub Actions run 36512777220, job 109228386133, PostgreSQL 16.15; pnpm verify and pnpm verify:db; clean and verified PEOPLE-02 upgrade migration/checksum/repeatability, nullable field ownership, notification NULL/false/true, restricted runtime RLS and cross-organization denial, foundation regression.",
+      "result": "PASS: both CI gates; 10 database files and 38 tests passed, including three PEOPLE-03P migration/tri-state/RLS tests and two existing RLS migration tests. Existing migration bytes/checksums and prior VERIFIED statuses unchanged. PEOPLE-03P VERIFIED and PEOPLE-03 returned to READY. No PEOPLE-03 read API, Add User, UI, OIDC, sessions or Export; SevenRooms unknowns unchanged."
     }
   ],
   "unresolvedQuestions": [
