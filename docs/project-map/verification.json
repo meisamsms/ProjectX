@@ -168,6 +168,13 @@
       "status": "VERIFIED",
       "method": "Roadmap state-only dependency audit: PEOPLE-03 depends only on VERIFIED PEOPLE-02; previous VERIFIED statuses and IMPL-MOD-14 checked; map dependency cycle validation; no implementation or SevenRooms evidence edits.",
       "result": "PEOPLE-02 verified; PEOPLE-03 dependency satisfied and nextExactTask already identifies PEOPLE-03. PEOPLE-03 transitioned PLANNED to READY; PEOPLE-04 remains PLANNED. No PEOPLE-03 implementation was started."
+    },
+    {
+      "id": "CHK-025",
+      "taskId": "PEOPLE-03",
+      "status": "BLOCKED",
+      "method": "Read-only PEOPLE-03 prerequisite and schema-gap audit of roadmap, SCR-025 registry, People core/grants/RLS migrations, API and OpenAPI contracts; no endpoint or migration implemented.",
+      "result": "BLOCKED \u2014 required SCR-025 persisted Name, Job Title and Email Notifications fields are absent from verified People persistence. PEOPLE-03P is proposed as a narrow ProjectX persistence predecessor; product-owner field ownership and absence semantics need a decision. The verified User table has only ID, disabled timestamp and lifecycle/version data; authenticated identity has issuer/subject, not roster profile. No fake/null fields or reference internals inferred. U-002, U-003, FLOW-006 and Export unknowns unchanged; real PostgreSQL PEOPLE-03 tests NOT RUN."
     }
   ],
   "unresolvedQuestions": [

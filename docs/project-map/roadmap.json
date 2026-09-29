@@ -616,6 +616,7 @@
         "PEOPLE-01",
         "PEOPLE-01B",
         "PEOPLE-02",
+        "PEOPLE-03P",
         "PEOPLE-03",
         "PEOPLE-04",
         "PEOPLE-05",
@@ -799,13 +800,61 @@
       "moduleId": "MOD-14"
     },
     {
+      "id": "PEOPLE-03P",
+      "name": "People account roster field persistence prerequisite",
+      "phaseId": "PHASE-04",
+      "parentTask": "IMPL-MOD-14",
+      "status": "BLOCKED",
+      "dependencies": [
+        "PEOPLE-02"
+      ],
+      "scope": "Define ProjectX ownership, nullability and persistence for SCR-025 Name, Job Title and Email Notifications display fields; add one narrow forward migration and synthetic clean/upgrade/database tests after the field contract is decided.",
+      "outOfScope": "Roster API, account creation, OIDC identity data, subscriptions delivery, UI, reference-internal schema claims and other modules.",
+      "blocker": "Product-owner ProjectX field contract required: verified People schema stores no Name, Job Title or Email Notifications value; determine whether notification status is User- or scoped-membership-owned and how absent values are represented before migration. SevenRooms validation and write outcomes remain unknown.",
+      "acceptanceCriteria": [
+        "Explicit ProjectX field ownership and nullable/required semantics documented without asserting SevenRooms internals",
+        "Forward-only migration preserves PEOPLE-01/01B/02 migration checksums and RLS/restricted runtime behavior",
+        "Synthetic PostgreSQL 16 clean/upgrade and isolation tests demonstrate fields can be read safely"
+      ],
+      "verificationCommands": [
+        "pnpm format:check",
+        "pnpm lint",
+        "pnpm typecheck",
+        "pnpm map:check",
+        "pnpm verify:db against PostgreSQL 16"
+      ],
+      "regressionChecks": [
+        "All previously VERIFIED tasks stay VERIFIED",
+        "No People API/UI or unrelated module work"
+      ],
+      "filesExpectedToChange": [
+        "apps/api/migrations/people-account-profile/*",
+        "apps/api/tests/people/*",
+        "docs/data/*"
+      ],
+      "unknownsToResolve": [
+        "U-002",
+        "U-003"
+      ],
+      "evidenceClassification": "PROPOSED ProjectX prerequisite; reference field labels confirmed, persistence semantics unknown",
+      "screenIds": [
+        "SCR-025"
+      ],
+      "actionIds": [],
+      "entityIds": [
+        "ENT-043"
+      ],
+      "moduleId": "MOD-14"
+    },
+    {
       "id": "PEOPLE-03",
       "name": "User Accounts read/list backend",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "READY",
+      "status": "BLOCKED",
       "dependencies": [
-        "PEOPLE-02"
+        "PEOPLE-02",
+        "PEOPLE-03P"
       ],
       "scope": "Versioned OpenAPI read/list contract for SCR-025 scoped user summaries and observed access-level filter; server validation, generated types and list security.",
       "outOfScope": "User creation/export, web screen, undocumented search/sort or alternate-role claims.",
@@ -846,7 +895,8 @@
         "ACT-0055"
       ],
       "entityIds": [],
-      "moduleId": "MOD-14"
+      "moduleId": "MOD-14",
+      "blocker": "BLOCKED \u2014 required SCR-025 persisted Name, Job Title and Email Notifications fields are absent from verified People persistence. Proposed predecessor PEOPLE-03P must define field ownership/nullability and pass a narrow migration/RLS upgrade gate before this read/list API can be implemented; no placeholder or null contract was approved."
     },
     {
       "id": "PEOPLE-04",
@@ -1495,6 +1545,7 @@
     "PEOPLE-01",
     "PEOPLE-01B",
     "PEOPLE-02",
+    "PEOPLE-03P",
     "PEOPLE-03",
     "PEOPLE-04",
     "PEOPLE-05",
@@ -1524,5 +1575,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "PEOPLE-03 \u2014 User Accounts read/list backend"
+  "nextExactTask": "PEOPLE-03P \u2014 decide and verify narrow SCR-025 roster-field persistence prerequisite before resuming PEOPLE-03."
 }
