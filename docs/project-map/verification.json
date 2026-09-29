@@ -203,6 +203,13 @@
       "status": "VERIFIED",
       "method": "GitHub Actions final run 36642984484, job 109659345883, branch people-03-accounts-read at e07e15b0b6c0f0b1b747c21f154739a2582c4ed1, PostgreSQL 16.15; pnpm verify and pnpm verify:db. Earlier run 36642671170 failed two unknown-query-key rejection assertions; scoped route fix applied and both gates rerun.",
       "result": "PASS: pnpm verify including format/lint/typecheck/contracts/map, unit/integration/web and Playwright E2E; pnpm verify:db with 11 database files and 46 tests passed, including all eight PEOPLE-03 accounts-read API tests. Authorized roster, user.read and active identity/membership denials, ORG-A/ORG-B isolation, venue-only denial, foreign known IDs, filter reduction, nullable names/job title, notification NULL/false/true, narrow response, empty roster, deterministic pagination and invalid query rejection passed under restricted runtime role and RLS. PEOPLE-03 VERIFIED; PEOPLE-05 READY. PEOPLE-09 BLOCKED, PEOPLE-04 PLANNED, IMPL-MOD-14 IN_PROGRESS. PEOPLE-03P remains VERIFIED from canonical final run 36513113775. SevenRooms unknowns and evidence classifications unchanged."
+    },
+    {
+      "id": "CHK-030",
+      "taskId": "PEOPLE-05",
+      "status": "BLOCKED",
+      "method": "Local SCR-025 component, generated-type API client, shell-route and contract/map regression checks. Playwright SCR-025 happy/denied and axe tests authored; full pnpm verify attempted. The prior PEOPLE-03 publishing approval does not cover this frontend.",
+      "result": "Local 9 focused component tests and 11 total web tests PASS. Format, lint, typecheck, contract generation/freshness and map PASS. pnpm verify passed install/static/unit/API integration/web, then E2E could not start because Chromium executable is absent; pnpm exec playwright install chromium failed to download a valid archive. The focused SCR-025 E2E and axe tests were NOT executed successfully. No PEOPLE-05 CI run; do not claim screen or task VERIFIED. PEOPLE-05 BLOCKED pending separately approved branch publication and CI. SCR-025 route registry remains NOT_IMPLEMENTED until its applicable acceptance gates pass. Earlier VERIFIED tasks and SevenRooms evidence, including U-002, unchanged."
     }
   ],
   "unresolvedQuestions": [

@@ -1,0 +1,9 @@
+# PEOPLE-05 User Accounts presentation
+
+Status: local implementation pending browser E2E and axe CI. This document records **PROJECTX IMPLEMENTATION DECISIONS** for SCR-025, not SevenRooms behavior.
+
+The mapped User Accounts route consumes `GET /api/v1/people/accounts` using generated OpenAPI types. Requests carry only the exact `accessLevel` name and exclusive `cursor` when present. A same-origin gateway may later supply trusted authentication context; no browser tenant ID, role, OIDC subject or secret is used. The backend remains the only authorization boundary. Without a trusted server binding, the API returns 401 and the page shows a sign-in-required message.
+
+The roster displays the backend's nullable `name` and `jobTitle`; `NULL` is shown as a visual em dash with accessible text. Email Notifications uses distinct labels: `true` is “Enabled,” `false` is “Disabled,” and `null` is “Not configured.” Every organization access level returned by the backend is shown in its supplied order, with no primary role or role precedence. The exact-role filter submits to the server and resets the cursor. The page provides a Next page control only while `nextCursor` exists; it shows no inferred count or undocumented backward navigation. Loading, empty, denied and generic error states are separate and safe.
+
+Additional Options displays “Unavailable” without controls. Add new links to the existing SCR-026 `NOT_IMPLEMENTED` placeholder, without a form or fake save. Export is displayed as unavailable and does not trigger a download. Opening a user is deferred because no verified detail endpoint or route is implemented. SCR-026, SCR-083 and SCR-084 remain unchanged. The reference's other-role behavior (U-002), backend semantics, validation/failure, role precedence, ordering, pagination and Export behavior retain their existing UNKNOWN / NEEDS TESTING classifications.

@@ -12,6 +12,7 @@ import {
   useMemo,
 } from "react";
 import { Link, matchPath, useLocation } from "react-router-dom";
+import { AccountsPage } from "./people/accounts/page";
 
 type ErrorState = { failed: boolean };
 export class ShellErrorBoundary extends Component<
@@ -101,8 +102,16 @@ export function Shell() {
             ))}
           </ul>
         </nav>
-        <main id="main" tabIndex={-1}>
-          {current ? (
+        <main
+          id="main"
+          tabIndex={-1}
+          className={
+            current?.screenId === "SCR-025" ? "accounts-main" : undefined
+          }
+        >
+          {current?.screenId === "SCR-025" ? (
+            <AccountsPage />
+          ) : current ? (
             <>
               <h1>{current.name}</h1>
               <p>Feature not implemented yet.</p>
