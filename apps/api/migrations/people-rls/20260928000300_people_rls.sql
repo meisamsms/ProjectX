@@ -11,6 +11,15 @@ GRANT SELECT ON organizations, venues, users, authenticated_identities,
 GRANT INSERT, UPDATE ON roles, role_permissions, organization_role_grants,
  venue_role_grants TO projectx_people_runtime;
 
+-- PEOPLE-01B grant triggers lock their active parent rows FOR UPDATE. Run the
+-- two narrowly checked trigger bodies as the migration owner so a restricted
+-- grant writer does not need UPDATE rights on Membership or VenueAccess.
+ALTER FUNCTION require_active_membership_for_grant() SECURITY DEFINER;
+ALTER FUNCTION require_active_membership_for_grant() SET search_path = projectx_test, pg_catalog;
+ALTER FUNCTION require_active_venue_access_for_grant() SECURITY DEFINER;
+ALTER FUNCTION require_active_venue_access_for_grant() SET search_path = projectx_test, pg_catalog;
+REVOKE ALL ON FUNCTION require_active_membership_for_grant(), require_active_venue_access_for_grant() FROM PUBLIC;
+
 -- A malformed/missing setting is NULL, never a wildcard or an exception oracle.
 CREATE FUNCTION people_context_uuid(setting_name text) RETURNS uuid
 LANGUAGE sql STABLE SET search_path = pg_catalog AS $$

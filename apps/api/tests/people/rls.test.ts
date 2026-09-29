@@ -218,6 +218,36 @@ describe("People RLS under restricted PostgreSQL runtime login", () => {
       );
     });
   });
+  it("permits authorized scoped grants while locking active parents without parent UPDATE rights", async () => {
+    await scope("orgA", "user.manage", async (client) => {
+      await client.query(
+        "INSERT INTO organization_role_grants(id,organization_id,membership_id,role_id) VALUES($1,$2,$3,$4)",
+        [newPeopleId(), f.orgA, f.identities.a2Only.membership, f.orgRole],
+      );
+    });
+    await scope(
+      "orgA",
+      "venue.manage",
+      async (client) => {
+        await client.query(
+          "INSERT INTO venue_role_grants(id,organization_id,venue_id,venue_access_id,role_id) VALUES($1,$2,$3,$4,$5)",
+          [
+            newPeopleId(),
+            f.orgA,
+            f.a1,
+            f.identities.a1a2.access[0],
+            f.venueManageRole,
+          ],
+        );
+      },
+      f.a1,
+    );
+    const granted = await adminPool.query(
+      "SELECT count(*)::int n FROM projectx_test.venue_role_grants WHERE organization_id=$1 AND venue_access_id=$2 AND role_id=$3 AND revoked_at IS NULL",
+      [f.orgA, f.identities.a1a2.access[0], f.venueManageRole],
+    );
+    expect(granted.rows[0].n).toBe(1);
+  });
   it("rejects wrong Venue INSERT and A1 to A2 scope move", async () => {
     await scope(
       "orgA",
