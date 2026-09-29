@@ -808,9 +808,9 @@
       "dependencies": [
         "PEOPLE-02"
       ],
-      "scope": "Define ProjectX ownership, nullability and persistence for SCR-025 Name, Job Title and Email Notifications display fields; add one narrow forward migration and synthetic clean/upgrade/database tests after the field contract is decided.",
+      "scope": "Persist approved ProjectX roster fields: nullable User.first_name/last_name and nullable OrganizationMembership.job_title/email_notifications_enabled, with NULL distinct from explicit false; one forward migration and synthetic clean/upgrade/RLS tests.",
       "outOfScope": "Roster API, account creation, OIDC identity data, subscriptions delivery, UI, reference-internal schema claims and other modules.",
-      "blocker": "Product-owner ProjectX field contract required: verified People schema stores no Name, Job Title or Email Notifications value; determine whether notification status is User- or scoped-membership-owned and how absent values are represented before migration. SevenRooms validation and write outcomes remain unknown.",
+      "blocker": "Owner approved ProjectX field ownership and null semantics; local migration and tests implemented. Real PostgreSQL 16 clean/upgrade/RLS CI has not run. The prior PEOPLE-03 prompt requires explicit publishing approval for new People code; none has been given for PEOPLE-03P.",
       "acceptanceCriteria": [
         "Explicit ProjectX field ownership and nullable/required semantics documented without asserting SevenRooms internals",
         "Forward-only migration preserves PEOPLE-01/01B/02 migration checksums and RLS/restricted runtime behavior",
@@ -828,15 +828,16 @@
         "No People API/UI or unrelated module work"
       ],
       "filesExpectedToChange": [
-        "apps/api/migrations/people-account-profile/*",
+        "apps/api/migrations/people-roster-fields/*",
         "apps/api/tests/people/*",
-        "docs/data/*"
+        "tooling/db-test.mjs",
+        "docs/data/people-roster-fields.md"
       ],
       "unknownsToResolve": [
         "U-002",
         "U-003"
       ],
-      "evidenceClassification": "PROPOSED ProjectX prerequisite; reference field labels confirmed, persistence semantics unknown",
+      "evidenceClassification": "APPROVED ProjectX ownership/nullability; confirmed reference field labels, reference storage and validation unknown",
       "screenIds": [
         "SCR-025"
       ],
@@ -1575,5 +1576,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "PEOPLE-03P \u2014 decide and verify narrow SCR-025 roster-field persistence prerequisite before resuming PEOPLE-03."
+  "nextExactTask": "After explicit owner approval, publish only committed people-03-accounts-read branch for PostgreSQL 16 PEOPLE-03P CI; inspect pnpm verify and pnpm verify:db, fix only PEOPLE-03P failures, then return PEOPLE-03 to READY after passing real database tests."
 }

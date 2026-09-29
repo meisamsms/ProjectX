@@ -175,6 +175,13 @@
       "status": "BLOCKED",
       "method": "Read-only PEOPLE-03 prerequisite and schema-gap audit of roadmap, SCR-025 registry, People core/grants/RLS migrations, API and OpenAPI contracts; no endpoint or migration implemented.",
       "result": "BLOCKED \u2014 required SCR-025 persisted Name, Job Title and Email Notifications fields are absent from verified People persistence. PEOPLE-03P is proposed as a narrow ProjectX persistence predecessor; product-owner field ownership and absence semantics need a decision. The verified User table has only ID, disabled timestamp and lifecycle/version data; authenticated identity has issuer/subject, not roster profile. No fake/null fields or reference internals inferred. U-002, U-003, FLOW-006 and Export unknowns unchanged; real PostgreSQL PEOPLE-03 tests NOT RUN."
+    },
+    {
+      "id": "CHK-026",
+      "taskId": "PEOPLE-03P",
+      "status": "BLOCKED",
+      "method": "Owner-approved ProjectX field contract and local forward migration; synthetic clean/PEOPLE-02 upgrade and restricted RLS tests authored. Local pnpm format:check, lint, typecheck, map:check and contract:check passed; pnpm verify reached E2E, pnpm verify:db stopped before migration.",
+      "result": "Local static/contract/map and unit/integration/web checks PASS. pnpm verify E2E NOT RUN successfully because Playwright Chromium executable is absent; pnpm verify:db NOT RUN because DATABASE_URL is missing. PostgreSQL 16 migration, tri-state, upgrade and RLS tests NOT RUN. Do not mark PEOPLE-03P VERIFIED or unblock PEOPLE-03 until real database CI passes. No read API, Add User, UI, OIDC, sessions or Export implementation; SevenRooms unknowns unchanged."
     }
   ],
   "unresolvedQuestions": [

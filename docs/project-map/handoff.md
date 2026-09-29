@@ -1,11 +1,11 @@
 CURRENT PHASE: PHASE-04 Core domain implementation — IN_PROGRESS.
-CURRENT TASK: PEOPLE-03 — User Accounts read/list backend, prerequisite audit.
-STATUS: BLOCKED — required SCR-025 persisted Name, Job Title and Email Notifications fields are absent from verified People persistence. Proposed PEOPLE-03P is blocked on a ProjectX field-ownership/absence contract; no PEOPLE-03 endpoint implemented.
-COMPLETED: Verified PEOPLE-01, PEOPLE-01B, PEOPLE-02 and initial PEOPLE-03 readiness; SCR-025 remains NOT_IMPLEMENTED. Read People migrations, authorization/RLS, discovery and API contracts. Recorded narrow PEOPLE-03P predecessor and stopped at the prompt's schema-gap gate.
-FILES CREATED: None.
-FILES MODIFIED: docs/project-map/roadmap.json; docs/project-map/verification.json; docs/project-map/handoff.md.
-TESTS EXECUTED: pnpm map:check and roadmap status/dependency audit after documentation update. No API or PostgreSQL PEOPLE-03 tests: implementation did not start.
-TEST RESULTS: See CHK-025. No new API, migration, generated type or CI run. Previously verified PEOPLE-02 CI remains CHK-023.
-UNRESOLVED ISSUES: ProjectX roster field ownership/nullability and notification status scope. U-002 alternate-role behavior UNKNOWN / REQUIRES_OTHER_ROLE; U-003 validation/failure, FLOW-006 write outcomes and Export behavior remain UNKNOWN. SevenRooms evidence classifications unchanged.
-NEXT EXACT TASK: PEOPLE-03P — decide and verify narrow SCR-025 roster-field persistence prerequisite before resuming PEOPLE-03.
-FILES NEXT AGENT MUST READ: AGENTS.md; docs/project-map/{roadmap.json,verification.json,handoff.md,people-implementation-plan.md,app-map.json,feature-registry.json}; docs/security/{permission-registry.json,authorization-contract.md,people-authorization-rls.md}; docs/data/{people-core-persistence.md,people-grants-persistence.md,rls-policy-model.md}; all People migrations and fixtures.
+CURRENT TASK: PEOPLE-03P — People account roster field persistence prerequisite.
+STATUS: BLOCKED — local implementation is committed for PostgreSQL 16 CI; explicit approval to publish this new People branch is required. PEOPLE-03 remains BLOCKED until database verification, PEOPLE-04/05 PLANNED, PEOPLE-09 BLOCKED, parent IN_PROGRESS.
+COMPLETED: Product owner approved nullable User first/last name and nullable OrganizationMembership job title/notification preference; NULL differs from explicit false. Forward migration and clean/PEOPLE-02 upgrade, tri-state, restricted RLS and cross-organization synthetic tests authored. No read API.
+FILES CREATED: apps/api/migrations/people-roster-fields/20260928000400_people_roster_fields.sql; apps/api/tests/people/roster-fields-migrations.test.ts; docs/data/people-roster-fields.md.
+FILES MODIFIED: apps/api/tests/people/rls-migrations.test.ts; tooling/db-test.mjs; docs/project-map/{roadmap.json,verification.json,handoff.md}.
+TESTS EXECUTED: local pnpm format:check, lint, typecheck, map:check, contract:check PASS. pnpm verify passed unit/integration/web but E2E failed because Playwright Chromium is absent. pnpm verify:db stopped because DATABASE_URL is absent. PostgreSQL 16 CI not run.
+TEST RESULTS: Static/contract/map checks PASS; full foundation verification incomplete due missing browser; new database tests NOT RUN. CHK-026 BLOCKED. PEOPLE-01/01B/02 remain VERIFIED and unchanged.
+UNRESOLVED ISSUES: Real PostgreSQL 16 migration/upgrade/RLS verification and branch publication approval. U-002 alternate-role behavior UNKNOWN / REQUIRES_OTHER_ROLE; U-003 validation/failure, FLOW-006 write outcomes and Export behavior remain UNKNOWN; SevenRooms evidence classifications unchanged.
+NEXT EXACT TASK: After explicit owner approval, publish only committed people-03-accounts-read branch for PostgreSQL 16 PEOPLE-03P CI; inspect pnpm verify and pnpm verify:db, fix only PEOPLE-03P failures, then return PEOPLE-03 to READY after passing real database tests.
+FILES NEXT AGENT MUST READ: AGENTS.md; docs/project-map/{roadmap.json,verification.json,handoff.md,app-map.json,feature-registry.json}; docs/data/people-roster-fields.md; all four People migrations; apps/api/tests/people/roster-fields-migrations.test.ts and restricted runtime fixture; tooling/db-test.mjs.
