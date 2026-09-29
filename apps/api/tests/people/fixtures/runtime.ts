@@ -34,6 +34,8 @@ export async function startRuntime() {
 }
 export async function stopRuntime() {
   if (runtimePool) await runtimePool.end();
+  // The database suite reuses one schema across files; leave no seeded identities.
+  await resetTestDatabase(adminPool);
   await adminPool.query(`DROP ROLE IF EXISTS ${login}`);
   await closeTestDatabase(adminPool);
 }
