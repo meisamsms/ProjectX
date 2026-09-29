@@ -1,11 +1,11 @@
 CURRENT PHASE: PHASE-04 Core domain implementation — IN_PROGRESS.
-CURRENT TASK: PEOPLE-02 — People authorization, tenant isolation and RLS.
-STATUS: VERIFIED — GitHub Actions run 36510010506, job 109219832076, PostgreSQL 16.15. PEOPLE-01/01B remain VERIFIED; PEOPLE-03/04 remain PLANNED and unstarted.
-COMPLETED: Restricted NOLOGIN runtime role, ten People table RLS policies, current capability lookup, transaction-local server-bound context, synthetic authorization/isolation/clean-and-upgrade tests. PEOPLE-01B grant triggers have narrowly owned execution for parent locks. This is an INFERRED ProjectX implementation, not reference internals.
-FILES CREATED: apps/api/migrations/people-rls/20260928000300_people_rls.sql; apps/api/src/people/authorization/context.ts; apps/api/tests/people/{fixtures/runtime.ts,authorization.test.ts,rls.test.ts,rls-migrations.test.ts}; docs/security/people-authorization-rls.md.
-FILES MODIFIED: apps/api/tests/people/grants-migrations.test.ts; tooling/db-test.mjs; docs/project-map/{roadmap.json,verification.json,handoff.md,people-implementation-plan.md}.
-TESTS EXECUTED: local pnpm format:check, lint, typecheck, map:check and pnpm verify; CI pnpm verify and pnpm verify:db against PostgreSQL 16.15.
-TEST RESULTS: PASS, nine database files and 35 tests, including seven authorization, nine RLS and two PEOPLE-02 migration tests. Initial CI run 36509688847 failed four core tests because PEOPLE-02 synthetic fixture rows leaked across files; test cleanup and narrow active-parent grant trigger execution were fixed, then run 36510010506 passed both gates.
-UNRESOLVED ISSUES: U-002 alternate-role reference behavior UNKNOWN / REQUIRES_OTHER_ROLE; FLOW-006 outcomes unknown. No People HTTP/OIDC/session, durable audit or production privileged path verified. SevenRooms evidence classifications unchanged.
-NEXT EXACT TASK: PEOPLE-03 — User Accounts read/list backend, PLANNED; do not begin under PEOPLE-02 CI authorization. Do not modify main or start PEOPLE-04.
+CURRENT TASK: PEOPLE-03 — User Accounts read/list backend, readiness transition only.
+STATUS: READY — no PEOPLE-03 implementation started. PEOPLE-01, PEOPLE-01B and PEOPLE-02 remain VERIFIED; PEOPLE-04 remains PLANNED; IMPL-MOD-14 remains IN_PROGRESS.
+COMPLETED: Roadmap state transition only. PEOPLE-02 verified; PEOPLE-03 dependency satisfied and nextExactTask already identifies PEOPLE-03.
+FILES CREATED: None.
+FILES MODIFIED: docs/project-map/roadmap.json; docs/project-map/verification.json; docs/project-map/handoff.md.
+TESTS EXECUTED: pnpm map (command unavailable); pnpm map:check and explicit roadmap dependency/status invariants.
+TEST RESULTS: Roadmap dependency and cycle validation PASS; no implementation code changed. PEOPLE-02 PostgreSQL 16 CI verification remains recorded in CHK-023.
+UNRESOLVED ISSUES: U-002 alternate-role reference behavior UNKNOWN / REQUIRES_OTHER_ROLE; FLOW-006 outcomes unknown. SevenRooms evidence classifications unchanged.
+NEXT EXACT TASK: PEOPLE-03 — User Accounts read/list backend.
 FILES NEXT AGENT MUST READ: AGENTS.md; docs/project-map/{roadmap.json,verification.json,handoff.md,people-implementation-plan.md}; docs/security/{permission-registry.json,authorization-contract.md,people-authorization-rls.md}; docs/data/{people-core-persistence.md,people-grants-persistence.md,rls-policy-model.md}; all three People migrations and database tests.

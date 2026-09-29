@@ -803,7 +803,7 @@
       "name": "User Accounts read/list backend",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "PLANNED",
+      "status": "READY",
       "dependencies": [
         "PEOPLE-02"
       ],
@@ -1524,5 +1524,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "PEOPLE-03 \u2014 User Accounts read/list backend, PLANNED after verified PEOPLE-02; do not begin within PEOPLE-02 CI authorization."
+  "nextExactTask": "PEOPLE-03 \u2014 User Accounts read/list backend"
 }

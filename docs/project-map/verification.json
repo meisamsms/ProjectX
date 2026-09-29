@@ -161,6 +161,13 @@
       "status": "VERIFIED",
       "method": "GitHub Actions run 36510010506, job 109219832076, PostgreSQL 16.15; pnpm verify and pnpm verify:db; synthetic authorization/RLS, restricted role, current revocation, cross-tenant/venue denial, scoped grant writes, clean and PEOPLE-01B upgrade migration/checksum/repeatability, foundation regression",
       "result": "PASS: both CI gates and all 9 database test files / 35 tests, including 7 authorization, 9 RLS and 2 PEOPLE-02 migration tests. Initial run 36509688847 passed pnpm verify and new PEOPLE-02 files but failed four core tests from leaked synthetic fixtures; cleanup and narrowly owned grant-trigger execution were fixed within PEOPLE-02, then rerun passed. No People API/UI, OIDC, sessions, durable audit, production privileged path or other module work. U-002 remains unresolved."
+    },
+    {
+      "id": "CHK-024",
+      "taskId": "PEOPLE-03",
+      "status": "VERIFIED",
+      "method": "Roadmap state-only dependency audit: PEOPLE-03 depends only on VERIFIED PEOPLE-02; previous VERIFIED statuses and IMPL-MOD-14 checked; map dependency cycle validation; no implementation or SevenRooms evidence edits.",
+      "result": "PEOPLE-02 verified; PEOPLE-03 dependency satisfied and nextExactTask already identifies PEOPLE-03. PEOPLE-03 transitioned PLANNED to READY; PEOPLE-04 remains PLANNED. No PEOPLE-03 implementation was started."
     }
   ],
   "unresolvedQuestions": [
