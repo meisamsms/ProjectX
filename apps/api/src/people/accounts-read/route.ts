@@ -55,6 +55,7 @@ const responseSchema = {
     nextCursor: { type: ["string", "null"] },
   },
 } as const;
+const allowedQueryKeys = new Set(["accessLevel", "cursor", "limit"]);
 
 export function registerPeopleAccountsRead(
   app: FastifyInstance,
@@ -85,6 +86,19 @@ export function registerPeopleAccountsRead(
           403: errorSchema,
           500: errorSchema,
         },
+      },
+      preValidation: async (request, reply) => {
+        // Fastify's default Ajv configuration removes unknown query keys before
+        // additionalProperties can reject them. Check the raw URL at this route.
+        const url = new URL(request.raw.url ?? "", "http://localhost");
+        if (
+          [...url.searchParams.keys()].some((key) => !allowedQueryKeys.has(key))
+        )
+          return reply.status(400).send({
+            code: "INVALID_REQUEST",
+            message: "Invalid request",
+            requestId: request.id,
+          });
       },
     },
     async (request, reply) => {
