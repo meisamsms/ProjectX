@@ -759,7 +759,7 @@
       "name": "People authorization, tenant isolation and RLS",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "BLOCKED",
+      "status": "VERIFIED",
       "dependencies": [
         "PEOPLE-01B"
       ],
@@ -796,8 +796,7 @@
       "screenIds": [],
       "actionIds": [],
       "entityIds": [],
-      "moduleId": "MOD-14",
-      "blocker": "Local implementation and static/foundation checks complete; PostgreSQL 16 migration and isolation tests require CI. Publishing this PEOPLE-02 branch needs explicit owner approval under the task prompt section 41."
+      "moduleId": "MOD-14"
     },
     {
       "id": "PEOPLE-03",
@@ -1525,5 +1524,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "After explicit owner approval, publish only committed people-02-authorization branch for PostgreSQL 16 CI; run pnpm verify and pnpm verify:db, fix only PEOPLE-02 failures, and mark VERIFIED only after passing real database tests."
+  "nextExactTask": "PEOPLE-03 \u2014 User Accounts read/list backend, PLANNED after verified PEOPLE-02; do not begin within PEOPLE-02 CI authorization."
 }

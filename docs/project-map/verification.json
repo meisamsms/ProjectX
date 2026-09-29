@@ -154,6 +154,13 @@
       "status": "BLOCKED",
       "method": "Local format, lint, typecheck, map and full foundation verification; PostgreSQL 16 migration, authorization and RLS tests require approved branch publication for CI",
       "result": "Local static/foundation checks PASS. pnpm verify:db NOT RUN because DATABASE_URL is unavailable locally. No PostgreSQL 16 CI or migration-upgrade result is claimed; PEOPLE-02 remains BLOCKED pending explicit publication approval and passing CI."
+    },
+    {
+      "id": "CHK-023",
+      "taskId": "PEOPLE-02",
+      "status": "VERIFIED",
+      "method": "GitHub Actions run 36510010506, job 109219832076, PostgreSQL 16.15; pnpm verify and pnpm verify:db; synthetic authorization/RLS, restricted role, current revocation, cross-tenant/venue denial, scoped grant writes, clean and PEOPLE-01B upgrade migration/checksum/repeatability, foundation regression",
+      "result": "PASS: both CI gates and all 9 database test files / 35 tests, including 7 authorization, 9 RLS and 2 PEOPLE-02 migration tests. Initial run 36509688847 passed pnpm verify and new PEOPLE-02 files but failed four core tests from leaked synthetic fixtures; cleanup and narrowly owned grant-trigger execution were fixed within PEOPLE-02, then rerun passed. No People API/UI, OIDC, sessions, durable audit, production privileged path or other module work. U-002 remains unresolved."
     }
   ],
   "unresolvedQuestions": [
