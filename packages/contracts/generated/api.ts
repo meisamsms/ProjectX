@@ -21,6 +21,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/people/accounts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read authorized People roster
+         * @description ProjectX implementation. Organization-scoped user.read is required; a server-trusted identity and organization are supplied outside the query. Only active memberships and organization role grants contribute. Venue-only grants do not authorize this roster. Empty authorized result is 200 with items []; pagination and UUID ordering are ProjectX decisions, not reference behavior.
+         */
+        get: operations["listPeopleAccounts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -29,6 +49,25 @@ export interface components {
             code: string;
             message: string;
             requestId: string;
+        };
+        PeopleAccountSummary: {
+            /** Format: uuid */
+            id: string;
+            /** @description Derived from persisted first and last name; null when both absent. */
+            name: string | null;
+            jobTitle: string | null;
+            /** @description null means unconfigured; false explicitly disabled; true explicitly enabled. */
+            emailNotificationsEnabled: boolean | null;
+            /** @description Sorted, distinct names of active ProjectX organization role grants. No primary-role precedence or venue-role inference. */
+            accessLevels: string[];
+        };
+        PeopleAccountsResponse: {
+            items: components["schemas"]["PeopleAccountSummary"][];
+            /**
+             * Format: uuid
+             * @description Last returned User ID if another page exists; null otherwise.
+             */
+            nextCursor: string | null;
         };
     };
     responses: never;
@@ -58,6 +97,69 @@ export interface operations {
                         /** @constant */
                         status: "ok";
                     };
+                };
+            };
+        };
+    };
+    listPeopleAccounts: {
+        parameters: {
+            query?: {
+                /** @description Exact ProjectX organization role display name; filters only the authorized roster. */
+                accessLevel?: string;
+                /** @description Exclusive User ID cursor in ascending UUID order. */
+                cursor?: string;
+                /** @description Page size, default 25 and maximum 100. */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Authorized roster or empty collection */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PeopleAccountsResponse"];
+                };
+            };
+            /** @description Invalid query */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description No trusted identity or scope */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Missing current user.read organization capability */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal failure */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
                 };
             };
         };

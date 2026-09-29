@@ -1,6 +1,225 @@
 {
-  "openapi":"3.1.0",
-  "info":{"title":"ProjectX foundation API","version":"1.0.0","description":"Infrastructure only. Business resources are not implemented."},
-  "paths":{"/health":{"get":{"operationId":"getHealth","summary":"Process liveness","responses":{"200":{"description":"Healthy process","content":{"application/json":{"schema":{"type":"object","required":["status"],"properties":{"status":{"type":"string","const":"ok"}},"additionalProperties":false}}}}}}}},
-  "components":{"schemas":{"ApiError":{"type":"object","required":["code","message","requestId"],"properties":{"code":{"type":"string"},"message":{"type":"string"},"requestId":{"type":"string"}},"additionalProperties":false}}}
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ProjectX foundation API",
+    "version": "1.0.0",
+    "description": "ProjectX versioned API. People roster reads require a server-verified identity and organization scope."
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "getHealth",
+        "summary": "Process liveness",
+        "responses": {
+          "200": {
+            "description": "Healthy process",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "const": "ok"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/people/accounts": {
+      "get": {
+        "operationId": "listPeopleAccounts",
+        "summary": "Read authorized People roster",
+        "description": "ProjectX implementation. Organization-scoped user.read is required; a server-trusted identity and organization are supplied outside the query. Only active memberships and organization role grants contribute. Venue-only grants do not authorize this roster. Empty authorized result is 200 with items []; pagination and UUID ordering are ProjectX decisions, not reference behavior.",
+        "parameters": [
+          {
+            "name": "accessLevel",
+            "in": "query",
+            "required": false,
+            "description": "Exact ProjectX organization role display name; filters only the authorized roster.",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120,
+              "pattern": "\\S"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "Exclusive User ID cursor in ascending UUID order.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Page size, default 25 and maximum 100.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authorized roster or empty collection",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PeopleAccountsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No trusted identity or scope",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Missing current user.read organization capability",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApiError": {
+        "type": "object",
+        "required": [
+          "code",
+          "message",
+          "requestId"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PeopleAccountSummary": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "jobTitle",
+          "emailNotificationsEnabled",
+          "accessLevels"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Derived from persisted first and last name; null when both absent."
+          },
+          "jobTitle": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "emailNotificationsEnabled": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "null means unconfigured; false explicitly disabled; true explicitly enabled."
+          },
+          "accessLevels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Sorted, distinct names of active ProjectX organization role grants. No primary-role precedence or venue-role inference."
+          }
+        }
+      },
+      "PeopleAccountsResponse": {
+        "type": "object",
+        "required": [
+          "items",
+          "nextCursor"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PeopleAccountSummary"
+            }
+          },
+          "nextCursor": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid",
+            "description": "Last returned User ID if another page exists; null otherwise."
+          }
+        }
+      }
+    }
+  }
 }

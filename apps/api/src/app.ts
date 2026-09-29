@@ -1,7 +1,14 @@
 import Fastify, { type FastifyInstance } from "fastify";
 import type { Config } from "./config.js";
+import {
+  registerPeopleAccountsRead,
+  type PeopleAccountsReadDependencies,
+} from "./people/accounts-read/route.js";
 
-export function createApp(config: Config): FastifyInstance {
+export function createApp(
+  config: Config,
+  options?: { peopleAccountsRead?: PeopleAccountsReadDependencies },
+): FastifyInstance {
   const app = Fastify({
     logger: {
       level: config.LOG_LEVEL,
@@ -58,6 +65,6 @@ export function createApp(config: Config): FastifyInstance {
     },
     async () => ({ status: "ok" }),
   );
-  // /api/v1 is reserved for future authorized domain resources. No endpoint exists here.
+  registerPeopleAccountsRead(app, options?.peopleAccountsRead);
   return app;
 }

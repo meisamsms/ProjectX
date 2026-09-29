@@ -187,8 +187,15 @@
       "id": "CHK-027",
       "taskId": "PEOPLE-03P",
       "status": "VERIFIED",
-      "method": "GitHub Actions run 36512777220, job 109228386133, PostgreSQL 16.15; pnpm verify and pnpm verify:db; clean and verified PEOPLE-02 upgrade migration/checksum/repeatability, nullable field ownership, notification NULL/false/true, restricted runtime RLS and cross-organization denial, foundation regression.",
-      "result": "PASS: both CI gates; 10 database files and 38 tests passed, including three PEOPLE-03P migration/tri-state/RLS tests and two existing RLS migration tests. Existing migration bytes/checksums and prior VERIFIED statuses unchanged. PEOPLE-03P VERIFIED and PEOPLE-03 returned to READY. No PEOPLE-03 read API, Add User, UI, OIDC, sessions or Export; SevenRooms unknowns unchanged."
+      "method": "GitHub Actions canonical final run 36513113775, job 109229403680, PostgreSQL 16.15; pnpm verify and pnpm verify:db; clean and verified PEOPLE-02 upgrade migration/checksum/repeatability, nullable field ownership, notification NULL/false/true, restricted runtime RLS and cross-organization denial, foundation regression.",
+      "result": "PASS: both CI gates on final branch-head run 36513113775 (earlier code run 36512777220 also passed); 10 database files and 38 tests passed, including three PEOPLE-03P migration/tri-state/RLS tests and two existing RLS migration tests. Existing migration bytes/checksums and prior VERIFIED statuses unchanged. PEOPLE-03P VERIFIED and PEOPLE-03 returned to READY. No PEOPLE-03 read API, Add User, UI, OIDC, sessions or Export; SevenRooms unknowns unchanged."
+    },
+    {
+      "id": "CHK-028",
+      "taskId": "PEOPLE-03",
+      "status": "BLOCKED",
+      "method": "Local PEOPLE-03 API/OpenAPI/generated-types/static/foundation audit; real PostgreSQL 16 accounts-read tests require separately approved branch publication. PEOPLE-03P canonical provenance reconciled from GitHub job logs.",
+      "result": "Local pnpm format:check, lint, typecheck, contract:generate/check and map:check PASS. Focused accounts-read test NOT RUN: DATABASE_URL absent. Local pnpm verify passed static/unit/integration/web gates but E2E failed because Chromium executable is absent. PostgreSQL 16 PEOPLE-03 CI NOT RUN; no authorization/RLS API result claimed. PEOPLE-03 remains BLOCKED pending explicit publishing approval and passing real CI. PEOPLE-03P remains VERIFIED from final run 36513113775; SevenRooms unknowns unchanged."
     }
   ],
   "unresolvedQuestions": [

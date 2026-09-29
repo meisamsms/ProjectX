@@ -1,6 +1,6 @@
 # PEOPLE-03P roster field persistence
 
-Status: **VERIFIED** by GitHub Actions run 36512777220 on PostgreSQL 16.15 (`pnpm verify` and `pnpm verify:db`; 10 database files, 38 tests). This is an approved **ProjectX implementation decision**, not a claim about SevenRooms storage or validation.
+Status: **VERIFIED** by GitHub Actions final run 36513113775 on PostgreSQL 16.15 (`pnpm verify` and `pnpm verify:db`; 10 database files, 38 tests). This is an approved **ProjectX implementation decision**, not a claim about SevenRooms storage or validation.
 
 | Owner | Field | Type | `NULL` meaning |
 |---|---|---|---|

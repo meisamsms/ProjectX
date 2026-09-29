@@ -851,7 +851,7 @@
       "name": "User Accounts read/list backend",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "READY",
+      "status": "BLOCKED",
       "dependencies": [
         "PEOPLE-02",
         "PEOPLE-03P"
@@ -895,7 +895,8 @@
         "ACT-0055"
       ],
       "entityIds": [],
-      "moduleId": "MOD-14"
+      "moduleId": "MOD-14",
+      "blocker": "Local read/list endpoint, OpenAPI and database API tests committed. Real PostgreSQL 16 authorization/RLS CI has not run; prior PEOPLE-03P publishing approval does not cover PEOPLE-03 API code. Explicit branch publication approval and passing pnpm verify plus pnpm verify:db are required before VERIFIED."
     },
     {
       "id": "PEOPLE-04",
@@ -1574,5 +1575,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "PEOPLE-03 \u2014 User Accounts read/list backend; READY after verified PEOPLE-03P, not started under PEOPLE-03P CI authorization."
+  "nextExactTask": "After explicit owner approval, publish only committed people-03-accounts-read branch for PostgreSQL 16 PEOPLE-03 CI; inspect pnpm verify and pnpm verify:db, fix only PEOPLE-03 failures, then mark VERIFIED and set PEOPLE-05 READY only after both gates pass."
 }
