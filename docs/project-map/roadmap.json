@@ -902,7 +902,7 @@
       "name": "Add User command/backend",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "BLOCKED",
+      "status": "VERIFIED",
       "dependencies": [
         "PEOPLE-02"
       ],
@@ -954,8 +954,7 @@
         "ENT-032",
         "ENT-044"
       ],
-      "moduleId": "MOD-14",
-      "blocker": "The product owner selected Option C: a separate organization-scoped pending provisioning record owns unverified Add User email while AuthenticatedIdentity remains verified issuer/subject only. The implementation and local static checks are complete, but real PostgreSQL 16 database/security tests and the full CI gates have not run. This checkout has no DATABASE_URL and its repository-wide format gate is blocked by pre-existing CRLF line endings in untouched files. PEOPLE-04 remains BLOCKED until a separately approved branch publication produces passing pnpm verify and pnpm verify:db results."
+      "moduleId": "MOD-14"
     },
     {
       "id": "PEOPLE-05",
@@ -1013,7 +1012,7 @@
       "name": "Add User frontend",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "PLANNED",
+      "status": "READY",
       "dependencies": [
         "PEOPLE-04"
       ],
@@ -1577,5 +1576,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "Publish the committed PEOPLE-04 branch for CI only after explicit push approval, then inspect pnpm verify and pnpm verify:db"
+  "nextExactTask": "PEOPLE-06 — Add User frontend"
 }
