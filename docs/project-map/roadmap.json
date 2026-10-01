@@ -1012,7 +1012,7 @@
       "name": "Add User frontend",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "READY",
+      "status": "BLOCKED",
       "dependencies": [
         "PEOPLE-04"
       ],
@@ -1056,7 +1056,8 @@
         "ACT-0058"
       ],
       "entityIds": [],
-      "moduleId": "MOD-14"
+      "moduleId": "MOD-14",
+      "blocker": "Prerequisite audit found no safe authorized Add User option source: OpenAPI exposes only health and People accounts GET/POST. Creation requires organizationRoleIds and optional venueId/roleIds, while the roster returns only role display names, not assignable role IDs, role capabilities or authorized venue choices. No granular permission selection field exists in the verified command. Proposed narrow predecessor: PEOPLE-04P, authorized Add User options read contract with scoped assignable organization/venue roles and capability metadata, plus an explicit supported-versus-deferred granular permission contract decision. Record and verify this predecessor before resuming PEOPLE-06; do not hard-code registry/role/venue IDs, infer authority from display names or expand the verified backend in this frontend task. No frontend implementation started."
     },
     {
       "id": "PEOPLE-07A",
@@ -1576,5 +1577,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "PEOPLE-06 — Add User frontend"
+  "nextExactTask": "Define PEOPLE-06 prerequisite — Authorized Add User role/venue options and supported granular permission contract (proposed PEOPLE-04P)"
 }
