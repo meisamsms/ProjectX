@@ -619,6 +619,7 @@
         "PEOPLE-03P",
         "PEOPLE-03",
         "PEOPLE-04",
+        "PEOPLE-04P",
         "PEOPLE-05",
         "PEOPLE-06",
         "PEOPLE-07A",
@@ -1008,13 +1009,40 @@
       "moduleId": "MOD-14"
     },
     {
+      "id": "PEOPLE-04P",
+      "name": "Authorized Add User options contract",
+      "phaseId": "PHASE-04",
+      "parentTask": "IMPL-MOD-14",
+      "status": "BLOCKED",
+      "dependencies": ["PEOPLE-02", "PEOPLE-04"],
+      "scope": "Owner-approved ProjectX actor-specific Add User role, venue and granular permission options; a narrow command extension only after explicit granular grant ownership/authorization semantics are defined.",
+      "outOfScope": "PEOPLE-06 frontend, global unrestricted catalogs, role hierarchy, shared role edits, other modules, OIDC, MFA, invitation/email delivery and reference parity claims.",
+      "acceptanceCriteria": [
+        "Trusted active actor with user.manage receives only same-organization roles whose capabilities are within current grant authority and only explicitly manageable venues",
+        "Canonical permission options are scoped to current actor authority and consumable by the Add User command with defined persistence and revocation semantics",
+        "Restricted runtime role/RLS, denied and empty states, cross-tenant exclusion and sensitive-field minimization pass real PostgreSQL 16 tests",
+        "Any granular command extension preserves atomic creation, scope checks, existing role grants and idempotency; generated OpenAPI types and both CI gates pass"
+      ],
+      "verificationCommands": ["pnpm format:check", "pnpm lint", "pnpm typecheck", "pnpm contract:generate", "pnpm contract:check", "pnpm map:check", "Focused PEOPLE-04P API/PostgreSQL tests", "pnpm verify", "pnpm verify:db"],
+      "regressionChecks": ["All prior VERIFIED tasks remain unchanged", "PEOPLE-04 atomicity/idempotency/authorization tests pass", "No frontend, reference-evidence or unrelated module changes"],
+      "filesExpectedToChange": ["apps/api/src/people/add-user/*", "apps/api/tests/people/*", "packages/contracts/openapi.json", "packages/contracts/generated/api.ts", "docs/project-map/{roadmap.json,verification.json,handoff.md}"],
+      "unknownsToResolve": ["U-001", "U-002", "U-003"],
+      "evidenceClassification": "PROJECTX IMPLEMENTATION DECISION; reference granular grant semantics UNKNOWN",
+      "screenIds": ["SCR-026"],
+      "actionIds": [],
+      "entityIds": ["ENT-024", "ENT-032", "ENT-043", "ENT-044"],
+      "moduleId": "MOD-14",
+      "blocker": "Prompt stop condition reached: verified PEOPLE-04 accepts organizationRoleIds and venue roleIds only; no explicit granular permission inputs or direct permission-grant persistence exist. people_has_capability resolves only active role-backed grants. Adding input fields alone would not create effective permissions; altering shared role_permissions would change existing users. Granular support is approved, but the grant ownership/lifecycle model is not defined. Required decision before implementation: direct membership/VenueAccess permission grants versus user-specific role-backed grants or reusable custom roles. Affected modules are People grant persistence, capability lookup/RLS and Add User command/generated contracts. Do not expose options the command cannot consume or silently redesign verified authorization."
+    },
+    {
       "id": "PEOPLE-06",
       "name": "Add User frontend",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
       "status": "BLOCKED",
       "dependencies": [
-        "PEOPLE-04"
+        "PEOPLE-04",
+        "PEOPLE-04P"
       ],
       "scope": "Implement SCR-026 form against generated command types, mapped visible fields and ProjectX security validation; support documented success/clear-for-another behavior.",
       "outOfScope": "Reference success/failure parity claim, email delivery, real OIDC, User Accounts list code.",
@@ -1057,7 +1085,7 @@
       ],
       "entityIds": [],
       "moduleId": "MOD-14",
-      "blocker": "Prerequisite audit found no safe authorized Add User option source: OpenAPI exposes only health and People accounts GET/POST. Creation requires organizationRoleIds and optional venueId/roleIds, while the roster returns only role display names, not assignable role IDs, role capabilities or authorized venue choices. No granular permission selection field exists in the verified command. Proposed narrow predecessor: PEOPLE-04P, authorized Add User options read contract with scoped assignable organization/venue roles and capability metadata, plus an explicit supported-versus-deferred granular permission contract decision. Record and verify this predecessor before resuming PEOPLE-06; do not hard-code registry/role/venue IDs, infer authority from display names or expand the verified backend in this frontend task. No frontend implementation started."
+      "blocker": "PEOPLE-04P is now an explicit prerequisite and remains BLOCKED on granular permission grant ownership/command semantics. The owner approved granular permission support, but the verified command currently accepts roles only and no authorized role/venue/permission option source is implemented. Resume PEOPLE-06 only after PEOPLE-04P is VERIFIED; no hard-coded choices or frontend implementation."
     },
     {
       "id": "PEOPLE-07A",
@@ -1550,6 +1578,7 @@
     "PEOPLE-03P",
     "PEOPLE-03",
     "PEOPLE-04",
+    "PEOPLE-04P",
     "PEOPLE-05",
     "PEOPLE-06",
     "PEOPLE-07A",
@@ -1577,5 +1606,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "Define PEOPLE-06 prerequisite — Authorized Add User role/venue options and supported granular permission contract (proposed PEOPLE-04P)"
+  "nextExactTask": "PEOPLE-04P — Decide explicit granular permission grant ownership and command semantics before options implementation"
 }
