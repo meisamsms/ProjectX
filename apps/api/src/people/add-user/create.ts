@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import type { components } from "@projectx/contracts/api";
 import type { Pool } from "pg";
 import {
   PeopleAccessDenied,
@@ -11,26 +12,10 @@ export interface AddUserScope {
   readonly identity: TrustedPeopleIdentity;
   readonly organizationId: string;
 }
-export interface AddUserVenueRequest {
-  readonly venueId: string;
-  readonly roleIds: readonly string[];
-}
-export interface AddUserRequest {
-  readonly email: string;
-  readonly firstName: string | null;
-  readonly lastName: string | null;
-  readonly jobTitle: string | null;
-  readonly emailNotificationsEnabled: boolean | null;
-  readonly suspended: boolean;
-  readonly organizationRoleIds: readonly string[];
-  readonly venues: readonly AddUserVenueRequest[];
-}
-export interface AddUserResult {
-  readonly provisioningId: string;
-  readonly userId: string;
-  readonly membershipId: string;
-  readonly status: "PENDING";
-}
+export type AddUserRequest =
+  components["schemas"]["CreatePeopleAccountRequest"];
+export type AddUserResult =
+  components["schemas"]["CreatePeopleAccountResponse"];
 
 export class PeopleCreateConflict extends Error {
   constructor() {
@@ -62,10 +47,21 @@ function normalizeRequest(scope: AddUserScope, request: AddUserRequest) {
     emailNotificationsEnabled: request.emailNotificationsEnabled,
     suspended: request.suspended,
     organizationRoleIds: [...request.organizationRoleIds].sort(),
+    // Omitted/empty extensions retain the verified command's old fingerprint.
+    ...(request.organizationPermissionIds?.length
+      ? {
+          organizationPermissionIds: [
+            ...request.organizationPermissionIds,
+          ].sort(),
+        }
+      : {}),
     venues: request.venues
       .map((venue) => ({
         venueId: venue.venueId,
         roleIds: [...venue.roleIds].sort(),
+        ...(venue.permissionIds?.length
+          ? { permissionIds: [...venue.permissionIds].sort() }
+          : {}),
       }))
       .sort((left, right) => left.venueId.localeCompare(right.venueId)),
   };
@@ -98,6 +94,10 @@ export async function createPendingPeopleAccount(
       grant_id: newPeopleId(),
       role_id: roleId,
     })),
+    permissions: (venue.permissionIds ?? []).map((permissionId) => ({
+      grant_id: newPeopleId(),
+      permission_id: permissionId,
+    })),
   }));
   try {
     return await withAuthorizedPeopleTransaction(
@@ -114,8 +114,8 @@ export async function createPendingPeopleAccount(
           membership_id: string;
           status: "PENDING";
         }>(
-          `SELECT * FROM create_pending_user_account(
-            $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15::jsonb,$16::jsonb
+          `SELECT * FROM create_pending_user_account_with_permissions(
+            $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15::jsonb,$16::jsonb,$17::jsonb
           )`,
           [
             scope.identity.userId,
@@ -134,6 +134,14 @@ export async function createPendingPeopleAccount(
             fingerprint,
             JSON.stringify(organizationGrants),
             JSON.stringify(venueGrants),
+            JSON.stringify(
+              (normalized.organizationPermissionIds ?? []).map(
+                (permissionId) => ({
+                  grant_id: newPeopleId(),
+                  permission_id: permissionId,
+                }),
+              ),
+            ),
           ],
         );
         const row = result.rows[0];

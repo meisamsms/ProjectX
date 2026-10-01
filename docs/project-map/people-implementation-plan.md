@@ -24,7 +24,10 @@ flowchart TD
   C --> D["PEOPLE-03 Accounts read API"]
   C --> E["PEOPLE-04 Add User API"]
   D --> F["PEOPLE-05 Accounts UI"]
+  E --> P["PEOPLE-04P Direct grants and authorized options"]
+  C --> P
   E --> G["PEOPLE-06 Add User UI"]
+  P --> G
   C --> H["PEOPLE-07A Booked By backend"]
   H --> I["PEOPLE-07B Booked By UI"]
   C --> J["PEOPLE-08A Server Names backend"]
@@ -42,6 +45,14 @@ flowchart TD
 PEOPLE-10 also depends on the backend tasks through their UI successors and directly on PEOPLE-02. Its export dependency is a **gate**, not a requirement to guess an export format: PEOPLE-09 is BLOCKED until safe evidence or an explicit ProjectX product-owner decision defines output, field scope, authorization, audit and privacy behavior. PEOPLE-09 then implements the scoped backend; PEOPLE-09B connects the SCR-025 action after both backend and list UI are ready. If export remains deferred, the parent cannot be reported as complete parity; a later explicit milestone scope change would have to document the omission and leave the action visibly unavailable. No implicit change to module scope is approved now.
 
 ## Shared fixture and identity seam
+
+PEOPLE-04P refinement (2026-10-01): the owner approved Option A direct grants owned
+by OrganizationMembership/VenueAccess, additive with unchanged reusable roles.
+ADR-0009 records the narrowly required persistence, capability/RLS and PEOPLE-04
+command seams. Actor-specific options expose only capability subsets the command
+can consume. This is a PROJECTX IMPLEMENTATION DECISION, not SevenRooms evidence.
+PEOPLE-04P and PEOPLE-06 remain BLOCKED until final PostgreSQL 16 CI passes;
+PEOPLE-04/05 remain VERIFIED. No PEOPLE-06 frontend work is authorized here.
 
 Use disposable PostgreSQL fixtures: ORG-A/VENUE-A1/VENUE-A2 and ORG-B/VENUE-B1. Identities: ORG-A admin with explicit organization grants; A1-only manager; A1+A2 cross-venue user with independent grants; A2-only user; ORG-B user; revoked membership; revoked VenueAccess; disabled User; actor with missing permission. Include known foreign object IDs and overlapping display names. Positive same-scope, wrong-venue, cross-organization, revoked, disabled, missing-capability, IDOR, and pool reuse tests must be tied to actual RLS roles, not mocks alone. No reference guest or staff records enter fixtures.
 

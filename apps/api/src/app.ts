@@ -1,5 +1,6 @@
 import Fastify, { type FastifyInstance } from "fastify";
 import type { Config } from "./config.js";
+import { registerPeopleAddUserOptions } from "./people/add-user/options.js";
 import {
   type PeopleAccountsReadDependencies,
   registerPeopleAccountsRead,
@@ -74,5 +75,6 @@ export function createApp(
   );
   registerPeopleAccountsRead(app, options?.peopleAccountsRead);
   registerPeopleAddUser(app, options?.peopleAddUser);
+  registerPeopleAddUserOptions(app, options?.peopleAddUser);
   return app;
 }

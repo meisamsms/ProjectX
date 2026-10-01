@@ -21,6 +21,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/people/accounts/options": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read actor-assignable Add User options
+         * @description PROJECTX IMPLEMENTATION DECISION. Requires trusted organization user.manage; role and permission subsets reflect current effective rights. Each venue requires explicit current venue.manage. No browser-selected identity or organization; no SevenRooms semantics inferred.
+         */
+        get: operations["getPeopleAddUserOptions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/people/accounts": {
         parameters: {
             query?: never;
@@ -73,9 +93,36 @@ export interface components {
              */
             nextCursor: string | null;
         };
+        /** @enum {string} */
+        PeoplePermissionId: "session.read.self" | "user.read.self" | "user.read" | "user.manage" | "organization.manage" | "venue.read" | "venue.manage" | "reservation.read" | "reservation.create" | "reservation.update" | "reservation.cancel" | "client.read" | "client.create" | "client.update" | "client.history.read.organization" | "floorplan.read" | "floorplan.manage" | "availability.read" | "availability.manage" | "import.manage" | "client.export" | "audit.read";
+        PeopleRoleOption: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+        };
+        PeoplePermissionOption: {
+            id: components["schemas"]["PeoplePermissionId"];
+            description: string;
+            /** @enum {string} */
+            scope: "SELF" | "ORGANIZATION" | "VENUE";
+        };
+        PeopleVenueOption: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            roles: components["schemas"]["PeopleRoleOption"][];
+            permissions: components["schemas"]["PeoplePermissionOption"][];
+        };
+        PeopleAddUserOptions: {
+            organizationRoles: components["schemas"]["PeopleRoleOption"][];
+            organizationPermissions: components["schemas"]["PeoplePermissionOption"][];
+            venues: components["schemas"]["PeopleVenueOption"][];
+        };
         CreatePeopleAccountVenueRequest: {
             /** Format: uuid */
             venueId: string;
+            /** @description Optional additive direct VENUE grants, checked against current actor rights at this explicit venue. */
+            permissionIds?: components["schemas"]["PeoplePermissionId"][];
             roleIds: string[];
         };
         CreatePeopleAccountRequest: {
@@ -92,6 +139,8 @@ export interface components {
             /** @description ProjectX maps true to User.disabled_at at creation. */
             suspended: boolean;
             organizationRoleIds: string[];
+            /** @description Optional additive direct ORGANIZATION/SELF grants owned by the new membership; no shared-role mutation. */
+            organizationPermissionIds?: components["schemas"]["PeoplePermissionId"][];
             venues: components["schemas"]["CreatePeopleAccountVenueRequest"][];
         };
         CreatePeopleAccountResponse: {
@@ -132,6 +181,62 @@ export interface operations {
                         /** @constant */
                         status: "ok";
                     };
+                };
+            };
+        };
+    };
+    getPeopleAddUserOptions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Authorized options, including empty groups */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PeopleAddUserOptions"];
+                };
+            };
+            /** @description Invalid query */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description No trusted identity */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Missing current user.manage */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal failure */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
                 };
             };
         };

@@ -1010,12 +1010,12 @@
     },
     {
       "id": "PEOPLE-04P",
-      "name": "Authorized Add User options contract",
+      "name": "Authorized Add User options contract and direct granular grants",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
       "status": "BLOCKED",
       "dependencies": ["PEOPLE-02", "PEOPLE-04"],
-      "scope": "Owner-approved ProjectX actor-specific Add User role, venue and granular permission options; a narrow command extension only after explicit granular grant ownership/authorization semantics are defined.",
+      "scope": "Owner-approved Option A ProjectX direct ORGANIZATION/SELF grants owned by OrganizationMembership and VENUE grants owned by VenueAccess; additive current capability lookup/RLS, atomic generated Add User extension and actor-specific assignable role/venue/permission options. No shared-role mutation or private roles. ADR-0009 records the dependency seams and authority rule.",
       "outOfScope": "PEOPLE-06 frontend, global unrestricted catalogs, role hierarchy, shared role edits, other modules, OIDC, MFA, invitation/email delivery and reference parity claims.",
       "acceptanceCriteria": [
         "Trusted active actor with user.manage receives only same-organization roles whose capabilities are within current grant authority and only explicitly manageable venues",
@@ -1025,14 +1025,14 @@
       ],
       "verificationCommands": ["pnpm format:check", "pnpm lint", "pnpm typecheck", "pnpm contract:generate", "pnpm contract:check", "pnpm map:check", "Focused PEOPLE-04P API/PostgreSQL tests", "pnpm verify", "pnpm verify:db"],
       "regressionChecks": ["All prior VERIFIED tasks remain unchanged", "PEOPLE-04 atomicity/idempotency/authorization tests pass", "No frontend, reference-evidence or unrelated module changes"],
-      "filesExpectedToChange": ["apps/api/src/people/add-user/*", "apps/api/tests/people/*", "packages/contracts/openapi.json", "packages/contracts/generated/api.ts", "docs/project-map/{roadmap.json,verification.json,handoff.md}"],
+      "filesExpectedToChange": ["apps/api/migrations/people-z-direct-grants/*", "apps/api/src/people/add-user/*", "apps/api/src/app.ts", "apps/api/tests/people/*", "tooling/db-test.mjs", "packages/contracts/openapi.json", "packages/contracts/generated/api.ts", "docs/architecture/ADR-0009-people-direct-permission-grants.md", "docs/data/people-direct-grants.md", "docs/project-map/{roadmap.json,verification.json,handoff.md,people-implementation-plan.md}"],
       "unknownsToResolve": ["U-001", "U-002", "U-003"],
       "evidenceClassification": "PROJECTX IMPLEMENTATION DECISION; reference granular grant semantics UNKNOWN",
       "screenIds": ["SCR-026"],
       "actionIds": [],
       "entityIds": ["ENT-024", "ENT-032", "ENT-043", "ENT-044"],
       "moduleId": "MOD-14",
-      "blocker": "Prompt stop condition reached: verified PEOPLE-04 accepts organizationRoleIds and venue roleIds only; no explicit granular permission inputs or direct permission-grant persistence exist. people_has_capability resolves only active role-backed grants. Adding input fields alone would not create effective permissions; altering shared role_permissions would change existing users. Granular support is approved, but the grant ownership/lifecycle model is not defined. Required decision before implementation: direct membership/VenueAccess permission grants versus user-specific role-backed grants or reusable custom roles. Affected modules are People grant persistence, capability lookup/RLS and Add User command/generated contracts. Do not expose options the command cannot consume or silently redesign verified authorization."
+      "blocker": "Ownership decision resolved by explicit owner Option A approval. Implemented locally with direct-grant persistence, effective permission lookup/RLS, atomic Add User consumption and authorized options. BLOCKED pending separate exact-SHA publication approval and both final branch-head CI gates, including real PostgreSQL 16 verification. Local DATABASE_URL unavailable; no DB pass or new CI claimed. PEOPLE-06 remains blocked until PEOPLE-04P VERIFIED."
     },
     {
       "id": "PEOPLE-06",
@@ -1085,7 +1085,7 @@
       ],
       "entityIds": [],
       "moduleId": "MOD-14",
-      "blocker": "PEOPLE-04P is now an explicit prerequisite and remains BLOCKED on granular permission grant ownership/command semantics. The owner approved granular permission support, but the verified command currently accepts roles only and no authorized role/venue/permission option source is implemented. Resume PEOPLE-06 only after PEOPLE-04P is VERIFIED; no hard-coded choices or frontend implementation."
+      "blocker": "PEOPLE-04P remains BLOCKED pending exact-SHA publication approval and real PostgreSQL 16 final branch-head CI. Its Option A ownership decision is resolved and backend implementation is local, not VERIFIED. Resume PEOPLE-06 only after PEOPLE-04P is VERIFIED; no frontend implementation in this task."
     },
     {
       "id": "PEOPLE-07A",
@@ -1606,5 +1606,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "PEOPLE-04P — Decide explicit granular permission grant ownership and command semantics before options implementation"
+  "nextExactTask": "PEOPLE-04P — Obtain exact-SHA push approval and verify final branch-head PostgreSQL 16 CI"
 }

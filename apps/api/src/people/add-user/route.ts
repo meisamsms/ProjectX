@@ -1,5 +1,6 @@
 import type { FastifyInstance, FastifyRequest } from "fastify";
 import type { Pool } from "pg";
+import { permissionArraySchema } from "./schema.js";
 import { PeopleAccessDenied } from "../authorization/context.js";
 import {
   type AddUserRequest,
@@ -49,6 +50,7 @@ const allowedBodyKeys = new Set([
   "emailNotificationsEnabled",
   "suspended",
   "organizationRoleIds",
+  "organizationPermissionIds",
   "venues",
 ]);
 
@@ -98,6 +100,7 @@ export function registerPeopleAddUser(
             },
             suspended: { type: "boolean" },
             organizationRoleIds: uuidArray,
+            organizationPermissionIds: permissionArraySchema,
             venues: {
               type: "array",
               maxItems: 50,
@@ -108,6 +111,7 @@ export function registerPeopleAddUser(
                 properties: {
                   venueId: { type: "string", format: "uuid" },
                   roleIds: uuidArray,
+                  permissionIds: permissionArraySchema,
                 },
               },
             },
@@ -140,7 +144,18 @@ export function registerPeopleAddUser(
           typeof body !== "object" ||
           body === null ||
           Array.isArray(body) ||
-          Object.keys(body).some((key) => !allowedBodyKeys.has(key))
+          Object.keys(body).some((key) => !allowedBodyKeys.has(key)) ||
+          ("venues" in body &&
+            Array.isArray(body.venues) &&
+            body.venues.some(
+              (venue: unknown) =>
+                typeof venue === "object" &&
+                venue !== null &&
+                Object.keys(venue).some(
+                  (key) =>
+                    !["venueId", "roleIds", "permissionIds"].includes(key),
+                ),
+            ))
         )
           return reply.status(400).send({
             code: "INVALID_REQUEST",

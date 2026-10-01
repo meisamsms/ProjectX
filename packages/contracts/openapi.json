@@ -34,6 +34,20 @@
         }
       }
     },
+    "/api/v1/people/accounts/options": {
+      "get": {
+        "operationId": "getPeopleAddUserOptions",
+        "summary": "Read actor-assignable Add User options",
+        "description": "PROJECTX IMPLEMENTATION DECISION. Requires trusted organization user.manage; role and permission subsets reflect current effective rights. Each venue requires explicit current venue.manage. No browser-selected identity or organization; no SevenRooms semantics inferred.",
+        "responses": {
+          "200": { "description": "Authorized options, including empty groups", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PeopleAddUserOptions" } } } },
+          "400": { "description": "Invalid query", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } } } },
+          "401": { "description": "No trusted identity", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } } } },
+          "403": { "description": "Missing current user.manage", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } } } },
+          "500": { "description": "Internal failure", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } } } }
+        }
+      }
+    },
     "/api/v1/people/accounts": {
       "post": {
         "operationId": "createPeopleAccount",
@@ -310,6 +324,34 @@
           }
         }
       },
+      "PeoplePermissionId": {
+        "type": "string",
+        "enum": ["session.read.self", "user.read.self", "user.read", "user.manage", "organization.manage", "venue.read", "venue.manage", "reservation.read", "reservation.create", "reservation.update", "reservation.cancel", "client.read", "client.create", "client.update", "client.history.read.organization", "floorplan.read", "floorplan.manage", "availability.read", "availability.manage", "import.manage", "client.export", "audit.read"]
+      },
+      "PeopleRoleOption": {
+        "type": "object", "additionalProperties": false, "required": ["id", "name"],
+        "properties": { "id": { "type": "string", "format": "uuid" }, "name": { "type": "string" } }
+      },
+      "PeoplePermissionOption": {
+        "type": "object", "additionalProperties": false, "required": ["id", "description", "scope"],
+        "properties": { "id": { "$ref": "#/components/schemas/PeoplePermissionId" }, "description": { "type": "string" }, "scope": { "type": "string", "enum": ["SELF", "ORGANIZATION", "VENUE"] } }
+      },
+      "PeopleVenueOption": {
+        "type": "object", "additionalProperties": false, "required": ["id", "name", "roles", "permissions"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" }, "name": { "type": "string" },
+          "roles": { "type": "array", "items": { "$ref": "#/components/schemas/PeopleRoleOption" } },
+          "permissions": { "type": "array", "items": { "$ref": "#/components/schemas/PeoplePermissionOption" } }
+        }
+      },
+      "PeopleAddUserOptions": {
+        "type": "object", "additionalProperties": false, "required": ["organizationRoles", "organizationPermissions", "venues"],
+        "properties": {
+          "organizationRoles": { "type": "array", "items": { "$ref": "#/components/schemas/PeopleRoleOption" } },
+          "organizationPermissions": { "type": "array", "items": { "$ref": "#/components/schemas/PeoplePermissionOption" } },
+          "venues": { "type": "array", "items": { "$ref": "#/components/schemas/PeopleVenueOption" } }
+        }
+      },
       "CreatePeopleAccountVenueRequest": {
         "type": "object",
         "required": [
@@ -321,6 +363,11 @@
           "venueId": {
             "type": "string",
             "format": "uuid"
+          },
+          "permissionIds": {
+            "type": "array", "maxItems": 22, "uniqueItems": true,
+            "description": "Optional additive direct VENUE grants, checked against current actor rights at this explicit venue.",
+            "items": { "$ref": "#/components/schemas/PeoplePermissionId" }
           },
           "roleIds": {
             "type": "array",
@@ -398,6 +445,11 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          "organizationPermissionIds": {
+            "type": "array", "maxItems": 22, "uniqueItems": true,
+            "description": "Optional additive direct ORGANIZATION/SELF grants owned by the new membership; no shared-role mutation.",
+            "items": { "$ref": "#/components/schemas/PeoplePermissionId" }
           },
           "venues": {
             "type": "array",
