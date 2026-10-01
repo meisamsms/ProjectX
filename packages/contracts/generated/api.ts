@@ -34,7 +34,11 @@ export interface paths {
          */
         get: operations["listPeopleAccounts"];
         put?: never;
-        post?: never;
+        /**
+         * Create an organization-scoped pending People account
+         * @description ProjectX implementation decision. Requires a server-trusted identity and organization-scoped user.manage. Creates User, OrganizationMembership, explicit authorized role/venue grants and a separate pending provisioning record atomically. The unverified email belongs only to the organization-scoped provisioning record; no OIDC identity, invitation delivery or MFA enrollment is performed.
+         */
+        post: operations["createPeopleAccount"];
         delete?: never;
         options?: never;
         head?: never;
@@ -68,6 +72,37 @@ export interface components {
              * @description Last returned User ID if another page exists; null otherwise.
              */
             nextCursor: string | null;
+        };
+        CreatePeopleAccountVenueRequest: {
+            /** Format: uuid */
+            venueId: string;
+            roleIds: string[];
+        };
+        CreatePeopleAccountRequest: {
+            /**
+             * Format: email
+             * @description Unverified organization-scoped provisioning email; never an OIDC identity key.
+             */
+            email: string;
+            firstName: string | null;
+            lastName: string | null;
+            jobTitle: string | null;
+            /** @description null means not established; false and true are explicit preferences. */
+            emailNotificationsEnabled: boolean | null;
+            /** @description ProjectX maps true to User.disabled_at at creation. */
+            suspended: boolean;
+            organizationRoleIds: string[];
+            venues: components["schemas"]["CreatePeopleAccountVenueRequest"][];
+        };
+        CreatePeopleAccountResponse: {
+            /** Format: uuid */
+            provisioningId: string;
+            /** Format: uuid */
+            userId: string;
+            /** Format: uuid */
+            membershipId: string;
+            /** @constant */
+            status: "PENDING";
         };
     };
     responses: never;
@@ -146,6 +181,77 @@ export interface operations {
             };
             /** @description Missing current user.read organization capability */
             403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal failure */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    createPeopleAccount: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreatePeopleAccountRequest"];
+            };
+        };
+        responses: {
+            /** @description Pending ProjectX account provisioning created, or the identical idempotent result returned */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CreatePeopleAccountResponse"];
+                };
+            };
+            /** @description Invalid request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description No trusted identity or scope */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Missing current authority or a requested organization, venue, role or grant exceeds actor scope */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Organization-scoped pending email conflict or conflicting idempotency-key reuse */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };

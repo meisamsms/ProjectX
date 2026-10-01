@@ -16,6 +16,7 @@ const result = spawnSync(
     "apps/api/tests/people/rls-migrations.test.ts",
     "apps/api/tests/people/roster-fields-migrations.test.ts",
     "apps/api/tests/people/accounts-read.test.ts",
+    "apps/api/tests/people/add-user.test.ts",
     "apps/api/tests/people/authorization.test.ts",
     "apps/api/tests/people/rls.test.ts",
     "--no-file-parallelism",

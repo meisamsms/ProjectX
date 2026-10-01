@@ -1,13 +1,20 @@
 import Fastify, { type FastifyInstance } from "fastify";
 import type { Config } from "./config.js";
 import {
-  registerPeopleAccountsRead,
   type PeopleAccountsReadDependencies,
+  registerPeopleAccountsRead,
 } from "./people/accounts-read/route.js";
+import {
+  type PeopleAddUserDependencies,
+  registerPeopleAddUser,
+} from "./people/add-user/route.js";
 
 export function createApp(
   config: Config,
-  options?: { peopleAccountsRead?: PeopleAccountsReadDependencies },
+  options?: {
+    peopleAccountsRead?: PeopleAccountsReadDependencies;
+    peopleAddUser?: PeopleAddUserDependencies;
+  },
 ): FastifyInstance {
   const app = Fastify({
     logger: {
@@ -66,5 +73,6 @@ export function createApp(
     async () => ({ status: "ok" }),
   );
   registerPeopleAccountsRead(app, options?.peopleAccountsRead);
+  registerPeopleAddUser(app, options?.peopleAddUser);
   return app;
 }

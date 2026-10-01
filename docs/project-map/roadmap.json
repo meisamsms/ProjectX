@@ -911,7 +911,7 @@
       "acceptanceCriteria": [
         "Server rejects self-escalation, cross-tenant grant, wrong Venue parent and revoked actor",
         "One transaction commits user/membership/grants/audit or rolls back; idempotent retry yields one effect",
-        "Duplicate verified identity/email policy and success/error contract explicitly labeled ProjectX decisions, not reference parity",
+        "Duplicate pending organization email policy and success/error contract explicitly labeled ProjectX decisions, not reference parity; verified identity remains issuer/subject only",
         "OpenAPI types are regenerated; isolated database/API/security tests pass"
       ],
       "verificationCommands": [
@@ -928,10 +928,12 @@
         "No unrelated MOD-01\u2013MOD-16 business behavior changed"
       ],
       "filesExpectedToChange": [
+        "apps/api/migrations/people-user-provisioning/*",
         "apps/api/src/people/add-user/*",
         "apps/api/tests/people/add-user.test.ts",
         "packages/contracts/openapi.json",
-        "packages/contracts/generated/api.ts"
+        "packages/contracts/generated/api.ts",
+        "docs/data/people-user-provisioning.md"
       ],
       "unknownsToResolve": [
         "U-001",
@@ -953,7 +955,7 @@
         "ENT-044"
       ],
       "moduleId": "MOD-14",
-      "blocker": "ProjectX has no approved persisted email-address ownership or pre-provisioning identity/invitation boundary. AuthenticatedIdentity stores only a verified opaque OIDC issuer/subject pair and must not use unverified email as an identity key. A narrow product-owner decision and persistence prerequisite must define where Add User email belongs, its normalization/uniqueness/lifecycle semantics, and how it later links to verified identity before PEOPLE-04 can safely implement duplicate policy, idempotency and atomic creation."
+      "blocker": "The product owner selected Option C: a separate organization-scoped pending provisioning record owns unverified Add User email while AuthenticatedIdentity remains verified issuer/subject only. The implementation and local static checks are complete, but real PostgreSQL 16 database/security tests and the full CI gates have not run. This checkout has no DATABASE_URL and its repository-wide format gate is blocked by pre-existing CRLF line endings in untouched files. PEOPLE-04 remains BLOCKED until a separately approved branch publication produces passing pnpm verify and pnpm verify:db results."
     },
     {
       "id": "PEOPLE-05",
@@ -1575,5 +1577,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "Product-owner decision — Define ProjectX Add User email ownership and pre-provisioning identity linkage prerequisite"
+  "nextExactTask": "Publish the committed PEOPLE-04 branch for CI only after explicit push approval, then inspect pnpm verify and pnpm verify:db"
 }

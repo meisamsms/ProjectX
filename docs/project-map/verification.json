@@ -224,6 +224,13 @@
       "status": "BLOCKED",
       "method": "Read-only prerequisite audit of verified People core, roster-field, grant and RLS migrations; identity/access documentation; authorization fixtures and context; PEOPLE-03 route/OpenAPI conventions; SCR-026 and FLOW-006 discovery evidence.",
       "result": "BLOCKED before implementation: no approved ProjectX persistence owner exists for the Add User email address. User has nullable names and disabled_at; OrganizationMembership has nullable job title and email-notification preference; AuthenticatedIdentity has only verified opaque issuer/subject and explicitly must not use unverified email as an identity key. Implementing email, duplicate policy or identity linkage would invent an unapproved security boundary. No application code, migration, API, OpenAPI, generated type or test changed. PEOPLE-01/01B/02/03P/03/05 remain VERIFIED; PEOPLE-09 remains BLOCKED; IMPL-MOD-14 remains IN_PROGRESS. U-001/U-002/U-003, FLOW-006 outcomes, role precedence and reference validation remain unchanged."
+    },
+    {
+      "id": "CHK-033",
+      "taskId": "PEOPLE-04",
+      "status": "BLOCKED",
+      "method": "Owner-approved Option C implementation review; organization-scoped pending provisioning migration, restricted Add User command/API, OpenAPI/generated types and PostgreSQL-backed atomicity/authorization/idempotency tests. Local contract generation/freshness, lint, typecheck, integration, build, map and touched-file formatting checks; attempted full verify and database verification.",
+      "result": "Implementation complete locally but verification incomplete. PASS: pnpm contract:generate/check, lint, typecheck, test:integration, build, map:check, touched-file Biome check and git diff --check. NOT RUN: PEOPLE-04 PostgreSQL tests because DATABASE_URL is unavailable; pnpm verify:db could not reach migrations/tests. pnpm verify stopped at repository-wide format:check because this OneDrive checkout has pre-existing CRLF line endings across untouched files; touched PEOPLE-04 files pass formatting. No CI run exists and no push was made. The resolved design blocker is replaced only by the publication/CI blocker. PEOPLE-01/01B/02/03P/03/05 remain VERIFIED; PEOPLE-09 remains BLOCKED; IMPL-MOD-14 remains IN_PROGRESS. SevenRooms UNKNOWN / NEEDS TESTING classifications, including U-002, remain unchanged."
     }
   ],
   "unresolvedQuestions": [
