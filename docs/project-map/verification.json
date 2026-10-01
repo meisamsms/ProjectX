@@ -217,6 +217,13 @@
       "status": "VERIFIED",
       "method": "GitHub Actions run 36926152045 on branch people-03-accounts-read at exact implementation commit 4e92e9a7653f79dc4eb8bf352d86e78e11451ac3; pnpm verify, pnpm verify:db, Playwright browser verification and SCR-025 frontend E2E/accessibility coverage.",
       "result": "PASS: pnpm verify and pnpm verify:db completed successfully; SCR-025 frontend E2E and accessibility verification passed. PEOPLE-05 transitioned BLOCKED to VERIFIED and its CI/publication blocker is resolved. PEOPLE-04 depends only on VERIFIED PEOPLE-02 and transitioned PLANNED to READY. PEOPLE-03 and PEOPLE-03P remain VERIFIED; PEOPLE-09 remains BLOCKED; IMPL-MOD-14 remains IN_PROGRESS. SevenRooms UNKNOWN / NEEDS TESTING classifications, including U-002, remain unchanged. GitHub advisory warnings about Node.js 20 actions and the ubuntu-latest migration are non-blocking CI maintenance notes, not test failures."
+    },
+    {
+      "id": "CHK-032",
+      "taskId": "PEOPLE-04",
+      "status": "BLOCKED",
+      "method": "Read-only prerequisite audit of verified People core, roster-field, grant and RLS migrations; identity/access documentation; authorization fixtures and context; PEOPLE-03 route/OpenAPI conventions; SCR-026 and FLOW-006 discovery evidence.",
+      "result": "BLOCKED before implementation: no approved ProjectX persistence owner exists for the Add User email address. User has nullable names and disabled_at; OrganizationMembership has nullable job title and email-notification preference; AuthenticatedIdentity has only verified opaque issuer/subject and explicitly must not use unverified email as an identity key. Implementing email, duplicate policy or identity linkage would invent an unapproved security boundary. No application code, migration, API, OpenAPI, generated type or test changed. PEOPLE-01/01B/02/03P/03/05 remain VERIFIED; PEOPLE-09 remains BLOCKED; IMPL-MOD-14 remains IN_PROGRESS. U-001/U-002/U-003, FLOW-006 outcomes, role precedence and reference validation remain unchanged."
     }
   ],
   "unresolvedQuestions": [

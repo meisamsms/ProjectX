@@ -902,7 +902,7 @@
       "name": "Add User command/backend",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "READY",
+      "status": "BLOCKED",
       "dependencies": [
         "PEOPLE-02"
       ],
@@ -952,7 +952,8 @@
         "ENT-032",
         "ENT-044"
       ],
-      "moduleId": "MOD-14"
+      "moduleId": "MOD-14",
+      "blocker": "ProjectX has no approved persisted email-address ownership or pre-provisioning identity/invitation boundary. AuthenticatedIdentity stores only a verified opaque OIDC issuer/subject pair and must not use unverified email as an identity key. A narrow product-owner decision and persistence prerequisite must define where Add User email belongs, its normalization/uniqueness/lifecycle semantics, and how it later links to verified identity before PEOPLE-04 can safely implement duplicate policy, idempotency and atomic creation."
     },
     {
       "id": "PEOPLE-05",
@@ -1574,5 +1575,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "PEOPLE-04 — Add User command/backend"
+  "nextExactTask": "Product-owner decision — Define ProjectX Add User email ownership and pre-provisioning identity linkage prerequisite"
 }
