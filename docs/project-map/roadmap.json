@@ -902,7 +902,7 @@
       "name": "Add User command/backend",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "PLANNED",
+      "status": "READY",
       "dependencies": [
         "PEOPLE-02"
       ],
@@ -959,7 +959,7 @@
       "name": "User Accounts frontend",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "BLOCKED",
+      "status": "VERIFIED",
       "dependencies": [
         "PEOPLE-03"
       ],
@@ -1003,8 +1003,7 @@
         "ACT-0056"
       ],
       "entityIds": [],
-      "moduleId": "MOD-14",
-      "blocker": "PEOPLE-05 frontend and focused tests are locally implemented. Local Playwright Chromium is unavailable, so SCR-025 E2E and axe have not run; pnpm verify fails at that environment gate. Prior publishing approval covered PEOPLE-03 only. Explicit approval to publish the committed PEOPLE-05 branch and passing CI are required before VERIFIED."
+      "moduleId": "MOD-14"
     },
     {
       "id": "PEOPLE-06",
@@ -1575,5 +1574,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "After explicit owner approval, publish only the committed PEOPLE-05 branch for CI; inspect pnpm verify including SCR-025 E2E and axe, fix only PEOPLE-05 failures, then mark VERIFIED if all required gates pass."
+  "nextExactTask": "PEOPLE-04 — Add User command/backend"
 }
