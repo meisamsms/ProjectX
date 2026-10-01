@@ -94,7 +94,7 @@ export function registerPeopleAddUser(
             lastName: nullableText,
             jobTitle: nullableText,
             emailNotificationsEnabled: {
-              anyOf: [{ type: "boolean" }, { type: "null" }],
+              type: ["boolean", "null"],
             },
             suspended: { type: "boolean" },
             organizationRoleIds: uuidArray,

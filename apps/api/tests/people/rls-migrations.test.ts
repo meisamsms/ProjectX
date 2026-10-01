@@ -15,6 +15,7 @@ const files = [
   "people-grants/20260928000200_people_grants.sql",
   "people-rls/20260928000300_people_rls.sql",
   "people-roster-fields/20260928000400_people_roster_fields.sql",
+  "people-user-provisioning/20261001000500_people_user_provisioning.sql",
 ];
 const content = (name: string) =>
   readFile(new URL(`../../migrations/${name}`, import.meta.url));
