@@ -1154,7 +1154,10 @@
       "name": "Booked By Names frontend",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "READY",
+      "status": "BLOCKED",
+      "remainingWork": "Local SCR-083 implementation is complete; blocked pending separate approval to publish its exact committed SHA and successful final branch-head pnpm verify plus pnpm verify:db on PostgreSQL 16. Do not start another task or mark VERIFIED from local tests. No push approval inherited from predecessor commits.",
+      "verificationNotes": "CHK-046: focused component 58/58; full web 109/109 across four files (Add User 40/40 and Accounts 9/9 unchanged); focused E2E 11/11 and full browser/accessibility regression 20/20. Lint, typecheck, unit 4/4, integration 11/11, contract freshness, map, build, touched-file format and whitespace PASS. pnpm format:check and pnpm verify stop on 45 pre-existing formatting diagnostics, all outside changed files. DATABASE_URL absent: no local pnpm verify:db or new CI result claimed.",
+      "implementationNotes": "PROJECTX IMPLEMENTATION DECISION (ADR-0012): generated scoped GET/POST/versioned PATCH client; UUID cursor/ID deduplication; local Add/Cancel, explicit confirmed create, one-record dirty/valid saves, Unicode validation and duplicates allowed. Safe errors and asynchronous focus; 409/404 retain drafts and require explicit refresh, discard confirmation with drafts and no automatic retry. No established navigation guard: local drafts lost on navigation/reload, visibly documented. No backend/migration/identity/Server Names/lifecycle changes. U-001/U-002/U-003 and all reference UNKNOWN / NEEDS TESTING unchanged.",
       "dependencies": [
         "PEOPLE-07A"
       ],
@@ -1170,7 +1173,13 @@
         "pnpm lint",
         "pnpm typecheck",
         "pnpm exec vitest run apps/web/tests/people/booked-by.test.tsx",
-        "pnpm exec playwright test tests/e2e/people-booked-by.spec.ts"
+        "pnpm exec playwright test tests/e2e/people-booked-by.spec.ts",
+        "pnpm test:web",
+        "pnpm test:e2e",
+        "pnpm contract:check",
+        "pnpm map:check",
+        "pnpm verify",
+        "pnpm verify:db (if DATABASE_URL available locally; required in final CI)"
       ],
       "regressionChecks": [
         "pnpm map:check",
@@ -1181,7 +1190,15 @@
         "apps/web/src/people/booked-by/*",
         "apps/web/tests/people/booked-by.test.tsx",
         "packages/contracts/routes.json",
-        "tests/e2e/people-booked-by.spec.ts"
+        "tests/e2e/people-booked-by.spec.ts",
+        "tests/fixtures/people-booked-by.ts",
+        "apps/web/src/shell.tsx (SCR-083 integration only)",
+        "apps/web/src/style.css (scoped Booked By styles only)",
+        "package.json (test:web suite registration)",
+        "tooling/validate-map.mjs (SCR-083 explicit allowlist only)",
+        "docs/architecture/ADR-0012-people-booked-by-frontend.md",
+        "docs/data/people-booked-by-ui.md",
+        "docs/project-map/{roadmap.json,verification.json,handoff.md}"
       ],
       "unknownsToResolve": [
         "U-001",
@@ -1617,5 +1634,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "PEOPLE-07B — Booked By Names frontend"
+  "nextExactTask": "PEOPLE-07B — Exact-SHA publication approval and final branch-head CI verification"
 }

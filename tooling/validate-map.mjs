@@ -60,7 +60,7 @@ for (const route of registry.routes) {
   if (
     route.implementationStatus !== "NOT_IMPLEMENTED" &&
     !(
-      route.screenId === "SCR-026" &&
+      ["SCR-026", "SCR-083"].includes(route.screenId) &&
       route.implementationStatus === "IMPLEMENTED"
     )
   )

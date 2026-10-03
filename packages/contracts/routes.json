@@ -912,7 +912,7 @@
       "navigationVisible": true,
       "contextType": "VENUE",
       "futurePermission": null,
-      "implementationStatus": "NOT_IMPLEMENTED",
+      "implementationStatus": "IMPLEMENTED",
       "surfaceOnly": false
     },
     {

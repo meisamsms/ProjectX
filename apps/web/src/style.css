@@ -176,3 +176,51 @@ main.accounts-main {
   border-left: 4px solid #a12929;
   padding: 0.7rem;
 }
+.booked-by-page {
+  max-width: 65rem;
+  overflow-wrap: anywhere;
+}
+.booked-by-page ol {
+  padding-left: 1.5rem;
+}
+.booked-by-page li {
+  margin: 1rem 0;
+}
+.booked-by-page fieldset {
+  min-width: 0;
+  border: 1px solid #526579;
+  padding: 1rem;
+}
+.booked-by-page label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+.booked-by-page input {
+  display: block;
+  width: 100%;
+}
+.booked-by-page input,
+.booked-by-page button {
+  font: inherit;
+  padding: 0.6rem;
+  max-width: 100%;
+}
+.booked-by-page button {
+  margin: 0.3rem;
+}
+.booked-by-page [role="alert"] {
+  border-left: 4px solid #a12929;
+  padding: 0.7rem;
+}
+.booked-by-page [role="alert"]:focus,
+.booked-by-page [role="status"]:focus {
+  outline: 3px solid #174b80;
+  outline-offset: 3px;
+}
+.booked-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}

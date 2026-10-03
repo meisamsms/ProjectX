@@ -14,6 +14,7 @@ import {
 import { Link, matchPath, useLocation } from "react-router-dom";
 import { AccountsPage } from "./people/accounts/page";
 import { AddUserPage } from "./people/add-user/page";
+import { BookedByPage } from "./people/booked-by/page";
 
 type ErrorState = { failed: boolean };
 export class ShellErrorBoundary extends Component<
@@ -107,13 +108,17 @@ export function Shell() {
           id="main"
           tabIndex={-1}
           className={
-            current?.screenId === "SCR-025" ? "accounts-main" : undefined
+            ["SCR-025", "SCR-083"].includes(current?.screenId ?? "")
+              ? "accounts-main"
+              : undefined
           }
         >
           {current?.screenId === "SCR-025" ? (
             <AccountsPage />
           ) : current?.screenId === "SCR-026" ? (
             <AddUserPage />
+          ) : current?.screenId === "SCR-083" ? (
+            <BookedByPage />
           ) : current ? (
             <>
               <h1>{current.name}</h1>
