@@ -1038,8 +1038,7 @@
       "name": "Add User frontend",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "BLOCKED",
-      "blocker": "PEOPLE-06 frontend implemented locally; exact-SHA publication approval and final branch-head pnpm verify / pnpm verify:db CI required. Local pnpm verify stops on unchanged pre-existing checkout formatting; DATABASE_URL absent. No push authorized.",
+      "status": "VERIFIED",
       "dependencies": [
         "PEOPLE-04",
         "PEOPLE-04P"
@@ -1605,5 +1604,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "PEOPLE-06 — Publish exact frontend commit for final branch-head CI (approval required)"
+  "nextExactTask": "PEOPLE-07A — Booked By Names backend"
 }
