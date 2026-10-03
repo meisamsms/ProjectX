@@ -1154,9 +1154,9 @@
       "name": "Booked By Names frontend",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "BLOCKED",
-      "remainingWork": "Local SCR-083 implementation is complete; blocked pending separate approval to publish its exact committed SHA and successful final branch-head pnpm verify plus pnpm verify:db on PostgreSQL 16. Do not start another task or mark VERIFIED from local tests. No push approval inherited from predecessor commits.",
-      "verificationNotes": "CHK-046: focused component 58/58; full web 109/109 across four files (Add User 40/40 and Accounts 9/9 unchanged); focused E2E 11/11 and full browser/accessibility regression 20/20. Lint, typecheck, unit 4/4, integration 11/11, contract freshness, map, build, touched-file format and whitespace PASS. pnpm format:check and pnpm verify stop on 45 pre-existing formatting diagnostics, all outside changed files. DATABASE_URL absent: no local pnpm verify:db or new CI result claimed.",
+      "status": "VERIFIED",
+      "remainingWork": "Exact implementation publication and final branch-head CI blocker resolved. This separate documentation/status transition is local only and requires separate exact-SHA approval before publication. No next feature implementation started; parent module verification/export gates remain outstanding.",
+      "verificationNotes": "CHK-047: owner-approved exact implementation SHA 01bed6718e3923c01c9d7fa43e00eb36851e0a99, direct parent 2418ee8d54324308061cf27bcef51af6bf0fd2fa, published without recreation or amendment. Final branch-head CI 37161707466 / job 111316320280 (verify), attempt 1, SUCCESS. pnpm verify and pnpm verify:db PASS on PostgreSQL 16.15. Booked By component file 58/58 within full web 109/109 across four files; unchanged Add User 40/40 including asynchronous error-focus regression and Accounts 9/9. E2E 20/20, including Booked By 11/11, eight Booked By axe analyses with no violations, keyboard/focus/conflict and 390px responsive checks. Database runner 134/134 across 18 files including PEOPLE-07A 38/38; unit 4/4, API integration 11/11 and repository format/lint/typecheck/contracts/map/build PASS. All earlier checks including local limitations in CHK-046 preserved. Node.js 20 action advisory is non-blocking maintenance, not a test failure. Reference classifications unchanged.",
       "implementationNotes": "PROJECTX IMPLEMENTATION DECISION (ADR-0012): generated scoped GET/POST/versioned PATCH client; UUID cursor/ID deduplication; local Add/Cancel, explicit confirmed create, one-record dirty/valid saves, Unicode validation and duplicates allowed. Safe errors and asynchronous focus; 409/404 retain drafts and require explicit refresh, discard confirmation with drafts and no automatic retry. No established navigation guard: local drafts lost on navigation/reload, visibly documented. No backend/migration/identity/Server Names/lifecycle changes. U-001/U-002/U-003 and all reference UNKNOWN / NEEDS TESTING unchanged.",
       "dependencies": [
         "PEOPLE-07A"
@@ -1220,7 +1220,7 @@
       "name": "Server Names backend",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "PLANNED",
+      "status": "READY",
       "dependencies": [
         "PEOPLE-02"
       ],
@@ -1634,5 +1634,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "PEOPLE-07B — Exact-SHA publication approval and final branch-head CI verification"
+  "nextExactTask": "PEOPLE-08A — Server Names backend"
 }
