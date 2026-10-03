@@ -141,3 +141,38 @@ main.accounts-main {
     padding: 1rem;
   }
 }
+
+.add-user-page fieldset {
+  margin: 1rem 0;
+  border: 1px solid #526579;
+  min-width: 0;
+}
+.add-user-page legend {
+  font-weight: 600;
+}
+.add-user-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin: 0.8rem 0;
+}
+.add-user-page input:not([type="checkbox"]),
+.add-user-page select,
+.add-user-page button {
+  font: inherit;
+  padding: 0.5rem;
+  max-width: 100%;
+}
+.add-user-choice {
+  display: block;
+  margin: 0.65rem 0;
+  overflow-wrap: anywhere;
+}
+.add-user-page select:focus-visible {
+  outline: 3px solid #d07618;
+  outline-offset: 3px;
+}
+.add-user-page [role="alert"] {
+  border-left: 4px solid #a12929;
+  padding: 0.7rem;
+}

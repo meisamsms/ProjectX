@@ -57,7 +57,13 @@ for (const route of registry.routes) {
     (source.route.startsWith("/") ? source.route.split(" (")[0] : null)
   )
     throw Error(`Stale route mapping ${route.screenId}`);
-  if (route.implementationStatus !== "NOT_IMPLEMENTED")
+  if (
+    route.implementationStatus !== "NOT_IMPLEMENTED" &&
+    !(
+      route.screenId === "SCR-026" &&
+      route.implementationStatus === "IMPLEMENTED"
+    )
+  )
     throw Error(`Unexpected implementation state ${route.screenId}`);
 }
 for (const screen of map.screens) {

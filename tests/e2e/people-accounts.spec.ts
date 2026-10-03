@@ -78,9 +78,20 @@ test("SCR-025 reads authorized synthetic data, filters and advances cursor", asy
   ).toBe(true);
 });
 
-test("SCR-025 denies safely and preserves the Add User placeholder", async ({
+test("SCR-025 denies safely and links to Add User without bypassing authorization", async ({
   page,
 }) => {
+  await page.route("**/api/v1/people/accounts/options", (request) =>
+    request.fulfill({
+      status: 403,
+      contentType: "application/json",
+      body: JSON.stringify({
+        code: "FORBIDDEN",
+        message: "People access denied",
+        requestId: "synthetic",
+      }),
+    }),
+  );
   await page.route("**/api/v1/people/accounts*", (request) =>
     request.fulfill({
       status: 403,
@@ -99,7 +110,11 @@ test("SCR-025 denies safely and preserves the Add User placeholder", async ({
   await expect(page.getByRole("table")).toHaveCount(0);
   await page.getByRole("link", { name: "Add new" }).click();
   await expect(page.getByRole("heading", { name: "Add User" })).toBeVisible();
-  await expect(page.getByText("Feature not implemented yet.")).toBeVisible();
+  await expect(
+    page.getByText(
+      "You do not have access to add users or assign these selections.",
+    ),
+  ).toBeVisible();
 });
 
 test("SCR-025 loaded roster has no automated accessibility violations", async ({

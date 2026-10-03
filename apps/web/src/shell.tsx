@@ -13,6 +13,7 @@ import {
 } from "react";
 import { Link, matchPath, useLocation } from "react-router-dom";
 import { AccountsPage } from "./people/accounts/page";
+import { AddUserPage } from "./people/add-user/page";
 
 type ErrorState = { failed: boolean };
 export class ShellErrorBoundary extends Component<
@@ -111,6 +112,8 @@ export function Shell() {
         >
           {current?.screenId === "SCR-025" ? (
             <AccountsPage />
+          ) : current?.screenId === "SCR-026" ? (
+            <AddUserPage />
           ) : current ? (
             <>
               <h1>{current.name}</h1>
