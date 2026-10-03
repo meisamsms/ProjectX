@@ -13,7 +13,7 @@
     "typecheck": "pnpm --recursive --if-present typecheck",
     "test": "pnpm test:unit && pnpm test:integration && pnpm test:web",
     "test:unit": "vitest run apps/api/tests/config.test.ts packages/contracts/src/routes.test.ts",
-    "test:integration": "vitest run apps/api/tests/api.test.ts",
+    "test:integration": "vitest run apps/api/tests/api.test.ts apps/api/tests/people/booked-by-contract.test.ts",
     "test:web": "vitest run apps/web/tests/shell.test.tsx apps/web/tests/people/accounts.test.tsx apps/web/tests/people/add-user.test.tsx",
     "test:e2e": "playwright test",
     "contract:generate": "openapi-typescript packages/contracts/openapi.json -o packages/contracts/generated/api.ts",

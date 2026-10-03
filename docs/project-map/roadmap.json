@@ -1090,7 +1090,9 @@
       "name": "Booked By Names backend",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "PLANNED",
+      "status": "BLOCKED",
+      "blocker": "Local implementation is NOT VERIFIED. Separate exact-SHA publication approval and final branch-head PostgreSQL 16 CI must pass pnpm verify and pnpm verify:db. DATABASE_URL is unavailable locally; broad local verification stops at 45 pre-existing formatting diagnostics outside this slice.",
+      "implementationNotes": "PROJECTX IMPLEMENTATION DECISION (ADR-0011): independent organization/venue display record, composite venue FK, venue.manage via PEOPLE-02 and restricted-runtime RLS. Trimmed case-preserving 1–120 Unicode code points, no controls/unpaired surrogates; duplicates allowed; UUID cursor order; one-record optimistic version save with stale 409; atomic scoped create/update history, no generic audit subsystem. No User/AuthIdentity/employee/Server Names FK, delete/archive or frontend. Reference discovery and U-001/U-002/U-003 remain unchanged.",
       "dependencies": [
         "PEOPLE-02"
       ],
@@ -1107,7 +1109,10 @@
         "pnpm typecheck",
         "pnpm contract:generate",
         "pnpm contract:check",
-        "pnpm exec vitest run apps/api/tests/people/booked-by.test.ts"
+        "pnpm exec vitest run apps/api/tests/people/booked-by.test.ts",
+        "pnpm exec vitest run apps/api/tests/people/booked-by-contract.test.ts",
+        "pnpm verify",
+        "pnpm verify:db"
       ],
       "regressionChecks": [
         "pnpm map:check",
@@ -1115,11 +1120,19 @@
         "No unrelated MOD-01\u2013MOD-16 business behavior changed"
       ],
       "filesExpectedToChange": [
-        "apps/api/migrations/people-booked-by/*",
+        "apps/api/migrations/people-zz-booked-by/*",
         "apps/api/src/people/booked-by/*",
         "apps/api/tests/people/booked-by.test.ts",
         "packages/contracts/openapi.json",
-        "packages/contracts/generated/api.ts"
+        "packages/contracts/generated/api.ts",
+        "apps/api/src/app.ts",
+        "apps/api/tests/people/booked-by-contract.test.ts",
+        "apps/api/tests/people/{rls,roster-fields,direct-grants}-migrations.test.ts (ledger append only)",
+        "tooling/db-test.mjs",
+        "package.json (integration suite registration)",
+        "docs/architecture/ADR-0011-people-booked-by-names.md",
+        "docs/data/people-booked-by-names.md",
+        "docs/project-map/{roadmap.json,verification.json,handoff.md}"
       ],
       "unknownsToResolve": [
         "U-001",
@@ -1604,5 +1617,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "PEOPLE-07A — Booked By Names backend"
+  "nextExactTask": "PEOPLE-07A — Exact-SHA publication approval and PostgreSQL 16 CI verification"
 }

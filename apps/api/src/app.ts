@@ -1,5 +1,9 @@
 import Fastify, { type FastifyInstance } from "fastify";
 import type { Config } from "./config.js";
+import {
+  type PeopleBookedByDependencies,
+  registerPeopleBookedBy,
+} from "./people/booked-by/route.js";
 import { registerPeopleAddUserOptions } from "./people/add-user/options.js";
 import {
   type PeopleAccountsReadDependencies,
@@ -15,6 +19,7 @@ export function createApp(
   options?: {
     peopleAccountsRead?: PeopleAccountsReadDependencies;
     peopleAddUser?: PeopleAddUserDependencies;
+    peopleBookedBy?: PeopleBookedByDependencies;
   },
 ): FastifyInstance {
   const app = Fastify({
@@ -76,5 +81,6 @@ export function createApp(
   registerPeopleAccountsRead(app, options?.peopleAccountsRead);
   registerPeopleAddUser(app, options?.peopleAddUser);
   registerPeopleAddUserOptions(app, options?.peopleAddUser);
+  registerPeopleBookedBy(app, options?.peopleBookedBy);
   return app;
 }

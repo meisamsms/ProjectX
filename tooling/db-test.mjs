@@ -23,6 +23,8 @@ const result = spawnSync(
     "apps/api/tests/people/add-user-validation.test.ts",
     "apps/api/tests/people/authorization.test.ts",
     "apps/api/tests/people/rls.test.ts",
+    "apps/api/tests/people/booked-by.test.ts",
+    "apps/api/tests/people/booked-by-contract.test.ts",
     "--no-file-parallelism",
   ],
   {
