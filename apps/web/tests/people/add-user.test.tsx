@@ -364,11 +364,14 @@ describe("PEOPLE-06 Add User", () => {
     click();
     const alert = await screen.findByRole("alert");
     expect(alert.textContent).toMatch(text);
-    expect(document.activeElement).toBe(alert);
+    await waitFor(() => expect(document.activeElement).toBe(alert));
     expect(
       (screen.getByRole("textbox", { name: "Email" }) as HTMLInputElement)
         .value,
     ).toBe("synthetic@example.test");
+    expect(document.body.textContent).not.toMatch(
+      /SQL|constraint|RLS|issuer|subject|foreign tenant/,
+    );
   });
   it("never renders arbitrary backend failure details", async () => {
     mount(defaultLoad, async () => {

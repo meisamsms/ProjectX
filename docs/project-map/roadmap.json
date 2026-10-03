@@ -1617,5 +1617,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "PEOPLE-07B — Booked By Names frontend"
+  "nextExactTask": "PEOPLE-06 — Publish corrective SHA and rerun branch-head CI"
 }
