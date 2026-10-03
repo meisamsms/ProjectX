@@ -1013,7 +1013,7 @@
       "name": "Authorized Add User options contract and direct granular grants",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "BLOCKED",
+      "status": "VERIFIED",
       "dependencies": ["PEOPLE-02", "PEOPLE-04"],
       "scope": "Owner-approved Option A ProjectX direct ORGANIZATION/SELF grants owned by OrganizationMembership and VENUE grants owned by VenueAccess; additive current capability lookup/RLS, atomic generated Add User extension and actor-specific assignable role/venue/permission options. No shared-role mutation or private roles. ADR-0009 records the dependency seams and authority rule.",
       "outOfScope": "PEOPLE-06 frontend, global unrestricted catalogs, role hierarchy, shared role edits, other modules, OIDC, MFA, invitation/email delivery and reference parity claims.",
@@ -1031,15 +1031,14 @@
       "screenIds": ["SCR-026"],
       "actionIds": [],
       "entityIds": ["ENT-024", "ENT-032", "ENT-043", "ENT-044"],
-      "moduleId": "MOD-14",
-      "blocker": "Approved commit c4f70abd45d216398d7d82447936c3cf09846bc6 published unchanged. PostgreSQL 16.15 CI run 37082513830/job 111085890206 passed pnpm verify but failed pnpm verify:db: 88/89 tests passed; one new raw-runtime RLS test omitted schema qualification after transaction-local search_path reset. Corrected only its SELECT/UPDATE table qualification locally, preserving negative assertions and all application/migration/contract behavior. BLOCKED pending separate approval for the corrective SHA and passing final branch-head CI; local DATABASE_URL remains unavailable. PEOPLE-06 remains BLOCKED."
+      "moduleId": "MOD-14"
     },
     {
       "id": "PEOPLE-06",
       "name": "Add User frontend",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "BLOCKED",
+      "status": "READY",
       "dependencies": [
         "PEOPLE-04",
         "PEOPLE-04P"
@@ -1084,8 +1083,7 @@
         "ACT-0058"
       ],
       "entityIds": [],
-      "moduleId": "MOD-14",
-      "blocker": "PEOPLE-04P CI run 37082513830 passed pnpm verify but failed one new raw-runtime RLS test among 89 database-suite tests. A test-only schema-qualification correction is local and requires separate exact-SHA publication approval and successful final PostgreSQL 16 CI. Resume PEOPLE-06 only after PEOPLE-04P VERIFIED; no frontend implementation."
+      "moduleId": "MOD-14"
     },
     {
       "id": "PEOPLE-07A",
@@ -1606,5 +1604,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "PEOPLE-04P — Approve corrective test commit publication and verify final branch-head PostgreSQL 16 CI"
+  "nextExactTask": "PEOPLE-06 — Add User frontend"
 }
