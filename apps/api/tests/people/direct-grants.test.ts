@@ -378,10 +378,12 @@ describe("PEOPLE-04P direct grants and effective current rights", () => {
     try {
       await client.query("BEGIN");
       await rawScoped(client, f.identities.orgA.user, f.orgB, f.b1, "venue");
+      // rawScoped sets only RLS context; unlike the authorized wrapper it does
+      // not set search_path. Keep this negative test independent of pool state.
       expect(
         (
           await client.query(
-            "SELECT id FROM venue_permission_grants WHERE id=$1",
+            "SELECT id FROM projectx_test.venue_permission_grants WHERE id=$1",
             [venue],
           )
         ).rowCount,
@@ -389,7 +391,7 @@ describe("PEOPLE-04P direct grants and effective current rights", () => {
       expect(
         (
           await client.query(
-            "UPDATE venue_permission_grants SET revoked_at=now(),version=version+1 WHERE id=$1",
+            "UPDATE projectx_test.venue_permission_grants SET revoked_at=now(),version=version+1 WHERE id=$1",
             [venue],
           )
         ).rowCount,

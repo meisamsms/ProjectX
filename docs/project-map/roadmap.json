@@ -1032,7 +1032,7 @@
       "actionIds": [],
       "entityIds": ["ENT-024", "ENT-032", "ENT-043", "ENT-044"],
       "moduleId": "MOD-14",
-      "blocker": "Ownership decision resolved by explicit owner Option A approval. Implemented locally with direct-grant persistence, effective permission lookup/RLS, atomic Add User consumption and authorized options. BLOCKED pending separate exact-SHA publication approval and both final branch-head CI gates, including real PostgreSQL 16 verification. Local DATABASE_URL unavailable; no DB pass or new CI claimed. PEOPLE-06 remains blocked until PEOPLE-04P VERIFIED."
+      "blocker": "Approved commit c4f70abd45d216398d7d82447936c3cf09846bc6 published unchanged. PostgreSQL 16.15 CI run 37082513830/job 111085890206 passed pnpm verify but failed pnpm verify:db: 88/89 tests passed; one new raw-runtime RLS test omitted schema qualification after transaction-local search_path reset. Corrected only its SELECT/UPDATE table qualification locally, preserving negative assertions and all application/migration/contract behavior. BLOCKED pending separate approval for the corrective SHA and passing final branch-head CI; local DATABASE_URL remains unavailable. PEOPLE-06 remains BLOCKED."
     },
     {
       "id": "PEOPLE-06",
@@ -1085,7 +1085,7 @@
       ],
       "entityIds": [],
       "moduleId": "MOD-14",
-      "blocker": "PEOPLE-04P remains BLOCKED pending exact-SHA publication approval and real PostgreSQL 16 final branch-head CI. Its Option A ownership decision is resolved and backend implementation is local, not VERIFIED. Resume PEOPLE-06 only after PEOPLE-04P is VERIFIED; no frontend implementation in this task."
+      "blocker": "PEOPLE-04P CI run 37082513830 passed pnpm verify but failed one new raw-runtime RLS test among 89 database-suite tests. A test-only schema-qualification correction is local and requires separate exact-SHA publication approval and successful final PostgreSQL 16 CI. Resume PEOPLE-06 only after PEOPLE-04P VERIFIED; no frontend implementation."
     },
     {
       "id": "PEOPLE-07A",
@@ -1606,5 +1606,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "PEOPLE-04P — Obtain exact-SHA push approval and verify final branch-head PostgreSQL 16 CI"
+  "nextExactTask": "PEOPLE-04P — Approve corrective test commit publication and verify final branch-head PostgreSQL 16 CI"
 }
