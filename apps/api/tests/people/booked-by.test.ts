@@ -219,14 +219,22 @@ describe("PEOPLE-07A venue display data and API", () => {
     await addBookedByName(runtime, scope(), { displayName: "Standalone" });
     expect((await counts()).rows).toEqual(before);
     const keys = await adminPool.query(
-      "SELECT pg_get_constraintdef(oid) definition,confrelid::regclass::text parent FROM pg_constraint WHERE conrelid='projectx_test.booked_by_names'::regclass AND contype='f'",
+      `SELECT n.nspname AS parent_schema,p.relname AS parent_table,
+        ARRAY(SELECT a.attname::text FROM unnest(c.conkey) WITH ORDINALITY AS k(attnum,ordinality)
+          JOIN pg_attribute a ON a.attrelid=c.conrelid AND a.attnum=k.attnum ORDER BY k.ordinality) AS columns,
+        ARRAY(SELECT a.attname::text FROM unnest(c.confkey) WITH ORDINALITY AS k(attnum,ordinality)
+          JOIN pg_attribute a ON a.attrelid=c.confrelid AND a.attnum=k.attnum ORDER BY k.ordinality) AS parent_columns,
+        c.confdeltype AS delete_action
+      FROM pg_constraint c JOIN pg_class p ON p.oid=c.confrelid JOIN pg_namespace n ON n.oid=p.relnamespace
+      WHERE c.conrelid='projectx_test.booked_by_names'::regclass AND c.contype='f'`,
     );
     expect(keys.rows).toEqual([
       {
-        definition: expect.stringContaining(
-          "FOREIGN KEY (organization_id, venue_id) REFERENCES projectx_test.venues(organization_id, id)",
-        ),
-        parent: "projectx_test.venues",
+        parent_schema: "projectx_test",
+        parent_table: "venues",
+        columns: ["organization_id", "venue_id"],
+        parent_columns: ["organization_id", "id"],
+        delete_action: "r",
       },
     ]);
   });
