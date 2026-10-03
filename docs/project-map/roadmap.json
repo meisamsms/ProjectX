@@ -1090,8 +1090,8 @@
       "name": "Booked By Names backend",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "BLOCKED",
-      "blocker": "Local implementation is NOT VERIFIED. Separate exact-SHA publication approval and final branch-head PostgreSQL 16 CI must pass pnpm verify and pnpm verify:db. DATABASE_URL is unavailable locally; broad local verification stops at 45 pre-existing formatting diagnostics outside this slice.",
+      "status": "VERIFIED",
+      "verificationNotes": "Final branch-head CI 37152073311, job 111287830545, at corrective commit 79b8f2e9d29e12227339856f80d7979d7d7a798e on PostgreSQL 16.15: pnpm verify and pnpm verify:db PASS; 134/134 tests across 18 database-suite files, including 38/38 PEOPLE-07A PostgreSQL tests. Implementation 7f54a0ef15473fd81c7fe87d33b07732410c647e preserved; correction changes only FK catalog assertion metadata, not application code, migrations or contracts. Publication/CI blocker resolved; prior local CRLF and missing DATABASE_URL remain environment limitations, not CI failures. See CHK-043.",
       "implementationNotes": "PROJECTX IMPLEMENTATION DECISION (ADR-0011): independent organization/venue display record, composite venue FK, venue.manage via PEOPLE-02 and restricted-runtime RLS. Trimmed case-preserving 1–120 Unicode code points, no controls/unpaired surrogates; duplicates allowed; UUID cursor order; one-record optimistic version save with stale 409; atomic scoped create/update history, no generic audit subsystem. No User/AuthIdentity/employee/Server Names FK, delete/archive or frontend. Reference discovery and U-001/U-002/U-003 remain unchanged.",
       "dependencies": [
         "PEOPLE-02"
@@ -1154,7 +1154,7 @@
       "name": "Booked By Names frontend",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "PLANNED",
+      "status": "READY",
       "dependencies": [
         "PEOPLE-07A"
       ],
@@ -1617,5 +1617,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "PEOPLE-07A — Exact-SHA publication approval and PostgreSQL 16 CI verification"
+  "nextExactTask": "PEOPLE-07B — Booked By Names frontend"
 }
