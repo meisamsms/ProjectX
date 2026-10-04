@@ -224,3 +224,51 @@ main.accounts-main {
   gap: 0.5rem;
   margin: 1rem 0;
 }
+.server-names-page {
+  max-width: 65rem;
+  overflow-wrap: anywhere;
+}
+.server-names-page ol {
+  padding-left: 1.5rem;
+}
+.server-names-page li {
+  margin: 1rem 0;
+}
+.server-names-page fieldset {
+  min-width: 0;
+  border: 1px solid #526579;
+  padding: 1rem;
+}
+.server-names-page label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+.server-names-page input {
+  display: block;
+  width: 100%;
+}
+.server-names-page input,
+.server-names-page button {
+  font: inherit;
+  padding: 0.6rem;
+  max-width: 100%;
+}
+.server-names-page button {
+  margin: 0.3rem;
+}
+.server-names-page [role="alert"] {
+  border-left: 4px solid #a12929;
+  padding: 0.7rem;
+}
+.server-names-page [role="alert"]:focus,
+.server-names-page [role="status"]:focus {
+  outline: 3px solid #174b80;
+  outline-offset: 3px;
+}
+.server-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
