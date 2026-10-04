@@ -1220,7 +1220,7 @@
       "name": "Server Names backend",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "READY",
+      "status": "BLOCKED",
       "dependencies": [
         "PEOPLE-02"
       ],
@@ -1237,19 +1237,35 @@
         "pnpm typecheck",
         "pnpm contract:generate",
         "pnpm contract:check",
-        "pnpm exec vitest run apps/api/tests/people/server-names.test.ts"
+        "pnpm exec vitest run apps/api/tests/people/server-names.test.ts",
+        "pnpm exec vitest run apps/api/tests/people/server-names-contract.test.ts",
+        "pnpm map:check",
+        "pnpm verify",
+        "pnpm verify:db (only with DATABASE_URL)",
+        "git diff --check"
       ],
       "regressionChecks": [
         "pnpm map:check",
         "Previously verified foundation/discovery gates remain VERIFIED",
-        "No unrelated MOD-01\u2013MOD-16 business behavior changed"
+        "No unrelated MOD-01–MOD-16 business behavior changed",
+        "Booked By contract 7/7, component 58/58 and browser11/11; unchanged backend behavior awaits real PostgreSQL CI",
+        "All historical migrations, previous VERIFIED tasks, prior verification records and reference classifications unchanged"
       ],
       "filesExpectedToChange": [
-        "apps/api/migrations/people-server-names/*",
+        "apps/api/migrations/people-zzz-server-names/*",
         "apps/api/src/people/server-names/*",
         "apps/api/tests/people/server-names.test.ts",
+        "apps/api/tests/people/server-names-contract.test.ts",
         "packages/contracts/openapi.json",
-        "packages/contracts/generated/api.ts"
+        "packages/contracts/generated/api.ts",
+        "apps/api/src/app.ts (new resource registration only)",
+        "apps/api/tests/people/{rls,roster-fields,direct-grants}-migrations.test.ts (eighth ledger entry only)",
+        "apps/api/tests/people/booked-by.test.ts (ledger append and own-migration checksum lookup only)",
+        "tooling/db-test.mjs (new test registration)",
+        "package.json (integration suite registration)",
+        "docs/architecture/ADR-0013-people-server-names.md",
+        "docs/data/people-server-names.md",
+        "docs/project-map/{roadmap.json,verification.json,handoff.md}"
       ],
       "unknownsToResolve": [
         "U-001",
@@ -1264,7 +1280,9 @@
         "ACT-0170"
       ],
       "entityIds": [],
-      "moduleId": "MOD-14"
+      "moduleId": "MOD-14",
+      "implementationNotes": "PROJECTX IMPLEMENTATION DECISION (ADR-0013): separate organization/venue Server Name record and append-only history, UUIDv7/composite Venue ownership, no User/AuthIdentity/membership/employee/Booked By/OIDC/provisioning linkage or synchronization. Case-preserving plain-text ECMAScript edge trim, 1–120 Unicode code points, no controls/unpaired surrogates; duplicates allowed; UUID ascending cursor pages default 25/max 100; versioned one-record PATCH/stale 409/scoped404. Existing venue.manage, unchanged PEOPLE-02 authorized transactions and restricted-runtime RLS. No frontend/delete/archive/bulk/Export. Narrow shared app/runner/ledger dependencies recorded in ADR-0013; historical SQL and Booked By application/contracts/frontend unchanged. All reference classifications and U-001/U-002/U-003 unchanged.",
+      "verificationNotes": "Local contract 8/8 PASS; integration 19/19, unit 4/4, web 109/109 (Booked By 58/58, Add User 40/40, Accounts 9/9), browser 20/20 including Booked By 11/11 PASS. Lint/typecheck/generated contract/map/build and scoped formatting PASS. pnpm format:check and pnpm verify FAIL on 45 unchanged pre-existing CRLF diagnostics, not Server Names files; no unrelated mass-format. Focused real PostgreSQL suite fails at module load because DATABASE_URL is absent (0 tests executed); pnpm verify:db NOT RUN, no PostgreSQL/RLS/migration pass claimed. BLOCKED pending separate exact-SHA publication approval and successful final branch-head pnpm verify + pnpm verify:db on PostgreSQL 16. No new CI run or push. See CHK-048."
     },
     {
       "id": "PEOPLE-08B",
@@ -1634,5 +1652,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "PEOPLE-08A — Server Names backend"
+  "nextExactTask": "PEOPLE-08A — Exact-SHA publication approval and final branch-head CI verification"
 }

@@ -17,12 +17,18 @@ import {
   withAuthorizedPeopleTransaction,
 } from "../../src/people/authorization/context.js";
 import {
-  type BookedByScope,
-  type BookedByName,
+  type ServerScope,
+  type ServerName,
+  addServerName,
+  listServerNames,
+  updateServerName,
+} from "../../src/people/server-names/service.js";
+import { newPeopleId } from "../../src/people/persistence/id.js";
+import {
   addBookedByName,
+  updateBookedByName,
   listBookedByNames,
 } from "../../src/people/booked-by/service.js";
-import { newPeopleId } from "../../src/people/persistence/id.js";
 import { withTransaction, resetTestDatabase } from "../database/harness.js";
 import { migrateTestDatabase } from "../database/migrate.js";
 import { seedCorePeople } from "./fixtures/core.js";
@@ -38,9 +44,10 @@ type Fixture = Awaited<ReturnType<typeof freshPeopleFixture>>;
 let f: Fixture;
 let runtime: Pool;
 const apps: ReturnType<typeof createApp>[] = [];
-const base = "/api/v1/people/booked-by-names";
+const base = "/api/v1/people/server-names";
 const config = loadConfig({ NODE_ENV: "test", LOG_LEVEL: "silent" });
-const migration = "people-zz-booked-by/20261002000700_people_booked_by.sql";
+const migration =
+  "people-zzz-server-names/20261003000800_people_server_names.sql";
 const previous = [
   "people-core/20260928000100_people_core.sql",
   "people-grants/20260928000200_people_grants.sql",
@@ -48,6 +55,7 @@ const previous = [
   "people-roster-fields/20260928000400_people_roster_fields.sql",
   "people-user-provisioning/20261001000500_people_user_provisioning.sql",
   "people-z-direct-grants/20261001000600_people_direct_grants.sql",
+  "people-zz-booked-by/20261002000700_people_booked_by.sql",
 ];
 const content = (name: string) =>
   readFile(new URL(`../../migrations/${name}`, import.meta.url), "utf8");
@@ -57,7 +65,7 @@ function scope(
   actor: keyof Fixture["identities"] = "orgA",
   org = f.orgA,
   venue = f.a1,
-): BookedByScope {
+): ServerScope {
   return {
     identity: bindVerifiedPeopleIdentity(f.identities[actor].user),
     organizationId: org,
@@ -66,7 +74,7 @@ function scope(
 }
 function app(selected = scope()) {
   const instance = createApp(config, {
-    peopleBookedBy: {
+    peopleServer: {
       runtimePool: runtime,
       resolveTrustedScope: async () => selected,
     },
@@ -111,7 +119,7 @@ function authorized(operation: (client: PoolClient) => Promise<unknown>) {
   );
 }
 async function raw(
-  s: BookedByScope,
+  s: ServerScope,
   operation: (client: PoolClient) => Promise<unknown>,
 ) {
   const client = await runtime.connect();
@@ -136,7 +144,7 @@ async function raw(
 async function history(id: string) {
   return (
     await adminPool.query(
-      "SELECT action,version,actor_user_id,organization_id,venue_id,request_id FROM projectx_test.booked_by_name_changes WHERE booked_by_name_id=$1 ORDER BY version",
+      "SELECT action,version,actor_user_id,organization_id,venue_id,request_id FROM projectx_test.server_name_changes WHERE server_name_id=$1 ORDER BY version",
       [id],
     )
   ).rows;
@@ -160,7 +168,102 @@ afterEach(async () => {
 });
 afterAll(stopRuntime);
 
-describe("PEOPLE-07A venue display data and API", () => {
+describe("PEOPLE-08A venue display data and API", () => {
+  it("allows authorized raw runtime SELECT/INSERT/UPDATE with atomic history", async () => {
+    const id = newPeopleId();
+    await authorized(async (client) => {
+      await client.query(
+        "INSERT INTO projectx_test.server_names(id,organization_id,venue_id,display_name) VALUES($1,$2,$3,'Raw name')",
+        [id, f.orgA, f.a1],
+      );
+      expect(
+        (
+          await client.query(
+            "SELECT display_name,version FROM projectx_test.server_names WHERE id=$1",
+            [id],
+          )
+        ).rows,
+      ).toEqual([{ display_name: "Raw name", version: 1 }]);
+      expect(
+        (
+          await client.query(
+            "UPDATE projectx_test.server_names SET display_name='Raw update',version=version+1 WHERE id=$1 RETURNING display_name,version",
+            [id],
+          )
+        ).rows,
+      ).toEqual([{ display_name: "Raw update", version: 2 }]);
+    });
+    expect(await history(id)).toHaveLength(2);
+  });
+  it("keeps Booked By records, versions, history and foreign identifiers independent", async () => {
+    const booked = await addBookedByName(runtime, scope(), {
+      displayName: "Same name",
+    });
+    const server = await addServerName(runtime, scope(), {
+      displayName: "Same name",
+    });
+    expect(server.id).not.toBe(booked.id);
+    const savedServer = await updateServerName(runtime, scope(), server.id, {
+      displayName: "Only server changed",
+      version: 1,
+    });
+    expect((await listBookedByNames(runtime, scope(), {})).items).toEqual([
+      booked,
+    ]);
+    const savedBooked = await updateBookedByName(runtime, scope(), booked.id, {
+      displayName: "Only Booked By changed",
+      version: 1,
+    });
+    expect((await listServerNames(runtime, scope(), {})).items).toEqual([
+      savedServer,
+    ]);
+    expect((await listBookedByNames(runtime, scope(), {})).items).toEqual([
+      savedBooked,
+    ]);
+    for (const foreign of [booked.id, newPeopleId()]) {
+      const response = await app().inject({
+        method: "PATCH",
+        url: `${base}/${foreign}`,
+        payload: { displayName: "No cross-link", version: 1 },
+      });
+      expect(response.statusCode).toBe(404);
+      expect(response.json()).toEqual({
+        code: "NOT_FOUND",
+        message: "Resource not found",
+        requestId: expect.any(String),
+      });
+    }
+    expect(await history(server.id)).toHaveLength(2);
+    const bookedHistory = await adminPool.query(
+      "SELECT version FROM projectx_test.booked_by_name_changes WHERE booked_by_name_id=$1 ORDER BY version",
+      [booked.id],
+    );
+    expect(bookedHistory.rows).toEqual([{ version: 1 }, { version: 2 }]);
+  });
+  it("enforces default/max page sizes and traverses all rows without duplication", async () => {
+    await authorized(async (client) => {
+      for (let index = 0; index < 101; index++)
+        await client.query(
+          "INSERT INTO server_names(id,organization_id,venue_id,display_name) VALUES($1,$2,$3,$4)",
+          [newPeopleId(), f.orgA, f.a1, `Name ${index}`],
+        );
+    });
+    expect((await listServerNames(runtime, scope(), {})).items).toHaveLength(
+      25,
+    );
+    const first = await listServerNames(runtime, scope(), { limit: 100 });
+    expect(first.items).toHaveLength(100);
+    expect(first.nextCursor).toBe(first.items.at(-1)?.id);
+    const final = await listServerNames(runtime, scope(), {
+      limit: 100,
+      cursor: first.nextCursor ?? "",
+    });
+    expect(final.items).toHaveLength(1);
+    expect(final.nextCursor).toBeNull();
+    const ids = [...first.items, ...final.items].map(({ id }) => id);
+    expect(new Set(ids).size).toBe(101);
+    expect(ids).toEqual([...ids].sort());
+  });
   it("creates, lists and saves with minimal generated DTOs and atomic attributed history", async () => {
     const instance = app();
     const created = await instance.inject({
@@ -169,7 +272,7 @@ describe("PEOPLE-07A venue display data and API", () => {
       payload: { displayName: "  MiXeD <b>plain</b>  " },
     });
     expect(created.statusCode).toBe(201);
-    const record = created.json<BookedByName>();
+    const record = created.json<ServerName>();
     expect(record).toEqual({
       id: expect.any(String),
       displayName: "MiXeD <b>plain</b>",
@@ -191,7 +294,7 @@ describe("PEOPLE-07A venue display data and API", () => {
     });
     const stored = (
       await adminPool.query(
-        "SELECT organization_id,venue_id,created_at,updated_at FROM projectx_test.booked_by_names WHERE id=$1",
+        "SELECT organization_id,venue_id,created_at,updated_at FROM projectx_test.server_names WHERE id=$1",
         [record.id],
       )
     ).rows[0];
@@ -211,12 +314,24 @@ describe("PEOPLE-07A venue display data and API", () => {
     );
   });
   it("does not create identity/account rows and has only composite Venue ownership FK", async () => {
+    const columns = await adminPool.query(
+      "SELECT column_name FROM information_schema.columns WHERE table_schema='projectx_test' AND table_name='server_names' ORDER BY ordinal_position",
+    );
+    expect(columns.rows.map(({ column_name }) => column_name)).toEqual([
+      "id",
+      "organization_id",
+      "venue_id",
+      "display_name",
+      "version",
+      "created_at",
+      "updated_at",
+    ]);
     const counts = () =>
       adminPool.query(
         "SELECT (SELECT count(*) FROM projectx_test.users) users,(SELECT count(*) FROM projectx_test.authenticated_identities) identities,(SELECT count(*) FROM projectx_test.organization_memberships) memberships,(SELECT count(*) FROM projectx_test.venue_access) accesses",
       );
     const before = (await counts()).rows;
-    await addBookedByName(runtime, scope(), { displayName: "Standalone" });
+    await addServerName(runtime, scope(), { displayName: "Standalone" });
     expect((await counts()).rows).toEqual(before);
     const keys = await adminPool.query(
       `SELECT n.nspname AS parent_schema,p.relname AS parent_table,
@@ -226,7 +341,7 @@ describe("PEOPLE-07A venue display data and API", () => {
           JOIN pg_attribute a ON a.attrelid=c.confrelid AND a.attnum=k.attnum ORDER BY k.ordinality) AS parent_columns,
         c.confdeltype AS delete_action
       FROM pg_constraint c JOIN pg_class p ON p.oid=c.confrelid JOIN pg_namespace n ON n.oid=p.relnamespace
-      WHERE c.conrelid='projectx_test.booked_by_names'::regclass AND c.contype='f'`,
+      WHERE c.conrelid='projectx_test.server_names'::regclass AND c.contype='f'`,
     );
     expect(keys.rows).toEqual([
       {
@@ -240,47 +355,44 @@ describe("PEOPLE-07A venue display data and API", () => {
   });
   it("allows identical names within A1, across A1/A2 and across organizations", async () => {
     await grantForeignScopes();
-    const first = await addBookedByName(runtime, scope(), {
+    const first = await addServerName(runtime, scope(), {
       displayName: "Alex",
     });
-    const duplicate = await addBookedByName(runtime, scope(), {
+    const duplicate = await addServerName(runtime, scope(), {
       displayName: " Alex ",
     });
     expect(
-      (await addBookedByName(runtime, scope(), { displayName: "alex" }))
+      (await addServerName(runtime, scope(), { displayName: "alex" }))
         .displayName,
     ).toBe("alex");
-    await addBookedByName(runtime, scope("a2Only", f.orgA, f.a2), {
+    await addServerName(runtime, scope("a2Only", f.orgA, f.a2), {
       displayName: "Alex",
     });
-    await addBookedByName(runtime, scope("orgB", f.orgB, f.b1), {
+    await addServerName(runtime, scope("orgB", f.orgB, f.b1), {
       displayName: "Alex",
     });
     expect(first.id).not.toBe(duplicate.id);
-    expect((await listBookedByNames(runtime, scope(), {})).items).toHaveLength(
-      3,
-    );
+    expect((await listServerNames(runtime, scope(), {})).items).toHaveLength(3);
     expect(
-      (await listBookedByNames(runtime, scope("a2Only", f.orgA, f.a2), {}))
-        .items,
+      (await listServerNames(runtime, scope("a2Only", f.orgA, f.a2), {})).items,
     ).toHaveLength(1);
     expect(
-      (await listBookedByNames(runtime, scope("orgB", f.orgB, f.b1), {})).items,
+      (await listServerNames(runtime, scope("orgB", f.orgB, f.b1), {})).items,
     ).toHaveLength(1);
   });
   it("uses deterministic UUID ascending pagination without exposing foreign scope", async () => {
     for (const displayName of ["Z", "A", "M"])
-      await addBookedByName(runtime, scope(), { displayName });
-    const all = await listBookedByNames(runtime, scope(), {});
+      await addServerName(runtime, scope(), { displayName });
+    const all = await listServerNames(runtime, scope(), {});
     expect(all.items.map((row) => row.id)).toEqual(
       all.items.map((row) => row.id).sort(),
     );
-    const page = await listBookedByNames(runtime, scope(), { limit: 2 });
+    const page = await listServerNames(runtime, scope(), { limit: 2 });
     expect(page.items).toEqual(all.items.slice(0, 2));
     expect(page.nextCursor).toBe(page.items[1]?.id);
     if (!page.nextCursor) throw new Error("Missing page cursor");
     expect(
-      await listBookedByNames(runtime, scope(), {
+      await listServerNames(runtime, scope(), {
         limit: 2,
         cursor: page.nextCursor,
       }),
@@ -290,7 +402,7 @@ describe("PEOPLE-07A venue display data and API", () => {
     const displayName = "😀".repeat(120);
     expect(
       (
-        await addBookedByName(runtime, scope(), {
+        await addServerName(runtime, scope(), {
           displayName: `\u00a0${displayName}\u3000`,
         })
       ).displayName,
@@ -322,14 +434,14 @@ describe("PEOPLE-07A venue display data and API", () => {
     expect(
       (
         await adminPool.query(
-          "SELECT count(*)::int n FROM projectx_test.booked_by_names",
+          "SELECT count(*)::int n FROM projectx_test.server_names",
         )
       ).rows[0].n,
     ).toBe(0);
     expect(
       (
         await adminPool.query(
-          "SELECT count(*)::int n FROM projectx_test.booked_by_name_changes",
+          "SELECT count(*)::int n FROM projectx_test.server_name_changes",
         )
       ).rows[0].n,
     ).toBe(0);
@@ -337,7 +449,7 @@ describe("PEOPLE-07A venue display data and API", () => {
   it.each(["", " ", "a".repeat(121), "bad\nname"])(
     "rejects invalid save and retains original version: %j",
     async (displayName) => {
-      const record = await addBookedByName(runtime, scope(), {
+      const record = await addServerName(runtime, scope(), {
         displayName: "Original",
       });
       const response = await app().inject({
@@ -346,14 +458,14 @@ describe("PEOPLE-07A venue display data and API", () => {
         payload: { displayName, version: 1 },
       });
       expect(response.statusCode).toBe(400);
-      expect((await listBookedByNames(runtime, scope(), {})).items).toEqual([
+      expect((await listServerNames(runtime, scope(), {})).items).toEqual([
         record,
       ]);
       expect(await history(record.id)).toHaveLength(1);
     },
   );
   it("returns 409 for stale optimistic saves, including two concurrent writers", async () => {
-    const record = await addBookedByName(runtime, scope(), {
+    const record = await addServerName(runtime, scope(), {
       displayName: "Original",
     });
     const instance = app();
@@ -373,13 +485,13 @@ describe("PEOPLE-07A venue display data and API", () => {
       requestId: expect.any(String),
     });
     expect(
-      (await listBookedByNames(runtime, scope(), {})).items[0]?.version,
+      (await listServerNames(runtime, scope(), {})).items[0]?.version,
     ).toBe(2);
     expect(await history(record.id)).toHaveLength(2);
   });
   it("rolls back state when create audit insertion fails and exposes only generic 500", async () => {
     await adminPool.query(
-      "ALTER TABLE projectx_test.booked_by_name_changes ADD CONSTRAINT test_audit_failure CHECK(action='UPDATED')",
+      "ALTER TABLE projectx_test.server_name_changes ADD CONSTRAINT test_audit_failure CHECK(action='UPDATED')",
     );
     const response = await app().inject({
       method: "POST",
@@ -392,14 +504,14 @@ describe("PEOPLE-07A venue display data and API", () => {
       message: "An unexpected error occurred",
       requestId: expect.any(String),
     });
-    expect((await listBookedByNames(runtime, scope(), {})).items).toEqual([]);
+    expect((await listServerNames(runtime, scope(), {})).items).toEqual([]);
   });
   it("rolls back an update and version when audit insertion fails", async () => {
-    const record = await addBookedByName(runtime, scope(), {
+    const record = await addServerName(runtime, scope(), {
       displayName: "Original",
     });
     await adminPool.query(
-      "ALTER TABLE projectx_test.booked_by_name_changes ADD CONSTRAINT test_audit_failure CHECK(action='CREATED')",
+      "ALTER TABLE projectx_test.server_name_changes ADD CONSTRAINT test_audit_failure CHECK(action='CREATED')",
     );
     const response = await app().inject({
       method: "PATCH",
@@ -407,19 +519,19 @@ describe("PEOPLE-07A venue display data and API", () => {
       payload: { displayName: "Not committed", version: 1 },
     });
     expect(response.statusCode).toBe(500);
-    expect((await listBookedByNames(runtime, scope(), {})).items).toEqual([
+    expect((await listServerNames(runtime, scope(), {})).items).toEqual([
       record,
     ]);
     expect(await history(record.id)).toHaveLength(1);
   });
 });
 
-describe("PEOPLE-07A current authority and restricted runtime RLS", () => {
+describe("PEOPLE-08A current authority and restricted runtime RLS", () => {
   it.each(["a2Only", "orgB"] as const)(
     "isolates authorized foreign %s scope and does not leak known IDs",
     async (actor) => {
       await grantForeignScopes();
-      const record = await addBookedByName(runtime, scope(), {
+      const record = await addServerName(runtime, scope(), {
         displayName: "A1 only",
       });
       const foreign =
@@ -447,7 +559,7 @@ describe("PEOPLE-07A current authority and restricted runtime RLS", () => {
         expect(
           (
             await client.query(
-              "SELECT id FROM projectx_test.booked_by_names WHERE id=$1",
+              "SELECT id FROM projectx_test.server_names WHERE id=$1",
               [record.id],
             )
           ).rows,
@@ -455,13 +567,13 @@ describe("PEOPLE-07A current authority and restricted runtime RLS", () => {
         expect(
           (
             await client.query(
-              "UPDATE projectx_test.booked_by_names SET display_name='Forbidden',version=version+1 WHERE id=$1",
+              "UPDATE projectx_test.server_names SET display_name='Forbidden',version=version+1 WHERE id=$1",
               [record.id],
             )
           ).rowCount,
         ).toBe(0);
       });
-      expect((await listBookedByNames(runtime, scope(), {})).items).toEqual([
+      expect((await listServerNames(runtime, scope(), {})).items).toEqual([
         record,
       ]);
     },
@@ -505,7 +617,7 @@ describe("PEOPLE-07A current authority and restricted runtime RLS", () => {
   it.each(["access", "membership", "user", "grant"])(
     "immediately denies revoked/disabled %s in API and raw RLS",
     async (kind) => {
-      const record = await addBookedByName(runtime, scope(), {
+      const record = await addServerName(runtime, scope(), {
         displayName: "Original",
       });
       if (kind === "access")
@@ -546,20 +658,20 @@ describe("PEOPLE-07A current authority and restricted runtime RLS", () => {
       }
       await raw(scope(), async (client) => {
         expect(
-          (await client.query("SELECT id FROM projectx_test.booked_by_names"))
+          (await client.query("SELECT id FROM projectx_test.server_names"))
             .rows,
         ).toEqual([]);
         expect(
           (
             await client.query(
-              "UPDATE projectx_test.booked_by_names SET display_name='Forbidden',version=version+1 WHERE id=$1",
+              "UPDATE projectx_test.server_names SET display_name='Forbidden',version=version+1 WHERE id=$1",
               [record.id],
             )
           ).rowCount,
         ).toBe(0);
         await expect(
           client.query(
-            "INSERT INTO projectx_test.booked_by_names(id,organization_id,venue_id,display_name) VALUES($1,$2,$3,'Forbidden')",
+            "INSERT INTO projectx_test.server_names(id,organization_id,venue_id,display_name) VALUES($1,$2,$3,'Forbidden')",
             [newPeopleId(), f.orgA, f.a1],
           ),
         ).rejects.toMatchObject({ code: "42501" });
@@ -567,7 +679,7 @@ describe("PEOPLE-07A current authority and restricted runtime RLS", () => {
     },
   );
   it("uses a non-owner/non-bypass runtime, absent context hides rows and blocks writes", async () => {
-    await addBookedByName(runtime, scope(), { displayName: "Private" });
+    await addServerName(runtime, scope(), { displayName: "Private" });
     const flags = (
       await runtime.query(
         "SELECT current_user,rolsuper,rolbypassrls FROM pg_roles WHERE rolname=current_user",
@@ -579,12 +691,11 @@ describe("PEOPLE-07A current authority and restricted runtime RLS", () => {
       rolbypassrls: false,
     });
     expect(
-      (await runtime.query("SELECT id FROM projectx_test.booked_by_names"))
-        .rows,
+      (await runtime.query("SELECT id FROM projectx_test.server_names")).rows,
     ).toEqual([]);
     await expect(
       runtime.query(
-        "INSERT INTO projectx_test.booked_by_names(id,organization_id,venue_id,display_name) VALUES($1,$2,$3,'Forbidden')",
+        "INSERT INTO projectx_test.server_names(id,organization_id,venue_id,display_name) VALUES($1,$2,$3,'Forbidden')",
         [newPeopleId(), f.orgA, f.a1],
       ),
     ).rejects.toMatchObject({ code: "42501" });
@@ -592,20 +703,28 @@ describe("PEOPLE-07A current authority and restricted runtime RLS", () => {
   it("denies raw cross-venue insert and immutable ownership update", async () => {
     await grantForeignScopes();
     await expect(
-      raw(scope("a2Only", f.orgA, f.a2), (client) =>
+      raw(scope("orgB", f.orgB, f.b1), (client) =>
         client.query(
-          "INSERT INTO projectx_test.booked_by_names(id,organization_id,venue_id,display_name) VALUES($1,$2,$3,'Forbidden')",
+          "INSERT INTO projectx_test.server_names(id,organization_id,venue_id,display_name) VALUES($1,$2,$3,'Forbidden')",
           [newPeopleId(), f.orgA, f.a1],
         ),
       ),
     ).rejects.toMatchObject({ code: "42501" });
-    const record = await addBookedByName(runtime, scope(), {
+    await expect(
+      raw(scope("a2Only", f.orgA, f.a2), (client) =>
+        client.query(
+          "INSERT INTO projectx_test.server_names(id,organization_id,venue_id,display_name) VALUES($1,$2,$3,'Forbidden')",
+          [newPeopleId(), f.orgA, f.a1],
+        ),
+      ),
+    ).rejects.toMatchObject({ code: "42501" });
+    const record = await addServerName(runtime, scope(), {
       displayName: "Original",
     });
     await expect(
       authorized((client) =>
         client.query(
-          "UPDATE projectx_test.booked_by_names SET venue_id=$1 WHERE id=$2",
+          "UPDATE projectx_test.server_names SET venue_id=$1 WHERE id=$2",
           [f.a2, record.id],
         ),
       ),
@@ -615,7 +734,7 @@ describe("PEOPLE-07A current authority and restricted runtime RLS", () => {
     await expect(
       withTransaction(adminPool, async (client) => {
         await client.query(
-          "INSERT INTO booked_by_names(id,organization_id,venue_id,display_name) VALUES($1,$2,$3,'Wrong parent')",
+          "INSERT INTO server_names(id,organization_id,venue_id,display_name) VALUES($1,$2,$3,'Wrong parent')",
           [newPeopleId(), f.orgA, f.b1],
         );
       }),
@@ -626,43 +745,43 @@ describe("PEOPLE-07A current authority and restricted runtime RLS", () => {
       await expect(
         authorized((client) =>
           client.query(
-            "INSERT INTO booked_by_names(id,organization_id,venue_id,display_name) VALUES($1,$2,$3,$4)",
+            "INSERT INTO server_names(id,organization_id,venue_id,display_name) VALUES($1,$2,$3,$4)",
             [newPeopleId(), f.orgA, f.a1, name],
           ),
         ),
       ).rejects.toMatchObject({ code: "23514" });
     }
-    const record = await addBookedByName(runtime, scope(), {
+    const record = await addServerName(runtime, scope(), {
       displayName: "Original",
     });
     await expect(
       authorized((client) =>
         client.query(
-          "UPDATE booked_by_names SET display_name='Invalid version' WHERE id=$1",
+          "UPDATE server_names SET display_name='Invalid version' WHERE id=$1",
           [record.id],
         ),
       ),
     ).rejects.toMatchObject({ code: "23514" });
-    expect((await listBookedByNames(runtime, scope(), {})).items).toEqual([
+    expect((await listServerNames(runtime, scope(), {})).items).toEqual([
       record,
     ]);
     await authorized(async (client) => {
       const name = "😀".repeat(120);
       const result = await client.query(
-        "INSERT INTO booked_by_names(id,organization_id,venue_id,display_name) VALUES($1,$2,$3,$4) RETURNING display_name,version",
+        "INSERT INTO server_names(id,organization_id,venue_id,display_name) VALUES($1,$2,$3,$4) RETURNING display_name,version",
         [newPeopleId(), f.orgA, f.a1, `\u00a0${name}\u3000`],
       );
       expect(result.rows[0]).toEqual({ display_name: name, version: 1 });
     });
   });
   it("has no DELETE/archive or runtime audit read/write privileges", async () => {
-    const record = await addBookedByName(runtime, scope(), {
+    const record = await addServerName(runtime, scope(), {
       displayName: "Original",
     });
     for (const sql of [
-      "DELETE FROM projectx_test.booked_by_names WHERE id=$1",
-      "SELECT * FROM projectx_test.booked_by_name_changes WHERE booked_by_name_id=$1",
-      "DELETE FROM projectx_test.booked_by_name_changes WHERE booked_by_name_id=$1",
+      "DELETE FROM projectx_test.server_names WHERE id=$1",
+      "SELECT * FROM projectx_test.server_name_changes WHERE server_name_id=$1",
+      "DELETE FROM projectx_test.server_name_changes WHERE server_name_id=$1",
     ])
       await expect(
         authorized((client) => client.query(sql, [record.id])),
@@ -672,8 +791,8 @@ describe("PEOPLE-07A current authority and restricted runtime RLS", () => {
         .statusCode,
     ).toBe(404);
     for (const sql of [
-      "UPDATE projectx_test.booked_by_name_changes SET action='UPDATED' WHERE booked_by_name_id=$1",
-      "DELETE FROM projectx_test.booked_by_name_changes WHERE booked_by_name_id=$1",
+      "UPDATE projectx_test.server_name_changes SET action='UPDATED' WHERE server_name_id=$1",
+      "DELETE FROM projectx_test.server_name_changes WHERE server_name_id=$1",
     ])
       await expect(adminPool.query(sql, [record.id])).rejects.toMatchObject({
         code: "23514",
@@ -681,15 +800,11 @@ describe("PEOPLE-07A current authority and restricted runtime RLS", () => {
   });
 });
 
-describe("PEOPLE-07A forward migration", () => {
+describe("PEOPLE-08A forward migration", () => {
   it("installs clean with exact ledger/checksum, RLS and least privilege; repeat unchanged", async () => {
     expect(await ledger()).toEqual(
       await Promise.all(
-        [
-          ...previous,
-          migration,
-          "people-zzz-server-names/20261003000800_people_server_names.sql",
-        ].map(async (name) => ({
+        [...previous, migration].map(async (name) => ({
           name,
           checksum: checksum(await content(name)),
         })),
@@ -697,7 +812,7 @@ describe("PEOPLE-07A forward migration", () => {
     );
     const policies = (
       await adminPool.query(
-        "SELECT cmd FROM pg_policies WHERE schemaname='projectx_test' AND tablename='booked_by_names' ORDER BY cmd",
+        "SELECT cmd FROM pg_policies WHERE schemaname='projectx_test' AND tablename='server_names' ORDER BY cmd",
       )
     ).rows;
     expect(policies).toEqual([
@@ -708,13 +823,13 @@ describe("PEOPLE-07A forward migration", () => {
     expect(
       (
         await adminPool.query(
-          "SELECT relrowsecurity FROM pg_class WHERE oid IN ('projectx_test.booked_by_names'::regclass,'projectx_test.booked_by_name_changes'::regclass)",
+          "SELECT relrowsecurity FROM pg_class WHERE oid IN ('projectx_test.server_names'::regclass,'projectx_test.server_name_changes'::regclass)",
         )
       ).rows,
     ).toEqual([{ relrowsecurity: true }, { relrowsecurity: true }]);
     const rights = (
       await adminPool.query(
-        "SELECT has_table_privilege('projectx_people_runtime','projectx_test.booked_by_names','SELECT') s,has_table_privilege('projectx_people_runtime','projectx_test.booked_by_names','INSERT') i,has_table_privilege('projectx_people_runtime','projectx_test.booked_by_names','UPDATE') u,has_column_privilege('projectx_people_runtime','projectx_test.booked_by_names','display_name','UPDATE') name,has_table_privilege('projectx_people_runtime','projectx_test.booked_by_names','DELETE') d,has_table_privilege('projectx_people_runtime','projectx_test.booked_by_name_changes','SELECT') audit",
+        "SELECT has_table_privilege('projectx_people_runtime','projectx_test.server_names','SELECT') s,has_table_privilege('projectx_people_runtime','projectx_test.server_names','INSERT') i,has_table_privilege('projectx_people_runtime','projectx_test.server_names','UPDATE') u,has_column_privilege('projectx_people_runtime','projectx_test.server_names','display_name','UPDATE') name,has_table_privilege('projectx_people_runtime','projectx_test.server_names','DELETE') d,has_table_privilege('projectx_people_runtime','projectx_test.server_name_changes','SELECT') audit",
       )
     ).rows[0];
     expect(rights).toEqual({
@@ -729,7 +844,7 @@ describe("PEOPLE-07A forward migration", () => {
     await migrateTestDatabase();
     expect(await ledger()).toEqual(before);
   });
-  it("upgrades all six verified migrations without changing prior rows/checksums", async () => {
+  it("upgrades all seven verified migrations without changing prior rows/checksums", async () => {
     await resetTestDatabase(adminPool);
     await withTransaction(adminPool, async (client) => {
       await client.query(
@@ -743,7 +858,39 @@ describe("PEOPLE-07A forward migration", () => {
           [name, checksum(sql)],
         );
       }
-      await seedCorePeople(client);
+      const prior = await seedCorePeople(client);
+      const access = newPeopleId();
+      const role = newPeopleId();
+      await client.query(
+        "INSERT INTO venue_access(id,organization_id,membership_id,venue_id) VALUES($1,$2,$3,$4)",
+        [access, prior.orgA, prior.identities.orgA.membership, prior.a1],
+      );
+      await client.query(
+        "INSERT INTO roles(id,organization_id,scope,name) VALUES($1,$2,'VENUE','Prior venue manager')",
+        [role, prior.orgA],
+      );
+      await client.query(
+        "INSERT INTO role_permissions(organization_id,role_id,role_scope,permission_id,permission_scope) VALUES($1,$2,'VENUE','venue.manage','VENUE')",
+        [prior.orgA, role],
+      );
+      await client.query(
+        "INSERT INTO venue_role_grants(id,organization_id,venue_id,venue_access_id,role_id) VALUES($1,$2,$3,$4,$5)",
+        [newPeopleId(), prior.orgA, prior.a1, access, role],
+      );
+      await rawScoped(
+        client,
+        prior.identities.orgA.user,
+        prior.orgA,
+        prior.a1,
+        "venue",
+      );
+      await client.query("SELECT set_config('app.request_id',$1,true)", [
+        crypto.randomUUID(),
+      ]);
+      await client.query(
+        "INSERT INTO booked_by_names(id,organization_id,venue_id,display_name) VALUES($1,$2,$3,'Preserved Booked By record')",
+        [newPeopleId(), prior.orgA, prior.a1],
+      );
     });
     const tables = [
       "organizations",
@@ -759,6 +906,8 @@ describe("PEOPLE-07A forward migration", () => {
       "user_provisioning_invites",
       "organization_permission_grants",
       "venue_permission_grants",
+      "booked_by_names",
+      "booked_by_name_changes",
     ];
     const snapshots = await Promise.all(
       tables.map((table) =>
@@ -767,7 +916,7 @@ describe("PEOPLE-07A forward migration", () => {
     );
     const oldLedger = await ledger();
     await migrateTestDatabase();
-    expect((await ledger()).slice(0, 6)).toEqual(oldLedger);
+    expect((await ledger()).slice(0, 7)).toEqual(oldLedger);
     for (const [index, table] of tables.entries())
       expect(
         (
@@ -779,7 +928,7 @@ describe("PEOPLE-07A forward migration", () => {
     expect(
       (
         await adminPool.query(
-          "SELECT count(*)::int n FROM projectx_test.booked_by_names",
+          "SELECT count(*)::int n FROM projectx_test.server_names",
         )
       ).rows[0].n,
     ).toBe(0);
@@ -792,8 +941,6 @@ describe("PEOPLE-07A forward migration", () => {
     await expect(migrateTestDatabase()).rejects.toThrow(
       "Modified applied migration",
     );
-    expect(
-      (await ledger()).find(({ name }) => name === migration)?.checksum,
-    ).toBe("tampered");
+    expect((await ledger()).at(-1).checksum).toBe("tampered");
   });
 });
