@@ -1289,7 +1289,7 @@
       "name": "Server Names frontend",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "BLOCKED",
+      "status": "VERIFIED",
       "dependencies": [
         "PEOPLE-08A"
       ],
@@ -1333,8 +1333,7 @@
       "entityIds": [],
       "moduleId": "MOD-14",
       "implementationNotes": "PROJECTX IMPLEMENTATION DECISION (ADR-0014): independent SCR-084 generated GET/POST/PATCH client and accessible row editor. UUID ordering/cursor Load more/ID dedup preserve drafts and newer confirmed versions. Local Add/Cancel before POST, confirmed create and one-record versioned save, normalized dirty comparison, Unicode validation and duplicates allowed. Safe persistent row errors/asynchronous focus; 409/404 require explicit refresh/discard, cleared only after successful refresh. Navigation/reload warning, no global guard. No User/employee/AuthIdentity/Booked By coupling, lifecycle/Export or browser tenant authority. Narrow shared integration seams recorded in ADR-0014. Backend/OpenAPI/generated/migrations/RLS and reference classifications unchanged.",
-      "verificationNotes": "Local component/client 69/69, full web 178/178, focused browser 12/12 and full E2E 32/32 (Booked By 11/11) PASS. Lint/typecheck/OpenAPI freshness/map/unit 4/4/integration 19/19/build/scoped formatting PASS. format:check and verify FAIL on 45 unchanged pre-existing CRLF diagnostics, none in task files. Intermediate full-web run failed unchanged PEOPLE-06 add-user.test.tsx:308 immediate success-focus assertion; focused 40/40 and subsequent full runs 177/177 then final 178/178 PASS without edits. Earlier failure retained, not hidden. DATABASE_URL absent: verify:db NOT RUN. All 21 previous VERIFIED tasks and 49 historical checks preserved. See CHK-050.",
-      "blockedReason": "Local implementation complete; separate exact-SHA publication approval required, no push. Both final branch-head pnpm verify and pnpm verify:db on PostgreSQL 16 must PASS before VERIFIED. Recheck recorded unchanged Add User focus-test race in CI; no out-of-scope fixes authorized."
+      "verificationNotes": "Final exact branch-head CI run 37234038404 / job 111529499865 (verify), attempt 1, at published unchanged implementation 63bc1d9efb254f354f7442ec9b3c126c53e2e19d: pnpm verify and pnpm verify:db PASS; actual PostgreSQL 16.15. Server Names component/client 69/69, full web 178/178 across 5 files (Booked By 58, Add User 40, Accounts 9, shell 2), full browser 32/32 including Server Names 12 and Booked By 11 PASS. Keyboard/asynchronous focus/alerts/status/axe/responsive coverage PASS. Database runner 183/183 across 20 files, Server Names real PostgreSQL 41/41 and contract 8/8, Booked By backend 38/38 and contract 7/7 PASS. API integration 19/19, unit 4/4, format/lint/typecheck/OpenAPI freshness/map/build PASS. CHK-050 local CRLF/missing DATABASE_URL limitations and the intermediate unchanged PEOPLE-06 immediate focus assertion remain historical non-authoritative/local observations; Add User 40/40 and browser regression PASS in final CI, no failure reproduced or correction required. Publication/final-CI blocker resolved; BLOCKED -> VERIFIED. All 21 previous VERIFIED tasks and 50 historical checks preserved; only three task-status documents updated after CI. All reference UNKNOWN / NEEDS TESTING and U-001/U-002/U-003 unchanged. See CHK-051."
     },
     {
       "id": "PEOPLE-09",
@@ -1655,5 +1654,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "PEOPLE-08B — Approve exact-SHA publication and verify final branch-head CI"
+  "nextExactTask": "BLOCKED — Resolve PEOPLE-09 export evidence/specification prerequisite; no dependency-valid implementation task is READY"
 }
