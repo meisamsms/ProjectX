@@ -630,7 +630,7 @@
         "PEOPLE-09B",
         "PEOPLE-10"
       ],
-      "remainingWork": "PEOPLE-01 through PEOPLE-08B predecessors VERIFIED. PEOPLE-D009 owner-approved ProjectX export specification resolves only the PEOPLE-09 planning prerequisite; PEOPLE-09 READY, backend unimplemented. PEOPLE-09B and PEOPLE-10 remain PLANNED; parent IN_PROGRESS until export backend/frontend and whole-module verification pass. Reference Export remains UNKNOWN / NEEDS TESTING, no parity claim."
+      "remainingWork": "PEOPLE-01 through PEOPLE-08B predecessors VERIFIED. PEOPLE-D009 export business specification remains APPROVED and its specification gate satisfied. PEOPLE-09 implementation preflight is BLOCKED on approval/design of an export-specific audit write seam: existing name-change histories cannot record export success/denied/failed events. Backend unimplemented, PEOPLE-09B/10 PLANNED, parent IN_PROGRESS. No new generic audit subsystem or reference parity claim."
     },
     {
       "id": "DB-HARNESS-001",
@@ -1340,7 +1340,7 @@
       "name": "People export evidence and scoped backend",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "READY",
+      "status": "BLOCKED",
       "dependencies": [
         "PEOPLE-03"
       ],
@@ -1393,7 +1393,24 @@
       "specificationDecisionId": "PEOPLE-D009",
       "specificationAdr": "docs/architecture/ADR-0015-people-accounts-export.md",
       "specificationGate": "SATISFIED — explicit owner-approved ProjectX specification, not new SevenRooms evidence",
-      "remainingWork": "Backend not implemented/tested; READY only. Required PEOPLE-09 seams: canonical capability registration, existing scoped roster field projection narrowed by current Venue access under least-privilege RLS, metadata-only audit and API contract/tests. No frontend, code, migration or generated contract changed by this planning transition."
+      "remainingWork": "Stopped before export implementation under the explicit architectural-blocker rule. PEOPLE-D009 remains APPROVED; missing reusable durable success/denied/failed audit path requires narrowly scoped architecture/write-seam approval before proceeding. No capability seed, RLS/read change, audit table/function, API/CSV code, tests, migration, OpenAPI/generated types or frontend implemented. Publication/final PostgreSQL 16 CI will still be required after a future authorized implementation.",
+      "implementationBlocker": {
+        "id": "PEOPLE-09-AUDIT-001",
+        "dependency": "Approved export-specific metadata audit persistence/write seam",
+        "reason": "Only Booked By and Server Names successful mutation history paths exist. Their tables require a name-record FK/version and CREATED/UPDATED action; trigger-only writers require venue.manage, and runtime has no direct audit write privilege. No reusable writer for export success/denied/failed was found. The PEOPLE-02 helper denies before invoking the operation and rolls back failures, so an audit in its failed transaction would not persist.",
+        "evidenceFiles": [
+          "apps/api/migrations/people-zz-booked-by/20261002000700_people_booked_by.sql",
+          "apps/api/migrations/people-zzz-server-names/20261003000800_people_server_names.sql",
+          "apps/api/src/people/authorization/context.ts",
+          "docs/security/authorization-contract.md"
+        ],
+        "affectedModules": ["MOD-14"],
+        "affectedContracts": ["PEOPLE-D009 export audit/failure atomicity", "PEOPLE-02 trusted scope and restricted runtime boundary"],
+        "requiredPredecessor": "Approve/design the smallest export-only append-only metadata writer, including safe denial attribution and failure durability, before PEOPLE-09 implementation; no new task or generic audit subsystem started.",
+        "ownerDecisionRequired": true,
+        "ownerQuestion": "Approve a narrowly scoped export-only audit write seam within PEOPLE-09, or explicitly authorize a separate prerequisite/scope change? Existing business specification is unchanged; no fundamental claim that safe export auditing is impossible.",
+        "recommendedTechnicalDefault": "Approve export-only metadata storage and a tightly checked writer with no runtime BYPASSRLS/admin request pool; preserve current trusted scope and permitted conditional denial auditing, separate failure durability from rolled-back export work, and require PostgreSQL isolation/append-only/atomicity tests. Do not implement without approval."
+      }
     },
     {
       "id": "PEOPLE-09B",
@@ -1664,5 +1681,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "PEOPLE-09 — People export evidence and scoped backend"
+  "nextExactTask": "BLOCKED — Approve narrowly scoped PEOPLE-09 audit write seam before export backend implementation"
 }

@@ -97,6 +97,20 @@ U-001/U-002/U-003 and all other reference classifications; no parity claim.
 
 ## Shared fixture and identity seam
 
+PEOPLE-09 implementation preflight (2026-10-04): business specification PEOPLE-D009
+remains APPROVED, but implementation is BLOCKED on PEOPLE-09-AUDIT-001. The only
+durable People histories are name-record/version-specific CREATED/UPDATED triggers
+requiring venue.manage, not reusable export attempt/result writers. No safe existing
+durable denial/failure writer was found; PEOPLE-02 denies before its callback and
+rolls back failed work. Per the implementation request's explicit failure rule,
+stop before creating a new audit write architecture. Smallest prerequisite is
+approval/design of an export-only metadata persistence/writer seam and its trusted
+scope/denial attribution/failure durability tests, not a generic audit subsystem.
+No code, migration, generated contract, frontend or future task was started.
+PEOPLE-09B/10 remain PLANNED; IMPL-MOD-14 IN_PROGRESS and all prior VERIFIED tasks
+unchanged. Specification readiness is historical; it does not override this newly
+discovered implementation blocker. Reference Export and U-001/U-002/U-003 unchanged.
+
 PEOPLE-04P refinement (2026-10-01): the owner approved Option A direct grants owned
 by OrganizationMembership/VenueAccess, additive with unchanged reusable roles.
 ADR-0009 records the narrowly required persistence, capability/RLS and PEOPLE-04
