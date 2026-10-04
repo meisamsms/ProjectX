@@ -1220,7 +1220,7 @@
       "name": "Server Names backend",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "BLOCKED",
+      "status": "VERIFIED",
       "dependencies": [
         "PEOPLE-02"
       ],
@@ -1282,14 +1282,14 @@
       "entityIds": [],
       "moduleId": "MOD-14",
       "implementationNotes": "PROJECTX IMPLEMENTATION DECISION (ADR-0013): separate organization/venue Server Name record and append-only history, UUIDv7/composite Venue ownership, no User/AuthIdentity/membership/employee/Booked By/OIDC/provisioning linkage or synchronization. Case-preserving plain-text ECMAScript edge trim, 1–120 Unicode code points, no controls/unpaired surrogates; duplicates allowed; UUID ascending cursor pages default 25/max 100; versioned one-record PATCH/stale 409/scoped404. Existing venue.manage, unchanged PEOPLE-02 authorized transactions and restricted-runtime RLS. No frontend/delete/archive/bulk/Export. Narrow shared app/runner/ledger dependencies recorded in ADR-0013; historical SQL and Booked By application/contracts/frontend unchanged. All reference classifications and U-001/U-002/U-003 unchanged.",
-      "verificationNotes": "Local contract 8/8 PASS; integration 19/19, unit 4/4, web 109/109 (Booked By 58/58, Add User 40/40, Accounts 9/9), browser 20/20 including Booked By 11/11 PASS. Lint/typecheck/generated contract/map/build and scoped formatting PASS. pnpm format:check and pnpm verify FAIL on 45 unchanged pre-existing CRLF diagnostics, not Server Names files; no unrelated mass-format. Focused real PostgreSQL suite fails at module load because DATABASE_URL is absent (0 tests executed); pnpm verify:db NOT RUN, no PostgreSQL/RLS/migration pass claimed. BLOCKED pending separate exact-SHA publication approval and successful final branch-head pnpm verify + pnpm verify:db on PostgreSQL 16. No new CI run or push. See CHK-048."
+      "verificationNotes": "Final exact branch-head CI run 37175140466, job 111356101186 (verify), attempt 1, at implementation fdf76449b22979ecff6700c6d5bafd668b65d650 on PostgreSQL 16.15: pnpm verify and pnpm verify:db PASS. Database runner 183/183 across 20 files; Server Names real PostgreSQL suite 41/41 and contract 8/8 PASS. Integration 19/19, unit 4/4, web 109/109 (Booked By 58/58, Add User 40/40, Accounts 9/9), browser 20/20 including Booked By 11/11 PASS. Booked By backend 38/38; authorization, RLS, direct grants, Add User, Accounts and predecessor migrations green. Format/lint/typecheck/OpenAPI freshness/map/build PASS in CI. Publication/final-CI blocker resolved; PEOPLE-08A BLOCKED -> VERIFIED. CHK-048 local CRLF and absent DATABASE_URL limitations remain historical, not final CI failures. No corrective application/test/migration/contract changes; only three status documents updated after success. All reference classifications remain unchanged. See CHK-049."
     },
     {
       "id": "PEOPLE-08B",
       "name": "Server Names frontend",
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
-      "status": "PLANNED",
+      "status": "READY",
       "dependencies": [
         "PEOPLE-08A"
       ],
@@ -1652,5 +1652,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "PEOPLE-08A — Exact-SHA publication approval and final branch-head CI verification"
+  "nextExactTask": "PEOPLE-08B — Server Names frontend"
 }
