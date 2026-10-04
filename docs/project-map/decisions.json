@@ -982,6 +982,89 @@
       "reversibility": "MODERATE",
       "notes": "Future test/data may refine implementation; not approved.",
       "coveredByDecisionId": null
+    },
+    {
+      "id": "PEOPLE-D009",
+      "title": "User Accounts Export contract",
+      "status": "APPROVED",
+      "category": "OWNER APPROVED",
+      "classification": "PROJECTX IMPLEMENTATION DECISION",
+      "ownerDecision": {
+        "approvedBy": "Product owner",
+        "approvedAt": "2026-10-04",
+        "basis": "Explicit attached Resolve PEOPLE-09 export specification prerequisite request; owner-approved ProjectX specification instead of additional SevenRooms Export discovery."
+      },
+      "rationale": "Resolve the implementation specification gate without guessing reference behavior; minimize exported data and independently authorize current-Venue exports.",
+      "affectedRoadmapTasks": ["PEOPLE-09", "PEOPLE-09B", "PEOPLE-10"],
+      "adr": "docs/architecture/ADR-0015-people-accounts-export.md",
+      "specification": {
+        "format": "CSV",
+        "encoding": "UTF-8",
+        "delivery": "Immediate synchronous HTTP download",
+        "storedExportJob": false,
+        "generatedServerFileRetention": "None",
+        "scope": "Current server-authorized Venue only",
+        "source": "Existing scoped PEOPLE-03 User Accounts roster domain; export must narrow its organization roster to current-Venue membership/access, not change or export the organization-wide read endpoint wholesale.",
+        "filters": "None in v1; complete authorized Venue roster, not the current UI filter/page",
+        "columns": ["Name", "Job Title", "Access Level", "Email Notifications"],
+        "excludedFields": [
+          "Email", "Mobile MFA", "Suspended internals", "Granular Permissions",
+          "Email Subscriptions", "Organization ID", "Venue ID", "User ID",
+          "AuthenticatedIdentity identifiers", "OIDC issuer/subject",
+          "internal Role IDs", "Permission IDs", "audit metadata"
+        ],
+        "authorization": {
+          "capability": "people.accounts.export",
+          "scope": "VENUE",
+          "readAuthorityImpliesExport": false,
+          "tenantAuthority": "Trusted server authorization context only; no browser/client-selected Organization or Venue authority"
+        },
+        "endpoint": {
+          "method": "POST",
+          "path": "/api/v1/people/accounts/export",
+          "requestBody": {},
+          "successStatus": 200,
+          "contentType": "text/csv; charset=utf-8",
+          "contentDisposition": "attachment",
+          "filename": "people-accounts-YYYY-MM-DD.csv"
+        },
+        "ordering": "Ascending User UUID, matching deterministic PEOPLE-03 account ordering; not a SevenRooms ordering claim",
+        "maximumRows": 10000,
+        "overLimit": "Safe 422/domain error; no partial export",
+        "emptyRoster": "Valid CSV with header row only",
+        "formulaInjectionProtection": "Neutralize exported text beginning with spreadsheet formula/control prefixes including =, +, -, @, tab and carriage return; CSV quoting alone is not the neutralization contract. ProjectX security decision; do not mutate stored fields.",
+        "audit": {
+          "convention": "Scoped export attempt/result using existing append-only, redacted audit conventions",
+          "fields": ["event type", "organization scope", "venue scope", "actor attribution", "timestamp", "result"],
+          "results": ["success", "denied", "failed"],
+          "successOnlyField": "exported row count",
+          "excluded": "CSV contents and exported field values; no generated-file storage"
+        },
+        "errors": {
+          "400": "Malformed request",
+          "401": "Unauthenticated",
+          "403": "Missing export capability",
+          "422": "Row-limit exceeded",
+          "500": "Generic generation failure"
+        },
+        "failureAtomicity": "Complete generation before any CSV response; no partial CSV response/file on failure",
+        "privacy": "Only the four allowlisted columns",
+        "frontendBoundary": "PEOPLE-09B remains separate; no frontend implementation in this specification task"
+      },
+      "referenceBoundary": {
+        "ACT-0056": "CONFIRMED visible action only",
+        "behaviorStatus": "UNKNOWN / NEEDS TESTING",
+        "unknowns": [
+          "file format", "exported fields", "tenant scope", "filtering",
+          "permission behavior", "delivery/download mechanism", "filename",
+          "audit", "retention", "failure/cancellation", "alternate roles"
+        ],
+        "preservedUnknownIds": ["U-001", "U-002", "U-003"],
+        "parityClaim": false,
+        "newReferenceEvidence": false
+      },
+      "implementationStatus": "NOT_IMPLEMENTED",
+      "notes": "Specification prerequisite satisfied only. PEOPLE-09 READY, not VERIFIED; canonical capability registration, least-privilege RLS/read seam, audit and API implementation/tests belong to PEOPLE-09. No runtime, migrations, generated contracts or reference classifications changed."
     }
   ],
   "unresolvedQuestions": [
@@ -1191,7 +1274,8 @@
     "ARCH-D011",
     "ARCH-D015",
     "ARCH-D016",
-    "ARCH-D018"
+    "ARCH-D018",
+    "PEOPLE-D009"
   ],
   "projectDocumentGap": "decisions.json was absent before ARCH-001; created in the previous checkpoint. Owner approvals and corresponding ADRs are now recorded.",
   "evidenceLabels": [

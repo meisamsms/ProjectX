@@ -42,7 +42,58 @@ flowchart TD
   N --> M
 ```
 
-PEOPLE-10 also depends on the backend tasks through their UI successors and directly on PEOPLE-02. Its export dependency is a **gate**, not a requirement to guess an export format: PEOPLE-09 is BLOCKED until safe evidence or an explicit ProjectX product-owner decision defines output, field scope, authorization, audit and privacy behavior. PEOPLE-09 then implements the scoped backend; PEOPLE-09B connects the SCR-025 action after both backend and list UI are ready. If export remains deferred, the parent cannot be reported as complete parity; a later explicit milestone scope change would have to document the omission and leave the action visibly unavailable. No implicit change to module scope is approved now.
+PEOPLE-10 also depends on the backend tasks through their UI successors and directly on PEOPLE-02. Its export dependency is a **gate**, not a requirement to guess an export format. On 2026-10-04, explicit owner-approved ProjectX specification PEOPLE-D009 (ADR-0015) satisfied the planning prerequisite; PEOPLE-09 is READY, not implemented or VERIFIED. PEOPLE-09 then implements the scoped backend; PEOPLE-09B connects the SCR-025 action after both backend and list UI are verified. PEOPLE-09B/10 remain PLANNED and IMPL-MOD-14 IN_PROGRESS. No milestone omission or reference parity is approved. SevenRooms Export behavior remains UNKNOWN / NEEDS TESTING.
+
+## PEOPLE-D009 — Owner-approved User Accounts Export specification
+
+OWNER APPROVED / PROJECTX IMPLEMENTATION DECISION, 2026-10-04; authoritative
+machine-readable contract in `decisions.json`, architectural boundary in
+`docs/architecture/ADR-0015-people-accounts-export.md`. The owner chose this path
+instead of further SevenRooms Export discovery. This section records specification
+only; no API, migration, generated types or frontend implemented.
+
+CSV UTF-8, immediate synchronous HTTP download; no stored export job or generated
+server-side file retention. Current server-authorized Venue only, from the existing
+PEOPLE-03 User Accounts roster domain, complete authorized roster with no v1
+filters. PEOPLE-03 itself is organization-scoped: export must narrow to active
+current-Venue membership/access without changing the existing read endpoint or
+exporting its organization-wide response. Use the same ascending User UUID order
+and roster field semantics, not a reference ordering/role-precedence claim.
+
+Exact columns: **Name, Job Title, Access Level, Email Notifications**. Explicitly
+exclude Email, Mobile MFA, Suspended internals, Granular Permissions, Email
+Subscriptions, Organization/Venue/User IDs, AuthenticatedIdentity identifiers,
+OIDC issuer/subject, internal Role/Permission IDs and audit metadata.
+
+Dedicated canonical VENUE capability `people.accounts.export`; ordinary roster
+read authority does not imply export. Scope comes only from trusted server
+authorization context, never browser/client-selected tenant authority. Planned
+`POST /api/v1/people/accounts/export`, strict body `{}`, 200,
+`Content-Type: text/csv; charset=utf-8`, attachment filename
+`people-accounts-YYYY-MM-DD.csv`. Empty roster: header only. Maximum 10,000 rows;
+above it return safe 422, never a partial export.
+
+ProjectX security decision: neutralize exported text beginning with `=`, `+`, `-`,
+`@`, tab or carriage return and test CSV escaping independently; do not alter stored
+data. Audit scoped attempt/result using existing conventions, only event type,
+organization/venue scope, actor attribution, timestamp, success/denied/failed and
+row count on success. Never audit/store CSV contents or exported field values.
+Safe errors: 400 malformed request, 401 unauthenticated, 403 missing capability,
+422 over limit, 500 generic generation failure. Complete generation/required audit
+before sending CSV; no partial response/file on failure.
+
+Future PEOPLE-09 acceptance covers tenant/RLS/revocation and read-only grant denial,
+exact allowlist, empty/10,000/10,001 boundaries, complete deterministic order,
+formula prefixes/escaping, safe errors, minimal audit and failure atomicity on
+PostgreSQL 16 with `pnpm verify` and `pnpm verify:db`. Required integration seams
+(capability registration, narrowed RLS/read projection, audit and API contracts)
+are PEOPLE-09-owned, not a new implementation in this planning task. PEOPLE-09B
+frontend remains separate and PLANNED; Export remains unavailable until verified.
+
+ACT-0056 stays CONFIRMED visible action only. SevenRooms file format, fields,
+tenant scope, filtering, permissions, delivery/download, filename, audit, retention,
+failure/cancellation and alternate roles stay UNKNOWN / NEEDS TESTING. Preserve
+U-001/U-002/U-003 and all other reference classifications; no parity claim.
 
 ## Shared fixture and identity seam
 
