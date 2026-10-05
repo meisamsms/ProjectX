@@ -175,3 +175,73 @@ The People domain consumes a trusted authenticated identity abstraction and serv
 SCR-025 changes `NOT_IMPLEMENTED` only after PEOPLE-05 passes API integration and frontend state tests; SCR-026 after PEOPLE-06; SCR-083 after PEOPLE-07B; SCR-084 after PEOPLE-08B. A screen can be IMPLEMENTED while final module regression remains pending; mark VERIFIED only after PEOPLE-10 validates route, auth, keyboard/accessibility, E2E and contract coverage. The observed Export action must remain clearly unavailable until PEOPLE-09 is resolved and verified. Backend-only tasks do not change screen status.
 
 Each child runs focused format/lint/typecheck plus its own database, RLS, API contract, UI or E2E tests. PEOPLE-10 runs full applicable `pnpm verify` and the real PostgreSQL isolation suite (the foundation's database N/A status cannot be reused). All tests must report exact commands and results. ProjectX behavior for duplicates, user creation success, error codes and navigation will be labeled PROJECTX IMPLEMENTATION DECISION in the relevant task; no UNKNOWN reference outcome will be relabeled CONFIRMED without new evidence.
+
+## PRIORITY-001 — Current reservation-core dependency boundary
+
+Current roadmap/PRIORITY-D001 supersede historical sequence/status prose above
+without rewriting historical contracts, acceptance or evidence. Decision is
+OWNER APPROVED / PROJECTX PRODUCT PRIORITY DECISION; D009/D010 remain APPROVED.
+
+PEOPLE-CORE-01 is VERIFIED for existing security evidence aggregation only:
+PEOPLE-01/01B/02 and the effective direct-permission/revocation subset of 04P.
+CHK-019/021/023/039 establish the foundation, CHK-051 preserves current regression
+evidence, CHK-056 checks this boundary. It is not full People, live OIDC/session
+integration, public booking or new-domain RLS verification. Existing 04P -> 04
+ancestry is test provenance, not a need to use Add User for booking. IMPL-MOD-14
+remains IN_PROGRESS and PEOPLE-10 full acceptance remains unsatisfied.
+
+| Task | Priority | Core reason / boundary |
+|---|---|---|
+| PEOPLE-01 | PART 2 REQUIRED | Identity binding, User, Organization/Venue, active membership and VenueAccess. |
+| PEOPLE-01B | PART 2 REQUIRED | Scoped roles/permissions/grants/revocation. |
+| PEOPLE-02 | PART 2 REQUIRED | Trusted abstraction, restricted context, People RLS/current authority. |
+| PEOPLE-03P | PART 2 NON-BLOCKING | Roster profile fields are not minimum guest/booking settings. |
+| PEOPLE-03 | PART 2 NON-BLOCKING | Accounts roster is not a booking predecessor. |
+| PEOPLE-04 | PART 2 NON-BLOCKING | Existing provisioning retained; Add User not required for first booking. |
+| PEOPLE-04P | PART 2 REQUIRED (subset) | Current additive rights/revocation only; options/command extension non-blocking. |
+| PEOPLE-05 | PART 2 NON-BLOCKING | Accounts management UI already verified, not a booking gate. |
+| PEOPLE-06 | PART 2 NON-BLOCKING | Add User UI already verified, not a booking gate. |
+| PEOPLE-07A | PART 2 NON-BLOCKING | SCR-003 CMP-0033 Booked By visible; integrate API only if approved staff-entry rules require it. |
+| PEOPLE-07B | PART 2 NON-BLOCKING | Management editor not required for capacity/booking. |
+| PEOPLE-08A | PART 2 NON-BLOCKING | No proven Server Names requirement; no User/employee inference. |
+| PEOPLE-08B | PART 2 NON-BLOCKING | Existing editor retained, not core predecessor. |
+| PEOPLE-09 | PART 3 DEFERRED | READY is planning readiness, not execution permission. |
+| PEOPLE-09B | PART 3 DEFERRED | PLANNED; export remains unavailable. |
+| PEOPLE-10 | PART 3 DEFERRED | Full module/Export integration PLANNED; narrow milestone does not satisfy it. |
+
+PEOPLE-09/09B/10: PRIORITY PART = 3; DEFERRED FOR CORE DELIVERY;
+RECONSIDER AFTER CORE READINESS GATE CORE-READY-01 verifies all ten owner criteria,
+or an explicit owner exception. D010 is export-only, not a generic reservation
+audit dependency. Necessary core audit must still be scoped/tested in its feature
+contract, not dropped or implemented through an unapproved generic subsystem.
+
+General Settings, Floorplan, Availability, Clients, Reservations and staff Widget
+configuration share the security subset, not Accounts/Add User/name editor screens.
+Public guest booking needs separately reviewed purpose-limited access, never
+unrestricted staff VenueAccess/roster authority.
+
+Thin capability execution graph (current roadmap, not reference internals):
+
+- FOUND-TASK-004 + PEOPLE-CORE-01 -> CORE-AUTH-01 specification -> CORE-AUTH-02 staff integration (BLOCKED).
+- Staff integration -> SETTINGS-CORE-01 -> FLOORPLAN-CORE-01 -> AVAILABILITY-CORE-01.
+- SETTINGS-CORE-01 -> CLIENTS-CORE-01 and LANGUAGE-CORE-01 in parallel where safe.
+- Settings + tables + availability + clients core -> RESERVATIONS-CORE-01.
+- Reservations + availability + language core -> WIDGET-CORE-01 -> CORE-READY-01.
+
+Original module IDs and whole-module acceptance stay intact. Optional settings,
+graphical designer features, profiles, all templates and other widgets cannot
+block this thin path. Historical app-map/dependencies/diagram module-level proposal
+is retained as product relationship evidence, not an execution/completion gate;
+roadmap.json now governs scheduling. Future child work must be decomposed into
+bounded approved contract/backend/frontend slices before code.
+
+First READY task: CORE-AUTH-01, documentation only. main.ts starts createApp without
+injected resolver/pool; the identity binder brands caller-verified UUID, not OIDC
+proof. FOUND-TASK-002/003 verify contracts, not working sessions. Separate
+CORE-AUTH-02 remains BLOCKED pending approved provider/config/session policy and
+verified integration. No fake production identity/admin pool can bridge this gap.
+
+Core remains unmet: minimum settings/IANA zone/DST, table/shift/rule/capacity,
+private minimum guests, atomic concurrent booking/retries, staff state transitions,
+safe public change/cancel and truthful required confirmation need scoped evidence.
+No SevenRooms finding/parity added; all U-001/U-002/U-003 and classifications retained.

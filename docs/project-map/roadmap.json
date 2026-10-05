@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "currentPhase": "PHASE-04",
-  "orderingBasis": "Proposed technical prerequisites, not navigation order. Hard edges must be verified; optional integrations do not block core modules. Owner policy in AGENTS.md now requires reservation-first reconciliation before any further implementation; the historical module order below is pending PRIORITY-001 and cannot authorize Part 3 work.",
+  "orderingBasis": "Reservation-first execution graph under PRIORITY-D001: capability-qualified People foundation and bounded core slices, not full optional module completion. app-map.json, dependencies.json and diagram edges remain historical proposed product/module relationships, not execution/completion gates. This roadmap governs scheduling; full-module/release acceptance unchanged.",
   "phases": [
     {
       "id": "PHASE-01",
@@ -262,10 +262,11 @@
       "status": "PLANNED",
       "dependencies": [
         "FOUND-TASK-004",
-        "IMPL-MOD-04",
-        "IMPL-MOD-11",
-        "IMPL-MOD-13",
-        "IMPL-MOD-14"
+        "PEOPLE-CORE-01",
+        "CLIENTS-CORE-01",
+        "AVAILABILITY-CORE-01",
+        "FLOORPLAN-CORE-01",
+        "RESERVATIONS-CORE-01"
       ],
       "scope": "Implement only the mapped Reservations screens and workflows once dependencies are verified.",
       "acceptanceCriteria": [
@@ -285,7 +286,11 @@
       "unknownsToResolve": [
         "U-001",
         "Q-002"
-      ]
+      ],
+      "childTaskIds": [
+        "RESERVATIONS-CORE-01"
+      ],
+      "remainingWork": "Core work owned by RESERVATIONS-CORE-01 only; original whole-module acceptance retained and not the core gate. Do not start every mapped screen. Optional residual features wait for CORE-READY-01 or explicit owner exception. Separate approved bounded contracts/implementation prompts required."
     },
     {
       "id": "IMPL-MOD-03",
@@ -296,7 +301,7 @@
         "FOUND-TASK-004",
         "IMPL-MOD-04",
         "IMPL-MOD-11",
-        "IMPL-MOD-14"
+        "PEOPLE-CORE-01"
       ],
       "scope": "Implement only the mapped Requests screens and workflows once dependencies are verified.",
       "acceptanceCriteria": [
@@ -322,8 +327,9 @@
       "status": "PLANNED",
       "dependencies": [
         "FOUND-TASK-004",
-        "IMPL-MOD-09",
-        "IMPL-MOD-14"
+        "PEOPLE-CORE-01",
+        "SETTINGS-CORE-01",
+        "CLIENTS-CORE-01"
       ],
       "scope": "Implement only the mapped Clients screens and workflows once dependencies are verified.",
       "acceptanceCriteria": [
@@ -340,7 +346,11 @@
         "Verify tenant and permission boundaries where applicable",
         "Do not change unrelated modules"
       ],
-      "unknownsToResolve": []
+      "unknownsToResolve": [],
+      "childTaskIds": [
+        "CLIENTS-CORE-01"
+      ],
+      "remainingWork": "Core work owned by CLIENTS-CORE-01 only; original whole-module acceptance retained and not the core gate. Do not start every mapped screen. Optional residual features wait for CORE-READY-01 or explicit owner exception. Separate approved bounded contracts/implementation prompts required."
     },
     {
       "id": "IMPL-MOD-05",
@@ -459,7 +469,8 @@
       "status": "PLANNED",
       "dependencies": [
         "FOUND-TASK-004",
-        "IMPL-MOD-14"
+        "PEOPLE-CORE-01",
+        "SETTINGS-CORE-01"
       ],
       "scope": "Implement only the mapped General Settings screens and workflows once dependencies are verified.",
       "acceptanceCriteria": [
@@ -476,7 +487,11 @@
         "Verify tenant and permission boundaries where applicable",
         "Do not change unrelated modules"
       ],
-      "unknownsToResolve": []
+      "unknownsToResolve": [],
+      "childTaskIds": [
+        "SETTINGS-CORE-01"
+      ],
+      "remainingWork": "Core work owned by SETTINGS-CORE-01 only; original whole-module acceptance retained and not the core gate. Do not start every mapped screen. Optional residual features wait for CORE-READY-01 or explicit owner exception. Separate approved bounded contracts/implementation prompts required."
     },
     {
       "id": "IMPL-MOD-10",
@@ -486,7 +501,7 @@
       "dependencies": [
         "FOUND-TASK-004",
         "IMPL-MOD-09",
-        "IMPL-MOD-14"
+        "PEOPLE-CORE-01"
       ],
       "scope": "Implement only the mapped Integrations screens and workflows once dependencies are verified.",
       "acceptanceCriteria": [
@@ -512,8 +527,10 @@
       "status": "PLANNED",
       "dependencies": [
         "FOUND-TASK-004",
-        "IMPL-MOD-09",
-        "IMPL-MOD-13"
+        "PEOPLE-CORE-01",
+        "SETTINGS-CORE-01",
+        "FLOORPLAN-CORE-01",
+        "AVAILABILITY-CORE-01"
       ],
       "scope": "Implement only the mapped Availability screens and workflows once dependencies are verified.",
       "acceptanceCriteria": [
@@ -530,7 +547,11 @@
         "Verify tenant and permission boundaries where applicable",
         "Do not change unrelated modules"
       ],
-      "unknownsToResolve": []
+      "unknownsToResolve": [],
+      "childTaskIds": [
+        "AVAILABILITY-CORE-01"
+      ],
+      "remainingWork": "Core work owned by AVAILABILITY-CORE-01 only; original whole-module acceptance retained and not the core gate. Do not start every mapped screen. Optional residual features wait for CORE-READY-01 or explicit owner exception. Separate approved bounded contracts/implementation prompts required."
     },
     {
       "id": "IMPL-MOD-12",
@@ -539,9 +560,11 @@
       "status": "PLANNED",
       "dependencies": [
         "FOUND-TASK-004",
-        "IMPL-MOD-11",
-        "IMPL-MOD-02",
-        "IMPL-MOD-15"
+        "PEOPLE-CORE-01",
+        "AVAILABILITY-CORE-01",
+        "RESERVATIONS-CORE-01",
+        "LANGUAGE-CORE-01",
+        "WIDGET-CORE-01"
       ],
       "scope": "Implement only the mapped Widgets screens and workflows once dependencies are verified.",
       "acceptanceCriteria": [
@@ -558,7 +581,11 @@
         "Verify tenant and permission boundaries where applicable",
         "Do not change unrelated modules"
       ],
-      "unknownsToResolve": []
+      "unknownsToResolve": [],
+      "childTaskIds": [
+        "WIDGET-CORE-01"
+      ],
+      "remainingWork": "Core work owned by WIDGET-CORE-01 only; original whole-module acceptance retained and not the core gate. Do not start every mapped screen. Optional residual features wait for CORE-READY-01 or explicit owner exception. Separate approved bounded contracts/implementation prompts required."
     },
     {
       "id": "IMPL-MOD-13",
@@ -567,8 +594,9 @@
       "status": "PLANNED",
       "dependencies": [
         "FOUND-TASK-004",
-        "IMPL-MOD-09",
-        "IMPL-MOD-14"
+        "PEOPLE-CORE-01",
+        "SETTINGS-CORE-01",
+        "FLOORPLAN-CORE-01"
       ],
       "scope": "Implement only the mapped Floorplan screens and workflows once dependencies are verified.",
       "acceptanceCriteria": [
@@ -585,7 +613,11 @@
         "Verify tenant and permission boundaries where applicable",
         "Do not change unrelated modules"
       ],
-      "unknownsToResolve": []
+      "unknownsToResolve": [],
+      "childTaskIds": [
+        "FLOORPLAN-CORE-01"
+      ],
+      "remainingWork": "Core work owned by FLOORPLAN-CORE-01 only; original whole-module acceptance retained and not the core gate. Do not start every mapped screen. Optional residual features wait for CORE-READY-01 or explicit owner exception. Separate approved bounded contracts/implementation prompts required."
     },
     {
       "id": "IMPL-MOD-14",
@@ -628,9 +660,10 @@
         "PEOPLE-08B",
         "PEOPLE-09",
         "PEOPLE-09B",
-        "PEOPLE-10"
+        "PEOPLE-10",
+        "PEOPLE-CORE-01"
       ],
-      "remainingWork": "PEOPLE-01 through PEOPLE-08B predecessors VERIFIED. PEOPLE-D009 business contract and PEOPLE-D010 narrow export-only audit seam APPROVED; PEOPLE-09-AUDIT-001 RESOLVED by PEOPLE-D010. PEOPLE-09 READY, backend/audit still unimplemented. Exact-SHA publication approval and final PostgreSQL 16 CI required after implementation. PEOPLE-09B/10 PLANNED, parent IN_PROGRESS; no generic Audit module or reference parity claim."
+      "remainingWork": "PEOPLE-CORE-01 qualifies existing reservation security subset only. Full People stays IN_PROGRESS, original acceptance retained. D009/D010 APPROVED and original audit blocker RESOLVED; backend/audit unimplemented. PEOPLE-09 READY but PART 3 DEFERRED FOR CORE DELIVERY; PEOPLE-09B/10 PLANNED likewise. RECONSIDER AFTER CORE READINESS GATE CORE-READY-01 or explicit owner exception. Production staff OIDC/session integration is separate CORE-AUTH-01/02, not People verification. Future export requires exact-SHA publication approval/final PostgreSQL 16 CI."
     },
     {
       "id": "DB-HARNESS-001",
@@ -1434,7 +1467,7 @@
       "specificationDecisionId": "PEOPLE-D009",
       "specificationAdr": "docs/architecture/ADR-0015-people-accounts-export.md",
       "specificationGate": "SATISFIED — explicit owner-approved ProjectX specification, not new SevenRooms evidence",
-      "remainingWork": "PEOPLE-D009 business contract APPROVED; PEOPLE-D010 export-only durable audit seam APPROVED and PEOPLE-09-AUDIT-001 RESOLVED. Backend/audit still unimplemented and unverified; READY for PEOPLE-09 only. No capability seed, RLS/read change, audit table/function, API/CSV code, tests, migration, OpenAPI/generated types or frontend in this documentation task. Exact-SHA publication approval and final branch-head pnpm verify/pnpm verify:db on PostgreSQL 16 required after future implementation.",
+      "remainingWork": "PEOPLE-D009 business contract APPROVED; PEOPLE-D010 export-only durable audit seam APPROVED and PEOPLE-09-AUDIT-001 RESOLVED. Backend/audit still unimplemented and unverified; READY for PEOPLE-09 only. No capability seed, RLS/read change, audit table/function, API/CSV code, tests, migration, OpenAPI/generated types or frontend in this documentation task. Exact-SHA publication approval and final branch-head pnpm verify/pnpm verify:db on PostgreSQL 16 required after future implementation. DEFERRED FOR CORE DELIVERY; RECONSIDER AFTER CORE READINESS GATE. Existing allowed status indicates planning/dependency readiness only, not execution permission. No implementation started.",
       "auditDecisionId": "PEOPLE-D010",
       "auditAdr": "docs/architecture/ADR-0016-people-export-audit-seam.md",
       "implementationBlocker": {
@@ -1461,6 +1494,14 @@
         "ownerDecisionRequired": false,
         "ownerQuestion": "Approve a narrowly scoped export-only audit write seam within PEOPLE-09, or explicitly authorize a separate prerequisite/scope change? Existing business specification is unchanged; no fundamental claim that safe export auditing is impossible.",
         "recommendedTechnicalDefault": "Approve export-only metadata storage and a tightly checked writer with no runtime BYPASSRLS/admin request pool; preserve current trusted scope and permitted conditional denial auditing, separate failure durability from rolled-back export work, and require PostgreSQL isolation/append-only/atomicity tests. Do not implement without approval."
+      },
+      "priorityPart": 3,
+      "priorityDecisionId": "PRIORITY-D001",
+      "deferral": {
+        "classification": "PART 3 DEFERRED",
+        "state": "DEFERRED FOR CORE DELIVERY",
+        "reconsiderAfter": "CORE READINESS GATE — CORE-READY-01 VERIFIED against all ten AGENTS.md criteria, or explicit owner exception",
+        "reason": "Administrative Export is not a reservation prerequisite; D009/D010 remain approved for later."
       }
     },
     {
@@ -1510,7 +1551,16 @@
         "ACT-0056"
       ],
       "entityIds": [],
-      "moduleId": "MOD-14"
+      "moduleId": "MOD-14",
+      "priorityPart": 3,
+      "priorityDecisionId": "PRIORITY-D001",
+      "deferral": {
+        "classification": "PART 3 DEFERRED",
+        "state": "DEFERRED FOR CORE DELIVERY",
+        "reconsiderAfter": "CORE READINESS GATE — CORE-READY-01 VERIFIED against all ten AGENTS.md criteria, or explicit owner exception",
+        "reason": "Administrative Export is not a reservation prerequisite; D009/D010 remain approved for later."
+      },
+      "remainingWork": "DEFERRED FOR CORE DELIVERY; RECONSIDER AFTER CORE READINESS GATE. Existing allowed status indicates planning/dependency readiness only, not execution permission. No implementation started."
     },
     {
       "id": "PEOPLE-10",
@@ -1582,7 +1632,16 @@
         "ENT-043",
         "ENT-044"
       ],
-      "moduleId": "MOD-14"
+      "moduleId": "MOD-14",
+      "priorityPart": 3,
+      "priorityDecisionId": "PRIORITY-D001",
+      "deferral": {
+        "classification": "PART 3 DEFERRED",
+        "state": "DEFERRED FOR CORE DELIVERY",
+        "reconsiderAfter": "CORE READINESS GATE — CORE-READY-01 VERIFIED against all ten AGENTS.md criteria, or explicit owner exception",
+        "reason": "Full People completion includes Export; narrow core milestone does not satisfy this task."
+      },
+      "remainingWork": "DEFERRED FOR CORE DELIVERY; RECONSIDER AFTER CORE READINESS GATE. Existing allowed status indicates planning/dependency readiness only, not execution permission. No implementation started."
     },
     {
       "id": "IMPL-MOD-15",
@@ -1591,7 +1650,9 @@
       "status": "PLANNED",
       "dependencies": [
         "FOUND-TASK-004",
-        "IMPL-MOD-09"
+        "PEOPLE-CORE-01",
+        "SETTINGS-CORE-01",
+        "LANGUAGE-CORE-01"
       ],
       "scope": "Implement only the mapped Guest-Facing Language screens and workflows once dependencies are verified.",
       "acceptanceCriteria": [
@@ -1608,7 +1669,11 @@
         "Verify tenant and permission boundaries where applicable",
         "Do not change unrelated modules"
       ],
-      "unknownsToResolve": []
+      "unknownsToResolve": [],
+      "childTaskIds": [
+        "LANGUAGE-CORE-01"
+      ],
+      "remainingWork": "Core work owned by LANGUAGE-CORE-01 only; original whole-module acceptance retained and not the core gate. Do not start every mapped screen. Optional residual features wait for CORE-READY-01 or explicit owner exception. Separate approved bounded contracts/implementation prompts required."
     },
     {
       "id": "IMPL-MOD-16",
@@ -1700,7 +1765,7 @@
     {
       "id": "PRIORITY-001",
       "name": "Reconcile reservation-first roadmap and minimum core dependencies",
-      "status": "READY",
+      "status": "VERIFIED",
       "dependencies": [
         "POLICY-001",
         "FOUND-TASK-004"
@@ -1722,7 +1787,499 @@
         "No application implementation",
         "Preserve existing architecture decisions and confirmed reference findings",
         "Do not mark core ready without integrated evidence"
+      ],
+      "verificationEvidence": "CHK-056 documentation reconciliation/qualification only, no runtime/core delivery proof."
+    },
+    {
+      "id": "PEOPLE-CORE-01",
+      "name": "People reservation-core readiness",
+      "phaseId": "PHASE-04",
+      "status": "VERIFIED",
+      "dependencies": [
+        "PEOPLE-01",
+        "PEOPLE-01B",
+        "PEOPLE-02",
+        "PEOPLE-04P"
+      ],
+      "scope": "Retrospective qualification of already VERIFIED persistence/security capabilities for core development, not new runtime or full People completion.",
+      "outOfScope": "Accounts/Add User workflow, name editors, Export/full PEOPLE-10, production OIDC/session wiring or new-domain/public-booking RLS proof.",
+      "acceptanceCriteria": [
+        "Existing identity/tenant/membership/VenueAccess constraints retain verified evidence",
+        "Current role/direct permission evaluation, revocation/disabled denial, restricted runtime/RLS and transaction cleanup retain verified evidence",
+        "Production authentication and new core domain security remain separate unmet gates; IMPL-MOD-14 stays IN_PROGRESS"
+      ],
+      "verificationCommands": [
+        "pnpm map:check",
+        "git diff --check",
+        "Validate qualification from CHK-019/021/023/039/051 and preserve historical checks"
+      ],
+      "regressionChecks": [
+        "No earlier VERIFIED task object/check changed",
+        "No full-People or production-authentication claim"
+      ],
+      "priorityPart": 2,
+      "priorityDecisionId": "PRIORITY-D001",
+      "implementationGate": "No implementation; existing evidence aggregation. Real staff access requires CORE-AUTH-02.",
+      "parentTask": "IMPL-MOD-14",
+      "verificationEvidence": "CHK-056 planning aggregation only. CHK-019/021/023/039 verify persistence, scoped grants, RLS and current additive rights; CHK-051 retains current 183/183 PostgreSQL and frontend regression baseline. No runtime rerun, OIDC or guest-access verification in this milestone.",
+      "qualificationBoundary": "Only effective-permission/revocation portion of PEOPLE-04P is required. Its existing PEOPLE-04 ancestry is historical test provenance, not a requirement to use Add User to book. Foundation-ready for development, not production."
+    },
+    {
+      "id": "CORE-AUTH-01",
+      "name": "Trusted staff access integration specification",
+      "phaseId": "PHASE-04",
+      "status": "READY",
+      "dependencies": [
+        "PRIORITY-001",
+        "PEOPLE-CORE-01",
+        "FOUND-TASK-004"
+      ],
+      "scope": "Documentation-only minimum managed-OIDC -> secure server session -> trusted staff scope resolver specification for reservation-required settings and staff book, under existing ADR-0004.",
+      "outOfScope": "Implementing OIDC/sessions/pool wiring, choosing/buying an unapproved provider, credentials, refactoring People, public booking, Export or new authentication architecture.",
+      "acceptanceCriteria": [
+        "Inventory actual injected resolver/default fail-closed behavior and missing login/session wiring without reopening VERIFIED foundation tasks",
+        "Specify issuer/subject verification, callback/session/cookie/CSRF/rotation/expiry/logout/context-switch/revocation/step-up boundaries under ADR-0004; list provider/environment/policy choices requiring owner approval",
+        "Specify non-owner runtime integration and negative forged identity/session/scope tests; no browser authority or production fixture login",
+        "Record bounded CORE-AUTH-02 implementation gate as BLOCKED until necessary choices approved; record an ADR only if actual architecture changes"
+      ],
+      "verificationCommands": [
+        "pnpm map:check",
+        "git diff --check",
+        "Parse affected JSON; validate dependency DAG and preserved verified/reference history"
+      ],
+      "regressionChecks": [
+        "No runtime/tests/migrations/contracts changed",
+        "No reference findings or production-login claims",
+        "Preserve existing ADR-0004 and People revocation/denial behavior"
+      ],
+      "priorityPart": 2,
+      "priorityDecisionId": "PRIORITY-D001",
+      "implementationGate": "PROCEED for documentation/specification only, not provider selection/purchase or implementation.",
+      "evidenceFiles": [
+        "apps/api/src/main.ts",
+        "apps/api/src/app.ts",
+        "apps/api/src/people/booked-by/route.ts",
+        "apps/api/src/people/authorization/context.ts",
+        "docs/security/identity-access-model.md",
+        "docs/architecture/ADR-0004-identity-and-authorization.md"
+      ],
+      "taskSelectionGate": {
+        "taskId": "CORE-AUTH-01",
+        "priorityPart": 2,
+        "coreWorkflowAdvanced": "Trusted staff access to required Venue settings, then staff reservation book/check-in/seating.",
+        "dependencies": [
+          {
+            "taskId": "PRIORITY-001",
+            "status": "VERIFIED",
+            "scope": "Documentation only"
+          },
+          {
+            "taskId": "PEOPLE-CORE-01",
+            "status": "VERIFIED",
+            "scope": "Existing security aggregation only"
+          },
+          {
+            "taskId": "FOUND-TASK-004",
+            "status": "VERIFIED",
+            "scope": "Shell/toolchain, not OIDC"
+          }
+        ],
+        "whyRequiredNow": "main.ts starts createApp without injected identity/scope resolver and runtime pool. bindVerifiedPeopleIdentity brands a caller-verified UUID; it does not verify OIDC/session proof. Exposing staff settings/guest-data writes on that abstraction alone would not authenticate staff.",
+        "ownedScope": "Existing-architecture staff integration specification and future scoped test/dependency gate.",
+        "excludedScope": "Runtime implementation, unapproved provider choice/purchase, new framework, guest/Export features.",
+        "acceptanceCriteria": [
+          "Evidence-backed missing-wiring inventory",
+          "Secure session/trusted scope integration and negative test matrix",
+          "Owner-dependent choices and blocked future implementation recorded"
+        ],
+        "verificationCommands": [
+          "pnpm map:check",
+          "git diff --check",
+          "JSON/DAG/history/reference checks"
+        ],
+        "regressionChecks": [
+          "Previous VERIFIED People objects unchanged",
+          "No architecture/runtime privilege weakening",
+          "No reference classification changes"
+        ],
+        "decision": "PROCEED",
+        "decisionScope": "Documentation only; CORE-AUTH-02 runtime remains BLOCKED."
+      }
+    },
+    {
+      "id": "CORE-AUTH-02",
+      "name": "Trusted staff session integration",
+      "phaseId": "PHASE-04",
+      "status": "BLOCKED",
+      "dependencies": [
+        "CORE-AUTH-01",
+        "PEOPLE-CORE-01"
+      ],
+      "scope": "Only approved managed-OIDC/server-session-to-trusted-scope integration and non-owner runtime wiring for staff under ADR-0004.",
+      "outOfScope": "New credential service, browser-authoritative identity, generic audit framework, unrelated business features or public guest access.",
+      "acceptanceCriteria": [
+        "Provider/config/session policy explicitly approved before implementation",
+        "Issuer/subject binding, secure cookie/CSRF/rotation/expiry/logout/context switching and immediate disabled/revoked denial tested",
+        "Wire real server identity and restricted pool; missing configuration fails closed, no fixture login",
+        "Controlled IdP integration and negative forged session/scope/pool tests pass; mocks alone do not verify production login"
+      ],
+      "verificationCommands": [
+        "pnpm format:check",
+        "pnpm lint",
+        "pnpm typecheck",
+        "pnpm contract:check",
+        "pnpm map:check",
+        "pnpm verify",
+        "pnpm verify:db"
+      ],
+      "regressionChecks": [
+        "Previous VERIFIED task/check history and successful People paths unchanged",
+        "Positive/negative tenant/Venue authorization, restricted runtime and pool cleanup; no BYPASSRLS/admin request pool",
+        "Focused disposable PostgreSQL 16/contract/affected browser-accessibility checks; specify exact focused commands before implementation"
+      ],
+      "priorityPart": 2,
+      "priorityDecisionId": "PRIORITY-D001",
+      "implementationGate": "PLANNING ONLY; approved bounded contract and separate implementation prompt required. Split backend/frontend where needed before code; never implement a whole module in one task.",
+      "blocker": "CORE-GAP-001: production resolver/session/pool wiring absent; required provider/environment/session-policy choices and integration contract outstanding. CORE-AUTH-01 owns specification, not implementing an unapproved provider."
+    },
+    {
+      "id": "SETTINGS-CORE-01",
+      "name": "Reservation-required Venue settings",
+      "phaseId": "PHASE-04",
+      "status": "PLANNED",
+      "dependencies": [
+        "FOUND-TASK-004",
+        "PEOPLE-CORE-01",
+        "CORE-AUTH-02"
+      ],
+      "scope": "Only minimum Venue reservation configuration consumed by tables/shifts/client/booking; reviewed contract before bounded implementation.",
+      "outOfScope": "Every settings screen, taxes/charges/paylinks, tags, reporting, internal summary emails, Export or speculative defaults.",
+      "acceptanceCriteria": [
+        "Specify required contact/duplicate/seating/confirmation inputs from SCR-023 CMP-0249/0251/0252/0253; ProjectX contract, not verified reference saves",
+        "Specify Venue IANA time-zone/local-date/DST and configuration change rules as ProjectX requirements, not observed reference settings",
+        "Ownership/RLS/current capability checks, version/conflict/audit and missing-invalid config fail-closed behavior tested on PostgreSQL 16",
+        "Implement only approved necessary configuration, not full IMPL-MOD-09"
+      ],
+      "verificationCommands": [
+        "pnpm format:check",
+        "pnpm lint",
+        "pnpm typecheck",
+        "pnpm contract:check",
+        "pnpm map:check",
+        "pnpm verify",
+        "pnpm verify:db"
+      ],
+      "regressionChecks": [
+        "Previous VERIFIED task/check history and successful People paths unchanged",
+        "Positive/negative tenant/Venue authorization, restricted runtime and pool cleanup; no BYPASSRLS/admin request pool",
+        "Focused disposable PostgreSQL 16/contract/affected browser-accessibility checks; specify exact focused commands before implementation"
+      ],
+      "priorityPart": 2,
+      "priorityDecisionId": "PRIORITY-D001",
+      "implementationGate": "PLANNING ONLY; approved bounded contract and separate implementation prompt required. Split backend/frontend where needed before code; never implement a whole module in one task.",
+      "parentTask": "IMPL-MOD-09",
+      "screenIds": [
+        "SCR-023"
       ]
+    },
+    {
+      "id": "FLOORPLAN-CORE-01",
+      "name": "Reservation table and seating-area core",
+      "phaseId": "PHASE-04",
+      "status": "PLANNED",
+      "dependencies": [
+        "PEOPLE-CORE-01",
+        "SETTINGS-CORE-01"
+      ],
+      "scope": "Minimum Venue seating-area/table identities and capacity consumed by shifts/allocation; contract then bounded backend/UI slices.",
+      "outOfScope": "Full graphic designer, optional combinations/styles/POS/exports or unapproved allocation algorithms.",
+      "acceptanceCriteria": [
+        "Review minimum layout/area/table and min/max-cover rules using SCR-077/096/138; combination/save semantics remain reference unknowns",
+        "Composite ownership/RLS/capabilities and stable allocation identities validated across tenants/Venues",
+        "Capacity edits cannot silently invalidate committed bookings; approved version/concurrency conflict behavior tested"
+      ],
+      "verificationCommands": [
+        "pnpm format:check",
+        "pnpm lint",
+        "pnpm typecheck",
+        "pnpm contract:check",
+        "pnpm map:check",
+        "pnpm verify",
+        "pnpm verify:db"
+      ],
+      "regressionChecks": [
+        "Previous VERIFIED task/check history and successful People paths unchanged",
+        "Positive/negative tenant/Venue authorization, restricted runtime and pool cleanup; no BYPASSRLS/admin request pool",
+        "Focused disposable PostgreSQL 16/contract/affected browser-accessibility checks; specify exact focused commands before implementation"
+      ],
+      "priorityPart": 1,
+      "priorityDecisionId": "PRIORITY-D001",
+      "implementationGate": "PLANNING ONLY; approved bounded contract and separate implementation prompt required. Split backend/frontend where needed before code; never implement a whole module in one task.",
+      "parentTask": "IMPL-MOD-13",
+      "screenIds": [
+        "SCR-077",
+        "SCR-096",
+        "SCR-138"
+      ]
+    },
+    {
+      "id": "AVAILABILITY-CORE-01",
+      "name": "Reservation slot and capacity core",
+      "phaseId": "PHASE-04",
+      "status": "PLANNED",
+      "dependencies": [
+        "PEOPLE-CORE-01",
+        "SETTINGS-CORE-01",
+        "FLOORPLAN-CORE-01"
+      ],
+      "scope": "Minimum date/time/party-size shift eligibility, durations and capacity contract/service, not every Availability management screen.",
+      "outOfScope": "Perks/reporting/advanced audiences/integrations or inferred reference algorithms.",
+      "acceptanceCriteria": [
+        "Approve deterministic shifts/hours/durations/eligibility/pacing/blackout constraints and booking-write revalidation contract",
+        "Explicit Venue-local dates/IANA zones/DST gaps-overlaps/overnight rules tested",
+        "Restricted staff/config RLS and purpose-limited public availability projection reveal no guest/staff records",
+        "Server write allocation/concurrency remains mandatory; successful slot query alone is not double-booking proof"
+      ],
+      "verificationCommands": [
+        "pnpm format:check",
+        "pnpm lint",
+        "pnpm typecheck",
+        "pnpm contract:check",
+        "pnpm map:check",
+        "pnpm verify",
+        "pnpm verify:db"
+      ],
+      "regressionChecks": [
+        "Previous VERIFIED task/check history and successful People paths unchanged",
+        "Positive/negative tenant/Venue authorization, restricted runtime and pool cleanup; no BYPASSRLS/admin request pool",
+        "Focused disposable PostgreSQL 16/contract/affected browser-accessibility checks; specify exact focused commands before implementation"
+      ],
+      "priorityPart": 1,
+      "priorityDecisionId": "PRIORITY-D001",
+      "implementationGate": "PLANNING ONLY; approved bounded contract and separate implementation prompt required. Split backend/frontend where needed before code; never implement a whole module in one task.",
+      "parentTask": "IMPL-MOD-11",
+      "screenIds": [
+        "SCR-024",
+        "SCR-066",
+        "SCR-070",
+        "SCR-142"
+      ]
+    },
+    {
+      "id": "CLIENTS-CORE-01",
+      "name": "Minimum reservation guest identity/contact",
+      "phaseId": "PHASE-04",
+      "status": "PLANNED",
+      "dependencies": [
+        "PEOPLE-CORE-01",
+        "SETTINGS-CORE-01"
+      ],
+      "scope": "Organization-owned minimum contact and Venue-scoped operational view/link necessary to create and see a reservation.",
+      "outOfScope": "Full directory/editor, marketing/preferences/tags/imports, unrestricted group search/history or guest identity inferred from email.",
+      "acceptanceCriteria": [
+        "Approve minimal required contact and safe deduplication/retry rules; email is not a verified login identity",
+        "Client Organization ownership and Venue profile/history visibility preserve authorization-contract minimization",
+        "Foreign IDs/tenant/Venue-history denial, safe lookup/errors and atomic booking-link semantics tested"
+      ],
+      "verificationCommands": [
+        "pnpm format:check",
+        "pnpm lint",
+        "pnpm typecheck",
+        "pnpm contract:check",
+        "pnpm map:check",
+        "pnpm verify",
+        "pnpm verify:db"
+      ],
+      "regressionChecks": [
+        "Previous VERIFIED task/check history and successful People paths unchanged",
+        "Positive/negative tenant/Venue authorization, restricted runtime and pool cleanup; no BYPASSRLS/admin request pool",
+        "Focused disposable PostgreSQL 16/contract/affected browser-accessibility checks; specify exact focused commands before implementation"
+      ],
+      "priorityPart": 1,
+      "priorityDecisionId": "PRIORITY-D001",
+      "implementationGate": "PLANNING ONLY; approved bounded contract and separate implementation prompt required. Split backend/frontend where needed before code; never implement a whole module in one task.",
+      "parentTask": "IMPL-MOD-04",
+      "screenIds": [
+        "SCR-003",
+        "SCR-009",
+        "SCR-140"
+      ]
+    },
+    {
+      "id": "RESERVATIONS-CORE-01",
+      "name": "Thin staff reservation lifecycle",
+      "phaseId": "PHASE-04",
+      "status": "PLANNED",
+      "dependencies": [
+        "PEOPLE-CORE-01",
+        "SETTINGS-CORE-01",
+        "FLOORPLAN-CORE-01",
+        "AVAILABILITY-CORE-01",
+        "CLIENTS-CORE-01"
+      ],
+      "scope": "Reservation create/read/modify/cancel and essential staff book/check-in/seating contract; decompose non-overlapping implementation slices before code.",
+      "outOfScope": "Full Reservations UI, payments/reporting/Requests/waitlist; optional Booked By/Server Names unless approved workflow requires them.",
+      "acceptanceCriteria": [
+        "Venue/date/time/party-size and minimal guest link create one authorized reservation visible to staff",
+        "Writes atomically revalidate/allocate/release capacity; concurrency/retries/idempotency/change/cancel/failure cannot overbook or leave partial allocation",
+        "Approve and enforce allowed check-in/seating/cancel transitions, version/conflict and Venue-local temporal semantics",
+        "New client/reservation/allocation tables require their own RLS/ownership/permissions/privacy/non-export audit tests; D010 is export-only approval",
+        "Applicable PostgreSQL/contract/integration/browser regressions pass; split layers before implementation"
+      ],
+      "verificationCommands": [
+        "pnpm format:check",
+        "pnpm lint",
+        "pnpm typecheck",
+        "pnpm contract:check",
+        "pnpm map:check",
+        "pnpm verify",
+        "pnpm verify:db"
+      ],
+      "regressionChecks": [
+        "Previous VERIFIED task/check history and successful People paths unchanged",
+        "Positive/negative tenant/Venue authorization, restricted runtime and pool cleanup; no BYPASSRLS/admin request pool",
+        "Focused disposable PostgreSQL 16/contract/affected browser-accessibility checks; specify exact focused commands before implementation"
+      ],
+      "priorityPart": 1,
+      "priorityDecisionId": "PRIORITY-D001",
+      "implementationGate": "PLANNING ONLY; approved bounded contract and separate implementation prompt required. Split backend/frontend where needed before code; never implement a whole module in one task.",
+      "parentTask": "IMPL-MOD-02",
+      "screenIds": [
+        "SCR-002",
+        "SCR-003",
+        "SCR-005",
+        "SCR-139"
+      ],
+      "workflowIds": [
+        "FLOW-002",
+        "FLOW-018"
+      ]
+    },
+    {
+      "id": "LANGUAGE-CORE-01",
+      "name": "Minimum booking language and confirmation",
+      "phaseId": "PHASE-04",
+      "status": "PLANNED",
+      "dependencies": [
+        "SETTINGS-CORE-01"
+      ],
+      "scope": "Only required locale/policy wording and truthful creation/change/cancel confirmation contract and delivery.",
+      "outOfScope": "All templates/reminders/referrals/subscriptions/marketing or generic connector rollout.",
+      "acceptanceCriteria": [
+        "Approve original ProjectX minimum locale/policy/confirmation content; no protected text copying",
+        "Define safe creation/change/cancel delivery/error/retry/privacy outcomes; no false delivery success",
+        "If external delivery required, verify in controlled isolated provider environment; mocks alone do not satisfy readiness",
+        "Optional template/library features cannot gate booking"
+      ],
+      "verificationCommands": [
+        "pnpm format:check",
+        "pnpm lint",
+        "pnpm typecheck",
+        "pnpm contract:check",
+        "pnpm map:check",
+        "pnpm verify",
+        "pnpm verify:db"
+      ],
+      "regressionChecks": [
+        "Previous VERIFIED task/check history and successful People paths unchanged",
+        "Positive/negative tenant/Venue authorization, restricted runtime and pool cleanup; no BYPASSRLS/admin request pool",
+        "Focused disposable PostgreSQL 16/contract/affected browser-accessibility checks; specify exact focused commands before implementation"
+      ],
+      "priorityPart": 2,
+      "priorityDecisionId": "PRIORITY-D001",
+      "implementationGate": "PLANNING ONLY; approved bounded contract and separate implementation prompt required. Split backend/frontend where needed before code; never implement a whole module in one task.",
+      "parentTask": "IMPL-MOD-15",
+      "screenIds": [
+        "SCR-088",
+        "SCR-097",
+        "SCR-099",
+        "SCR-100",
+        "SCR-119",
+        "SCR-120"
+      ]
+    },
+    {
+      "id": "WIDGET-CORE-01",
+      "name": "Thin safe public booking path",
+      "phaseId": "PHASE-04",
+      "status": "PLANNED",
+      "dependencies": [
+        "AVAILABILITY-CORE-01",
+        "RESERVATIONS-CORE-01",
+        "LANGUAGE-CORE-01"
+      ],
+      "scope": "Guest Venue/date/time/party-size search, minimum contact and safe booking/confirmation with staff visibility; approved public-access contract first.",
+      "outOfScope": "Full widget settings/design system, waitlist/subscriptions/audiences, exports or public staff sessions/PII.",
+      "acceptanceCriteria": [
+        "Purpose-limited public access and abuse/retry controls reviewed independently; never expose directory or staff authority",
+        "Search/create/confirm reuse atomic booking logic; guest change/cancel cannot enumerate other guests",
+        "Integrated guest-to-staff invalid/unavailable/failed/conflicting outcomes, responsive keyboard/axe and tenant/privacy tests pass",
+        "Browser IDs are not arbitrary tenant authority; expose only explicitly bookable resources/minimum data"
+      ],
+      "verificationCommands": [
+        "pnpm format:check",
+        "pnpm lint",
+        "pnpm typecheck",
+        "pnpm contract:check",
+        "pnpm map:check",
+        "pnpm verify",
+        "pnpm verify:db"
+      ],
+      "regressionChecks": [
+        "Previous VERIFIED task/check history and successful People paths unchanged",
+        "Positive/negative tenant/Venue authorization, restricted runtime and pool cleanup; no BYPASSRLS/admin request pool",
+        "Focused disposable PostgreSQL 16/contract/affected browser-accessibility checks; specify exact focused commands before implementation"
+      ],
+      "priorityPart": 1,
+      "priorityDecisionId": "PRIORITY-D001",
+      "implementationGate": "PLANNING ONLY; approved bounded contract and separate implementation prompt required. Split backend/frontend where needed before code; never implement a whole module in one task.",
+      "parentTask": "IMPL-MOD-12",
+      "screenIds": [
+        "SCR-072"
+      ]
+    },
+    {
+      "id": "CORE-READY-01",
+      "name": "Integrated core reservation readiness gate",
+      "phaseId": "PHASE-06",
+      "status": "PLANNED",
+      "dependencies": [
+        "CORE-AUTH-02",
+        "SETTINGS-CORE-01",
+        "FLOORPLAN-CORE-01",
+        "AVAILABILITY-CORE-01",
+        "CLIENTS-CORE-01",
+        "RESERVATIONS-CORE-01",
+        "LANGUAGE-CORE-01",
+        "WIDGET-CORE-01"
+      ],
+      "scope": "All ten AGENTS.md CORE READINESS GATE criteria verified together in isolated guest-to-staff integration before reconsidering Part 3.",
+      "outOfScope": "Full-module/product release claims, isolated API or mocked delivery treated as integration, automatic start of deferred work.",
+      "acceptanceCriteria": [
+        "Guest search/create/defined confirmation and authorized staff book/guest linkage verified",
+        "Modify/cancel/allocation/confirmation plus allowed check-in/seating and shift/rule/table capacity behavior verified",
+        "Concurrency/retries/double-booking, timezone/DST, privacy/staff permissions/tenant-Venue/RLS and atomic failure tests pass",
+        "Record environment/commands/results/limitations and actual required delivery proof; all ten owner criteria passed before VERIFIED"
+      ],
+      "verificationCommands": [
+        "pnpm format:check",
+        "pnpm lint",
+        "pnpm typecheck",
+        "pnpm contract:check",
+        "pnpm map:check",
+        "pnpm verify",
+        "pnpm verify:db"
+      ],
+      "regressionChecks": [
+        "Previous VERIFIED task/check history and successful People paths unchanged",
+        "Positive/negative tenant/Venue authorization, restricted runtime and pool cleanup; no BYPASSRLS/admin request pool",
+        "Focused disposable PostgreSQL 16/contract/affected browser-accessibility checks; specify exact focused commands before implementation"
+      ],
+      "priorityPart": 1,
+      "priorityDecisionId": "PRIORITY-D001",
+      "implementationGate": "PLANNING ONLY; approved bounded contract and separate implementation prompt required. Split backend/frontend where needed before code; never implement a whole module in one task.",
+      "readinessStatus": "UNMET",
+      "verificationEvidence": "No integrated reservation core runtime evidence in existing verification checks."
     }
   ],
   "unresolvedQuestions": [
@@ -1761,6 +2318,17 @@
     "PEOPLE-08B",
     "POLICY-001",
     "PRIORITY-001",
+    "PEOPLE-CORE-01",
+    "CORE-AUTH-01",
+    "CORE-AUTH-02",
+    "SETTINGS-CORE-01",
+    "FLOORPLAN-CORE-01",
+    "AVAILABILITY-CORE-01",
+    "CLIENTS-CORE-01",
+    "RESERVATIONS-CORE-01",
+    "LANGUAGE-CORE-01",
+    "WIDGET-CORE-01",
+    "CORE-READY-01",
     "PEOPLE-09",
     "PEOPLE-09B",
     "PEOPLE-10",
@@ -1782,5 +2350,383 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "PRIORITY-001 — Reconcile reservation-first roadmap and minimum core dependencies (documentation only)"
+  "nextExactTask": "CORE-AUTH-01 — Trusted staff access integration specification (documentation only)",
+  "deliveryPriority": {
+    "decisionId": "PRIORITY-D001",
+    "primaryTarget": "PART 1 — CORE ONLINE RESERVATION SYSTEM",
+    "part2": "Only concrete operational/security dependencies of Part 1",
+    "part3": "Secondary/admin deferred until integrated core readiness or explicit owner exception",
+    "taskClassifications": [
+      {
+        "taskId": "DISC-001",
+        "priorityPart": 2,
+        "classification": "PART 2 REQUIRED",
+        "reason": "Historical discovery/architecture/foundation/toolchain/policy prerequisite; earlier VERIFIED objects and evidence scope unchanged. Planning is not runtime readiness."
+      },
+      {
+        "taskId": "DISC-002",
+        "priorityPart": 2,
+        "classification": "PART 2 REQUIRED",
+        "reason": "Historical discovery/architecture/foundation/toolchain/policy prerequisite; earlier VERIFIED objects and evidence scope unchanged. Planning is not runtime readiness."
+      },
+      {
+        "taskId": "DISC-003",
+        "priorityPart": 2,
+        "classification": "PART 2 REQUIRED",
+        "reason": "Historical discovery/architecture/foundation/toolchain/policy prerequisite; earlier VERIFIED objects and evidence scope unchanged. Planning is not runtime readiness."
+      },
+      {
+        "taskId": "MAP-001",
+        "priorityPart": 2,
+        "classification": "PART 2 REQUIRED",
+        "reason": "Historical discovery/architecture/foundation/toolchain/policy prerequisite; earlier VERIFIED objects and evidence scope unchanged. Planning is not runtime readiness."
+      },
+      {
+        "taskId": "ARCH-001",
+        "priorityPart": 2,
+        "classification": "PART 2 REQUIRED",
+        "reason": "Historical discovery/architecture/foundation/toolchain/policy prerequisite; earlier VERIFIED objects and evidence scope unchanged. Planning is not runtime readiness."
+      },
+      {
+        "taskId": "FOUND-TASK-002",
+        "priorityPart": 2,
+        "classification": "PART 2 REQUIRED",
+        "reason": "Historical discovery/architecture/foundation/toolchain/policy prerequisite; earlier VERIFIED objects and evidence scope unchanged. Planning is not runtime readiness."
+      },
+      {
+        "taskId": "FOUND-TASK-003",
+        "priorityPart": 2,
+        "classification": "PART 2 REQUIRED",
+        "reason": "Historical discovery/architecture/foundation/toolchain/policy prerequisite; earlier VERIFIED objects and evidence scope unchanged. Planning is not runtime readiness."
+      },
+      {
+        "taskId": "FOUND-TASK-004",
+        "priorityPart": 2,
+        "classification": "PART 2 REQUIRED",
+        "reason": "Historical discovery/architecture/foundation/toolchain/policy prerequisite; earlier VERIFIED objects and evidence scope unchanged. Planning is not runtime readiness."
+      },
+      {
+        "taskId": "IMPL-MOD-01",
+        "priorityPart": 3,
+        "classification": "PART 3 DEFERRED",
+        "reason": "Secondary dashboards/Requests/marketing/Voice AI/sales/reporting/generic connectors/imports are not proven thin-booking prerequisites. Required confirmation transport belongs to LANGUAGE-CORE-01, not completion of all Integrations. Reconsider after CORE-READY-01 or explicit owner exception."
+      },
+      {
+        "taskId": "IMPL-MOD-02",
+        "priorityPart": 1,
+        "classification": "PART 1",
+        "reason": "Only bounded reservation-core capability slices are prerequisites; optional residual whole-module work must not block the thin path."
+      },
+      {
+        "taskId": "IMPL-MOD-03",
+        "priorityPart": 3,
+        "classification": "PART 3 DEFERRED",
+        "reason": "Secondary dashboards/Requests/marketing/Voice AI/sales/reporting/generic connectors/imports are not proven thin-booking prerequisites. Required confirmation transport belongs to LANGUAGE-CORE-01, not completion of all Integrations. Reconsider after CORE-READY-01 or explicit owner exception."
+      },
+      {
+        "taskId": "IMPL-MOD-04",
+        "priorityPart": 1,
+        "classification": "PART 1",
+        "reason": "Only bounded reservation-core capability slices are prerequisites; optional residual whole-module work must not block the thin path."
+      },
+      {
+        "taskId": "IMPL-MOD-05",
+        "priorityPart": 3,
+        "classification": "PART 3 DEFERRED",
+        "reason": "Secondary dashboards/Requests/marketing/Voice AI/sales/reporting/generic connectors/imports are not proven thin-booking prerequisites. Required confirmation transport belongs to LANGUAGE-CORE-01, not completion of all Integrations. Reconsider after CORE-READY-01 or explicit owner exception."
+      },
+      {
+        "taskId": "IMPL-MOD-06",
+        "priorityPart": 3,
+        "classification": "PART 3 DEFERRED",
+        "reason": "Secondary dashboards/Requests/marketing/Voice AI/sales/reporting/generic connectors/imports are not proven thin-booking prerequisites. Required confirmation transport belongs to LANGUAGE-CORE-01, not completion of all Integrations. Reconsider after CORE-READY-01 or explicit owner exception."
+      },
+      {
+        "taskId": "IMPL-MOD-07",
+        "priorityPart": 3,
+        "classification": "PART 3 DEFERRED",
+        "reason": "Secondary dashboards/Requests/marketing/Voice AI/sales/reporting/generic connectors/imports are not proven thin-booking prerequisites. Required confirmation transport belongs to LANGUAGE-CORE-01, not completion of all Integrations. Reconsider after CORE-READY-01 or explicit owner exception."
+      },
+      {
+        "taskId": "IMPL-MOD-08",
+        "priorityPart": 3,
+        "classification": "PART 3 DEFERRED",
+        "reason": "Secondary dashboards/Requests/marketing/Voice AI/sales/reporting/generic connectors/imports are not proven thin-booking prerequisites. Required confirmation transport belongs to LANGUAGE-CORE-01, not completion of all Integrations. Reconsider after CORE-READY-01 or explicit owner exception."
+      },
+      {
+        "taskId": "IMPL-MOD-09",
+        "priorityPart": 2,
+        "classification": "PART 2 REQUIRED",
+        "reason": "Only required Venue settings/locale/policy/confirmation. Taxes/tags/all templates/marketing and other nonessential residual settings wait until core readiness."
+      },
+      {
+        "taskId": "IMPL-MOD-10",
+        "priorityPart": 3,
+        "classification": "PART 3 DEFERRED",
+        "reason": "Secondary dashboards/Requests/marketing/Voice AI/sales/reporting/generic connectors/imports are not proven thin-booking prerequisites. Required confirmation transport belongs to LANGUAGE-CORE-01, not completion of all Integrations. Reconsider after CORE-READY-01 or explicit owner exception."
+      },
+      {
+        "taskId": "IMPL-MOD-11",
+        "priorityPart": 1,
+        "classification": "PART 1",
+        "reason": "Only bounded reservation-core capability slices are prerequisites; optional residual whole-module work must not block the thin path."
+      },
+      {
+        "taskId": "IMPL-MOD-12",
+        "priorityPart": 1,
+        "classification": "PART 1",
+        "reason": "Only bounded reservation-core capability slices are prerequisites; optional residual whole-module work must not block the thin path."
+      },
+      {
+        "taskId": "IMPL-MOD-13",
+        "priorityPart": 1,
+        "classification": "PART 1",
+        "reason": "Only bounded reservation-core capability slices are prerequisites; optional residual whole-module work must not block the thin path."
+      },
+      {
+        "taskId": "IMPL-MOD-14",
+        "priorityPart": 2,
+        "classification": "PART 2 NON-BLOCKING",
+        "reason": "IN_PROGRESS full-module container; security subset qualified separately. Full People completion and optional export are not core predecessors."
+      },
+      {
+        "taskId": "DB-HARNESS-001",
+        "priorityPart": 2,
+        "classification": "PART 2 REQUIRED",
+        "reason": "Historical discovery/architecture/foundation/toolchain/policy prerequisite; earlier VERIFIED objects and evidence scope unchanged. Planning is not runtime readiness."
+      },
+      {
+        "taskId": "PEOPLE-01",
+        "priorityPart": 2,
+        "classification": "PART 2 REQUIRED",
+        "reason": "User/verified identity binding, Organization/Venue ownership, active membership and VenueAccess underpin protected core operations."
+      },
+      {
+        "taskId": "PEOPLE-01B",
+        "priorityPart": 2,
+        "classification": "PART 2 REQUIRED",
+        "reason": "Scoped roles/permissions/grants and revocation prevent unauthorized reservation/settings access."
+      },
+      {
+        "taskId": "PEOPLE-02",
+        "priorityPart": 2,
+        "classification": "PART 2 REQUIRED",
+        "reason": "Trusted identity abstraction, active capability checks, restricted transaction context and People RLS. Future domain tables still require their own policies/tests."
+      },
+      {
+        "taskId": "PEOPLE-03P",
+        "priorityPart": 2,
+        "classification": "PART 2 NON-BLOCKING",
+        "reason": "Already VERIFIED roster/profile/provisioning paths, not minimum guest contact, capacity or reservation configuration. Core need not consume Accounts/Add User UI."
+      },
+      {
+        "taskId": "PEOPLE-03",
+        "priorityPart": 2,
+        "classification": "PART 2 NON-BLOCKING",
+        "reason": "Already VERIFIED roster/profile/provisioning paths, not minimum guest contact, capacity or reservation configuration. Core need not consume Accounts/Add User UI."
+      },
+      {
+        "taskId": "PEOPLE-04",
+        "priorityPart": 2,
+        "classification": "PART 2 NON-BLOCKING",
+        "reason": "Already VERIFIED roster/profile/provisioning paths, not minimum guest contact, capacity or reservation configuration. Core need not consume Accounts/Add User UI."
+      },
+      {
+        "taskId": "PEOPLE-05",
+        "priorityPart": 2,
+        "classification": "PART 2 NON-BLOCKING",
+        "reason": "Already VERIFIED roster/profile/provisioning paths, not minimum guest contact, capacity or reservation configuration. Core need not consume Accounts/Add User UI."
+      },
+      {
+        "taskId": "PEOPLE-04P",
+        "priorityPart": 2,
+        "classification": "PART 2 REQUIRED",
+        "reason": "Only current additive role/direct capability evaluation and immediate revocation are required security baseline. Options/provisioning extension is non-blocking. Existing PEOPLE-04 ancestry is test provenance, not a required booking workflow."
+      },
+      {
+        "taskId": "PEOPLE-06",
+        "priorityPart": 2,
+        "classification": "PART 2 NON-BLOCKING",
+        "reason": "Already VERIFIED roster/profile/provisioning paths, not minimum guest contact, capacity or reservation configuration. Core need not consume Accounts/Add User UI."
+      },
+      {
+        "taskId": "PEOPLE-07A",
+        "priorityPart": 2,
+        "classification": "PART 2 NON-BLOCKING",
+        "reason": "SCR-003 CMP-0033 Booked By is visible, but required selection/identity linkage is unproven. Reuse the verified display-name API only if an approved staff-entry contract requires it."
+      },
+      {
+        "taskId": "PEOPLE-07B",
+        "priorityPart": 2,
+        "classification": "PART 2 NON-BLOCKING",
+        "reason": "Verified name editor is not a prerequisite to allocate/create a reservation."
+      },
+      {
+        "taskId": "PEOPLE-08A",
+        "priorityPart": 2,
+        "classification": "PART 2 NON-BLOCKING",
+        "reason": "No mapped thin-booking workflow proves Server Names mandatory; names are not User/employee identity. Retain verified work and add integration only if a concrete requirement emerges."
+      },
+      {
+        "taskId": "PEOPLE-08B",
+        "priorityPart": 2,
+        "classification": "PART 2 NON-BLOCKING",
+        "reason": "No mapped thin-booking workflow proves Server Names mandatory; names are not User/employee identity. Retain verified work and add integration only if a concrete requirement emerges."
+      },
+      {
+        "taskId": "PEOPLE-09",
+        "priorityPart": 3,
+        "classification": "PART 3 DEFERRED",
+        "reason": "DEFERRED FOR CORE DELIVERY; RECONSIDER AFTER CORE READINESS GATE. Full People verification includes Export; narrow PEOPLE-CORE-01 does not satisfy it."
+      },
+      {
+        "taskId": "PEOPLE-09B",
+        "priorityPart": 3,
+        "classification": "PART 3 DEFERRED",
+        "reason": "DEFERRED FOR CORE DELIVERY; RECONSIDER AFTER CORE READINESS GATE. Full People verification includes Export; narrow PEOPLE-CORE-01 does not satisfy it."
+      },
+      {
+        "taskId": "PEOPLE-10",
+        "priorityPart": 3,
+        "classification": "PART 3 DEFERRED",
+        "reason": "DEFERRED FOR CORE DELIVERY; RECONSIDER AFTER CORE READINESS GATE. Full People verification includes Export; narrow PEOPLE-CORE-01 does not satisfy it."
+      },
+      {
+        "taskId": "IMPL-MOD-15",
+        "priorityPart": 2,
+        "classification": "PART 2 REQUIRED",
+        "reason": "Only required Venue settings/locale/policy/confirmation. Taxes/tags/all templates/marketing and other nonessential residual settings wait until core readiness."
+      },
+      {
+        "taskId": "IMPL-MOD-16",
+        "priorityPart": 3,
+        "classification": "PART 3 DEFERRED",
+        "reason": "Secondary dashboards/Requests/marketing/Voice AI/sales/reporting/generic connectors/imports are not proven thin-booking prerequisites. Required confirmation transport belongs to LANGUAGE-CORE-01, not completion of all Integrations. Reconsider after CORE-READY-01 or explicit owner exception."
+      },
+      {
+        "taskId": "RELEASE-001",
+        "priorityPart": 3,
+        "classification": "PART 3 DEFERRED",
+        "reason": "Historical full-product release acceptance retained. CORE-READY-01 independently gates core delivery; no full product or production-release claim."
+      },
+      {
+        "taskId": "POLICY-001",
+        "priorityPart": 2,
+        "classification": "PART 2 REQUIRED",
+        "reason": "Historical discovery/architecture/foundation/toolchain/policy prerequisite; earlier VERIFIED objects and evidence scope unchanged. Planning is not runtime readiness."
+      },
+      {
+        "taskId": "PRIORITY-001",
+        "priorityPart": 2,
+        "classification": "PART 2 REQUIRED",
+        "reason": "Historical discovery/architecture/foundation/toolchain/policy prerequisite; earlier VERIFIED objects and evidence scope unchanged. Planning is not runtime readiness."
+      },
+      {
+        "taskId": "PEOPLE-CORE-01",
+        "priorityPart": 2,
+        "classification": "PART 2 REQUIRED",
+        "reason": "Retrospective qualification of already VERIFIED persistence/security capabilities for core development, not new runtime or full People completion."
+      },
+      {
+        "taskId": "CORE-AUTH-01",
+        "priorityPart": 2,
+        "classification": "PART 2 REQUIRED",
+        "reason": "Documentation-only minimum managed-OIDC -> secure server session -> trusted staff scope resolver specification for reservation-required settings and staff book, under existing ADR-0004."
+      },
+      {
+        "taskId": "CORE-AUTH-02",
+        "priorityPart": 2,
+        "classification": "PART 2 REQUIRED",
+        "reason": "Only approved managed-OIDC/server-session-to-trusted-scope integration and non-owner runtime wiring for staff under ADR-0004."
+      },
+      {
+        "taskId": "SETTINGS-CORE-01",
+        "priorityPart": 2,
+        "classification": "PART 2 REQUIRED",
+        "reason": "Only minimum Venue reservation configuration consumed by tables/shifts/client/booking; reviewed contract before bounded implementation."
+      },
+      {
+        "taskId": "FLOORPLAN-CORE-01",
+        "priorityPart": 1,
+        "classification": "PART 1",
+        "reason": "Minimum Venue seating-area/table identities and capacity consumed by shifts/allocation; contract then bounded backend/UI slices."
+      },
+      {
+        "taskId": "AVAILABILITY-CORE-01",
+        "priorityPart": 1,
+        "classification": "PART 1",
+        "reason": "Minimum date/time/party-size shift eligibility, durations and capacity contract/service, not every Availability management screen."
+      },
+      {
+        "taskId": "CLIENTS-CORE-01",
+        "priorityPart": 1,
+        "classification": "PART 1",
+        "reason": "Organization-owned minimum contact and Venue-scoped operational view/link necessary to create and see a reservation."
+      },
+      {
+        "taskId": "RESERVATIONS-CORE-01",
+        "priorityPart": 1,
+        "classification": "PART 1",
+        "reason": "Reservation create/read/modify/cancel and essential staff book/check-in/seating contract; decompose non-overlapping implementation slices before code."
+      },
+      {
+        "taskId": "LANGUAGE-CORE-01",
+        "priorityPart": 2,
+        "classification": "PART 2 REQUIRED",
+        "reason": "Only required locale/policy wording and truthful creation/change/cancel confirmation contract and delivery."
+      },
+      {
+        "taskId": "WIDGET-CORE-01",
+        "priorityPart": 1,
+        "classification": "PART 1",
+        "reason": "Guest Venue/date/time/party-size search, minimum contact and safe booking/confirmation with staff visibility; approved public-access contract first."
+      },
+      {
+        "taskId": "CORE-READY-01",
+        "priorityPart": 1,
+        "classification": "PART 1",
+        "reason": "All ten AGENTS.md CORE READINESS GATE criteria verified together in isolated guest-to-staff integration before reconsidering Part 3."
+      }
+    ],
+    "coreReadinessGate": {
+      "taskId": "CORE-READY-01",
+      "status": "UNMET",
+      "criteriaSource": "AGENTS.md CORE READINESS GATE items 1–10",
+      "evidence": "Existing foundation/People checks do not verify integrated reservation core."
+    },
+    "unresolvedPrerequisites": [
+      {
+        "id": "CORE-GAP-001",
+        "classification": "CONFIRMED PROJECTX REPOSITORY GAP",
+        "ownerTask": "CORE-AUTH-01",
+        "evidence": [
+          "apps/api/src/main.ts",
+          "apps/api/src/app.ts",
+          "apps/api/src/people/booked-by/route.ts",
+          "docs/security/identity-access-model.md"
+        ],
+        "gap": "No production OIDC/server-session resolver/pool wiring; provider/environment/session choices outstanding under ADR-0004. Blocks authenticated runtime, not specification."
+      },
+      {
+        "id": "CORE-GAP-002",
+        "classification": "NEEDS SPECIFICATION / TESTING — PROJECTX",
+        "ownerTask": "SETTINGS-CORE-01",
+        "gap": "Minimum settings/contact/duplicate/seating/confirmation and IANA-zone/DST contracts unimplemented; no reference write semantics inferred."
+      },
+      {
+        "id": "CORE-GAP-003",
+        "classification": "NEEDS SPECIFICATION / TESTING — PROJECTX",
+        "ownerTask": "WIDGET-CORE-01",
+        "gap": "Public booking/change-cancel/abuse/privacy and required controlled confirmation delivery need their own evidence, not staff People authority."
+      },
+      {
+        "id": "CORE-GAP-004",
+        "classification": "NEEDS SPECIFICATION / TESTING — PROJECTX",
+        "ownerTask": "RESERVATIONS-CORE-01",
+        "gap": "Atomic allocation/concurrency/retries/allowed lifecycle and necessary non-export audit require scoped contracts/tests; D010 approves export only."
+      }
+    ],
+    "optionalPeopleIntegrations": "Reuse PEOPLE-07A/08A only if a reviewed core staff workflow requires them; never infer employee identity or require name-management editors.",
+    "noCoreExportDependency": true
+  }
 }

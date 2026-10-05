@@ -1144,6 +1144,72 @@
       },
       "implementationStatus": "NOT_IMPLEMENTED",
       "notes": "Resolves architecture approval only. PEOPLE-D009 unchanged, PEOPLE-09-AUDIT-001 RESOLVED by PEOPLE-D010, PEOPLE-09 READY not VERIFIED, PEOPLE-09B/10 PLANNED, IMPL-MOD-14 IN_PROGRESS. Future backend implementation still needs exact-SHA publication approval and final PostgreSQL 16 CI. No code, migration, contract or frontend implemented here."
+    },
+    {
+      "id": "PRIORITY-D001",
+      "title": "Reservation-first delivery priority",
+      "status": "APPROVED",
+      "category": "OWNER APPROVED",
+      "classification": "PROJECTX PRODUCT PRIORITY DECISION",
+      "ownerDecision": {
+        "approvedBy": "Product owner",
+        "basis": "AGENTS.md reservation priority owner policy and explicit PRIORITY-001/fast-forward continuation request",
+        "approvedAt": "2026-10-04"
+      },
+      "priorityParts": {
+        "part1": "Core online reservation: guest Venue/date/time/party-size search, safe booking/minimum guest linkage/defined confirmation, staff book/check-in/seating, concurrency/time-zone/privacy",
+        "part2": "Only concrete required operational/security foundation dependencies",
+        "part3": "Secondary/admin; explicitly PEOPLE-09 Export, PEOPLE-09B and full PEOPLE-10 completion"
+      },
+      "dependencyBoundary": "PEOPLE-CORE-01 replaces full People completion for core execution. Thin module-owned capability tasks avoid every settings/table/client/language/widget screen as prerequisites; historical full-module acceptance preserved.",
+      "deferral": "DEFERRED FOR CORE DELIVERY; RECONSIDER AFTER CORE READINESS GATE CORE-READY-01 verifies all ten AGENTS.md criteria, or explicit owner exception. Supported status retained; deferral is not completion.",
+      "preserves": [
+        "D009/D010 APPROVED",
+        "PEOPLE-09-AUDIT-001 RESOLVED",
+        "All prior VERIFIED task/check history",
+        "All SevenRooms classifications and unknown IDs"
+      ],
+      "minimumPeopleMilestone": "PEOPLE-CORE-01 — existing persistence/grants/RLS/trusted identity abstraction only, not live staff login/full module",
+      "firstReadyTask": "CORE-AUTH-01 — Trusted staff access integration specification (documentation only)",
+      "architectureChange": false,
+      "newReferenceEvidence": false,
+      "parityClaim": false,
+      "affectedRoadmapTasks": [
+        "PRIORITY-001",
+        "PEOPLE-CORE-01",
+        "CORE-AUTH-01",
+        "CORE-AUTH-02",
+        "SETTINGS-CORE-01",
+        "FLOORPLAN-CORE-01",
+        "AVAILABILITY-CORE-01",
+        "CLIENTS-CORE-01",
+        "RESERVATIONS-CORE-01",
+        "LANGUAGE-CORE-01",
+        "WIDGET-CORE-01",
+        "CORE-READY-01",
+        "PEOPLE-09",
+        "PEOPLE-09B",
+        "PEOPLE-10",
+        "IMPL-MOD-09",
+        "IMPL-MOD-13",
+        "IMPL-MOD-11",
+        "IMPL-MOD-04",
+        "IMPL-MOD-02",
+        "IMPL-MOD-15",
+        "IMPL-MOD-12"
+      ],
+      "evidenceFiles": [
+        "AGENTS.md",
+        "docs/security/identity-access-model.md",
+        "docs/security/people-authorization-rls.md",
+        "docs/security/authorization-contract.md",
+        "apps/api/src/main.ts",
+        "apps/api/src/app.ts",
+        "apps/api/src/people/authorization/context.ts",
+        "docs/project-map/app-map.json",
+        "docs/project-map/verification.json"
+      ],
+      "notes": "Product priority only. No new provider/schema/audit architecture decision or ADR. Provider/session choices and bounded core contracts remain explicit prerequisites; no implementation."
     }
   ],
   "unresolvedQuestions": [
@@ -1355,7 +1421,8 @@
     "ARCH-D016",
     "ARCH-D018",
     "PEOPLE-D009",
-    "PEOPLE-D010"
+    "PEOPLE-D010",
+    "PRIORITY-D001"
   ],
   "projectDocumentGap": "decisions.json was absent before ARCH-001; created in the previous checkpoint. Owner approvals and corresponding ADRs are now recorded.",
   "evidenceLabels": [
