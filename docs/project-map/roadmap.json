@@ -1912,7 +1912,7 @@
       "id": "CORE-AUTH-02",
       "name": "Trusted staff session integration",
       "phaseId": "PHASE-04",
-      "status": "READY",
+      "status": "IMPLEMENTED",
       "dependencies": [
         "CORE-AUTH-01",
         "PEOPLE-CORE-01"
@@ -1932,7 +1932,8 @@
         "pnpm contract:check",
         "pnpm map:check",
         "pnpm verify",
-        "pnpm verify:db"
+        "pnpm verify:db",
+        "pnpm test:auth"
       ],
       "regressionChecks": [
         "Previous VERIFIED task/check history and successful People paths unchanged",
@@ -1941,16 +1942,91 @@
       ],
       "priorityPart": 2,
       "priorityDecisionId": "PRIORITY-D001",
-      "implementationGate": "READY after owner policy approval and VERIFIED dependencies; no implementation authorized in this documentation task. Separate bounded implementation prompt required. Split backend/frontend where needed before code; never implement a whole module in one task. Scoped bootstrap/session database-access review, registered environment inputs and provider assurance verification are future engineering/deployment/exposure gates; stop for any genuinely new product/architecture blocker.",
+      "implementationGate": "Bounded implementation complete; deterministic security/full regression gates PASS (CHK-059). No production/provider VERIFIED claim. Separate exact-SHA publication/branch-head PostgreSQL 16 CI and controlled Auth0/deployment verification required before dependent core exposure.",
       "blocker": null,
       "ownerPolicyDecisionId": "CORE-AUTH-D004",
       "readinessEvidence": "CHK-058 owner-decision documentation only. Published CORE-AUTH-01 CI run 37253348486 attempt 2/job 111586842967 green at 95d4d1b1cc9f8a6dc69a1d8a3edea38df9e00923; original failed attempt preserved. Not production auth, new implementation or core readiness proof.",
       "coreWorkflowAdvanced": "Secure authenticated staff access for reservation-required Venue settings and future reservation book/check-in/seating.",
-      "remainingWork": "Runtime login/session/resolver/pool unimplemented. No extra unresolved architecture/product decision found in published specification; actual Auth0 deployment registrations/configuration, least-privilege bootstrap/session design and focused verification remain within bounded CORE-AUTH-02. No automatic start or privileged exposure without verified assurance.",
+      "remainingWork": "NEEDS TESTING: actual separate Auth0 registrations/secrets, HTTPS same-origin gateway/real cookies, production migration and restricted-role/TLS provisioning, live Code/PKCE/callback/key rotation/outage/multi-instance revocation, MFA/auth_time/recent assurance mapping. High-risk writes stay denied. No new unresolved owner policy or architecture choice. SETTINGS-CORE-01 cannot start before VERIFIED predecessor.",
       "specificationFile": "docs/security/staff-access-integration.md",
-      "requiredOwnerDecisionIds": ["CORE-AUTH-D001", "CORE-AUTH-D002"],
+      "requiredOwnerDecisionIds": [
+        "CORE-AUTH-D001",
+        "CORE-AUTH-D002"
+      ],
       "privilegedExposureDecisionId": "CORE-AUTH-D003",
-      "futureNegativeTestIds": "AUTH-N01–AUTH-N34, specified only / NEEDS TESTING"
+      "futureNegativeTestIds": "AUTH-N01–AUTH-N34 deterministic negative coverage PASS; controlled provider/deployment equivalents NEEDS TESTING; N32 privileged success deliberately denied/unverified. See CHK-059 and docs/security/staff-session-verification.md.",
+      "implementationSlices": [
+        {
+          "id": "A",
+          "scope": "Typed config; narrow auth-only PostgreSQL login transaction/session persistence and dedicated privilege/negative tests",
+          "status": "IMPLEMENTED"
+        },
+        {
+          "id": "B",
+          "scope": "Auth0 Code+PKCE adapter, correlated one-use callback, secure cookie/logout/CSRF and assurance fail-closed gate",
+          "status": "IMPLEMENTED"
+        },
+        {
+          "id": "C",
+          "scope": "Current-state trusted resolver/context switch/version guard and restricted runtime pool/startup wiring",
+          "status": "IMPLEMENTED"
+        },
+        {
+          "id": "D",
+          "scope": "Applicable AUTH-N01–N34, contract and People regression gates; minimal web continuity only where needed",
+          "status": "IMPLEMENTED"
+        }
+      ],
+      "taskSelectionGate": {
+        "taskId": "CORE-AUTH-02",
+        "priorityPart": 2,
+        "coreWorkflowAdvanced": "Secure staff access to SETTINGS-CORE-01 and future RESERVATIONS-CORE-01 book/check-in/seating.",
+        "dependencies": [
+          {
+            "taskId": "CORE-AUTH-01",
+            "status": "VERIFIED"
+          },
+          {
+            "taskId": "PEOPLE-CORE-01",
+            "status": "VERIFIED"
+          }
+        ],
+        "whyRequiredNow": "Concrete foundation for SETTINGS-CORE-01 / RESERVATIONS-CORE-01: replace missing runtime staff identity with verified OIDC/session/current context and restricted People/RLS, preventing caller-asserted or stale access.",
+        "ownedScope": "Auth0 standard OIDC Authorization Code + PKCE, secure callback/issuer-subject mapping, server session persistence/cookie middleware, CSRF, trusted staff resolver, Organization/Venue validation, restricted PostgreSQL pool, current-state revocation, logout/rotation and focused negative security tests under ADR-0004 and CORE-AUTH-D004. Review auth-only bootstrap/session least-privilege design before code; current People RLS is not anonymous identity lookup.",
+        "excludedScope": "Public guest authentication, reservation domain implementation, PEOPLE-09 Export, broad People refactor, generic audit subsystem, unrelated settings, full administration redesign, new credential service or browser-authoritative identity.",
+        "acceptanceCriteria": [
+          "CORE-AUTH-D004 approves Auth0 and separate development/staging/production configuration; 12h absolute / 30m idle / multiple sessions; targeted high-risk MFA with approximately 5-minute freshness. Actual environment values and exact Auth0 assurance mechanics require controlled setup/design/tests before exposure",
+          "Issuer/subject binding, secure cookie/CSRF/rotation/expiry/logout/context switching and immediate disabled/revoked denial tested",
+          "Wire real server identity and restricted pool; missing configuration fails closed, no fixture login",
+          "Controlled IdP integration and negative forged session/scope/pool tests pass; mocks alone do not verify production login"
+        ],
+        "verificationCommands": [
+          "pnpm format:check",
+          "pnpm lint",
+          "pnpm typecheck",
+          "pnpm contract:check",
+          "pnpm map:check",
+          "pnpm verify",
+          "pnpm verify:db",
+          "pnpm test:auth"
+        ],
+        "regressionChecks": [
+          "Previous VERIFIED task/check history and successful People paths unchanged",
+          "Positive/negative tenant/Venue authorization, restricted runtime and pool cleanup; no BYPASSRLS/admin request pool",
+          "Focused disposable PostgreSQL 16/contract/affected browser-accessibility checks; specify exact focused commands before implementation"
+        ],
+        "decision": "PROCEED",
+        "databaseReview": "docs/security/staff-session-database-review.md",
+        "providerEvidenceBoundary": "Mock/deterministic tests do not verify production Auth0; no tenants or real credentials created."
+      },
+      "verificationEvidence": "CHK-059: local pnpm verify PASS, focused auth/web 56/56; web 178/178; browser E2E/axe 32/32; pnpm verify:db PASS 210/210 across 21 files PostgreSQL 16.15 (auth DB 27/27). Prior 26 VERIFIED task objects / 58 checks / decisions / references unchanged. Original failed intermediate checks retained.",
+      "providerVerification": {
+        "status": "NEEDS TESTING",
+        "classification": "PROJECTX DEPLOYMENT / PROVIDER GATE",
+        "privilegedAssurance": "UNVERIFIED — high-risk Add User writes denied; approximately 5m policy unchanged",
+        "evidenceFile": "docs/security/staff-session-verification.md",
+        "liveAuth0Tested": false
+      }
     },
     {
       "id": "SETTINGS-CORE-01",
@@ -2360,7 +2436,7 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "CORE-AUTH-02 — Trusted staff session integration",
+  "nextExactTask": "CORE-AUTH-02 — Trusted staff session integration: exact-SHA publication and controlled Auth0 verification",
   "deliveryPriority": {
     "decisionId": "PRIORITY-D001",
     "primaryTarget": "PART 1 — CORE ONLINE RESERVATION SYSTEM",
@@ -2707,15 +2783,17 @@
     "unresolvedPrerequisites": [
       {
         "id": "CORE-GAP-001",
-        "classification": "CONFIRMED PROJECTX REPOSITORY GAP",
+        "classification": "CONFIRMED PROJECTX IMPLEMENTATION / NEEDS DEPLOYMENT-PROVIDER TESTING",
         "ownerTask": "CORE-AUTH-02",
         "evidence": [
           "apps/api/src/main.ts",
           "apps/api/src/app.ts",
           "apps/api/src/people/booked-by/route.ts",
-          "docs/security/identity-access-model.md"
+          "docs/security/identity-access-model.md",
+          "docs/security/staff-session-database-review.md",
+          "docs/security/staff-session-verification.md"
         ],
-        "gap": "Owner choices resolved by APPROVED CORE-AUTH-D004 (D001/D002/D003). CORE-AUTH-02 READY, not implemented: production OIDC/session/resolver/pool remains absent/unverified. Auth0 environment inputs and auth-only bootstrap/session least-privilege review/tests remain future scoped work; privileged assurance must be verified before exposure. No new owner policy blocker or core readiness claim."
+        "gap": "CORE-AUTH-02 IMPLEMENTED under approved D004 with local PostgreSQL 16.15 security/regression gates PASS (CHK-059). Runtime OIDC/session/resolver/restricted pool now present. Controlled Auth0 registration/HTTPS/cookies/deployment role-TLS-migration/multi-instance/assurance verification and separate exact-SHA CI publication remain exposure gates, not new owner policy decisions. Privileged assurance UNVERIFIED denies high-risk writes. Core readiness UNMET."
       },
       {
         "id": "CORE-GAP-002",

@@ -1,5 +1,59 @@
 # CORE-AUTH-01 — Trusted staff access integration specification
 
+## CORE-AUTH-02 implementation checkpoint — 2026-10-05
+
+PROJECTX IMPLEMENTATION DECISION, not SevenRooms evidence. The dated inventories
+below remain historical specification/base evidence. Runtime integration is now
+implemented under ADR-0003/0004 and CORE-AUTH-D004: maintained openid-client Code +
+PKCE S256 with explicit JWS validation; exact issuer/subject binding; PostgreSQL
+opaque sessions; cookie/CSRF/current-context resolver; restricted startup pool;
+minimal web continuity. No email enrollment, provider token persistence, new owner
+policy, guest auth, reservation domain or Export. See
+`staff-session-database-review.md` and `staff-session-verification.md`.
+
+Production/staging fail closed unless STAFF_AUTH_ENABLED=1 and all seven required
+Auth0/origin/runtime DB inputs validate. Inject AUTH0_CLIENT_SECRET outside Git.
+Issuer is an exact HTTPS root with trailing slash; callback is the canonical
+origin + /api/v1/staff-auth/callback; client ID is the ID-token audience. Configure
+separate registrations/secrets for each environment. AUTH0_POST_LOGOUT_URI is
+validated configuration, not an implemented federated logout endpoint.
+
+The shared migration runner installs the new auth-only migration after all eight
+historical People migrations. Runtime login must inherit projectx_people_runtime
+and projectx_staff_auth_runtime without owner, superuser, BYPASSRLS or broad-role
+authority, including assumable parent roles. No runtime direct auth-table grants.
+Deployment provisioning/migration remains an explicit controlled gate; the
+disposable test harness is not a production migration tool.
+
+HTTPS same-origin gateway must preserve the configured Host and strip/reject
+X-Forwarded-Host; no request-derived proxy trust or wildcard credentialed CORS.
+Configure VITE_STAFF_AUTH_ENABLED=1 for the staff web build. The optional foundation
+demo shell is not authentication and cannot bypass server authorization. Only
+successful mutations refresh idle activity; GET polling never extends the 30m
+idle or 12h absolute bounds. Login correlations have a five-minute one-use protocol
+TTL; this is not a new staff-session or privileged-assurance timeout.
+
+The web retains a per-tab context version; it never silently refreshes/replays a
+409 mutation. Successful selection remounts context-owned pages. Only current
+actor context IDs are exposed; a large selector/name-management UI is out of scope.
+Local logout is durable before cookie removal and independently revocable.
+Provider tokens, raw cookies, callback URLs and verifier/state/nonce are not logged;
+automatic request-URL logging is disabled and safe auth event metadata is used.
+These events are not a durable audit subsystem or PEOPLE-D010 reuse.
+
+Assurance representation is UNVERIFIED. The existing high-risk Add User POST is
+denied for real staff sessions until controlled Auth0 MFA/auth_time and freshness
+evidence exists. No browser MFA claim can elevate it. Ordinary venue operations
+retain current People/RLS capability checks without blanket repeated step-up.
+Targeted approximately-five-minute policy is unchanged; no verified-MFA timestamp
+is manufactured from baseline auth_time.
+
+CORE-AUTH-02 remains IMPLEMENTED, not provider/production VERIFIED. Controlled
+Auth0 login/callback/logout/cookie/revocation/multi-instance and MFA assurance
+verification, deployment role/TLS/gateway registration checks and exact-SHA CI
+publication remain gates. No real Auth0 tenant/credentials were created or used.
+All prior VERIFIED history and SevenRooms UNKNOWN / NEEDS TESTING remain intact.
+
 Date: 2026-10-04. Base: `7f2c25f532a5efae22237c3f9c42b1e528dadf8a`.
 DOCUMENTATION ONLY / PROJECTX IMPLEMENTATION SPECIFICATION under approved
 ADR-0003/0004. Requirements below are future acceptance contracts, not implemented

@@ -6,9 +6,342 @@
     "description": "ProjectX versioned API. People roster reads require a server-verified identity and organization scope."
   },
   "paths": {
+    "/api/v1/staff-auth/login": {
+      "get": {
+        "operationId": "startStaffLogin",
+        "summary": "Start Auth0 staff-only OIDC Code + PKCE",
+        "description": "PROJECTX IMPLEMENTATION DECISION. Fixed callback/canonical origin; no return URL or browser authority. One-use durable transaction with secure correlation cookie.",
+        "responses": {
+          "302": {
+            "description": "Configured provider authorization redirect"
+          },
+          "401": {
+            "description": "Missing, expired or invalid staff session / callback",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Denied current access, CSRF, origin or unverified privileged assurance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Store/provider unavailable; fail closed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/staff-auth/callback": {
+      "get": {
+        "operationId": "completeStaffLogin",
+        "summary": "Verify OIDC callback and rotate opaque session",
+        "description": "No provider tokens retained/exposed; exact issuer/subject binding only. One-use state/nonce/PKCE; validated signature/audience/time. Never auto-link by email.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "code",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "iss",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "error",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "error_description",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Canonical application redirect with Secure HttpOnly host-only session cookie"
+          },
+          "401": {
+            "description": "Missing, expired or invalid staff session / callback",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Denied current access, CSRF, origin or unverified privileged assurance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Store/provider unavailable; fail closed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/staff-auth/session": {
+      "get": {
+        "operationId": "getStaffSession",
+        "summary": "Read current staff context (no idle extension)",
+        "security": [
+          {
+            "StaffSessionCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Only caller's current context choices; no roster or provider credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffSessionContext"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, expired or invalid staff session / callback",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Denied current access, CSRF, origin or unverified privileged assurance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Store/provider unavailable; fail closed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/staff-auth/logout": {
+      "post": {
+        "operationId": "logoutStaffSession",
+        "summary": "Durably revoke local session before clearing cookie",
+        "security": [
+          {
+            "StaffSessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-ProjectX-CSRF",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "description": "Session-bound token from same-origin current session response."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Revoked (idempotent for well-formed stale cookie with valid CSRF/origin)"
+          },
+          "401": {
+            "description": "Missing, expired or invalid staff session / callback",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Denied current access, CSRF, origin or unverified privileged assurance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Store/provider unavailable; fail closed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/staff-auth/context": {
+      "post": {
+        "operationId": "selectStaffContext",
+        "summary": "Select only current authorized organization/venue",
+        "security": [
+          {
+            "StaffSessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-ProjectX-CSRF",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "description": "Session-bound token from same-origin current session response."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SelectStaffContext"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Validated selection with advanced stale-tab version",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffSessionContext"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid context input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, expired or invalid staff session / callback",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Denied current access, CSRF, origin or unverified privileged assurance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Stale context version; never automatically replay",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Store/provider unavailable; fail closed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/people/server-names": {
       "get": {
         "operationId": "listServerNames",
+        "security": [
+          {
+            "StaffSessionCookie": []
+          }
+        ],
+        "x-projectx-staff-boundary": "Current server session/context; GET does not extend idle timeout.",
         "summary": "List current venue display names",
         "description": "PROJECTX IMPLEMENTATION DECISION. Server-bound identity, organization and venue; current venue.manage via PEOPLE-02/RLS. Independent display data, not identity or Booked By Names. Reference behavior remains UNKNOWN. UUID ascending cursor order; duplicates allowed.",
         "parameters": [
@@ -86,6 +419,12 @@
       },
       "post": {
         "operationId": "addServerName",
+        "security": [
+          {
+            "StaffSessionCookie": []
+          }
+        ],
+        "x-projectx-staff-boundary": "Require session-bound X-ProjectX-CSRF, canonical Origin/Host and X-ProjectX-Context-Version; stale version 409. High-risk Add User writes denied while assurance UNVERIFIED.",
         "summary": "Add a venue display name",
         "description": "PROJECTX IMPLEMENTATION DECISION. Server-bound identity, organization and venue; current venue.manage via PEOPLE-02/RLS. Independent display data, not identity or Booked By Names. Reference behavior remains UNKNOWN. Trimmed, case-preserving plain text; 1–120 Unicode code points, no controls. No uniqueness or retry deduplication.",
         "requestBody": {
@@ -139,6 +478,16 @@
               }
             }
           },
+          "409": {
+            "description": "Stale session context; no automatic replay",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal failure",
             "content": {
@@ -149,12 +498,26 @@
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/StaffCsrf"
+          },
+          {
+            "$ref": "#/components/parameters/StaffContextVersion"
+          }
+        ]
       }
     },
     "/api/v1/people/server-names/{id}": {
       "patch": {
         "operationId": "updateServerName",
+        "security": [
+          {
+            "StaffSessionCookie": []
+          }
+        ],
+        "x-projectx-staff-boundary": "Require session-bound X-ProjectX-CSRF, canonical Origin/Host and X-ProjectX-Context-Version; stale version 409. High-risk Add User writes denied while assurance UNVERIFIED.",
         "summary": "Save one venue display name",
         "description": "PROJECTX IMPLEMENTATION DECISION. Server-bound identity, organization and venue; current venue.manage via PEOPLE-02/RLS. Independent display data, not identity or Booked By Names. Reference behavior remains UNKNOWN. Requires current version; one atomic save, stale version 409. Foreign and missing IDs both 404.",
         "parameters": [
@@ -166,6 +529,12 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          {
+            "$ref": "#/components/parameters/StaffCsrf"
+          },
+          {
+            "$ref": "#/components/parameters/StaffContextVersion"
           }
         ],
         "requestBody": {
@@ -255,6 +624,12 @@
     "/api/v1/people/booked-by-names": {
       "get": {
         "operationId": "listBookedByNames",
+        "security": [
+          {
+            "StaffSessionCookie": []
+          }
+        ],
+        "x-projectx-staff-boundary": "Current server session/context; GET does not extend idle timeout.",
         "summary": "List current venue display names",
         "description": "PROJECTX IMPLEMENTATION DECISION. Server-bound identity, organization and venue; current venue.manage via PEOPLE-02/RLS. Independent display data, not identity or Server Names. Reference behavior remains UNKNOWN. UUID ascending cursor order; duplicates allowed.",
         "parameters": [
@@ -332,6 +707,12 @@
       },
       "post": {
         "operationId": "addBookedByName",
+        "security": [
+          {
+            "StaffSessionCookie": []
+          }
+        ],
+        "x-projectx-staff-boundary": "Require session-bound X-ProjectX-CSRF, canonical Origin/Host and X-ProjectX-Context-Version; stale version 409. High-risk Add User writes denied while assurance UNVERIFIED.",
         "summary": "Add a venue display name",
         "description": "PROJECTX IMPLEMENTATION DECISION. Server-bound identity, organization and venue; current venue.manage via PEOPLE-02/RLS. Independent display data, not identity or Server Names. Reference behavior remains UNKNOWN. Trimmed, case-preserving plain text; 1–120 Unicode code points, no controls. No uniqueness or retry deduplication.",
         "requestBody": {
@@ -385,6 +766,16 @@
               }
             }
           },
+          "409": {
+            "description": "Stale session context; no automatic replay",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal failure",
             "content": {
@@ -395,12 +786,26 @@
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/StaffCsrf"
+          },
+          {
+            "$ref": "#/components/parameters/StaffContextVersion"
+          }
+        ]
       }
     },
     "/api/v1/people/booked-by-names/{id}": {
       "patch": {
         "operationId": "updateBookedByName",
+        "security": [
+          {
+            "StaffSessionCookie": []
+          }
+        ],
+        "x-projectx-staff-boundary": "Require session-bound X-ProjectX-CSRF, canonical Origin/Host and X-ProjectX-Context-Version; stale version 409. High-risk Add User writes denied while assurance UNVERIFIED.",
         "summary": "Save one venue display name",
         "description": "PROJECTX IMPLEMENTATION DECISION. Server-bound identity, organization and venue; current venue.manage via PEOPLE-02/RLS. Independent display data, not identity or Server Names. Reference behavior remains UNKNOWN. Requires current version; one atomic save, stale version 409. Foreign and missing IDs both 404.",
         "parameters": [
@@ -412,6 +817,12 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          {
+            "$ref": "#/components/parameters/StaffCsrf"
+          },
+          {
+            "$ref": "#/components/parameters/StaffContextVersion"
           }
         ],
         "requestBody": {
@@ -529,20 +940,77 @@
     "/api/v1/people/accounts/options": {
       "get": {
         "operationId": "getPeopleAddUserOptions",
+        "security": [
+          {
+            "StaffSessionCookie": []
+          }
+        ],
+        "x-projectx-staff-boundary": "Current server session/context; GET does not extend idle timeout.",
         "summary": "Read actor-assignable Add User options",
         "description": "PROJECTX IMPLEMENTATION DECISION. Requires trusted organization user.manage; role and permission subsets reflect current effective rights. Each venue requires explicit current venue.manage. No browser-selected identity or organization; no SevenRooms semantics inferred.",
         "responses": {
-          "200": { "description": "Authorized options, including empty groups", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PeopleAddUserOptions" } } } },
-          "400": { "description": "Invalid query", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } } } },
-          "401": { "description": "No trusted identity", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } } } },
-          "403": { "description": "Missing current user.manage", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } } } },
-          "500": { "description": "Internal failure", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } } } }
+          "200": {
+            "description": "Authorized options, including empty groups",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PeopleAddUserOptions"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No trusted identity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Missing current user.manage",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
         }
       }
     },
     "/api/v1/people/accounts": {
       "post": {
         "operationId": "createPeopleAccount",
+        "security": [
+          {
+            "StaffSessionCookie": []
+          }
+        ],
+        "x-projectx-staff-boundary": "Require session-bound X-ProjectX-CSRF, canonical Origin/Host and X-ProjectX-Context-Version; stale version 409. High-risk Add User writes denied while assurance UNVERIFIED.",
         "summary": "Create an organization-scoped pending People account",
         "description": "ProjectX implementation decision. Requires a server-trusted identity and organization-scoped user.manage. Creates User, OrganizationMembership, explicit authorized role/venue grants and a separate pending provisioning record atomically. The unverified email belongs only to the organization-scoped provisioning record; no OIDC identity, invitation delivery or MFA enrollment is performed.",
         "parameters": [
@@ -556,6 +1024,12 @@
               "maxLength": 128,
               "pattern": "^[A-Za-z0-9._:-]+$"
             }
+          },
+          {
+            "$ref": "#/components/parameters/StaffCsrf"
+          },
+          {
+            "$ref": "#/components/parameters/StaffContextVersion"
           }
         ],
         "requestBody": {
@@ -633,6 +1107,12 @@
       },
       "get": {
         "operationId": "listPeopleAccounts",
+        "security": [
+          {
+            "StaffSessionCookie": []
+          }
+        ],
+        "x-projectx-staff-boundary": "Current server session/context; GET does not extend idle timeout.",
         "summary": "Read authorized People roster",
         "description": "ProjectX implementation. Organization-scoped user.read is required; a server-trusted identity and organization are supplied outside the query. Only active memberships and organization role grants contribute. Venue-only grants do not authorize this roster. Empty authorized result is 200 with items []; pagination and UUID ordering are ProjectX decisions, not reference behavior.",
         "parameters": [
@@ -727,7 +1207,117 @@
     }
   },
   "components": {
+    "securitySchemes": {
+      "StaffSessionCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "__Host-projectx-session"
+      }
+    },
     "schemas": {
+      "StaffSessionContext": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "userId",
+          "organizationId",
+          "venueId",
+          "contextVersion",
+          "expiresAt",
+          "assurance",
+          "contexts",
+          "csrfToken"
+        ],
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organizationId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "venueId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "contextVersion": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "assurance": {
+            "type": "string",
+            "enum": [
+              "UNVERIFIED"
+            ],
+            "description": "No controlled Auth0 MFA mapping yet. High-risk writes are denied."
+          },
+          "contexts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "organizationId",
+                "venueId"
+              ],
+              "properties": {
+                "organizationId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "venueId": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "csrfToken": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      },
+      "SelectStaffContext": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "organizationId",
+          "venueId",
+          "contextVersion"
+        ],
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "venueId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "contextVersion": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      },
       "ServerName": {
         "type": "object",
         "additionalProperties": false,
@@ -994,30 +1584,131 @@
       },
       "PeoplePermissionId": {
         "type": "string",
-        "enum": ["session.read.self", "user.read.self", "user.read", "user.manage", "organization.manage", "venue.read", "venue.manage", "reservation.read", "reservation.create", "reservation.update", "reservation.cancel", "client.read", "client.create", "client.update", "client.history.read.organization", "floorplan.read", "floorplan.manage", "availability.read", "availability.manage", "import.manage", "client.export", "audit.read"]
+        "enum": [
+          "session.read.self",
+          "user.read.self",
+          "user.read",
+          "user.manage",
+          "organization.manage",
+          "venue.read",
+          "venue.manage",
+          "reservation.read",
+          "reservation.create",
+          "reservation.update",
+          "reservation.cancel",
+          "client.read",
+          "client.create",
+          "client.update",
+          "client.history.read.organization",
+          "floorplan.read",
+          "floorplan.manage",
+          "availability.read",
+          "availability.manage",
+          "import.manage",
+          "client.export",
+          "audit.read"
+        ]
       },
       "PeopleRoleOption": {
-        "type": "object", "additionalProperties": false, "required": ["id", "name"],
-        "properties": { "id": { "type": "string", "format": "uuid" }, "name": { "type": "string" } }
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
       },
       "PeoplePermissionOption": {
-        "type": "object", "additionalProperties": false, "required": ["id", "description", "scope"],
-        "properties": { "id": { "$ref": "#/components/schemas/PeoplePermissionId" }, "description": { "type": "string" }, "scope": { "type": "string", "enum": ["SELF", "ORGANIZATION", "VENUE"] } }
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "description",
+          "scope"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/PeoplePermissionId"
+          },
+          "description": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "SELF",
+              "ORGANIZATION",
+              "VENUE"
+            ]
+          }
+        }
       },
       "PeopleVenueOption": {
-        "type": "object", "additionalProperties": false, "required": ["id", "name", "roles", "permissions"],
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "roles",
+          "permissions"
+        ],
         "properties": {
-          "id": { "type": "string", "format": "uuid" }, "name": { "type": "string" },
-          "roles": { "type": "array", "items": { "$ref": "#/components/schemas/PeopleRoleOption" } },
-          "permissions": { "type": "array", "items": { "$ref": "#/components/schemas/PeoplePermissionOption" } }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PeopleRoleOption"
+            }
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PeoplePermissionOption"
+            }
+          }
         }
       },
       "PeopleAddUserOptions": {
-        "type": "object", "additionalProperties": false, "required": ["organizationRoles", "organizationPermissions", "venues"],
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "organizationRoles",
+          "organizationPermissions",
+          "venues"
+        ],
         "properties": {
-          "organizationRoles": { "type": "array", "items": { "$ref": "#/components/schemas/PeopleRoleOption" } },
-          "organizationPermissions": { "type": "array", "items": { "$ref": "#/components/schemas/PeoplePermissionOption" } },
-          "venues": { "type": "array", "items": { "$ref": "#/components/schemas/PeopleVenueOption" } }
+          "organizationRoles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PeopleRoleOption"
+            }
+          },
+          "organizationPermissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PeoplePermissionOption"
+            }
+          },
+          "venues": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PeopleVenueOption"
+            }
+          }
         }
       },
       "CreatePeopleAccountVenueRequest": {
@@ -1033,9 +1724,13 @@
             "format": "uuid"
           },
           "permissionIds": {
-            "type": "array", "maxItems": 22, "uniqueItems": true,
+            "type": "array",
+            "maxItems": 22,
+            "uniqueItems": true,
             "description": "Optional additive direct VENUE grants, checked against current actor rights at this explicit venue.",
-            "items": { "$ref": "#/components/schemas/PeoplePermissionId" }
+            "items": {
+              "$ref": "#/components/schemas/PeoplePermissionId"
+            }
           },
           "roleIds": {
             "type": "array",
@@ -1115,9 +1810,13 @@
             }
           },
           "organizationPermissionIds": {
-            "type": "array", "maxItems": 22, "uniqueItems": true,
+            "type": "array",
+            "maxItems": 22,
+            "uniqueItems": true,
             "description": "Optional additive direct ORGANIZATION/SELF grants owned by the new membership; no shared-role mutation.",
-            "items": { "$ref": "#/components/schemas/PeoplePermissionId" }
+            "items": {
+              "$ref": "#/components/schemas/PeoplePermissionId"
+            }
           },
           "venues": {
             "type": "array",
@@ -1155,6 +1854,28 @@
             "const": "PENDING"
           }
         }
+      }
+    },
+    "parameters": {
+      "StaffCsrf": {
+        "in": "header",
+        "name": "X-ProjectX-CSRF",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "description": "Session-bound same-origin token; all staff mutations require validated Origin/Host as well."
+      },
+      "StaffContextVersion": {
+        "in": "header",
+        "name": "X-ProjectX-Context-Version",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "description": "Per-tab context snapshot; stale version fails 409 without replay. Not authorization authority."
       }
     }
   }

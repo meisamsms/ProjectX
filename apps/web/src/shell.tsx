@@ -50,7 +50,11 @@ function routeFor(path: string) {
       matchPath({ path: route.routePattern, end: true }, path),
   );
 }
-export function Shell() {
+export function Shell({
+  staffConnected = false,
+}: {
+  staffConnected?: boolean;
+} = {}) {
   const location = useLocation();
   const current = routeFor(location.pathname);
   useEffect(() => {
@@ -73,9 +77,11 @@ export function Shell() {
         <header>
           <strong>ProjectX foundation</strong>
           <span>
-            {initialAuthState.status === "UNAVAILABLE"
-              ? "Authentication and venue context are not connected"
-              : "Authorized context"}
+            {staffConnected
+              ? "Server-authenticated staff context"
+              : initialAuthState.status === "UNAVAILABLE"
+                ? "Authentication and venue context are not connected"
+                : "Authorized context"}
           </span>
         </header>
         <nav aria-label="Application navigation">

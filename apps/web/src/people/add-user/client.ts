@@ -1,4 +1,5 @@
 import type { operations } from "@projectx/contracts/api";
+import { staffFetch } from "../../staff-auth/client";
 
 type CreateOperation = operations["createPeopleAccount"];
 export type AddUserRequest =
@@ -22,7 +23,7 @@ function endpoint(path: string) {
 export async function getAddUserOptions(
   signal?: AbortSignal,
 ): Promise<AddUserOptions> {
-  const response = await fetch(endpoint("people/accounts/options"), {
+  const response = await staffFetch(endpoint("people/accounts/options"), {
     credentials: "same-origin",
     signal: signal ?? null,
   });
@@ -35,7 +36,7 @@ export async function createPeopleAccount(
   signal?: AbortSignal,
 ): Promise<AddUserResult> {
   // Trusted identity/context belong to the server. No browser tenant selectors or tokens.
-  const response = await fetch(endpoint("people/accounts"), {
+  const response = await staffFetch(endpoint("people/accounts"), {
     method: "POST",
     credentials: "same-origin",
     signal: signal ?? null,

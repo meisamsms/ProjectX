@@ -407,7 +407,11 @@
       "method": "Verify exact HEAD and clean branch; inspect AGENTS/map/roadmap/decisions/checks/handoff/People plan, approved ADRs/security contracts, actual startup/config/route/resolver/binder/migrations/test fixtures/package dependencies. Consult primary OIDC/OAuth/OWASP guidance; specify secure server identity/session/CSRF/current scope/revocation/restricted bootstrap-pool boundaries and AUTH-N01–N34. Record D001/D002 owner blockers plus D003 privileged exposure gate; no redundant ADR. Run pnpm map:check, git diff --check and JSON/ID/DAG/prior-VERIFIED/history/reference/decision/Part-3/six-document scope assertions. Commit locally, no push.",
       "result": "Documentation validation PASS. CORE-AUTH-01 VERIFIED specification only; CORE-AUTH-02 BLOCKED until provider/environment D001 and session lifetime/concurrency D002 approved and scoped implementation prompt/design review. D003 preserves existing privileged step-up gate without blocking ordinary auth or adding blanket reservation step-up. No provider chosen; proposed 12h/30m and <=5m privileged MFA not approved. Startup lacks resolver/pool and tracked login/session/CSRF/logout/switch implementation; binder only UUID validation/branding. Existing People capability/revocation/RLS evidence remains narrower than production auth. Anonymous identity/current-context/session access requires least-privilege future design, not admin pool/fake GUC/BYPASSRLS. All 25 earlier VERIFIED task objects, 56 historical checks and 23 existing decisions unchanged; source reference/ADR/package/test/migration/contract files unchanged. PEOPLE-09 READY but Part 3 deferred, PEOPLE-09B/10 PLANNED deferred, IMPL-MOD-14 IN_PROGRESS, core gate UNMET. No runtime tests/CI/credentials/reference evidence/parity claims; future 34 negative tests NEEDS TESTING. Next exact action Resolve CORE-AUTH owner decisions. Local commit needs separate exact-SHA publication approval.",
       "specificationFile": "docs/security/staff-access-integration.md",
-      "ownerDecisionIds": ["CORE-AUTH-D001", "CORE-AUTH-D002", "CORE-AUTH-D003"],
+      "ownerDecisionIds": [
+        "CORE-AUTH-D001",
+        "CORE-AUTH-D002",
+        "CORE-AUTH-D003"
+      ],
       "runtimeTestsExecuted": false,
       "newReferenceEvidence": false,
       "parityClaim": false
@@ -454,6 +458,153 @@
       "runtimeTestsExecuted": false,
       "newReferenceEvidence": false,
       "parityClaim": false
+    },
+    {
+      "id": "CHK-059",
+      "taskId": "CORE-AUTH-02",
+      "status": "IMPLEMENTED",
+      "verificationScope": "Bounded implementation and deterministic local security/regression verification; not production/Auth0 provider or core readiness VERIFIED",
+      "baseCommit": "84ed2938d7d1fa6155e744a50ef3d6aebe6f978c",
+      "date": "2026-10-05",
+      "method": "Exact clean base confirmed; reviewed AGENTS/specification/ADR-0003/0004/D004 and narrow auth-only bootstrap DB seam before code. Implemented bounded persistence/OIDC/context/runtime/security/minimal-web slices. Ran required local gates and preserved previous task/check/decision/reference evidence. Local commit only; separate exact-SHA approval required to push.",
+      "result": "Local PASS: production config fail closed; maintained openid-client explicit signature/issuer/audience/time/state/nonce/PKCE checks; exact existing binding; hashed opaque sessions, secure cookies, 12h absolute/30m idle/multiple devices, atomic consume/rotation/revoke, CSRF/Origin/Host, current membership/VenueAccess/capability/RLS, stale-tab version guard, least-privilege auth-only functions and restricted pool. No email auto-link or provider token/grant persistence. Privileged assurance UNVERIFIED denies high-risk Add User; no blanket ordinary-operation step-up. CORE-AUTH-02 IMPLEMENTED pending controlled external/deployment/CI gates; no core readiness claim.",
+      "implementationSlices": [
+        "A persistence/config/review",
+        "B maintained OIDC/login/callback/session/logout/CSRF",
+        "C resolver/current context/switch/version/restricted pool",
+        "D security matrix/contracts/People regressions/minimal web"
+      ],
+      "commands": [
+        {
+          "command": "pnpm install --frozen-lockfile",
+          "result": "PASS"
+        },
+        {
+          "command": "pnpm format:check; pnpm lint; pnpm typecheck; pnpm contract:check; pnpm map:check",
+          "result": "PASS"
+        },
+        {
+          "command": "pnpm test:auth",
+          "result": "PASS — 56 tests / 4 files: OIDC/config 27, HTTP 21, rollback cleanup 1, web continuity 7"
+        },
+        {
+          "command": "pnpm verify",
+          "result": "PASS — unit 4/4; focused auth 56/56; integration/API contract 19/19; existing web 178/178; browser E2E/axe 32/32; API/web builds PASS"
+        },
+        {
+          "command": "pnpm verify:db",
+          "result": "PASS — 210/210 across 21 files; new auth database 27/27 plus all 183 pre-existing DB/API contract tests"
+        },
+        {
+          "command": "git diff --check; history/scope/acyclic dependency assertions",
+          "result": "PASS"
+        }
+      ],
+      "environment": {
+        "os": "Windows",
+        "node": "24.19.0",
+        "postgresql": "16.15",
+        "database": "New disposable synthetic _test cluster at loopback 127.0.0.1:55436; actual restricted non-owner runtime login, no BYPASSRLS; no existing DB/Windows service changed",
+        "browser": "Installed local Chrome via PROJECTX_CHROMIUM_PATH; real Playwright execution; CI installs separate Chromium",
+        "authConfiguration": "All seven scoped Auth0/origin/runtime inputs absent from this task process; live provider tests not executed"
+      },
+      "intermediateFailures": [
+        {
+          "gate": "Initial format/TypeScript",
+          "failure": "New file formatting/line endings and one new DB-test tuple string|undefined typing",
+          "correction": "Formatter and tuple as const; unused new-test imports removed; gates PASS"
+        },
+        {
+          "gate": "First full pnpm verify:db",
+          "result": "200 PASS / 9 FAIL",
+          "failure": "Five People tests expected old eight-migration whole ledger; Server Names tamper assertion assumed last entry",
+          "correction": "Only expected new auth checksum/ledger entry appended; tamper lookup uses stable migration name; no historical migration/checksum/business/RLS assertions removed"
+        },
+        {
+          "gate": "Second full pnpm verify:db",
+          "result": "209 PASS / 1 FAIL",
+          "failure": "Core persistence expected isolated two Organizations but prior upgrade fixture left one row; suite lacked reset",
+          "correction": "Guarded disposable test-schema reset before core fixture migrations; all exact counts/assertions unchanged"
+        },
+        {
+          "gate": "Final full pnpm verify:db",
+          "result": "210 PASS / 0 FAIL"
+        }
+      ],
+      "negativeMatrix": {
+        "ids": "AUTH-N01–AUTH-N34",
+        "localResult": "Applicable deterministic negative boundaries PASS; N08/14/29 include retained live-capability/direct-grant/RLS regressions",
+        "providerEquivalent": "NEEDS TESTING — mocks/fixtures do not verify Auth0",
+        "privilegedPositive": "NEEDS TESTING / deliberately denied until verified MFA and recent assurance",
+        "evidenceFile": "docs/security/staff-session-verification.md"
+      },
+      "databaseReview": "docs/security/staff-session-database-review.md",
+      "deploymentGates": [
+        "Separate Auth0 confidential-client registrations/secrets/RS256/Code+PKCE/client_secret_post/exact URLs and pre-existing issuer-subject binding",
+        "Production migration/role/TLS/storage/retention review; test migrator is not a deployment tool",
+        "Same-origin HTTPS gateway/Host/forwarded-header/access-log handling; real secure cookies; staff web build enabled",
+        "Controlled Auth0 callback/replay/invalid-grant/key-rotation/outage/multi-instance/session revocation/expiry/local logout",
+        "Controlled MFA/auth_time/reauth provenance and approximately-five-minute freshness before privileged success exposure",
+        "Separate exact-SHA approval, push and final branch-head pnpm verify + verify:db PostgreSQL 16 CI"
+      ],
+      "historicalPreservation": "All 26 previously VERIFIED task objects, 58 historical checks and owner decisions unchanged. Existing People application behavior/migration SQL preserved; only required auth consumption/pool cleanup and narrowly affected migration test compatibility/isolation changed. Known PEOPLE-06 focus assertion unchanged and passes; old failure/rerun history retained.",
+      "maintenanceNotes": "Node shell-spawn deprecation, color and React Router directive warnings are non-blocking; no test failure hidden. Initial sandbox child-process restriction required approved test-tool execution; no production weakening.",
+      "noApplicationScopeExpansion": true,
+      "liveAuth0Tested": false,
+      "newReferenceEvidence": false,
+      "parityClaim": false,
+      "noPush": true,
+      "nextExactTask": "CORE-AUTH-02 — Trusted staff session integration: exact-SHA publication and controlled Auth0 verification",
+      "filesCreated": [
+        "apps/api/migrations/staff-auth/20261005000900_staff_sessions.sql",
+        "apps/api/src/staff-auth/config.ts",
+        "apps/api/src/staff-auth/credentials.ts",
+        "apps/api/src/staff-auth/oidc.ts",
+        "apps/api/src/staff-auth/routes.ts",
+        "apps/api/src/staff-auth/runtime.ts",
+        "apps/api/src/staff-auth/store.ts",
+        "apps/api/tests/staff-auth/database.test.ts",
+        "apps/api/tests/staff-auth/fixtures.ts",
+        "apps/api/tests/staff-auth/http.test.ts",
+        "apps/api/tests/staff-auth/oidc.test.ts",
+        "apps/api/tests/staff-auth/transaction.test.ts",
+        "apps/web/src/staff-auth/boundary.tsx",
+        "apps/web/src/staff-auth/client.ts",
+        "apps/web/tests/staff-auth.test.tsx",
+        "docs/security/staff-session-database-review.md",
+        "docs/security/staff-session-verification.md"
+      ],
+      "filesModified": [
+        "apps/api/.env.example",
+        "apps/api/package.json",
+        "apps/api/src/app.ts",
+        "apps/api/src/main.ts",
+        "apps/api/src/people/authorization/context.ts",
+        "apps/api/tests/people/booked-by.test.ts",
+        "apps/api/tests/people/core-persistence.test.ts",
+        "apps/api/tests/people/direct-grants-migrations.test.ts",
+        "apps/api/tests/people/rls-migrations.test.ts",
+        "apps/api/tests/people/roster-fields-migrations.test.ts",
+        "apps/api/tests/people/server-names.test.ts",
+        "apps/web/.env.example",
+        "apps/web/src/api-client.ts",
+        "apps/web/src/main.tsx",
+        "apps/web/src/people/add-user/client.ts",
+        "apps/web/src/people/booked-by/client.ts",
+        "apps/web/src/people/server-names/client.ts",
+        "apps/web/src/shell.tsx",
+        "docs/project-map/handoff.md",
+        "docs/project-map/roadmap.json",
+        "docs/project-map/verification.json",
+        "docs/security/identity-access-model.md",
+        "docs/security/staff-access-integration.md",
+        "package.json",
+        "packages/contracts/generated/api.ts",
+        "packages/contracts/openapi.json",
+        "pnpm-lock.yaml",
+        "tooling/db-test.mjs",
+        "tooling/verify.mjs"
+      ]
     }
   ],
   "unresolvedQuestions": [

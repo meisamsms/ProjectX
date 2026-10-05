@@ -57,6 +57,7 @@ export async function withAuthorizedPeopleTransaction<T>(
   )
     throw new PeopleAccessDenied();
   const client = await pool.connect();
+  let destroy = false;
   try {
     await client.query("BEGIN");
     await client.query("SET LOCAL search_path TO projectx_test, public");
@@ -84,10 +85,9 @@ export async function withAuthorizedPeopleTransaction<T>(
       "SELECT set_config('app.user_id',$1,true),set_config('app.organization_id',$2,true),set_config('app.access_mode',$3,true)",
       [identity.userId, request.organizationId, mode],
     );
-    if (request.venueId)
-      await client.query("SELECT set_config('app.venue_id',$1,true)", [
-        request.venueId,
-      ]);
+    await client.query("SELECT set_config('app.venue_id',$1,true)", [
+      request.venueId ?? "",
+    ]);
     if (request.target) {
       const table = targetTables[request.target.kind];
       const found = await client.query(`SELECT id FROM ${table} WHERE id=$1`, [
@@ -99,9 +99,13 @@ export async function withAuthorizedPeopleTransaction<T>(
     await client.query("COMMIT");
     return result;
   } catch (error) {
-    await client.query("ROLLBACK");
+    try {
+      await client.query("ROLLBACK");
+    } catch {
+      destroy = true;
+    }
     throw error;
   } finally {
-    client.release();
+    client.release(destroy);
   }
 }

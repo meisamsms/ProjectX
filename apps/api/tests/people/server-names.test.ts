@@ -804,7 +804,11 @@ describe("PEOPLE-08A forward migration", () => {
   it("installs clean with exact ledger/checksum, RLS and least privilege; repeat unchanged", async () => {
     expect(await ledger()).toEqual(
       await Promise.all(
-        [...previous, migration].map(async (name) => ({
+        [
+          ...previous,
+          migration,
+          "staff-auth/20261005000900_staff_sessions.sql",
+        ].map(async (name) => ({
           name,
           checksum: checksum(await content(name)),
         })),
@@ -941,6 +945,8 @@ describe("PEOPLE-08A forward migration", () => {
     await expect(migrateTestDatabase()).rejects.toThrow(
       "Modified applied migration",
     );
-    expect((await ledger()).at(-1).checksum).toBe("tampered");
+    expect(
+      (await ledger()).find(({ name }) => name === migration)?.checksum,
+    ).toBe("tampered");
   });
 });

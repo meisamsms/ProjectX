@@ -1,5 +1,23 @@
 # ProjectX identity, tenant and session model — FOUND-TASK-002
 
+## CORE-AUTH-02 implementation reality — 2026-10-05
+
+PROJECTX IMPLEMENTATION DECISION. Staff runtime now follows the reviewed existing
+ADR-0004 boundary: verified Auth0 issuer/subject -> existing identity/User ->
+hashed opaque server session -> current membership/VenueAccess ->
+current capability/RLS transaction. No email auto-link, fixture authentication,
+provider tokens, frozen permissions, owner/admin request pool or BYPASSRLS.
+New auth-only functions and persistence are reviewed in
+`staff-session-database-review.md`; deterministic verification and controlled
+deployment limitations are in `staff-session-verification.md`.
+
+CORE-AUTH-02 is IMPLEMENTED, not production/provider VERIFIED. Existing D004
+choices remain unchanged: Auth0; 12h absolute / 30m idle / multiple sessions;
+targeted high-risk MFA with approximately 5m freshness. UNVERIFIED assurance denies
+high-risk administration, never treats baseline auth_time/browser flags as step-up.
+No SevenRooms behavior or core readiness is inferred. The specification inventories
+below describe their stated historical bases, not current runtime absence.
+
 ## Current staff integration specification — CORE-AUTH-01
 
 `staff-access-integration.md` specifies this existing ADR-0004 boundary, not a new

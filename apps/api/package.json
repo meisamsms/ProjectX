@@ -12,6 +12,7 @@
     "@projectx/contracts": "workspace:*",
     "ajv": "8.17.1",
     "fastify": "5.12.5",
+    "openid-client": "6.8.8",
     "pg": "8.16.3"
   },
   "devDependencies": {

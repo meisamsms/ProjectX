@@ -1,4 +1,5 @@
 import type { operations } from "@projectx/contracts/api";
+import { staffFetch } from "../../staff-auth/client";
 
 export type BookedByQuery = NonNullable<
   operations["listBookedByNames"]["parameters"]["query"]
@@ -36,7 +37,7 @@ export async function listBookedByNames(
   if (query.limit !== undefined)
     url.searchParams.set("limit", String(query.limit));
   if (query.cursor !== undefined) url.searchParams.set("cursor", query.cursor);
-  const response = await fetch(url, {
+  const response = await staffFetch(url, {
     credentials: "same-origin",
     signal: signal ?? null,
   });
@@ -47,7 +48,7 @@ export async function addBookedByName(
   body: AddBookedByRequest,
   signal?: AbortSignal,
 ): Promise<CreatedName> {
-  const response = await fetch(endpoint(), {
+  const response = await staffFetch(endpoint(), {
     method: "POST",
     credentials: "same-origin",
     signal: signal ?? null,
@@ -63,7 +64,7 @@ export async function updateBookedByName(
   signal?: AbortSignal,
 ): Promise<UpdatedName> {
   // Authority and organization/venue selection belong to the trusted server context.
-  const response = await fetch(endpoint(id), {
+  const response = await staffFetch(endpoint(id), {
     method: "PATCH",
     credentials: "same-origin",
     signal: signal ?? null,

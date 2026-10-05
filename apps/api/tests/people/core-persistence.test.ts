@@ -3,6 +3,7 @@ import type { PoolClient } from "pg";
 import {
   closeTestDatabase,
   connectTestDatabase,
+  resetTestDatabase,
   withTransaction,
 } from "../database/harness.js";
 import { migrateTestDatabase } from "../database/migrate.js";
@@ -10,7 +11,10 @@ import { newPeopleId } from "../../src/people/persistence/id.js";
 import { seedCorePeople } from "./fixtures/core.js";
 
 const pool = connectTestDatabase();
-beforeAll(async () => migrateTestDatabase());
+beforeAll(async () => {
+  await resetTestDatabase(pool);
+  await migrateTestDatabase();
+});
 afterAll(async () => closeTestDatabase(pool));
 
 async function rolledBack(fn: (client: PoolClient) => Promise<void>) {

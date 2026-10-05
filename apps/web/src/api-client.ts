@@ -1,4 +1,5 @@
 import type { operations, paths } from "@projectx/contracts/api";
+import { staffFetch } from "./staff-auth/client";
 export type HealthResponse =
   paths["/health"]["get"]["responses"][200]["content"]["application/json"];
 export async function checkHealth(baseUrl: string): Promise<HealthResponse> {
@@ -33,7 +34,7 @@ export async function getPeopleAccounts(
   );
   if (query.accessLevel) url.searchParams.set("accessLevel", query.accessLevel);
   if (query.cursor) url.searchParams.set("cursor", query.cursor);
-  const response = await fetch(url, {
+  const response = await staffFetch(url, {
     credentials: "same-origin",
     signal: signal ?? null,
   });

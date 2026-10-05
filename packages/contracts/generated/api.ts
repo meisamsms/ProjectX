@@ -4,6 +4,97 @@
  */
 
 export interface paths {
+    "/api/v1/staff-auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Start Auth0 staff-only OIDC Code + PKCE
+         * @description PROJECTX IMPLEMENTATION DECISION. Fixed callback/canonical origin; no return URL or browser authority. One-use durable transaction with secure correlation cookie.
+         */
+        get: operations["startStaffLogin"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/staff-auth/callback": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Verify OIDC callback and rotate opaque session
+         * @description No provider tokens retained/exposed; exact issuer/subject binding only. One-use state/nonce/PKCE; validated signature/audience/time. Never auto-link by email.
+         */
+        get: operations["completeStaffLogin"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/staff-auth/session": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read current staff context (no idle extension) */
+        get: operations["getStaffSession"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/staff-auth/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Durably revoke local session before clearing cookie */
+        post: operations["logoutStaffSession"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/staff-auth/context": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Select only current authorized organization/venue */
+        post: operations["selectStaffContext"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/people/server-names": {
         parameters: {
             query?: never;
@@ -157,6 +248,36 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        StaffSessionContext: {
+            /** Format: uuid */
+            userId: string;
+            /** Format: uuid */
+            organizationId: string | null;
+            /** Format: uuid */
+            venueId: string | null;
+            contextVersion: number;
+            /** Format: date-time */
+            expiresAt: string;
+            /**
+             * @description No controlled Auth0 MFA mapping yet. High-risk writes are denied.
+             * @enum {string}
+             */
+            assurance: "UNVERIFIED";
+            contexts: {
+                /** Format: uuid */
+                organizationId: string;
+                /** Format: uuid */
+                venueId: string | null;
+            }[];
+            csrfToken: string;
+        };
+        SelectStaffContext: {
+            /** Format: uuid */
+            organizationId: string;
+            /** Format: uuid */
+            venueId: string | null;
+            contextVersion: number;
+        };
         ServerName: {
             /** Format: uuid */
             id: string;
@@ -279,13 +400,281 @@ export interface components {
         };
     };
     responses: never;
-    parameters: never;
+    parameters: {
+        /** @description Session-bound same-origin token; all staff mutations require validated Origin/Host as well. */
+        StaffCsrf: string;
+        /** @description Per-tab context snapshot; stale version fails 409 without replay. Not authorization authority. */
+        StaffContextVersion: number;
+    };
     requestBodies: never;
     headers: never;
     pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    startStaffLogin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Configured provider authorization redirect */
+            302: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Missing, expired or invalid staff session / callback */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Denied current access, CSRF, origin or unverified privileged assurance */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Store/provider unavailable; fail closed */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    completeStaffLogin: {
+        parameters: {
+            query?: {
+                code?: string;
+                state?: string;
+                iss?: string;
+                error?: string;
+                error_description?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Canonical application redirect with Secure HttpOnly host-only session cookie */
+            302: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Missing, expired or invalid staff session / callback */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Denied current access, CSRF, origin or unverified privileged assurance */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Store/provider unavailable; fail closed */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    getStaffSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Only caller's current context choices; no roster or provider credentials */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffSessionContext"];
+                };
+            };
+            /** @description Missing, expired or invalid staff session / callback */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Denied current access, CSRF, origin or unverified privileged assurance */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Store/provider unavailable; fail closed */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    logoutStaffSession: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Session-bound token from same-origin current session response. */
+                "X-ProjectX-CSRF": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Revoked (idempotent for well-formed stale cookie with valid CSRF/origin) */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Missing, expired or invalid staff session / callback */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Denied current access, CSRF, origin or unverified privileged assurance */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Store/provider unavailable; fail closed */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    selectStaffContext: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Session-bound token from same-origin current session response. */
+                "X-ProjectX-CSRF": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SelectStaffContext"];
+            };
+        };
+        responses: {
+            /** @description Validated selection with advanced stale-tab version */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffSessionContext"];
+                };
+            };
+            /** @description Invalid context input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Missing, expired or invalid staff session / callback */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Denied current access, CSRF, origin or unverified privileged assurance */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Stale context version; never automatically replay */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Store/provider unavailable; fail closed */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     listServerNames: {
         parameters: {
             query?: {
@@ -348,7 +737,12 @@ export interface operations {
     addServerName: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Session-bound same-origin token; all staff mutations require validated Origin/Host as well. */
+                "X-ProjectX-CSRF": components["parameters"]["StaffCsrf"];
+                /** @description Per-tab context snapshot; stale version fails 409 without replay. Not authorization authority. */
+                "X-ProjectX-Context-Version": components["parameters"]["StaffContextVersion"];
+            };
             path?: never;
             cookie?: never;
         };
@@ -394,6 +788,15 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
+            /** @description Stale session context; no automatic replay */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
             /** @description Internal failure */
             500: {
                 headers: {
@@ -408,7 +811,12 @@ export interface operations {
     updateServerName: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Session-bound same-origin token; all staff mutations require validated Origin/Host as well. */
+                "X-ProjectX-CSRF": components["parameters"]["StaffCsrf"];
+                /** @description Per-tab context snapshot; stale version fails 409 without replay. Not authorization authority. */
+                "X-ProjectX-Context-Version": components["parameters"]["StaffContextVersion"];
+            };
             path: {
                 id: string;
             };
@@ -547,7 +955,12 @@ export interface operations {
     addBookedByName: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Session-bound same-origin token; all staff mutations require validated Origin/Host as well. */
+                "X-ProjectX-CSRF": components["parameters"]["StaffCsrf"];
+                /** @description Per-tab context snapshot; stale version fails 409 without replay. Not authorization authority. */
+                "X-ProjectX-Context-Version": components["parameters"]["StaffContextVersion"];
+            };
             path?: never;
             cookie?: never;
         };
@@ -593,6 +1006,15 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
+            /** @description Stale session context; no automatic replay */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
             /** @description Internal failure */
             500: {
                 headers: {
@@ -607,7 +1029,12 @@ export interface operations {
     updateBookedByName: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Session-bound same-origin token; all staff mutations require validated Origin/Host as well. */
+                "X-ProjectX-CSRF": components["parameters"]["StaffCsrf"];
+                /** @description Per-tab context snapshot; stale version fails 409 without replay. Not authorization authority. */
+                "X-ProjectX-Context-Version": components["parameters"]["StaffContextVersion"];
+            };
             path: {
                 id: string;
             };
@@ -831,6 +1258,10 @@ export interface operations {
             query?: never;
             header: {
                 "Idempotency-Key": string;
+                /** @description Session-bound same-origin token; all staff mutations require validated Origin/Host as well. */
+                "X-ProjectX-CSRF": components["parameters"]["StaffCsrf"];
+                /** @description Per-tab context snapshot; stale version fails 409 without replay. Not authorization authority. */
+                "X-ProjectX-Context-Version": components["parameters"]["StaffContextVersion"];
             };
             path?: never;
             cookie?: never;

@@ -6,6 +6,7 @@ const steps = [
   "lint",
   "typecheck",
   "test:unit",
+  "test:auth",
   "contract:check",
   "map:check",
   "test:integration",

@@ -1,5 +1,10 @@
-import Fastify, { type FastifyInstance } from "fastify";
+import Fastify, { LogController, type FastifyInstance } from "fastify";
+import type { Writable } from "node:stream";
 import type { Config } from "./config.js";
+import {
+  registerStaffAuth,
+  type StaffAuthDependencies,
+} from "./staff-auth/routes.js";
 import {
   type PeopleServerDependencies,
   registerPeopleServer,
@@ -21,6 +26,8 @@ import {
 export function createApp(
   config: Config,
   options?: {
+    loggerStream?: Writable;
+    staffAuth?: StaffAuthDependencies;
     peopleAccountsRead?: PeopleAccountsReadDependencies;
     peopleAddUser?: PeopleAddUserDependencies;
     peopleBookedBy?: PeopleBookedByDependencies;
@@ -28,7 +35,9 @@ export function createApp(
   },
 ): FastifyInstance {
   const app = Fastify({
+    logController: new LogController({ disableRequestLogging: true }),
     logger: {
+      ...(options?.loggerStream ? { stream: options.loggerStream } : {}),
       level: config.LOG_LEVEL,
       redact: {
         paths: [
@@ -83,10 +92,22 @@ export function createApp(
     },
     async () => ({ status: "ok" }),
   );
-  registerPeopleAccountsRead(app, options?.peopleAccountsRead);
-  registerPeopleAddUser(app, options?.peopleAddUser);
-  registerPeopleAddUserOptions(app, options?.peopleAddUser);
-  registerPeopleBookedBy(app, options?.peopleBookedBy);
-  registerPeopleServer(app, options?.peopleServer);
+  const staff = options?.staffAuth
+    ? registerStaffAuth(app, options.staffAuth)
+    : undefined;
+  const pool = options?.staffAuth?.runtimePool;
+  const organization =
+    staff && pool
+      ? { runtimePool: pool, resolveTrustedScope: staff.resolveOrganization }
+      : undefined;
+  const venue =
+    staff && pool
+      ? { runtimePool: pool, resolveTrustedScope: staff.resolveVenue }
+      : undefined;
+  registerPeopleAccountsRead(app, organization ?? options?.peopleAccountsRead);
+  registerPeopleAddUser(app, organization ?? options?.peopleAddUser);
+  registerPeopleAddUserOptions(app, organization ?? options?.peopleAddUser);
+  registerPeopleBookedBy(app, venue ?? options?.peopleBookedBy);
+  registerPeopleServer(app, venue ?? options?.peopleServer);
   return app;
 }
