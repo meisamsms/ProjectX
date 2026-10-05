@@ -6,10 +6,19 @@
 architecture or a verified production login. At base 7f2c25f532a5efae22237c3f9c42b1e528dadf8a,
 startup injects no resolver/runtime pool; the identity helper only brands a UUID.
 Login, sessions, CSRF/logout/context-switch wiring remain unimplemented in inspected
-tracked code. CORE-AUTH-01 is documentation-only VERIFIED; CORE-AUTH-02 BLOCKED
-pending CORE-AUTH-D001/D002 owner choices. D003 gates privileged step-up exposure;
-no new blanket step-up for ordinary reservation work. Proposed timeouts are not
-approved. The specification includes restricted bootstrap/session access review,
+tracked code. CORE-AUTH-01 is documentation-only VERIFIED; CORE-AUTH-02 now READY
+under APPROVED CORE-AUTH-D004, resolving D001/D002/D003. Auth0 chosen for staff only;
+separate development/staging/production configuration; 12h absolute / 30m idle /
+multiple sessions approved. Secure/HttpOnly/SameSite=Lax host-only Path=/ cookie,
+production HTTPS, rotation/logout invalidation/current-state revocation required.
+Targeted high-risk administrative MFA/recent privileged assurance has approximately
+5-minute freshness; ordinary reservations/book/check-in/seating need no repeated
+step-up. Exact Auth0 mechanics remain future tests; privileged exposure without
+verified assurance stays denied. Historical open-policy wording below is superseded
+by D004, not rewritten as production verification. No new ADR, tenant or credentials.
+Actual environment inputs and restricted bootstrap/session access review remain
+CORE-AUTH-02 implementation gates, not new owner product/architecture blockers.
+The specification includes restricted bootstrap/session access review,
 current-state revocation and AUTH-N01–AUTH-N34 future tests. No reference
 classifications or historical foundation verification changed. The evidence
 convention below applies to the historical reference/contract sections; the new

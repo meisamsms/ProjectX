@@ -1910,17 +1910,17 @@
     },
     {
       "id": "CORE-AUTH-02",
-      "name": "Trusted staff access integration implementation",
+      "name": "Trusted staff session integration",
       "phaseId": "PHASE-04",
-      "status": "BLOCKED",
+      "status": "READY",
       "dependencies": [
         "CORE-AUTH-01",
         "PEOPLE-CORE-01"
       ],
-      "scope": "Approved OIDC adapter, secure server session persistence/middleware, trusted resolver, restricted runtime pool, CSRF/logout and validated Venue context, with focused integration/security tests under ADR-0004. Review auth-only bootstrap/session least-privilege access before code; current People RLS is not anonymous identity lookup.",
-      "outOfScope": "New credential service, browser-authoritative identity, generic audit framework, unrelated business features or public guest access.",
+      "scope": "Auth0 standard OIDC Authorization Code + PKCE, secure callback/issuer-subject mapping, server session persistence/cookie middleware, CSRF, trusted staff resolver, Organization/Venue validation, restricted PostgreSQL pool, current-state revocation, logout/rotation and focused negative security tests under ADR-0004 and CORE-AUTH-D004. Review auth-only bootstrap/session least-privilege design before code; current People RLS is not anonymous identity lookup.",
+      "outOfScope": "Public guest authentication, reservation domain implementation, PEOPLE-09 Export, broad People refactor, generic audit subsystem, unrelated settings, full administration redesign, new credential service or browser-authoritative identity.",
       "acceptanceCriteria": [
-        "Provider/config/session policy explicitly approved before implementation",
+        "CORE-AUTH-D004 approves Auth0 and separate development/staging/production configuration; 12h absolute / 30m idle / multiple sessions; targeted high-risk MFA with approximately 5-minute freshness. Actual environment values and exact Auth0 assurance mechanics require controlled setup/design/tests before exposure",
         "Issuer/subject binding, secure cookie/CSRF/rotation/expiry/logout/context switching and immediate disabled/revoked denial tested",
         "Wire real server identity and restricted pool; missing configuration fails closed, no fixture login",
         "Controlled IdP integration and negative forged session/scope/pool tests pass; mocks alone do not verify production login"
@@ -1941,8 +1941,12 @@
       ],
       "priorityPart": 2,
       "priorityDecisionId": "PRIORITY-D001",
-      "implementationGate": "PLANNING ONLY; approved bounded contract and separate implementation prompt required. Split backend/frontend where needed before code; never implement a whole module in one task.",
-      "blocker": "CORE-GAP-001 remains open: specification now VERIFIED, but CORE-AUTH-D001 provider/environment and CORE-AUTH-D002 session lifetime/concurrency require owner approval. Runtime absent/unverified; separate implementation prompt and narrow bootstrap/session database-access review required. CORE-AUTH-D003 blocks privileged exposure; unresolved step-up must deny privileged mutations, not broaden ordinary reservation auth scope.",
+      "implementationGate": "READY after owner policy approval and VERIFIED dependencies; no implementation authorized in this documentation task. Separate bounded implementation prompt required. Split backend/frontend where needed before code; never implement a whole module in one task. Scoped bootstrap/session database-access review, registered environment inputs and provider assurance verification are future engineering/deployment/exposure gates; stop for any genuinely new product/architecture blocker.",
+      "blocker": null,
+      "ownerPolicyDecisionId": "CORE-AUTH-D004",
+      "readinessEvidence": "CHK-058 owner-decision documentation only. Published CORE-AUTH-01 CI run 37253348486 attempt 2/job 111586842967 green at 95d4d1b1cc9f8a6dc69a1d8a3edea38df9e00923; original failed attempt preserved. Not production auth, new implementation or core readiness proof.",
+      "coreWorkflowAdvanced": "Secure authenticated staff access for reservation-required Venue settings and future reservation book/check-in/seating.",
+      "remainingWork": "Runtime login/session/resolver/pool unimplemented. No extra unresolved architecture/product decision found in published specification; actual Auth0 deployment registrations/configuration, least-privilege bootstrap/session design and focused verification remain within bounded CORE-AUTH-02. No automatic start or privileged exposure without verified assurance.",
       "specificationFile": "docs/security/staff-access-integration.md",
       "requiredOwnerDecisionIds": ["CORE-AUTH-D001", "CORE-AUTH-D002"],
       "privilegedExposureDecisionId": "CORE-AUTH-D003",
@@ -2356,7 +2360,7 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "Resolve CORE-AUTH owner decisions",
+  "nextExactTask": "CORE-AUTH-02 — Trusted staff session integration",
   "deliveryPriority": {
     "decisionId": "PRIORITY-D001",
     "primaryTarget": "PART 1 — CORE ONLINE RESERVATION SYSTEM",
@@ -2711,7 +2715,7 @@
           "apps/api/src/people/booked-by/route.ts",
           "docs/security/identity-access-model.md"
         ],
-        "gap": "CORE-AUTH-01 specification VERIFIED (CHK-057); production OIDC/session/resolver/pool still absent/unverified. D001/D002 owner choices and auth-only bootstrap/session least-privilege design outstanding; D003 preserves privileged step-up gate. Blocks authenticated runtime, not completed specification. No core readiness claim."
+        "gap": "Owner choices resolved by APPROVED CORE-AUTH-D004 (D001/D002/D003). CORE-AUTH-02 READY, not implemented: production OIDC/session/resolver/pool remains absent/unverified. Auth0 environment inputs and auth-only bootstrap/session least-privilege review/tests remain future scoped work; privileged assurance must be verified before exposure. No new owner policy blocker or core readiness claim."
       },
       {
         "id": "CORE-GAP-002",

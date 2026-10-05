@@ -3,8 +3,48 @@
 Date: 2026-10-04. Base: `7f2c25f532a5efae22237c3f9c42b1e528dadf8a`.
 DOCUMENTATION ONLY / PROJECTX IMPLEMENTATION SPECIFICATION under approved
 ADR-0003/0004. Requirements below are future acceptance contracts, not implemented
-or production-verified behavior. No new architecture, provider selection/purchase,
+or production-verified behavior. No new architecture or provider purchase,
 credentials, runtime, migration, test, API contract or reference evidence is added.
+
+## Current owner-approved policy — CORE-AUTH-D004
+
+OWNER APPROVED / PROJECTX IMPLEMENTATION DECISION, 2026-10-04; documentation base
+`95d4d1b1cc9f8a6dc69a1d8a3edea38df9e00923`. Next unused consolidated decision ID
+CORE-AUTH-D004 resolves existing CORE-AUTH-D001/D002/D003, preserving their IDs and
+original options. Explicit selections: 1B Auth0; 2A session policy; 3A targeted MFA.
+This specializes ADR-0004; no redundant ADR or SevenRooms inference.
+
+- Managed OIDC provider: **Auth0**, staff authentication only for the current
+  reservation-core milestone. Standard OIDC Authorization Code + PKCE, secure
+  callback, issuer/audience/signature/expiry/state/nonce checks and exact verified
+  issuer/subject mapping remain mandatory. No email-only identity linking or
+  browser-authoritative User/Organization/Venue claims.
+- Separate development, staging and production configuration. No Auth0 tenant,
+  client registration, credential or secret is created here. Exact issuer/client/
+  callback/origin/proxy configuration and secret provisioning are controlled future
+  CORE-AUTH-02 inputs; missing values fail closed before exposure. They are not an
+  additional unresolved product/architecture choice.
+- Staff sessions: **12 hours absolute**, **30 minutes idle**, **multiple sessions
+  allowed**, opaque server-managed state. Secure, HttpOnly, SameSite=Lax, host-only
+  cookie, Path=/; production HTTPS. Rotate after authentication/security-sensitive
+  reauthentication where applicable; server invalidation before logout cookie
+  removal. Current disabled/revoked authorization state remains authoritative;
+  permissions never frozen into long-lived browser claims.
+- Ordinary staff book/check-in/seating and ordinary reservation operations do
+  **not** require repeated step-up and are not automatically high-risk. High-risk
+  user/role/permission administration and highly sensitive security configuration
+  require MFA/recent privileged assurance, with approved freshness target
+  **approximately 5 minutes**. Exact Auth0 feature/claim/enforcement mechanics belong
+  to CORE-AUTH-02 design and verification; no extra timeout values invented. Policy
+  approval is not assurance verification; unverified/missing assurance still denies
+  privileged actions. No full administration redesign is authorized.
+
+All required owner choices are resolved; no additional required product/architecture
+decision found in this specification. CORE-AUTH-02 is READY for a separate bounded
+implementation prompt, not implemented. Least-privilege identity/session bootstrap
+review and registered environment/provider verification remain its engineering
+acceptance gates. If that work discovers a genuinely new decision, stop and record
+it rather than widen scope or weaken RLS. Core readiness remains UNMET.
 
 ## Task-selection gate and reservation boundary
 
@@ -23,7 +63,8 @@ audit, unrelated settings and Export. ACCEPTANCE: all boundaries below specified
 uncertainty explicit, prior verified/reference history retained. VERIFICATION:
 `pnpm map:check`, `git diff --check`, JSON/ID/DAG/history/scope assertions.
 REGRESSION: no runtime/test/migration/contract or existing approved ADR changes.
-DECISION: PROCEED for specification only; CORE-AUTH-02 remains BLOCKED.
+DECISION: CORE-AUTH-01 specification VERIFIED; CORE-AUTH-02 now READY after D004,
+but no implementation in this owner-decision documentation task.
 
 PART 1 remains the delivery goal. PEOPLE-09 READY is planning readiness only;
 PEOPLE-09B/10 PLANNED; all three PART 3 DEFERRED FOR CORE DELIVERY until
@@ -155,8 +196,8 @@ atomically at authentication and successful step-up, and on detected privilege
 elevation; invalidate the predecessor and rebind CSRF state. Idle activity cannot
 extend the original absolute expiry; renewal is never silent unlimited login.
 No refresh extends local policy. Failed/replayed rotation cannot resurrect old
-credentials. D002 must approve absolute/idle/concurrent policy; proposed default
-12 hours absolute / 30 minutes idle is NOT selected or deployed. Background polling
+credentials. D002/D004 approve 12 hours absolute / 30 minutes idle, with multiple
+sessions allowed; policy is selected, not implemented or deployed. Background polling
 must not silently keep an unattended terminal alive; CORE-AUTH-02 defines/tests
 accepted interactive activity and expiry race handling.
 
@@ -166,8 +207,8 @@ before cookie removal, idempotent for an already expired session. Store failure
 does not report successful logout/invalidation; fail safely and do not authorize
 on unavailable storage. Local logout invalidates this session; global User/session
 revocation must be server-enforced. Federated/global IdP logout is provider-dependent,
-not promised. Concurrent sessions default per-device and independently revocable
-if D002 A is approved; no shared-terminal bypass or unapproved session-list UI.
+not promised. Approved multiple sessions remain independently revocable;
+no shared-terminal bypass or unapproved session-list UI.
 
 ## CSRF, origins and login/error states
 
@@ -272,9 +313,10 @@ Keep current sensitive-operation authorization/audit/concurrency rules. Existing
 identity-access/authorization contracts still require fresh reauthentication or
 verified MFA for high-risk user/grant/role administration, secrets and Organization
 settings; cancellation/destructive operations keep their risk-specific review.
-Never expose those routes with only baseline session authentication. D003 resolves
-privileged assurance/freshness before such exposure; absent approval/verified
-assurance, privileged mutations stay denied, not weakened. No People-admin rewrite
+Never expose those routes with only baseline session authentication. D003/D004
+approve targeted privileged MFA/recent assurance with approximately 5-minute
+freshness; exact Auth0 mechanics remain NEEDS TESTING. Without verified assurance,
+privileged mutations stay denied, not weakened. No People-admin rewrite
 or step-up UI is a prerequisite to implementing ordinary staff access. Verified
 `auth_time`/provider assurance mapping, not a browser `mfa=true` or recent page visit,
 must support any accepted step-up. Existing tests do not prove production step-up.
@@ -349,9 +391,12 @@ claim mocks prove a managed provider works. Future gates: `pnpm format:check`,
 checks, real PostgreSQL privilege/RLS/cleanup evidence. Required secrets belong in
 approved environment configuration, never this spec or commit.
 
-## Owner decisions — unresolved, no defaults approved
+## Owner decisions — resolved by CORE-AUTH-D004
 
 Authoritative structured records: `docs/project-map/decisions.json`.
+The questions/options below preserve the original consideration history, not
+current blockers or newly approved alternative timeout values. D001/D002/D003 are
+now APPROVED by explicit owner selections 1B / 2A / 3A; D004 consolidates policy.
 
 ### CORE-AUTH-D001 — Managed provider and deployment configuration
 
@@ -368,11 +413,12 @@ not a vendor. Options below are selection paths, not vendor recommendations.
 | C — Use managed enterprise federation through an owner-approved OIDC broker. | Central staff SSO, local ProjectX authorization retained. | Federation setup/customer dependency; unnecessary if no enterprise need. |
 | D — Defer provider choice; specification only, no staff runtime exposure. | No premature spending/configuration. | Blocks authenticated reservation-core delivery. |
 
-RECOMMENDED TECHNICAL DEFAULT: A if the owner identifies a suitable existing tenant;
-otherwise B via a short approved evaluation, not automatic purchase. Approval must
-name provider/tenant, environment separation, issuer, client registration/callback,
-canonical staff origin and secret provisioning responsibility (not secret values).
-Blocks CORE-AUTH-02. Credentials are not needed to approve a specification choice.
+HISTORICAL RECOMMENDATION: A if a suitable existing tenant; otherwise B via review.
+OWNER SELECTED 1B: Auth0, separate development/staging/production configuration.
+Provider policy blocker resolved. Actual tenant/issuer/client/callback/origin/proxy
+and secret-provisioning inputs must be established safely for CORE-AUTH-02 before
+live integration, never stored as secrets in this document. No tenants purchased
+or created here; no credentials needed for this policy record.
 
 ### CORE-AUTH-D002 — Session lifetime and concurrent policy
 
@@ -387,9 +433,9 @@ interruptions; server enforcement and test acceptance need concrete values.
 | C — 24h absolute / 60m idle; separate device sessions. | Few interruptions for extended operations. | Longer stolen/unattended-session exposure. |
 | D — 12h absolute / 30m idle; one active session per User. | Bounds simultaneous credentials. | Switching devices interrupts staff; does not make shared accounts acceptable. |
 
-RECOMMENDED TECHNICAL DEFAULT: A, no remember-me, server expiry authoritative and
-background polling not qualifying as interactive activity. Proposed values are
-not standards-mandated or approved. Blocks CORE-AUTH-02 until owner chooses.
+OWNER SELECTED 2A: 12h absolute / 30m idle / multiple sessions allowed. Other options
+above remain historical/unselected. Server expiry remains authoritative; background
+polling is not interactive activity. No additional timeout values are approved.
 
 ### CORE-AUTH-D003 — Privileged assurance/freshness policy
 
@@ -405,23 +451,25 @@ numeric window are unresolved. This is not a new blanket reservation-MVP require
 | C — MFA at every staff login plus fresh <=5m MFA for high-risk operations. | Stronger staff-session baseline. | Adds routine staff friction/enrollment; owner product/security choice. |
 | D — Deny/defer privileged mutations until scoped assurance policy is approved. | Safe bounded ordinary staff delivery without fake assurance. | Administrative writes cannot be exposed through new integration. |
 
-RECOMMENDED TECHNICAL DEFAULT: A when provider support is verified; D as fail-closed
-behavior pending approval. D003 blocks privileged exposure, not ordinary staff
-authentication implementation once D001/D002 are approved. No previously required
-step-up is removed; any privileged work needs an explicitly bounded approval/test
-scope. No Export or new administrative implementation belongs to CORE-AUTH-02.
+OWNER SELECTED 3A: Targeted high-risk MFA/recent privileged assurance with freshness
+approximately 5 minutes. This owner wording governs the policy; original option
+table wording is history, not an additional exact timeout. Auth0 implementation
+mechanics remain future design/tests. Privileged exposure fails closed without
+verified assurance; ordinary reservations need no repeated step-up. No Export or
+full administrative redesign belongs to CORE-AUTH-02.
 
 ## Completion and next action
 
 CORE-AUTH-01 VERIFIED means documentation validation only. CORE-AUTH-02 — Trusted
-staff access integration implementation remains BLOCKED on D001/D002, followed by
-a separate explicitly scoped implementation prompt and bootstrap/session security
-design review. Scope: approved adapter, restricted server session persistence /
+staff session integration is now READY after APPROVED D004 resolves D001/D002/D003;
+it still requires a separate explicitly scoped implementation prompt and
+bootstrap/session security design review. Scope: Auth0 adapter, secure callback,
+issuer/subject mapping, restricted server session persistence /
 middleware/resolver/pool, CSRF/logout/context validation and focused tests. Exclude
 public guest auth, reservation domain, Export, broad People changes, unrelated
 settings and generic audit. D003 preserves the privileged exposure gate.
 
 No runtime/production-login readiness or integrated core gate is verified here.
-Next exact task: **Resolve CORE-AUTH owner decisions**. Local documentation commit
+Next exact task: **CORE-AUTH-02 — Trusted staff session integration**. Local documentation commit
 only; separate exact-SHA publication approval required. Do not start CORE-AUTH-02
 or any deferred task automatically.

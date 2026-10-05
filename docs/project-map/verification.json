@@ -411,6 +411,49 @@
       "runtimeTestsExecuted": false,
       "newReferenceEvidence": false,
       "parityClaim": false
+    },
+    {
+      "id": "CHK-058",
+      "taskId": "CORE-AUTH-02",
+      "status": "VERIFIED",
+      "verificationScope": "Owner-decision documentation and implementation readiness only; CORE-AUTH-02 READY, not implemented or runtime VERIFIED",
+      "baseCommit": "95d4d1b1cc9f8a6dc69a1d8a3edea38df9e00923",
+      "method": "Verify exact clean base and existing specification/ADR-0004; record explicit owner approvals 1B/2A/3A using unused CORE-AUTH-D004 and resolve D001-D003 without replacing their IDs/options. Evaluate dependency/owner gates; update only six required documents. Run pnpm map:check, git diff --check and JSON/unique-ID/acyclic-DAG/prior-VERIFIED/history/reference/Part-3/documentation-scope assertions. Commit locally without push.",
+      "result": "Documentation validation PASS. Auth0 staff-only standard OIDC Authorization Code + PKCE, separate development/staging/production configuration, exact verified issuer/subject mapping, opaque server-managed sessions, 12h absolute / 30m idle / multiple sessions and secure cookies approved. Targeted high-risk administrative MFA/recent assurance with approximately 5-minute freshness; no repeated ordinary reservation step-up or additional timeout values. CORE-AUTH-01 unchanged VERIFIED; CORE-AUTH-02 READY after approved policy and VERIFIED dependencies. No additional required unresolved product/architecture decision found; actual deployment registrations/configuration, auth-only bootstrap/session least-privilege review and exact Auth0 assurance verification remain future engineering/exposure gates. Runtime absent/unverified, AUTH-N01–N34 NEEDS TESTING, CORE-READY-01 UNMET. Existing 26 VERIFIED task objects, all 57 historical checks and 23 unrelated decisions unchanged. PEOPLE-D009/D010, Part-3 deferrals and all SevenRooms reference classifications/unknowns unchanged. No code/tests/migrations/contracts/SDK/tenants/credentials/new ADR, no automatic implementation or new runtime verification claim. Next exact task CORE-AUTH-02 — Trusted staff session integration requires separate bounded implementation task.",
+      "ownerDecisionIds": [
+        "CORE-AUTH-D001",
+        "CORE-AUTH-D002",
+        "CORE-AUTH-D003",
+        "CORE-AUTH-D004"
+      ],
+      "specificationFile": "docs/security/staff-access-integration.md",
+      "priorPublicationCI": {
+        "verificationScope": "Preserved prior controlled CI rerun at base SHA; not tests executed by this documentation task or production authentication proof",
+        "runId": "37253348486",
+        "headSha": "95d4d1b1cc9f8a6dc69a1d8a3edea38df9e00923",
+        "originalAttempt": {
+          "attempt": 1,
+          "jobId": "111585299206",
+          "pnpmVerify": "FAIL",
+          "pnpmVerifyDb": "SKIPPED",
+          "webSuite": "177 passed / 1 failed",
+          "failureFile": "apps/web/tests/people/add-user.test.tsx",
+          "failureTest": "Add Another remains and resets every user-specific value and focuses safe success",
+          "failureAssertion": "expect(document.activeElement).toBe(success): expected success message element, observed document body"
+        },
+        "successfulRerun": {
+          "attempt": 2,
+          "jobId": "111586842967",
+          "pnpmVerify": "PASS",
+          "pnpmVerifyDb": "PASS",
+          "postgresqlVersion": "16.15"
+        },
+        "classification": "NEEDS TESTING / intermittent CI focus failure; no root-cause or permanent-correction claim",
+        "publicationGate": "GREEN at the base SHA after the single controlled rerun; original failed attempt preserved"
+      },
+      "runtimeTestsExecuted": false,
+      "newReferenceEvidence": false,
+      "parityClaim": false
     }
   ],
   "unresolvedQuestions": [
