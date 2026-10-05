@@ -1210,9 +1210,118 @@
         "docs/project-map/verification.json"
       ],
       "notes": "Product priority only. No new provider/schema/audit architecture decision or ADR. Provider/session choices and bounded core contracts remain explicit prerequisites; no implementation."
+    },
+    {
+      "id": "CORE-AUTH-D001",
+      "title": "Managed OIDC provider and environment registration",
+      "status": "PROPOSED",
+      "category": "OWNER APPROVAL REQUIRED",
+      "classification": "PROJECTX IMPLEMENTATION DECISION — PROPOSED, NOT APPROVED",
+      "question": "Which managed OIDC provider/tenant and environment registrations may ProjectX use?",
+      "whyItMatters": "Staff enrollment/SSO, recovery, recurring cost, verified issuer/client/callback/origin and controlled IdP testing depend on owner account/deployment authority. ADR-0004 approves managed OIDC, not a vendor.",
+      "options": [
+        {"id": "A", "description": "Owner-confirmed existing managed OIDC tenant, if suitable.", "pros": "Least new procurement; existing staff lifecycle.", "cons": "No suitable tenant confirmed; code/PKCE/configuration/assurance support must be verified."},
+        {"id": "B", "description": "New dedicated managed OIDC service after bounded owner-approved fit/cost review.", "pros": "Independent ProjectX lifecycle and test environment.", "cons": "Procurement, recurring cost and new operations."},
+        {"id": "C", "description": "Managed enterprise federation through an approved OIDC broker.", "pros": "Central staff SSO with ProjectX-owned authorization.", "cons": "Federation/customer dependency and unnecessary setup without enterprise need."},
+        {"id": "D", "description": "Defer selection; specification only and no authenticated runtime exposure.", "pros": "No premature spending or configuration.", "cons": "Blocks authenticated core delivery."}
+      ],
+      "recommendedDefault": {"optionId": "A", "reason": "Use an existing tenant only if the owner identifies one meeting the contract; otherwise B via approved short evaluation, never automatic purchase."},
+      "ownerDecision": null,
+      "approvalRequirements": ["Named provider/tenant and isolated environments", "Exact issuer and client registration/callback URI", "Canonical staff origin and trusted proxy boundary", "Secret provisioning responsibility, never secret values in documentation", "Verified provider assurance/auth_time capability if privileged step-up is exposed"],
+      "affectedRoadmapTasks": ["CORE-AUTH-02", "SETTINGS-CORE-01"],
+      "blocks": ["CORE-AUTH-02"],
+      "coveredByDecisionId": "ARCH-D008",
+      "adr": "docs/architecture/ADR-0004-identity-and-authorization.md",
+      "specificationFile": "docs/security/staff-access-integration.md",
+      "architectureChange": false,
+      "newReferenceEvidence": false,
+      "parityClaim": false,
+      "notes": "Vendor-neutral selection paths, no provider chosen/purchased. Existing APPROVED architecture unchanged."
+    },
+    {
+      "id": "CORE-AUTH-D002",
+      "title": "Staff session lifetime and concurrent-device policy",
+      "status": "PROPOSED",
+      "category": "OWNER APPROVAL REQUIRED",
+      "classification": "PROJECTX IMPLEMENTATION DECISION — PROPOSED, NOT APPROVED",
+      "question": "What absolute/idle limits and concurrent-device policy fit staffed Venue terminals?",
+      "whyItMatters": "Unattended-terminal guest-data exposure and shift interruption are product/security tradeoffs; acceptance needs concrete server-enforced values.",
+      "options": [
+        {"id": "A", "description": "12h absolute / 30m idle; independent concurrent-device sessions.", "pros": "Covers long shifts with bounded inactivity; devices independent.", "cons": "Up to 30m unattended exposure; actual shifts need owner confirmation."},
+        {"id": "B", "description": "8h absolute / 15m idle; independent device sessions.", "pros": "Shorter unattended exposure.", "cons": "More shift interruptions/reauthentication."},
+        {"id": "C", "description": "24h absolute / 60m idle; independent device sessions.", "pros": "Few interruptions for extended operations.", "cons": "Longer unattended/stolen-session exposure."},
+        {"id": "D", "description": "12h absolute / 30m idle; only one active session per User.", "pros": "Bounds simultaneous credentials.", "cons": "Device switching interrupts staff; not permission for shared accounts."}
+      ],
+      "recommendedDefault": {"optionId": "A", "reason": "Bounded shift-friendly proposal only; no remember-me, background polling not interactive activity, server expiry authoritative. Values not mandated by standards or approved."},
+      "ownerDecision": null,
+      "affectedRoadmapTasks": ["CORE-AUTH-02"],
+      "blocks": ["CORE-AUTH-02"],
+      "coveredByDecisionId": "ARCH-D008",
+      "adr": "docs/architecture/ADR-0004-identity-and-authorization.md",
+      "specificationFile": "docs/security/staff-access-integration.md",
+      "architectureChange": false,
+      "newReferenceEvidence": false,
+      "parityClaim": false
+    },
+    {
+      "id": "CORE-AUTH-D003",
+      "title": "Privileged step-up assurance and freshness",
+      "status": "PROPOSED",
+      "category": "OWNER APPROVAL REQUIRED BEFORE PRIVILEGED EXPOSURE",
+      "classification": "PROJECTX IMPLEMENTATION DECISION — PROPOSED, NOT APPROVED",
+      "question": "Which verified provider assurance/reauthentication policy and freshness window may authorize existing high-risk operations?",
+      "whyItMatters": "Existing contracts already require fresh step-up for user/grant/role administration, secrets and Organization settings; numeric freshness and provider assurance mapping are not approved. No blanket new reservation-MVP step-up.",
+      "options": [
+        {"id": "A", "description": "Verified provider MFA step-up <=5m for existing high-risk operations only.", "pros": "Narrow strong control; ordinary staff flow unaffected.", "cons": "Requires verified MFA/auth_time support and admin reauthentication."},
+        {"id": "B", "description": "Fresh provider reauthentication for every privileged operation.", "pros": "Clear per-operation freshness under existing reauth alternative.", "cons": "More prompts; provider baseline may be weaker than MFA."},
+        {"id": "C", "description": "MFA at all staff logins plus <=5m fresh MFA for high-risk operations.", "pros": "Stronger baseline staff assurance.", "cons": "Routine staff enrollment/friction; requires explicit owner choice."},
+        {"id": "D", "description": "Deny/defer privileged mutations until scoped assurance policy is approved.", "pros": "Safe ordinary staff delivery with no fake assurance.", "cons": "Administrative writes cannot be exposed through new integration."}
+      ],
+      "recommendedDefault": {"optionId": "A", "reason": "Target only existing high-risk operations once provider support is verified; D fail-closed pending approval. Do not implement unrelated administration."},
+      "ownerDecision": null,
+      "affectedRoadmapTasks": ["CORE-AUTH-02", "SETTINGS-CORE-01"],
+      "blocks": [],
+      "exposureGate": "Blocks privileged mutations, not ordinary staff authentication once D001/D002 approved. Missing verified step-up denies high-risk operations; existing foundation/People tests are not production step-up evidence.",
+      "coveredByDecisionId": "ARCH-D008",
+      "adr": "docs/architecture/ADR-0004-identity-and-authorization.md",
+      "specificationFile": "docs/security/staff-access-integration.md",
+      "architectureChange": false,
+      "newReferenceEvidence": false,
+      "parityClaim": false
     }
   ],
   "unresolvedQuestions": [
+    {
+      "id": "CORE-AUTH-D001",
+      "question": "Approve managed OIDC provider/tenant and environment registrations.",
+      "whyItMatters": "Owner account/cost/configuration authority required; no vendor chosen.",
+      "optionIds": ["A", "B", "C", "D"],
+      "recommendedTechnicalDefault": "A if suitable owner-existing tenant; otherwise approved B evaluation",
+      "blocks": ["CORE-AUTH-02"],
+      "status": "UNRESOLVED",
+      "ownerDecision": null
+    },
+    {
+      "id": "CORE-AUTH-D002",
+      "question": "Approve absolute/idle session limits and concurrent-device policy.",
+      "whyItMatters": "Bound guest-data exposure versus shift interruptions.",
+      "optionIds": ["A", "B", "C", "D"],
+      "recommendedTechnicalDefault": "A — 12h absolute / 30m idle, independent device sessions, not approved",
+      "blocks": ["CORE-AUTH-02"],
+      "status": "UNRESOLVED",
+      "ownerDecision": null
+    },
+    {
+      "id": "CORE-AUTH-D003",
+      "question": "Approve privileged step-up assurance and freshness before high-risk exposure.",
+      "whyItMatters": "Existing required step-up cannot be bypassed by baseline session integration.",
+      "optionIds": ["A", "B", "C", "D"],
+      "recommendedTechnicalDefault": "A if provider verified; D fail-closed pending approval",
+      "blocks": [],
+      "exposureGate": "Privileged mutations only, not ordinary authentication implementation",
+      "status": "UNRESOLVED",
+      "ownerDecision": null
+    },
     {
       "id": "ARCH-D001",
       "question": "Which independently designed deployment and hosting model should ProjectX use for the first production milestone?",
@@ -1404,7 +1513,7 @@
       }
     }
   ],
-  "ownerApprovalRequiredBeforeImplementation": [],
+  "ownerApprovalRequiredBeforeImplementation": ["CORE-AUTH-D001", "CORE-AUTH-D002"],
   "approvedDecisions": [
     "ARCH-D001",
     "ARCH-D002",

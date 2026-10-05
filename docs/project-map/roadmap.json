@@ -1828,7 +1828,7 @@
       "id": "CORE-AUTH-01",
       "name": "Trusted staff access integration specification",
       "phaseId": "PHASE-04",
-      "status": "READY",
+      "status": "VERIFIED",
       "dependencies": [
         "PRIORITY-001",
         "PEOPLE-CORE-01",
@@ -1854,7 +1854,9 @@
       ],
       "priorityPart": 2,
       "priorityDecisionId": "PRIORITY-D001",
-      "implementationGate": "PROCEED for documentation/specification only, not provider selection/purchase or implementation.",
+      "implementationGate": "Specification VERIFIED only (CHK-057); no provider selection/purchase or runtime implementation. Required owner choices CORE-AUTH-D001/D002 unresolved; D003 gates privileged exposure.",
+      "verificationEvidence": "CHK-057: repository inventory, ADR-0004 specification, 34 future negative tests, formal owner options and documentation checks only; no production authentication/core readiness proof.",
+      "specificationFile": "docs/security/staff-access-integration.md",
       "evidenceFiles": [
         "apps/api/src/main.ts",
         "apps/api/src/app.ts",
@@ -1908,14 +1910,14 @@
     },
     {
       "id": "CORE-AUTH-02",
-      "name": "Trusted staff session integration",
+      "name": "Trusted staff access integration implementation",
       "phaseId": "PHASE-04",
       "status": "BLOCKED",
       "dependencies": [
         "CORE-AUTH-01",
         "PEOPLE-CORE-01"
       ],
-      "scope": "Only approved managed-OIDC/server-session-to-trusted-scope integration and non-owner runtime wiring for staff under ADR-0004.",
+      "scope": "Approved OIDC adapter, secure server session persistence/middleware, trusted resolver, restricted runtime pool, CSRF/logout and validated Venue context, with focused integration/security tests under ADR-0004. Review auth-only bootstrap/session least-privilege access before code; current People RLS is not anonymous identity lookup.",
       "outOfScope": "New credential service, browser-authoritative identity, generic audit framework, unrelated business features or public guest access.",
       "acceptanceCriteria": [
         "Provider/config/session policy explicitly approved before implementation",
@@ -1940,7 +1942,11 @@
       "priorityPart": 2,
       "priorityDecisionId": "PRIORITY-D001",
       "implementationGate": "PLANNING ONLY; approved bounded contract and separate implementation prompt required. Split backend/frontend where needed before code; never implement a whole module in one task.",
-      "blocker": "CORE-GAP-001: production resolver/session/pool wiring absent; required provider/environment/session-policy choices and integration contract outstanding. CORE-AUTH-01 owns specification, not implementing an unapproved provider."
+      "blocker": "CORE-GAP-001 remains open: specification now VERIFIED, but CORE-AUTH-D001 provider/environment and CORE-AUTH-D002 session lifetime/concurrency require owner approval. Runtime absent/unverified; separate implementation prompt and narrow bootstrap/session database-access review required. CORE-AUTH-D003 blocks privileged exposure; unresolved step-up must deny privileged mutations, not broaden ordinary reservation auth scope.",
+      "specificationFile": "docs/security/staff-access-integration.md",
+      "requiredOwnerDecisionIds": ["CORE-AUTH-D001", "CORE-AUTH-D002"],
+      "privilegedExposureDecisionId": "CORE-AUTH-D003",
+      "futureNegativeTestIds": "AUTH-N01–AUTH-N34, specified only / NEEDS TESTING"
     },
     {
       "id": "SETTINGS-CORE-01",
@@ -2350,7 +2356,7 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "CORE-AUTH-01 — Trusted staff access integration specification (documentation only)",
+  "nextExactTask": "Resolve CORE-AUTH owner decisions",
   "deliveryPriority": {
     "decisionId": "PRIORITY-D001",
     "primaryTarget": "PART 1 — CORE ONLINE RESERVATION SYSTEM",
@@ -2698,14 +2704,14 @@
       {
         "id": "CORE-GAP-001",
         "classification": "CONFIRMED PROJECTX REPOSITORY GAP",
-        "ownerTask": "CORE-AUTH-01",
+        "ownerTask": "CORE-AUTH-02",
         "evidence": [
           "apps/api/src/main.ts",
           "apps/api/src/app.ts",
           "apps/api/src/people/booked-by/route.ts",
           "docs/security/identity-access-model.md"
         ],
-        "gap": "No production OIDC/server-session resolver/pool wiring; provider/environment/session choices outstanding under ADR-0004. Blocks authenticated runtime, not specification."
+        "gap": "CORE-AUTH-01 specification VERIFIED (CHK-057); production OIDC/session/resolver/pool still absent/unverified. D001/D002 owner choices and auth-only bootstrap/session least-privilege design outstanding; D003 preserves privileged step-up gate. Blocks authenticated runtime, not completed specification. No core readiness claim."
       },
       {
         "id": "CORE-GAP-002",

@@ -1,5 +1,20 @@
 # ProjectX identity, tenant and session model — FOUND-TASK-002
 
+## Current staff integration specification — CORE-AUTH-01
+
+`staff-access-integration.md` specifies this existing ADR-0004 boundary, not a new
+architecture or a verified production login. At base 7f2c25f532a5efae22237c3f9c42b1e528dadf8a,
+startup injects no resolver/runtime pool; the identity helper only brands a UUID.
+Login, sessions, CSRF/logout/context-switch wiring remain unimplemented in inspected
+tracked code. CORE-AUTH-01 is documentation-only VERIFIED; CORE-AUTH-02 BLOCKED
+pending CORE-AUTH-D001/D002 owner choices. D003 gates privileged step-up exposure;
+no new blanket step-up for ordinary reservation work. Proposed timeouts are not
+approved. The specification includes restricted bootstrap/session access review,
+current-state revocation and AUTH-N01–AUTH-N34 future tests. No reference
+classifications or historical foundation verification changed. The evidence
+convention below applies to the historical reference/contract sections; the new
+specification explicitly labels CONFIRMED ProjectX repository evidence separately.
+
 **Evidence convention:** CONFIRMED means observed in the reference UI; **APPROVED PROJECTX DECISION** means the owner selected it in ADR-0003/0004, not that it reflects reference internals; **INFERRED** is a proposed ProjectX contract; **UNKNOWN** is unresolved; **NEEDS TESTING** requires isolated fixtures or another authorized role.
 
 ## Evidence and boundaries
