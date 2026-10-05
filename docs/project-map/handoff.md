@@ -1,4 +1,23 @@
 CURRENT PHASE: PHASE-04 Core domain implementation — IN_PROGRESS.
+CURRENT TASK: POLICY-001 — Install reservation-first agent instructions.
+STATUS: VERIFIED for instruction/document installation only; core readiness remains unmet.
+COMPLETED: Preserved original AGENTS.md and appended owner-approved three-part priority policy, task-selection gate, security boundaries, and evidence-based core readiness gate. Superseded the prior next-action pointer to export with documentation-only PRIORITY-001.
+FILES CREATED: None.
+FILES MODIFIED: AGENTS.md; docs/project-map/{roadmap.json,verification.json,handoff.md}.
+TESTS EXECUTED: pnpm map:check; git diff --check; original instruction prefix, JSON syntax and historical task/check preservation assertions.
+TEST RESULTS: PASS for documentation only; CHK-055. No application/runtime/database/E2E verification performed or claimed by this task.
+UNRESOLVED ISSUES: Historical module dependency graph still requires People parent completion; PRIORITY-001 must identify minimal reservation prerequisites and remove optional-export coupling with recorded evidence. Core functionality not verified by this task.
+PRIORITY PART: Reservation-first policy installation; next task is planning for Part 1 and required Part 2 dependencies.
+CORE WORKFLOW ADVANCED: Task selection now prioritizes guest-to-staff reservations; no runtime behavior changed.
+CORE READINESS GATE: unmet; no integrated evidence added.
+REQUIRED FOUNDATION DEPENDENCIES: Determine concrete minimums in PRIORITY-001; preserve existing security/RLS/venue-access controls.
+DEFERRED SECONDARY TASKS AND REASONS: PEOPLE-09, export-only PEOPLE-D010 implementation, and other Part 3 work cannot start under AGENTS.md until core readiness or explicit owner exception. Historical task statuses and accepted design decisions retained; explicit roadmap deferral/classification belongs to PRIORITY-001.
+NEXT EXACT TASK: PRIORITY-001 — Reconcile reservation-first roadmap and minimum core dependencies (documentation only); execute AGENTS.md FIRST TASK. Do not begin export or application code in this reconciliation task.
+FILES NEXT AGENT MUST READ: AGENTS.md; docs/project-map/{roadmap.json,verification.json,app-map.json,decisions.json,people-implementation-plan.md}; relevant existing code/tests/contracts; docs/architecture/ADR-0015-people-accounts-export.md and ADR-0016-people-export-audit-seam.md.
+
+Previous handoff retained below as historical evidence. Its NEXT EXACT TASK and publication constraints do not override the owner's current request to install/publish these instructions or the policy above.
+
+CURRENT PHASE: PHASE-04 Core domain implementation — IN_PROGRESS.
 CURRENT TASK: Record PEOPLE-D010 — Export-only durable audit write seam.
 STATUS: Owner-approved architecture documented; PEOPLE-09-AUDIT-001 RESOLVED by PEOPLE-D010; PEOPLE-09 BLOCKED -> READY, not implemented/VERIFIED. Local documentation only, no push.
 COMPLETED: Verified clean exact base e55fb81424c0089c02075f96891bdbac55482ba4 and expected state. Recorded Option A — narrow export-only writer inside PEOPLE-09, APPROVED / OWNER APPROVED / PROJECTX IMPLEMENTATION DECISION. New ADR-0016; preserved original blocker/CHK-053 and PEOPLE-D009 business contract. No generic Audit module, new roadmap parent or cross-module framework.

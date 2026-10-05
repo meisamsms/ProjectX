@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "currentPhase": "PHASE-04",
-  "orderingBasis": "Proposed technical prerequisites, not navigation order. Hard edges must be verified; optional integrations do not block core modules.",
+  "orderingBasis": "Proposed technical prerequisites, not navigation order. Hard edges must be verified; optional integrations do not block core modules. Owner policy in AGENTS.md now requires reservation-first reconciliation before any further implementation; the historical module order below is pending PRIORITY-001 and cannot authorize Part 3 work.",
   "phases": [
     {
       "id": "PHASE-01",
@@ -85,7 +85,7 @@
       ],
       "acceptanceCriteria": [
         "No missing nested screens or unexplained gaps",
-        "Classify U-001\u2013U-010 and Q-001\u2013Q-011 by build impact and test restriction",
+        "Classify U-001–U-010 and Q-001–Q-011 by build impact and test restriction",
         "Preserve prior Reporting evidence; defer detailed Reporting parity",
         "Prioritize remaining safe core workflow and cross-module checks"
       ],
@@ -209,7 +209,7 @@
         "FOUND-TASK-002",
         "FOUND-TASK-003"
       ],
-      "scope": "Minimal React/Vite navigation placeholder shell, Fastify infrastructure, generated OpenAPI seam and deterministic foundation verification only; no MOD-01\u2013MOD-16 business behavior.",
+      "scope": "Minimal React/Vite navigation placeholder shell, Fastify infrastructure, generated OpenAPI seam and deterministic foundation verification only; no MOD-01–MOD-16 business behavior.",
       "acceptanceCriteria": [
         "All 144 mapped screen IDs have registry entries marked NOT_IMPLEMENTED and references validated",
         "Web shell provides semantic navigation, title, error/not-found and accessibility baseline with no domain data",
@@ -224,7 +224,7 @@
       ],
       "regressionChecks": [
         "Previous VERIFIED tasks remain VERIFIED; discovery and ADRs unchanged",
-        "Review file list for MOD-01\u2013MOD-16 business logic, secrets, migrations and endpoint leakage"
+        "Review file list for MOD-01–MOD-16 business logic, secrets, migrations and endpoint leakage"
       ],
       "unknownsToResolve": []
     },
@@ -691,7 +691,7 @@
       "regressionChecks": [
         "pnpm map:check",
         "Previously verified foundation/discovery gates remain VERIFIED",
-        "No unrelated MOD-01\u2013MOD-16 business behavior changed"
+        "No unrelated MOD-01–MOD-16 business behavior changed"
       ],
       "filesExpectedToChange": [
         "apps/api/migrations/people-core/*",
@@ -737,7 +737,7 @@
       "regressionChecks": [
         "pnpm map:check",
         "Previously verified foundation/discovery gates remain VERIFIED",
-        "No unrelated MOD-01\u2013MOD-16 business behavior changed"
+        "No unrelated MOD-01–MOD-16 business behavior changed"
       ],
       "filesExpectedToChange": [
         "apps/api/migrations/people-grants/*",
@@ -783,7 +783,7 @@
       "regressionChecks": [
         "pnpm map:check",
         "Previously verified foundation/discovery gates remain VERIFIED",
-        "No unrelated MOD-01\u2013MOD-16 business behavior changed"
+        "No unrelated MOD-01–MOD-16 business behavior changed"
       ],
       "filesExpectedToChange": [
         "apps/api/src/people/authorization/*",
@@ -876,7 +876,7 @@
       "regressionChecks": [
         "pnpm map:check",
         "Previously verified foundation/discovery gates remain VERIFIED",
-        "No unrelated MOD-01\u2013MOD-16 business behavior changed"
+        "No unrelated MOD-01–MOD-16 business behavior changed"
       ],
       "filesExpectedToChange": [
         "apps/api/src/people/accounts-read/*",
@@ -926,7 +926,7 @@
       "regressionChecks": [
         "pnpm map:check",
         "Previously verified foundation/discovery gates remain VERIFIED",
-        "No unrelated MOD-01\u2013MOD-16 business behavior changed"
+        "No unrelated MOD-01–MOD-16 business behavior changed"
       ],
       "filesExpectedToChange": [
         "apps/api/migrations/people-user-provisioning/*",
@@ -984,7 +984,7 @@
       "regressionChecks": [
         "pnpm map:check",
         "Previously verified foundation/discovery gates remain VERIFIED",
-        "No unrelated MOD-01\u2013MOD-16 business behavior changed"
+        "No unrelated MOD-01–MOD-16 business behavior changed"
       ],
       "filesExpectedToChange": [
         "apps/web/src/people/accounts/*",
@@ -1014,7 +1014,10 @@
       "phaseId": "PHASE-04",
       "parentTask": "IMPL-MOD-14",
       "status": "VERIFIED",
-      "dependencies": ["PEOPLE-02", "PEOPLE-04"],
+      "dependencies": [
+        "PEOPLE-02",
+        "PEOPLE-04"
+      ],
       "scope": "Owner-approved Option A ProjectX direct ORGANIZATION/SELF grants owned by OrganizationMembership and VENUE grants owned by VenueAccess; additive current capability lookup/RLS, atomic generated Add User extension and actor-specific assignable role/venue/permission options. No shared-role mutation or private roles. ADR-0009 records the dependency seams and authority rule.",
       "outOfScope": "PEOPLE-06 frontend, global unrestricted catalogs, role hierarchy, shared role edits, other modules, OIDC, MFA, invitation/email delivery and reference parity claims.",
       "acceptanceCriteria": [
@@ -1023,14 +1026,50 @@
         "Restricted runtime role/RLS, denied and empty states, cross-tenant exclusion and sensitive-field minimization pass real PostgreSQL 16 tests",
         "Any granular command extension preserves atomic creation, scope checks, existing role grants and idempotency; generated OpenAPI types and both CI gates pass"
       ],
-      "verificationCommands": ["pnpm format:check", "pnpm lint", "pnpm typecheck", "pnpm contract:generate", "pnpm contract:check", "pnpm map:check", "Focused PEOPLE-04P API/PostgreSQL tests", "pnpm verify", "pnpm verify:db"],
-      "regressionChecks": ["All prior VERIFIED tasks remain unchanged", "PEOPLE-04 atomicity/idempotency/authorization tests pass", "No frontend, reference-evidence or unrelated module changes"],
-      "filesExpectedToChange": ["apps/api/migrations/people-z-direct-grants/*", "apps/api/src/people/add-user/*", "apps/api/src/app.ts", "apps/api/tests/people/*", "tooling/db-test.mjs", "packages/contracts/openapi.json", "packages/contracts/generated/api.ts", "docs/architecture/ADR-0009-people-direct-permission-grants.md", "docs/data/people-direct-grants.md", "docs/project-map/{roadmap.json,verification.json,handoff.md,people-implementation-plan.md}"],
-      "unknownsToResolve": ["U-001", "U-002", "U-003"],
+      "verificationCommands": [
+        "pnpm format:check",
+        "pnpm lint",
+        "pnpm typecheck",
+        "pnpm contract:generate",
+        "pnpm contract:check",
+        "pnpm map:check",
+        "Focused PEOPLE-04P API/PostgreSQL tests",
+        "pnpm verify",
+        "pnpm verify:db"
+      ],
+      "regressionChecks": [
+        "All prior VERIFIED tasks remain unchanged",
+        "PEOPLE-04 atomicity/idempotency/authorization tests pass",
+        "No frontend, reference-evidence or unrelated module changes"
+      ],
+      "filesExpectedToChange": [
+        "apps/api/migrations/people-z-direct-grants/*",
+        "apps/api/src/people/add-user/*",
+        "apps/api/src/app.ts",
+        "apps/api/tests/people/*",
+        "tooling/db-test.mjs",
+        "packages/contracts/openapi.json",
+        "packages/contracts/generated/api.ts",
+        "docs/architecture/ADR-0009-people-direct-permission-grants.md",
+        "docs/data/people-direct-grants.md",
+        "docs/project-map/{roadmap.json,verification.json,handoff.md,people-implementation-plan.md}"
+      ],
+      "unknownsToResolve": [
+        "U-001",
+        "U-002",
+        "U-003"
+      ],
       "evidenceClassification": "PROJECTX IMPLEMENTATION DECISION; reference granular grant semantics UNKNOWN",
-      "screenIds": ["SCR-026"],
+      "screenIds": [
+        "SCR-026"
+      ],
       "actionIds": [],
-      "entityIds": ["ENT-024", "ENT-032", "ENT-043", "ENT-044"],
+      "entityIds": [
+        "ENT-024",
+        "ENT-032",
+        "ENT-043",
+        "ENT-044"
+      ],
       "moduleId": "MOD-14"
     },
     {
@@ -1061,7 +1100,7 @@
       "regressionChecks": [
         "pnpm map:check",
         "Previously verified foundation/discovery gates remain VERIFIED",
-        "No unrelated MOD-01\u2013MOD-16 business behavior changed"
+        "No unrelated MOD-01–MOD-16 business behavior changed"
       ],
       "filesExpectedToChange": [
         "apps/web/src/people/add-user/*",
@@ -1117,7 +1156,7 @@
       "regressionChecks": [
         "pnpm map:check",
         "Previously verified foundation/discovery gates remain VERIFIED",
-        "No unrelated MOD-01\u2013MOD-16 business behavior changed"
+        "No unrelated MOD-01–MOD-16 business behavior changed"
       ],
       "filesExpectedToChange": [
         "apps/api/migrations/people-zz-booked-by/*",
@@ -1184,7 +1223,7 @@
       "regressionChecks": [
         "pnpm map:check",
         "Previously verified foundation/discovery gates remain VERIFIED",
-        "No unrelated MOD-01\u2013MOD-16 business behavior changed"
+        "No unrelated MOD-01–MOD-16 business behavior changed"
       ],
       "filesExpectedToChange": [
         "apps/web/src/people/booked-by/*",
@@ -1310,7 +1349,7 @@
       "regressionChecks": [
         "pnpm map:check",
         "Previously verified foundation/discovery gates remain VERIFIED",
-        "No unrelated MOD-01\u2013MOD-16 business behavior changed"
+        "No unrelated MOD-01–MOD-16 business behavior changed"
       ],
       "filesExpectedToChange": [
         "apps/web/src/people/server-names/*",
@@ -1369,7 +1408,7 @@
       "regressionChecks": [
         "pnpm map:check",
         "Previously verified foundation/discovery gates remain VERIFIED",
-        "No unrelated MOD-01\u2013MOD-16 business behavior changed"
+        "No unrelated MOD-01–MOD-16 business behavior changed"
       ],
       "filesExpectedToChange": [
         "docs/project-map/people-implementation-plan.md",
@@ -1383,7 +1422,7 @@
         "U-002",
         "U-003"
       ],
-      "evidenceClassification": "NEEDS TESTING \u2014 observed action only",
+      "evidenceClassification": "NEEDS TESTING — observed action only",
       "screenIds": [
         "SCR-025"
       ],
@@ -1411,8 +1450,13 @@
           "apps/api/src/people/authorization/context.ts",
           "docs/security/authorization-contract.md"
         ],
-        "affectedModules": ["MOD-14"],
-        "affectedContracts": ["PEOPLE-D009 export audit/failure atomicity", "PEOPLE-02 trusted scope and restricted runtime boundary"],
+        "affectedModules": [
+          "MOD-14"
+        ],
+        "affectedContracts": [
+          "PEOPLE-D009 export audit/failure atomicity",
+          "PEOPLE-02 trusted scope and restricted runtime boundary"
+        ],
         "requiredPredecessor": "Approve/design the smallest export-only append-only metadata writer, including safe denial attribution and failure durability, before PEOPLE-09 implementation; no new task or generic audit subsystem started.",
         "ownerDecisionRequired": false,
         "ownerQuestion": "Approve a narrowly scoped export-only audit write seam within PEOPLE-09, or explicitly authorize a separate prerequisite/scope change? Existing business specification is unchanged; no fundamental claim that safe export auditing is impossible.",
@@ -1458,7 +1502,7 @@
         "U-002",
         "U-003"
       ],
-      "evidenceClassification": "NEEDS TESTING \u2014 observed action only",
+      "evidenceClassification": "NEEDS TESTING — observed action only",
       "screenIds": [
         "SCR-025"
       ],
@@ -1501,7 +1545,7 @@
       "regressionChecks": [
         "pnpm map:check",
         "Previously verified foundation/discovery gates remain VERIFIED",
-        "No unrelated MOD-01\u2013MOD-16 business behavior changed"
+        "No unrelated MOD-01–MOD-16 business behavior changed"
       ],
       "filesExpectedToChange": [
         "docs/project-map/verification.json",
@@ -1631,6 +1675,54 @@
         "Do not change unrelated modules"
       ],
       "unknownsToResolve": []
+    },
+    {
+      "id": "POLICY-001",
+      "name": "Install owner-approved reservation-first agent instructions",
+      "status": "VERIFIED",
+      "dependencies": [],
+      "scope": "Documentation only: preserve existing AGENTS.md and add reservation-first task gate; update project status records. No application implementation or full dependency reconciliation.",
+      "acceptanceCriteria": [
+        "Original agent instructions preserved",
+        "Three priority levels and core readiness gate installed",
+        "Next task points to reservation-priority reconciliation"
+      ],
+      "verificationCommands": [
+        "pnpm map:check",
+        "git diff --check",
+        "Validate original AGENTS prefix and preserved task/check history"
+      ],
+      "regressionChecks": [
+        "Existing task objects and historical verification checks unchanged",
+        "No application code, migrations, contracts or architecture decisions changed"
+      ]
+    },
+    {
+      "id": "PRIORITY-001",
+      "name": "Reconcile reservation-first roadmap and minimum core dependencies",
+      "status": "READY",
+      "dependencies": [
+        "POLICY-001",
+        "FOUND-TASK-004"
+      ],
+      "scope": "Execute AGENTS.md FIRST TASK in documentation only. Inspect verified core capabilities and minimum foundation prerequisites; preserve stable IDs and successful paths; classify/defer Part 3; reconcile module-level People completion dependencies before choosing the smallest ready reservation task. Record priority decision without reversing PEOPLE-D009/D010.",
+      "acceptanceCriteria": [
+        "Every remaining task classified by reservation priority and concrete dependencies",
+        "PEOPLE-09 and secondary work explicitly deferred until core readiness, using supported status/notes",
+        "Core is not blocked by completion of optional People exports",
+        "Required security and audit controls retained",
+        "Exact next bounded core task or required prerequisite recorded with acceptance and verification criteria"
+      ],
+      "verificationCommands": [
+        "pnpm map:check",
+        "git diff --check",
+        "Validate task dependency DAG and preserved VERIFIED history"
+      ],
+      "regressionChecks": [
+        "No application implementation",
+        "Preserve existing architecture decisions and confirmed reference findings",
+        "Do not mark core ready without integrated evidence"
+      ]
     }
   ],
   "unresolvedQuestions": [
@@ -1667,6 +1759,8 @@
     "PEOPLE-07B",
     "PEOPLE-08A",
     "PEOPLE-08B",
+    "POLICY-001",
+    "PRIORITY-001",
     "PEOPLE-09",
     "PEOPLE-09B",
     "PEOPLE-10",
@@ -1688,5 +1782,5 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "PEOPLE-09 — People export evidence and scoped backend"
+  "nextExactTask": "PRIORITY-001 — Reconcile reservation-first roadmap and minimum core dependencies (documentation only)"
 }

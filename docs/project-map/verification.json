@@ -48,7 +48,7 @@
       "taskId": "DISC-002",
       "status": "VERIFIED",
       "method": "Final JSON parse; unique IDs; inventory/registry IDs and routes; parent/child and workflow references; partial/unknown reasons; no NAV_ONLY or production writes",
-      "result": "PASS after new surfaces SCR-134\u2013SCR-138; 138 screens, 0 full, 137 partial, 1 package inaccessible, 0 NAV_ONLY. DISC-003 not executed."
+      "result": "PASS after new surfaces SCR-134–SCR-138; 138 screens, 0 full, 137 partial, 1 package inaccessible, 0 NAV_ONLY. DISC-003 not executed."
     },
     {
       "id": "CHK-008",
@@ -90,7 +90,7 @@
       "taskId": "FOUND-TASK-004",
       "status": "VERIFIED",
       "method": "Frozen pnpm installation; strict TypeScript, Biome, Vitest foundation unit/API/web, OpenAPI validation and generated freshness, map reference/DAG checks, Playwright Chromium shell and axe accessibility smoke, API and web production builds, file-scope audit",
-      "result": "PASS: pnpm install --frozen-lockfile; pnpm contract:generate; PROJECTX_CHROMIUM_PATH=/tmp/projectx-chromium/chromium pnpm verify (exit 0). 4 unit, 4 API integration, 2 web, 2 browser tests; axe smoke no violations. Database/RLS NOT_APPLICABLE_FOR_THIS_TASK. Web build emits known React Router use-client directive advisory; no broken imports. No OIDC, migrations, domain endpoints, production data or MOD-01\u2013MOD-16 behavior."
+      "result": "PASS: pnpm install --frozen-lockfile; pnpm contract:generate; PROJECTX_CHROMIUM_PATH=/tmp/projectx-chromium/chromium pnpm verify (exit 0). 4 unit, 4 API integration, 2 web, 2 browser tests; axe smoke no violations. Database/RLS NOT_APPLICABLE_FOR_THIS_TASK. Web build emits known React Router use-client directive advisory; no broken imports. No OIDC, migrations, domain endpoints, production data or MOD-01–MOD-16 behavior."
     },
     {
       "id": "CHK-014",
@@ -174,7 +174,7 @@
       "taskId": "PEOPLE-03",
       "status": "BLOCKED",
       "method": "Read-only PEOPLE-03 prerequisite and schema-gap audit of roadmap, SCR-025 registry, People core/grants/RLS migrations, API and OpenAPI contracts; no endpoint or migration implemented.",
-      "result": "BLOCKED \u2014 required SCR-025 persisted Name, Job Title and Email Notifications fields are absent from verified People persistence. PEOPLE-03P is proposed as a narrow ProjectX persistence predecessor; product-owner field ownership and absence semantics need a decision. The verified User table has only ID, disabled timestamp and lifecycle/version data; authenticated identity has issuer/subject, not roster profile. No fake/null fields or reference internals inferred. U-002, U-003, FLOW-006 and Export unknowns unchanged; real PostgreSQL PEOPLE-03 tests NOT RUN."
+      "result": "BLOCKED — required SCR-025 persisted Name, Job Title and Email Notifications fields are absent from verified People persistence. PEOPLE-03P is proposed as a narrow ProjectX persistence predecessor; product-owner field ownership and absence semantics need a decision. The verified User table has only ID, disabled timestamp and lifecycle/version data; authenticated identity has issuer/subject, not roster profile. No fake/null fields or reference internals inferred. U-002, U-003, FLOW-006 and Export unknowns unchanged; real PostgreSQL PEOPLE-03 tests NOT RUN."
     },
     {
       "id": "CHK-026",
@@ -381,6 +381,14 @@
       "verificationScope": "PEOPLE-D010 architecture/decision documentation only; backend/audit unimplemented, PEOPLE-09 READY not VERIFIED",
       "method": "Confirm clean exact expected HEAD e55fb81424c0089c02075f96891bdbac55482ba4 on people-03-accounts-read, BLOCKED PEOPLE-09-AUDIT-001 and expected next pointer/statuses. Read owner decision request, authoritative status/decisions/history/People plan, ADR-0015, authorization contract and PEOPLE-02 callback/rollback boundary. Confirm PEOPLE-D010 and ADR-0016 unused. Record explicit approved Option A and narrow export-only persistence/writer/trusted transaction contract; preserve historical blocker evidence and mark RESOLVED by PEOPLE-D010. Update only five planning/status docs and new ADR-0016. Run pnpm map:check, git diff --check and JSON/unique decision/ADR link/approved contract/dependency DAG/VERIFIED prerequisite/history/reference/exact documentation-scope checks. Commit locally only, no push or implementation.",
       "result": "Documentation validation PASS only. PEOPLE-D010 APPROVED / OWNER APPROVED / PROJECTX IMPLEMENTATION DECISION, Option A — narrow export-only writer inside PEOPLE-09. PEOPLE-09-AUDIT-001 RESOLVED by decision, original blocker evidence and CHK-053 unchanged. Approved conceptual id/organization_id/venue_id/actor_user_id/request_id/event_type/result/exported_row_count/occurred_at, fixed people.accounts.export, success/denied/failed and success-only nullable count. Append-only immutable export-specific rows, no direct runtime INSERT/UPDATE/DELETE or broad audit SELECT; preferred narrow SECURITY DEFINER writer, safe search_path, explicit validation, EXECUTE only projectx_people_runtime/no PUBLIC, no generic SQL/arbitrary event or metadata, BYPASSRLS/admin request pool. Trusted server actor/Organization/Venue/request context and referential ownership, not browser DTO authority/custom settings alone; explicit User existence check if following existing history's plain actor-UUID/no ownership-FK pattern, no invented employee/lifecycle semantics. Durable denial need not hold export capability but never grants data access/queries; rollback failed export work and separately persist bounded failed audit without internals/resurrecting work; required success audit/count before CSV, audit failure prevents successful/partial CSV. No CSV values/filename/SQL/stack/payload/JSON/generated-file reference. PEOPLE-D009 historical business decision unchanged; D010 authorizes minimal row/request metadata persistence, no CSV contract change. PEOPLE-09 BLOCKED -> READY only, backend/audit still unimplemented; PEOPLE-03 prerequisite VERIFIED, full task DAG acyclic, nextExactTask PEOPLE-09 — People export evidence and scoped backend. All 22 previous VERIFIED task objects and 53 historical verification checks unchanged; PEOPLE-09B/10 PLANNED, IMPL-MOD-14 IN_PROGRESS. ACT-0056 confirmed visible action only; all SevenRooms Export/reference UNKNOWN / NEEDS TESTING and U-001/U-002/U-003 unchanged, no evidence/parity. No code/test/migration/OpenAPI/generated/frontend/main changes, no new module/parent/framework or runtime/database test claims. Future implementation still needs separate exact-SHA publication approval and final PostgreSQL 16 CI. Current decision documentation local-only commit needs its own separate publication approval."
+    },
+    {
+      "id": "CHK-055",
+      "taskId": "POLICY-001",
+      "status": "VERIFIED",
+      "verificationScope": "Reservation-priority instruction installation and project-status documents only; no core/runtime verification claimed",
+      "method": "Preserve original AGENTS.md prefix; validate project map and JSON, unchanged historical task/check objects and documentation-only diff; git diff --check.",
+      "result": "PASS: existing rules preserved; owner policy requires Part 1 core first, only necessary Part 2 dependencies, Part 3 deferred until verified end-to-end core. Next task PRIORITY-001 reconciles historical dependencies/order before implementation. Existing PEOPLE-D009/D010 and all prior task/check objects unchanged; PEOPLE-09 retains historical READY planning status but policy forbids starting export before the core gate or explicit owner exception. No production code or runtime test claims."
     }
   ],
   "unresolvedQuestions": [
@@ -437,7 +445,7 @@
     "workflowReferences": "PASS",
     "routeParity": "PASS",
     "productionWrites": 0,
-    "nextTask": "Prompt 02 \u2014 Build Complete Application Map"
+    "nextTask": "Prompt 02 — Build Complete Application Map"
   },
   "mapCounts": {
     "domains": 10,
