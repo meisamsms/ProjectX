@@ -95,9 +95,9 @@ tenant scope, filtering, permissions, delivery/download, filename, audit, retent
 failure/cancellation and alternate roles stay UNKNOWN / NEEDS TESTING. Preserve
 U-001/U-002/U-003 and all other reference classifications; no parity claim.
 
-## Shared fixture and identity seam
+## PEOPLE-09 audit blocker history
 
-PEOPLE-09 implementation preflight (2026-10-04): business specification PEOPLE-D009
+Historical PEOPLE-09 implementation preflight (2026-10-04): business specification PEOPLE-D009
 remains APPROVED, but implementation is BLOCKED on PEOPLE-09-AUDIT-001. The only
 durable People histories are name-record/version-specific CREATED/UPDATED triggers
 requiring venue.manage, not reusable export attempt/result writers. No safe existing
@@ -110,6 +110,53 @@ No code, migration, generated contract, frontend or future task was started.
 PEOPLE-09B/10 remain PLANNED; IMPL-MOD-14 IN_PROGRESS and all prior VERIFIED tasks
 unchanged. Specification readiness is historical; it does not override this newly
 discovered implementation blocker. Reference Export and U-001/U-002/U-003 unchanged.
+
+## PEOPLE-D010 — Export-only durable audit write seam
+
+OWNER APPROVED / PROJECTX IMPLEMENTATION DECISION, 2026-10-04; Option A — narrow
+export-only writer inside PEOPLE-09. `decisions.json` and ADR-0016 record the
+approved boundary. PEOPLE-09-AUDIT-001 is now RESOLVED by PEOPLE-D010, with original
+blocker evidence retained. PEOPLE-09 BLOCKED -> READY, not implemented/VERIFIED.
+PEOPLE-D009 business/CSV contract unchanged; PEOPLE-09B/10 PLANNED and IMPL-MOD-14
+IN_PROGRESS. No new Audit module, roadmap parent or cross-module framework.
+
+Future PEOPLE-09 may add only export-specific append-only persistence, a narrowly
+validated write function and trusted-scope transaction seam. Conceptual minimum
+fields: id, organization_id, venue_id, actor_user_id, request_id, event_type,
+result, exported_row_count, occurred_at. Event is fixed people.accounts.export;
+results success/denied/failed only. Row count nullable and permitted only on
+success, whose event includes actual row count. Row identity/request correlation
+are approved audit metadata, not new CSV fields.
+
+No runtime direct INSERT/UPDATE/DELETE or broad audit SELECT; immutable rows via
+repository convention. Preferred SECURITY DEFINER writer has fixed safe
+search_path, explicit validation, EXECUTE only for projectx_people_runtime, no
+PUBLIC execute/generic SQL/arbitrary table or event. No BYPASSRLS, admin/migration
+request pool, browser authority, arbitrary metadata or audit-read API.
+
+Trusted resolver establishes actor/Organization/Venue/request context; parameters
+must match that context and referential ownership, not browser DTOs or custom
+settings alone. Validate User/Organization/Venue existence and Venue's Organization.
+Existing history actor UUID attribution has no User ownership FK; if retaining
+that convention, the writer explicitly validates User existence rather than
+inventing lifecycle/deletion or employee/name ownership semantics.
+
+Denial can be durable without export capability solely for auditing; this never
+grants roster visibility and no export query runs after denial. Failed authorized
+work rolls back, then a bounded separate failed audit persists without failure
+internals or resurrecting work. Success audit/row count must persist before CSV;
+audit failure prevents success, and no partial CSV is returned. No CSV/Name/Job
+Title/Access Level/Email Notifications values, filename, stack/SQL, arbitrary
+failure payload/metadata JSON or generated-file reference stored.
+
+This task records architecture only: no migration/table/function/application helper,
+contract/test or frontend. Future implementation requires focused PostgreSQL
+attribution/isolation/immutability/durability/atomicity tests, separate exact-SHA
+publication approval and final pnpm verify plus pnpm verify:db on PostgreSQL 16.
+ACT-0056 stays confirmed visible action only; all Export behavior remains UNKNOWN /
+NEEDS TESTING, U-001/U-002/U-003 unchanged and no reference parity claim.
+
+## Shared fixture and identity seam
 
 PEOPLE-04P refinement (2026-10-01): the owner approved Option A direct grants owned
 by OrganizationMembership/VenueAccess, additive with unchanged reusable roles.

@@ -1065,6 +1065,85 @@
       },
       "implementationStatus": "NOT_IMPLEMENTED",
       "notes": "Specification prerequisite satisfied only. PEOPLE-09 READY, not VERIFIED; canonical capability registration, least-privilege RLS/read seam, audit and API implementation/tests belong to PEOPLE-09. No runtime, migrations, generated contracts or reference classifications changed."
+    },
+    {
+      "id": "PEOPLE-D010",
+      "title": "Export-only durable audit write seam",
+      "status": "APPROVED",
+      "category": "OWNER APPROVED",
+      "classification": "PROJECTX IMPLEMENTATION DECISION",
+      "ownerDecision": {
+        "optionId": "A",
+        "option": "Option A — narrow export-only writer inside PEOPLE-09",
+        "approvedBy": "Product owner",
+        "approvedAt": "2026-10-04",
+        "basis": "Explicit attached Record owner-approved PEOPLE-D010 request; documentation/architecture decision only, not implementation or publication approval."
+      },
+      "resolvesBlockerId": "PEOPLE-09-AUDIT-001",
+      "affectedRoadmapTasks": ["PEOPLE-09", "PEOPLE-09B", "PEOPLE-10"],
+      "adr": "docs/architecture/ADR-0016-people-export-audit-seam.md",
+      "rationale": "Existing name-mutation history writers cannot persist export attempt/results; authorize a narrow export-only metadata writer and transaction seam without a generic audit subsystem or wider data authority.",
+      "approvedBoundary": {
+        "implementationOwner": "PEOPLE-09 only",
+        "mayIntroduce": [
+          "Export-only append-only audit persistence structure",
+          "Tightly scoped export-audit write function",
+          "PEOPLE-09-specific trusted-scope transaction seam for durable success, denied and failed results",
+          "Separate denial/failure audit durability from rolled-back export work where required"
+        ],
+        "notApproved": [
+          "Generic audit subsystem", "Cross-module audit framework", "New Audit module/roadmap parent",
+          "Runtime BYPASSRLS", "Request-time admin/migration-owner pool",
+          "Arbitrary privileged writes", "Browser-supplied audit authority",
+          "Arbitrary event names", "Arbitrary metadata blobs", "Audit-read API"
+        ]
+      },
+      "auditContract": {
+        "minimumFields": ["id", "organization_id", "venue_id", "actor_user_id", "request_id", "event_type", "result", "exported_row_count", "occurred_at"],
+        "eventType": "people.accounts.export",
+        "results": ["success", "denied", "failed"],
+        "exportedRowCount": "Nullable; permitted only for result=success; required success record includes the exported row count, including zero",
+        "contentExclusions": [
+          "CSV contents", "Name values", "Job Title values", "Access Level values",
+          "Email Notifications values", "filename", "stack traces", "SQL",
+          "arbitrary failure payload", "arbitrary metadata JSON", "generated file reference"
+        ],
+        "appendOnly": true,
+        "immutability": "Repository-consistent immutable history mechanism; no mutation of historical entries",
+        "runtimeDirectInsertUpdateDelete": false,
+        "runtimeAuditRead": "No broad SELECT access; any runtime audit readability requires a separate explicit authorization decision",
+        "writer": {
+          "preferredMechanism": "SECURITY DEFINER database function",
+          "safeSearchPath": "Fixed safe search_path",
+          "inputValidation": "Explicit validation, fixed table/event and result/row-count constraints; no generic SQL execution",
+          "executeRole": "projectx_people_runtime only",
+          "publicExecute": false,
+          "bypassRls": false,
+          "adminRequestPool": false
+        },
+        "trustedContext": "Derive/validate actor, Organization, Venue and request ID from trusted server-established request/transaction context. Unavoidable parameters must match that context and referential ownership; browser DTOs and custom settings alone are not identity/tenant proof.",
+        "referentialValidation": "Actor User and Organization exist; Venue exists and belongs to Organization. Follow composite tenant ownership conventions. Actor UUID is attribution, not employee/name ownership; if following existing history's lack of User FK, explicitly validate User existence in the writer and document that safe alternative without inventing deletion/lifecycle semantics.",
+        "denied": "Trusted resolver establishes actor/Organization/Venue/request context before capability evaluation. Durably record denied through the narrow writer without requiring people.accounts.export merely to audit denial; validate attribution/scope to prevent cross-tenant injection. Grant no roster visibility and run no export query after denial. Never fabricate missing trusted context.",
+        "failed": "Roll back authorized export work; safely classify failure and persist a separate bounded failed audit record through the export-only seam, without failure internals, partial CSV or resurrecting/committing rolled-back work.",
+        "success": "Required success audit with exported row count persists before successful CSV response. If audit persistence fails, fail the response; no successful CSV without required audit and no exported values stored.",
+        "failureAtomicity": "PEOPLE-D009 remains authoritative for no partial CSV; PEOPLE-D010 supplies the durable audit seam, including success audit before response and independent denial/failure durability. Row ID and request correlation are explicitly approved minimal persistence metadata, not added exported CSV fields.",
+        "identityAndModuleBoundary": "No employee inference, Booked By/Server Names coupling, tenant visibility widening, arbitrary actor/scope/event injection or runtime audit-read API"
+      },
+      "futureImplementation": [
+        "Forward-only migration without historical migration edits",
+        "Export-specific audit table/writer and tightly scoped application helper",
+        "Focused PostgreSQL security/append-only/attribution/rollback/success-audit failure tests"
+      ],
+      "referenceBoundary": {
+        "ACT-0056": "CONFIRMED visible Export action only",
+        "behaviorStatus": "UNKNOWN / NEEDS TESTING",
+        "unknowns": ["export format", "fields", "tenant scope", "filters", "permission behavior", "delivery", "filename", "audit", "retention", "cancellation/failure", "alternate roles"],
+        "preservedUnknownIds": ["U-001", "U-002", "U-003"],
+        "newReferenceEvidence": false,
+        "parityClaim": false
+      },
+      "implementationStatus": "NOT_IMPLEMENTED",
+      "notes": "Resolves architecture approval only. PEOPLE-D009 unchanged, PEOPLE-09-AUDIT-001 RESOLVED by PEOPLE-D010, PEOPLE-09 READY not VERIFIED, PEOPLE-09B/10 PLANNED, IMPL-MOD-14 IN_PROGRESS. Future backend implementation still needs exact-SHA publication approval and final PostgreSQL 16 CI. No code, migration, contract or frontend implemented here."
     }
   ],
   "unresolvedQuestions": [
@@ -1275,7 +1354,8 @@
     "ARCH-D015",
     "ARCH-D016",
     "ARCH-D018",
-    "PEOPLE-D009"
+    "PEOPLE-D009",
+    "PEOPLE-D010"
   ],
   "projectDocumentGap": "decisions.json was absent before ARCH-001; created in the previous checkpoint. Owner approvals and corresponding ADRs are now recorded.",
   "evidenceLabels": [
