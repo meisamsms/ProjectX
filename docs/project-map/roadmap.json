@@ -1942,12 +1942,21 @@
       ],
       "priorityPart": 2,
       "priorityDecisionId": "PRIORITY-D001",
-      "implementationGate": "Bounded implementation complete; deterministic security/full regression gates PASS (CHK-059). No production/provider VERIFIED claim. Separate exact-SHA publication/branch-head PostgreSQL 16 CI and controlled Auth0/deployment verification required before dependent core exposure.",
-      "blocker": null,
+      "implementationGate": "Bounded implementation complete; deterministic security/full regression gates PASS (CHK-059). Exact implementation 8469fd5e21df350e4e6f59c5183ae0c347dbf6f0 published; branch-head CI 37378038188/job 111992282747 PASS on PostgreSQL 16.15 (CHK-060). Controlled provider verification BLOCKED BY ENVIRONMENT SETUP; no production/provider VERIFIED claim or dependent core exposure.",
+      "blocker": {
+        "id": "CORE-AUTH-02-ENV-001",
+        "classification": "CONFIRMED — required configuration unavailable to this verification session; external deployment existence UNKNOWN",
+        "dependency": "Approved Auth0 development registration, HTTPS application endpoint, mapped test staff identity and restricted development runtime/database configuration",
+        "reason": "All seven required Auth0/origin/runtime inputs and staff API/web enable flags absent in process/user/machine environment; no conventional local .env/.env.local files. No approved endpoint, registration settings, test issuer/subject mapping or deployed runtime-role evidence supplied. Live verification stopped at precheck; no substitute provider, setup mutation or code defect claimed.",
+        "affectedModules": ["CORE-AUTH-02", "SETTINGS-CORE-01", "RESERVATIONS-CORE-01"],
+        "requiredPredecessor": "Owner/admin securely provision approved development inputs and test identity/deployment evidence outside Git, then resume controlled CORE-AUTH-02 verification",
+        "evidenceId": "CHK-060",
+        "ownerDecisionRequired": false
+      },
       "ownerPolicyDecisionId": "CORE-AUTH-D004",
       "readinessEvidence": "CHK-058 owner-decision documentation only. Published CORE-AUTH-01 CI run 37253348486 attempt 2/job 111586842967 green at 95d4d1b1cc9f8a6dc69a1d8a3edea38df9e00923; original failed attempt preserved. Not production auth, new implementation or core readiness proof.",
       "coreWorkflowAdvanced": "Secure authenticated staff access for reservation-required Venue settings and future reservation book/check-in/seating.",
-      "remainingWork": "NEEDS TESTING: actual separate Auth0 registrations/secrets, HTTPS same-origin gateway/real cookies, production migration and restricted-role/TLS provisioning, live Code/PKCE/callback/key rotation/outage/multi-instance revocation, MFA/auth_time/recent assurance mapping. High-risk writes stay denied. No new unresolved owner policy or architecture choice. SETTINGS-CORE-01 cannot start before VERIFIED predecessor.",
+      "remainingWork": "CONTROLLED AUTH0 VERIFICATION = BLOCKED BY ENVIRONMENT SETUP (CORE-AUTH-02-ENV-001 / CHK-060). Provision approved development inputs outside Git, HTTPS same-origin gateway, exact pre-existing issuer/subject test binding and restricted-runtime DB/deployment evidence before live verification. All real provider/cookie/CSRF/revocation/context/expiry/logout/multi-instance/JWKS/outage/MFA and deployment-role/TLS/log gates remain NEEDS TESTING. High-risk writes stay denied; ordinary core no-blanket-step-up contract has deterministic evidence only. Publication/CI complete; no new unresolved owner policy or architecture choice. SETTINGS-CORE-01 cannot start before VERIFIED predecessor.",
       "specificationFile": "docs/security/staff-access-integration.md",
       "requiredOwnerDecisionIds": [
         "CORE-AUTH-D001",
@@ -2019,13 +2028,16 @@
         "databaseReview": "docs/security/staff-session-database-review.md",
         "providerEvidenceBoundary": "Mock/deterministic tests do not verify production Auth0; no tenants or real credentials created."
       },
-      "verificationEvidence": "CHK-059: local pnpm verify PASS, focused auth/web 56/56; web 178/178; browser E2E/axe 32/32; pnpm verify:db PASS 210/210 across 21 files PostgreSQL 16.15 (auth DB 27/27). Prior 26 VERIFIED task objects / 58 checks / decisions / references unchanged. Original failed intermediate checks retained.",
+      "verificationEvidence": "CHK-059 local implementation evidence retained. CHK-060 confirms exact published SHA 8469fd5e21df350e4e6f59c5183ae0c347dbf6f0 and CI 37378038188/job 111992282747: pnpm verify and verify:db PASS, focused auth 56/56, auth DB 27/27, all DB 210/210 across 21 files, PostgreSQL 16.15. Environment-only precheck blocked controlled Auth0/deployment verification; parent remains IMPLEMENTED. All previous VERIFIED task objects/checks, owner decisions and reference evidence unchanged.",
       "providerVerification": {
         "status": "NEEDS TESTING",
         "classification": "PROJECTX DEPLOYMENT / PROVIDER GATE",
         "privilegedAssurance": "UNVERIFIED — high-risk Add User writes denied; approximately 5m policy unchanged",
         "evidenceFile": "docs/security/staff-session-verification.md",
-        "liveAuth0Tested": false
+        "liveAuth0Tested": false,
+        "environmentStatus": "BLOCKED BY ENVIRONMENT SETUP",
+        "blockerId": "CORE-AUTH-02-ENV-001",
+        "evidenceId": "CHK-060"
       }
     },
     {
@@ -2436,7 +2448,7 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "CORE-AUTH-02 — Trusted staff session integration: exact-SHA publication and controlled Auth0 verification",
+  "nextExactTask": "CORE-AUTH-02 — Provision approved Auth0 development / HTTPS / restricted-runtime environment, then resume controlled verification",
   "deliveryPriority": {
     "decisionId": "PRIORITY-D001",
     "primaryTarget": "PART 1 — CORE ONLINE RESERVATION SYSTEM",

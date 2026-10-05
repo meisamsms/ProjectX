@@ -95,7 +95,69 @@ CI installs its own Chromium. Browser/axe results do not prove WCAG conformance.
 Node shell-spawn deprecation, color and React Router directive warnings are
 non-blocking maintenance notes, not failed tests.
 
-## Controlled deployment/provider gates — NEEDS TESTING
+## Controlled verification precheck — CHK-060, 2026-10-05
+
+Base/published implementation: `8469fd5e21df350e4e6f59c5183ae0c347dbf6f0`;
+exact clean HEAD and branch `people-03-accounts-read` confirmed. Existing
+[CI run 37378038188](https://github.com/meisamsms/ProjectX/actions/runs/37378038188),
+attempt 1 / job 111992282747, SUCCESS: pnpm verify and pnpm verify:db PASS;
+PostgreSQL 16.15; auth 56/56, auth DB 27/27, all DB 210/210 across 21 files.
+This is CONFIRMED exact-SHA CI evidence, not controlled provider/deployment proof.
+CHK-059 and earlier results remain historical and unchanged; no rerun requested.
+
+**CONTROLLED AUTH0 VERIFICATION = BLOCKED BY ENVIRONMENT SETUP.**
+Presence-only checks found all seven required inputs unavailable in Process,
+User and Machine environments: AUTH0_ISSUER, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET,
+AUTH0_CALLBACK_URI, AUTH0_POST_LOGOUT_URI, STAFF_APP_ORIGIN and
+STAFF_RUNTIME_DATABASE_URL. STAFF_AUTH_ENABLED and VITE_STAFF_AUTH_ENABLED are
+also absent. No root/API/web `.env` or `.env.local` file exists at the six checked
+conventional paths. These are CONFIRMED local-session findings, not proof that no
+external tenant/deployment exists. No approved HTTPS endpoint, registration
+settings, mapped test issuer/subject/User or development runtime-role evidence
+was supplied; their external availability is UNKNOWN.
+
+Live verification stopped at the environment precheck. No tenant/client creation,
+configuration change, login, provider discovery, callback, DB connection, test-data
+mutation, outage/rotation injection or mock replacement was attempted. No secret
+values were printed or committed. No implementation defect established by this
+precheck; no code/test/migration/contract change authorized or needed here.
+
+| Controlled gate | Classification / result |
+|---|---|
+| Auth0 registration: Code/PKCE S256, exact callback/logout/origin/issuer/client/RS256 | UNKNOWN; registration/configuration not accessible |
+| HTTPS browser cookie attributes, JavaScript exclusion and HTTP non-use | NEEDS TESTING; no approved HTTPS endpoint |
+| Real login/callback, issuer/audience/signature/expiry/state/nonce/PKCE | NEEDS TESTING; not executed |
+| Exact issuer/subject mapping, unknown binding/disabled denial, no email linking | NEEDS TESTING with real provider/test identity |
+| Membership/VenueAccess/User revocation and Venue/context/version boundaries | NEEDS TESTING with real session and controlled test data |
+| Rotation, absolute/idle expiry, no GET renewal, durable logout/no reuse | NEEDS TESTING in controlled deployment; 12h/30m/multiple policy unchanged |
+| Callback negative cases, JWKS, key rotation and provider outage | NEEDS TESTING; no safe configured environment to induce cases |
+| Multi-instance session/revocation | NEEDS TESTING; no two approved instances available |
+| CSRF and Origin/Host with authenticated browser | NEEDS TESTING; not executed |
+| Auth0 MFA/auth_time/recent assurance and privileged success | NEEDS TESTING; high-risk writes remain fail-closed |
+| Ordinary core operations without blanket repeated step-up | NEEDS TESTING with real provider/core consumer; no reservation implementation or exemption proof |
+| Deployed migration/runtime role/RLS/grants/TLS/pool isolation | NEEDS TESTING; no approved deployment database configuration |
+| Controlled application/gateway/provider secret-free logs | NEEDS TESTING; no controlled logs available; local presence checks expose no values |
+
+CORE-AUTH-02 remains IMPLEMENTED; providerVerification.status NEEDS TESTING and
+liveAuth0Tested false. Positive privileged assurance is not verified. The owner
+prompt permits a fail-closed privileged-exposure alternative only with controlled
+proof that required ordinary reservation-core operations remain usable; that proof
+is absent here. No production Auth0 or integrated core readiness claim is made.
+
+Required predecessor (CORE-AUTH-02-ENV-001): owner/admin securely provision the
+approved development registration/configuration outside Git, canonical HTTPS
+gateway/endpoint, pre-existing exact test identity binding and restricted runtime
+database/role/TLS evidence, plus access to sanitized controlled logs. Do not paste
+secrets into chat/docs or use migration-owner credentials for app requests. No new
+product/architecture choice is required. Resume the controlled matrix only after
+these inputs are available; do not start SETTINGS-CORE-01, reservations or Export.
+This task records documentation locally only; separate exact-SHA approval is
+required to publish it.
+
+## Original implementation deployment/provider checklist — historical
+
+The six items below are the original CHK-059 checklist. Publication item 6 is now
+satisfied by the CI evidence above; provider/deployment items remain NEEDS TESTING.
 
 1. Separate Auth0 confidential web-client registrations for dev/staging/production;
    exact HTTPS issuer, client ID/audience, callback/logout allowlists, RS256 and

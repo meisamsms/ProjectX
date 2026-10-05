@@ -605,6 +605,162 @@
         "tooling/db-test.mjs",
         "tooling/verify.mjs"
       ]
+    },
+    {
+      "id": "CHK-060",
+      "taskId": "CORE-AUTH-02",
+      "status": "BLOCKED",
+      "date": "2026-10-05",
+      "baseCommit": "8469fd5e21df350e4e6f59c5183ae0c347dbf6f0",
+      "verificationScope": "Controlled Auth0/deployment environment precheck and existing exact-SHA publication evidence only; no live provider verification",
+      "method": "Confirmed exact clean local HEAD/branch; read required project/security records and implemented configuration loader. Checked presence only of named inputs in process/user/machine environment and six conventional local environment-file paths; no values printed. Re-read GitHub run/job/logs and live remote SHA. Stopped live testing at missing-environment precheck; no provider registration, account, database or gateway mutation.",
+      "result": "CONTROLLED AUTH0 VERIFICATION = BLOCKED BY ENVIRONMENT SETUP. Required configuration unavailable to this session; this does not establish that no external Auth0 environment exists. CORE-AUTH-02 remains IMPLEMENTED and providerVerification.status NEEDS TESTING, liveAuth0Tested false. Existing implementation publication gate GREEN; no runtime defect identified by this precheck and no mocked rerun substituted for real provider evidence.",
+      "environmentPrecheck": {
+        "classification": "CONFIRMED",
+        "missingRequiredInputs": [
+          "AUTH0_ISSUER",
+          "AUTH0_CLIENT_ID",
+          "AUTH0_CLIENT_SECRET",
+          "AUTH0_CALLBACK_URI",
+          "AUTH0_POST_LOGOUT_URI",
+          "STAFF_APP_ORIGIN",
+          "STAFF_RUNTIME_DATABASE_URL"
+        ],
+        "missingEnableFlags": [
+          "STAFF_AUTH_ENABLED",
+          "VITE_STAFF_AUTH_ENABLED"
+        ],
+        "checkedScopes": [
+          "Process",
+          "User",
+          "Machine"
+        ],
+        "absentLocalConfigFiles": [
+          ".env",
+          ".env.local",
+          "apps/api/.env",
+          "apps/api/.env.local",
+          "apps/web/.env",
+          "apps/web/.env.local"
+        ],
+        "externalEnvironmentExistence": "UNKNOWN — no approved environment/registration/test identity/runtime evidence supplied",
+        "endpointConnectionAttempted": false,
+        "secretValuesPrinted": false,
+        "blockerId": "CORE-AUTH-02-ENV-001"
+      },
+      "publicationEvidence": {
+        "classification": "CONFIRMED",
+        "branch": "people-03-accounts-read",
+        "sha": "8469fd5e21df350e4e6f59c5183ae0c347dbf6f0",
+        "run": "37378038188",
+        "job": "111992282747",
+        "attempt": 1,
+        "url": "https://github.com/meisamsms/ProjectX/actions/runs/37378038188",
+        "conclusion": "SUCCESS",
+        "pnpmVerify": "PASS",
+        "pnpmVerifyDb": "PASS",
+        "postgresql": "16.15",
+        "focusedAuthTests": "56/56 PASS",
+        "authDatabaseTests": "27/27 PASS",
+        "databaseSuite": "210/210 PASS across 21 files",
+        "limitation": "CI uses deterministic provider substitutes; not controlled Auth0/HTTPS/deployment proof. No new workflow run or rerun requested."
+      },
+      "controlledGates": [
+        {
+          "gate": "Approved Auth0 application Code/PKCE S256, callback/logout/origin/client/RS256 allowlists",
+          "classification": "UNKNOWN",
+          "result": "No application registration access/configuration available; owner/admin setup evidence required"
+        },
+        {
+          "gate": "Real HTTPS Secure/HttpOnly/SameSite=Lax/host-only/Path=/ cookie and HTTP/JavaScript exclusion",
+          "classification": "NEEDS TESTING",
+          "result": "Not executed; no approved HTTPS endpoint"
+        },
+        {
+          "gate": "Real login/callback, issuer/audience/signature/expiry/state/nonce/PKCE and exact issuer-subject identity mapping",
+          "classification": "NEEDS TESTING",
+          "result": "Not executed; no real provider configuration or mapped test staff identity"
+        },
+        {
+          "gate": "Current OrganizationMembership/VenueAccess revocation, disabled User, Venue scope/context/version and safe errors",
+          "classification": "NEEDS TESTING",
+          "result": "Not executed with a real session; deterministic CHK-059/CI evidence retained only"
+        },
+        {
+          "gate": "Session absolute/idle expiry, accepted activity/no polling renewal, rotation, durable logout and no reuse",
+          "classification": "NEEDS TESTING",
+          "result": "Not executed in controlled deployment; approved 12h/30m/multiple policy unchanged"
+        },
+        {
+          "gate": "Callback negative cases, JWKS/key rotation and provider outage",
+          "classification": "NEEDS TESTING",
+          "result": "Not executed; no provider changes or fault injection"
+        },
+        {
+          "gate": "Multi-instance session/revocation",
+          "classification": "NEEDS TESTING",
+          "result": "No two approved controlled instances/session store available"
+        },
+        {
+          "gate": "Real-session CSRF and Origin/Host",
+          "classification": "NEEDS TESTING",
+          "result": "Not executed; no real authenticated session"
+        },
+        {
+          "gate": "MFA/recent assurance and privileged success",
+          "classification": "NEEDS TESTING",
+          "result": "High-risk exposure remains fail-closed; positive mapping deliberately unsupported/unverified. Not a passed gate"
+        },
+        {
+          "gate": "Ordinary reservation-core auth without repeated blanket step-up",
+          "classification": "NEEDS TESTING",
+          "result": "D004 and deterministic ordinary-operation contract preserved; real provider/core-consumer non-blocking proof absent. No VERIFIED exception claimed"
+        },
+        {
+          "gate": "Deployment migration, restricted non-owner runtime/no elevated assumable roles, RLS/grants/PUBLIC execute, TLS and pool isolation",
+          "classification": "NEEDS TESTING",
+          "result": "No approved deployment DB connection/configuration; PostgreSQL 16.15 CI is not deployment provisioning evidence"
+        },
+        {
+          "gate": "Controlled gateway/provider/application logs contain no credentials/codes/verifiers/cookies/tokens",
+          "classification": "NEEDS TESTING",
+          "result": "No controlled deployment logs available; presence checks disclosed no secret values. Historical canary tests retained only"
+        }
+      ],
+      "parentTaskStatus": "IMPLEMENTED",
+      "providerVerificationStatus": "NEEDS TESTING",
+      "liveAuth0Tested": false,
+      "productionAuthClaim": false,
+      "historicalPreservation": "All 59 prior check objects and 26 previously VERIFIED task objects unchanged. D001–D004, reference classifications/U-001/U-002/U-003 and Part-3 deferrals unchanged. No core readiness or parity claim.",
+      "commands": [
+        {
+          "command": "git rev-parse HEAD; git status --short; branch/remote SHA checks",
+          "result": "PASS — exact implementation SHA, clean start, live remote same SHA"
+        },
+        {
+          "command": "Named environment presence and conventional config-file existence checks",
+          "result": "BLOCKED — required inputs unavailable; no values printed"
+        },
+        {
+          "command": "Read existing GitHub Actions run 37378038188/job 111992282747 and logs",
+          "result": "PASS — existing exact-SHA gates green; no rerun"
+        },
+        {
+          "command": "pnpm map:check; git diff --check; JSON/DAG/history/scope assertions",
+          "result": "PASS — acyclic dependencies; all 26 previous VERIFIED task objects, 54 unrelated tasks and 59 historical checks unchanged; exactly four documentation files"
+        }
+      ],
+      "noCodeChanges": true,
+      "noPush": true,
+      "newReferenceEvidence": false,
+      "parityClaim": false,
+      "nextExactTask": "CORE-AUTH-02 — Provision approved Auth0 development / HTTPS / restricted-runtime environment, then resume controlled verification",
+      "filesModified": [
+        "docs/project-map/roadmap.json",
+        "docs/project-map/verification.json",
+        "docs/project-map/handoff.md",
+        "docs/security/staff-session-verification.md"
+      ]
     }
   ],
   "unresolvedQuestions": [
