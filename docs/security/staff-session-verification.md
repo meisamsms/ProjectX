@@ -5,6 +5,40 @@ CORE-AUTH-D004. Base 84ed2938d7d1fa6155e744a50ef3d6aebe6f978c.
 Parent task IMPLEMENTED; controlled Auth0/production assurance remains NEEDS TESTING.
 No SevenRooms evidence or parity claims.
 
+## Owner-approved development target checkpoint — D005 / CHK-061
+
+2026-10-05; documentation base `cf6d4354eec1408a4f004857cdb944978e948c83`.
+OWNER APPROVED / PROJECTX DEPLOYMENT DECISION, not executed provisioning or
+controlled-provider verification. See authoritative CORE-AUTH-D005 in decisions.json
+and the development policy in staff-access-integration.md. CHK-059/060 and all
+historical results below are preserved without rewriting their limitations.
+
+Approved 1A–5A: Render DEVELOPMENT; nearest suitable supported US region to
+Arkansas, preferring Ohio IF offered at provisioning time; Render-provided HTTPS
+hostname initially, custom domain DEFERRED; smallest normal stable paid/development
+service/database tier; dedicated ProjectX Auth0 DEVELOPMENT tenant/application.
+Ohio and actual region/tier/pricing/PostgreSQL 16 availability remain NEEDS TESTING
+in the actual provisioning interface. Material cost/architecture escalation requires
+STOP and new owner approval; no production/staging approval or annual commitment.
+D004 remains unchanged and authoritative for authentication/session/assurance.
+
+CORE-AUTH-02-ENV-001 remains **BLOCKED**. Owner selection RESOLVED; outstanding:
+actual Render resources and availability/cost checks, actual Auth0 development
+registration, canonical same-origin HTTPS endpoint/cookie verification, PostgreSQL
+target, distinct restricted runtime role, deployment-native secret injection,
+synthetic identity binding and sanitized controlled logs/evidence. No resources,
+credentials or identities created here, no secret values recorded, no live test.
+CORE-AUTH-02 stays IMPLEMENTED; providerVerification NEEDS TESTING, liveAuth0Tested
+false. All existing controlled gates and fail-closed assurance boundaries persist.
+
+Next exact task: **CORE-AUTH-02-ENV-001 — Provision approved Render/Auth0 development
+environment**. No application code, production resources, Settings, reservations
+or Export. Once ENVIRONMENT READY FOR CONTROLLED VERIFICATION: YES is supported by
+evidence, resume this existing real-provider matrix, not new authentication code.
+SETTINGS-CORE-01 remains PLANNED, blocked pending VERIFIED CORE-AUTH-02.
+Documentation commit requires separate exact-SHA publication approval; no push or
+provisioning in this approval-recording task. No new SevenRooms evidence/parity claim.
+
 ## Deterministic evidence
 
 Focused files:

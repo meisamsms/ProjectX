@@ -1946,17 +1946,41 @@
       "blocker": {
         "id": "CORE-AUTH-02-ENV-001",
         "classification": "CONFIRMED — required configuration unavailable to this verification session; external deployment existence UNKNOWN",
-        "dependency": "Approved Auth0 development registration, HTTPS application endpoint, mapped test staff identity and restricted development runtime/database configuration",
-        "reason": "All seven required Auth0/origin/runtime inputs and staff API/web enable flags absent in process/user/machine environment; no conventional local .env/.env.local files. No approved endpoint, registration settings, test issuer/subject mapping or deployed runtime-role evidence supplied. Live verification stopped at precheck; no substitute provider, setup mutation or code defect claimed.",
+        "dependency": "Provisioned Render/Auth0 DEVELOPMENT environment under APPROVED CORE-AUTH-D005, canonical HTTPS endpoint, synthetic staff identity and restricted PostgreSQL runtime",
+        "reason": "Owner-selection portion RESOLVED by D005: platform, region selection rule, hostname, development-tier and Auth0 development policies. Actual provisioning/availability and sanitized evidence remain outstanding. CHK-060 precheck retained; no environment readiness or live Auth0 verification claimed.",
         "affectedModules": ["CORE-AUTH-02", "SETTINGS-CORE-01", "RESERVATIONS-CORE-01"],
-        "requiredPredecessor": "Owner/admin securely provision approved development inputs and test identity/deployment evidence outside Git, then resume controlled CORE-AUTH-02 verification",
+        "requiredPredecessor": "CORE-AUTH-02-ENV-001 — Provision approved Render/Auth0 development environment",
         "evidenceId": "CHK-060",
-        "ownerDecisionRequired": false
+        "ownerDecisionRequired": false,
+        "status": "BLOCKED",
+        "ownerSelectionStatus": "RESOLVED",
+        "ownerSelectionDecisionId": "CORE-AUTH-D005",
+        "resolvedOwnerSelections": [
+          "Hosting platform selection",
+          "Region selection rule",
+          "Hostname policy",
+          "Development tier policy",
+          "Auth0 development environment policy"
+        ],
+        "outstandingProvisioning": [
+          "Actual Render resources",
+          "Actual region availability",
+          "Actual pricing/tier availability",
+          "Actual Auth0 development tenant/application",
+          "HTTPS endpoint",
+          "PostgreSQL target",
+          "Restricted runtime role",
+          "Secret injection",
+          "Synthetic identity",
+          "Sanitized controlled logs/evidence"
+        ],
+        "approvalEvidenceId": "CHK-061"
       },
       "ownerPolicyDecisionId": "CORE-AUTH-D004",
+      "developmentDeploymentDecisionId": "CORE-AUTH-D005",
       "readinessEvidence": "CHK-058 owner-decision documentation only. Published CORE-AUTH-01 CI run 37253348486 attempt 2/job 111586842967 green at 95d4d1b1cc9f8a6dc69a1d8a3edea38df9e00923; original failed attempt preserved. Not production auth, new implementation or core readiness proof.",
       "coreWorkflowAdvanced": "Secure authenticated staff access for reservation-required Venue settings and future reservation book/check-in/seating.",
-      "remainingWork": "CONTROLLED AUTH0 VERIFICATION = BLOCKED BY ENVIRONMENT SETUP (CORE-AUTH-02-ENV-001 / CHK-060). Provision approved development inputs outside Git, HTTPS same-origin gateway, exact pre-existing issuer/subject test binding and restricted-runtime DB/deployment evidence before live verification. All real provider/cookie/CSRF/revocation/context/expiry/logout/multi-instance/JWKS/outage/MFA and deployment-role/TLS/log gates remain NEEDS TESTING. High-risk writes stay denied; ordinary core no-blanket-step-up contract has deterministic evidence only. Publication/CI complete; no new unresolved owner policy or architecture choice. SETTINGS-CORE-01 cannot start before VERIFIED predecessor.",
+      "remainingWork": "CORE-AUTH-02-ENV-001 remains BLOCKED: D005 resolves owner-selection policies only, not provisioning. Provision approved Render/Auth0 DEVELOPMENT resources securely outside Git; verify actual region/pricing/tier/PostgreSQL 16 availability, canonical same-origin HTTPS/cookies, restricted non-owner runtime, exact synthetic issuer/subject binding and sanitized logs. Then resume the existing real-provider matrix, not another authentication code task. Real provider/deployment gates remain NEEDS TESTING; high-risk writes stay denied. No production/staging, Settings, reservation or Export implementation. SETTINGS-CORE-01 remains PLANNED pending VERIFIED CORE-AUTH-02.",
       "specificationFile": "docs/security/staff-access-integration.md",
       "requiredOwnerDecisionIds": [
         "CORE-AUTH-D001",
@@ -2028,7 +2052,7 @@
         "databaseReview": "docs/security/staff-session-database-review.md",
         "providerEvidenceBoundary": "Mock/deterministic tests do not verify production Auth0; no tenants or real credentials created."
       },
-      "verificationEvidence": "CHK-059 local implementation evidence retained. CHK-060 confirms exact published SHA 8469fd5e21df350e4e6f59c5183ae0c347dbf6f0 and CI 37378038188/job 111992282747: pnpm verify and verify:db PASS, focused auth 56/56, auth DB 27/27, all DB 210/210 across 21 files, PostgreSQL 16.15. Environment-only precheck blocked controlled Auth0/deployment verification; parent remains IMPLEMENTED. All previous VERIFIED task objects/checks, owner decisions and reference evidence unchanged.",
+      "verificationEvidence": "CHK-059 local implementation evidence retained. CHK-060 confirms exact published SHA 8469fd5e21df350e4e6f59c5183ae0c347dbf6f0 and CI 37378038188/job 111992282747: pnpm verify and verify:db PASS, focused auth 56/56, auth DB 27/27, all DB 210/210 across 21 files, PostgreSQL 16.15. Environment-only precheck blocked controlled Auth0/deployment verification; parent remains IMPLEMENTED. All previous VERIFIED task objects/checks, owner decisions and reference evidence unchanged. CHK-061 records APPROVED D005 development target policy and documentation preservation checks only; it does not verify provisioning or Auth0 behavior.",
       "providerVerification": {
         "status": "NEEDS TESTING",
         "classification": "PROJECTX DEPLOYMENT / PROVIDER GATE",
@@ -2037,7 +2061,10 @@
         "liveAuth0Tested": false,
         "environmentStatus": "BLOCKED BY ENVIRONMENT SETUP",
         "blockerId": "CORE-AUTH-02-ENV-001",
-        "evidenceId": "CHK-060"
+        "evidenceId": "CHK-060",
+        "developmentDeploymentDecisionId": "CORE-AUTH-D005",
+        "ownerSelectionStatus": "RESOLVED",
+        "provisioningStatus": "OUTSTANDING"
       }
     },
     {
@@ -2448,7 +2475,7 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "CORE-AUTH-02 — Provision approved Auth0 development / HTTPS / restricted-runtime environment, then resume controlled verification",
+  "nextExactTask": "CORE-AUTH-02-ENV-001 — Provision approved Render/Auth0 development environment",
   "deliveryPriority": {
     "decisionId": "PRIORITY-D001",
     "primaryTarget": "PART 1 — CORE ONLINE RESERVATION SYSTEM",

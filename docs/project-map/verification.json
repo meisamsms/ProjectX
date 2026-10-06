@@ -761,6 +761,86 @@
         "docs/project-map/handoff.md",
         "docs/security/staff-session-verification.md"
       ]
+    },
+    {
+      "id": "CHK-061",
+      "taskId": "CORE-AUTH-02",
+      "status": "VERIFIED",
+      "date": "2026-10-05",
+      "baseCommit": "cf6d4354eec1408a4f004857cdb944978e948c83",
+      "verificationScope": "Documentation-only owner-approved development target policy; not environment, provider or parent-task verification",
+      "decisionId": "CORE-AUTH-D005",
+      "method": "Read owner prompt and required project/security records; confirm exact clean branch HEAD; record approvals without provisioning, secret values or runtime changes. Validate map, whitespace, JSON, unique IDs, roadmap DAG and preservation against base.",
+      "result": "D005 APPROVED: Render development policy recorded. Owner selection RESOLVED; CORE-AUTH-02-ENV-001 BLOCKED pending actual provisioning. CORE-AUTH-02 IMPLEMENTED, providerVerification NEEDS TESTING and liveAuth0Tested false. No environment-ready, production or parity claim.",
+      "approvedPolicies": {
+        "1A": "Render DEVELOPMENT platform",
+        "2A": "Nearest suitable supported US region to Arkansas; Ohio IF available; availability NEEDS TESTING",
+        "3A": "Render HTTPS hostname, canonical same-origin web/API; custom domain DEFERRED",
+        "4A": "Smallest normal paid/development tier sufficient for stable verification; pricing/tier availability NEEDS TESTING; material cost escalation requires approval before purchase",
+        "5A": "Dedicated ProjectX Auth0 DEVELOPMENT tenant/application for synthetic staff verification"
+      },
+      "environmentBlocker": {
+        "id": "CORE-AUTH-02-ENV-001",
+        "status": "BLOCKED",
+        "ownerSelectionStatus": "RESOLVED",
+        "provisioningStatus": "OUTSTANDING",
+        "resolved": [
+          "Hosting platform selection",
+          "Region selection rule",
+          "Hostname policy",
+          "Development tier policy",
+          "Auth0 development environment policy"
+        ],
+        "outstanding": [
+          "Actual Render resources",
+          "Actual region availability",
+          "Actual pricing/tier availability",
+          "Actual Auth0 development tenant/application",
+          "HTTPS endpoint",
+          "PostgreSQL target",
+          "Restricted runtime role",
+          "Secret injection",
+          "Synthetic identity",
+          "Sanitized controlled logs/evidence"
+        ]
+      },
+      "parentTaskStatus": "IMPLEMENTED",
+      "providerVerificationStatus": "NEEDS TESTING",
+      "liveAuth0Tested": false,
+      "environmentReadyForControlledVerification": false,
+      "historicalPreservation": "All 60 prior check objects, 26 previously VERIFIED task objects, 54 unrelated task objects and all pre-existing decision objects unchanged. Reference files/classifications/U-001/U-002/U-003 unchanged. D004 remains authentication/session/assurance policy authority.",
+      "commands": [
+        {
+          "command": "git rev-parse HEAD; git status --short; git branch --show-current",
+          "result": "PASS — exact cf6d4354eec1408a4f004857cdb944978e948c83, clean initial worktree, people-03-accounts-read"
+        },
+        {
+          "command": "pnpm map:check",
+          "result": "PASS — map references validated"
+        },
+        {
+          "command": "git diff --check",
+          "result": "PASS"
+        },
+        {
+          "command": "JSON/unique IDs/roadmap DAG/history/docs-only and secret-content assertions",
+          "result": "PASS — unique D005/CHK-061, acyclic dependencies; preserved historical objects; six documentation files, variable names only"
+        }
+      ],
+      "noCodeChanges": true,
+      "noProvisioning": true,
+      "noPush": true,
+      "newReferenceEvidence": false,
+      "parityClaim": false,
+      "nextExactTask": "CORE-AUTH-02-ENV-001 — Provision approved Render/Auth0 development environment",
+      "filesModified": [
+        "docs/project-map/decisions.json",
+        "docs/project-map/roadmap.json",
+        "docs/project-map/verification.json",
+        "docs/project-map/handoff.md",
+        "docs/security/staff-access-integration.md",
+        "docs/security/staff-session-verification.md"
+      ]
     }
   ],
   "unresolvedQuestions": [

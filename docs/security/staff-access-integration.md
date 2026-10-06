@@ -1,5 +1,64 @@
 # CORE-AUTH-01 — Trusted staff access integration specification
 
+## Development deployment owner approval — CORE-AUTH-D005, 2026-10-05
+
+OWNER APPROVED / PROJECTX DEPLOYMENT DECISION; documentation base
+`cf6d4354eec1408a4f004857cdb944978e948c83`. Authoritative policy is D005 in
+`docs/project-map/decisions.json`. It specializes the existing development
+verification environment, not production architecture or staging/production
+deployment approval. D001–D004 remain unchanged; D004 continues to govern Auth0,
+12h absolute / 30m idle / concurrent sessions and targeted approximately-5m
+privileged assurance. Historical checkpoints below are not new readiness claims.
+
+- 1A: **Render** for DEVELOPMENT web/API, managed development PostgreSQL, HTTPS,
+  secure deployment-native environment/secret injection and controlled Auth0 tests.
+- 2A: nearest suitable supported US region to Arkansas; prefer **Ohio IF offered
+  at provisioning time**. Ohio availability is NEEDS TESTING against the actual
+  provisioning interface/current service availability. If unavailable, use the
+  next nearest suitable US region only without material cost/architecture change;
+  otherwise STOP for owner approval.
+- 3A: initially Render-provided HTTPS hostname; custom domain DEFERRED, no purchase
+  here. Canonical same-origin web and `/api/v1`, exact HTTPS callback, no permissive
+  credentialed CORS substitute and actual Secure-cookie verification remain gates.
+- 4A: smallest normal paid/development service/database tier sufficient for stable
+  controlled verification (API, PostgreSQL 16, HTTPS and secure variables). Actual
+  pricing and tier/version availability NEEDS TESTING during provisioning; no
+  invented prices. No production sizing/SLA/HA/replicas, annual commitment,
+  unnecessary autoscaling or unrelated premium features. Material cost above the
+  smallest normal development option requires new approval before purchase.
+- 5A: dedicated ProjectX Auth0 DEVELOPMENT tenant/application for staff verification
+  only, not production infrastructure. Code/PKCE S256, supported RS256/JWKS, exact
+  callback/logout/origin allowlists; no wildcard production callbacks or committed
+  credentials. Synthetic development-only identity, not a real employee.
+
+Render managed PostgreSQL DEVELOPMENT target is approved subject to actual
+PostgreSQL 16/tier availability checks. Use a distinct restricted non-owner login:
+no SUPERUSER, BYPASSRLS, database ownership, migration-owner runtime or elevated
+assumable role; only reviewed People/auth grants. Migration administration and
+runtime credentials stay separate; actual deployed role/RLS/TLS proof is required.
+
+API secrets stay server-side using Render/deployment-native injection, never Git,
+docs, Vite, screenshots, chat, CI output or public logs. Names only:
+`STAFF_AUTH_ENABLED`, `AUTH0_ISSUER`, `AUTH0_CLIENT_ID`, `AUTH0_CLIENT_SECRET`,
+`AUTH0_CALLBACK_URI`, `AUTH0_POST_LOGOUT_URI`, `STAFF_APP_ORIGIN`,
+`STAFF_RUNTIME_DATABASE_URL`; web flag `VITE_STAFF_AUTH_ENABLED` is not a secret
+container. Map verified issuer + subject explicitly to existing ProjectX AuthIdentity
+(AuthenticatedIdentity), then User with controlled OrganizationMembership and
+VenueAccess. Never use email-only authoritative linking.
+
+Owner-selection portion RESOLVED; CORE-AUTH-02-ENV-001 remains BLOCKED until actual
+resources, region/pricing/tier availability, Auth0 registration, HTTPS endpoint,
+database/runtime role, secret injection, synthetic identity and sanitized logs/
+evidence are supplied. No provisioning performed here. CORE-AUTH-02 IMPLEMENTED,
+not VERIFIED; all real-provider gates remain NEEDS TESTING and high-risk writes
+fail closed. No SevenRooms evidence, deployment inference or parity claim.
+
+Next exact task: **CORE-AUTH-02-ENV-001 — Provision approved Render/Auth0 development
+environment** in a separate task after documentation publication approval. That
+task may provision approved DEVELOPMENT infrastructure only; no application code,
+production resources, Settings, reservations, Export or secret exposure. Once the
+environment is ready, resume the existing real-provider matrix, not more auth code.
+
 ## CORE-AUTH-02 implementation checkpoint — 2026-10-05
 
 PROJECTX IMPLEMENTATION DECISION, not SevenRooms evidence. The dated inventories

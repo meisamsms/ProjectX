@@ -1482,6 +1482,179 @@
         "SevenRooms classifications and unknown IDs"
       ],
       "notes": "Specializes existing managed-OIDC/server-session architecture; no redundant ADR. CORE-AUTH-02 READY for a separate bounded implementation prompt, not implemented, runtime-configured or production VERIFIED."
+    },
+    {
+      "id": "CORE-AUTH-D005",
+      "title": "Development verification deployment target policy",
+      "status": "APPROVED",
+      "category": "OWNER APPROVED",
+      "classification": "PROJECTX DEPLOYMENT DECISION",
+      "ownerDecision": {
+        "approvedBy": "Product owner",
+        "approvedAt": "2026-10-05",
+        "basis": "Explicit 1A / 2A / 3A / 4A / 5A approvals and documentation-only recording prompt",
+        "selections": {
+          "1A": "Render development platform",
+          "2A": "Nearest suitable supported US region to Arkansas; Ohio conditional on availability",
+          "3A": "Render-provided HTTPS hostname; custom domain deferred",
+          "4A": "Smallest normal paid/development tier sufficient for stable verification",
+          "5A": "Dedicated ProjectX Auth0 DEVELOPMENT tenant/application"
+        }
+      },
+      "specializesDecisionId": "CORE-AUTH-D004",
+      "developmentPlatform": "Render",
+      "purpose": "Controlled development verification for CORE-AUTH-02 only",
+      "scope": [
+        "Development web/API deployment",
+        "Render managed development PostgreSQL",
+        "HTTPS endpoint",
+        "Secure environment-variable/secret injection",
+        "Controlled Auth0 verification"
+      ],
+      "notApproved": [
+        "Production or staging deployment",
+        "Production sizing, SLA, region or DNS",
+        "Annual infrastructure commitment",
+        "Production high availability or replicas",
+        "Unnecessary autoscaling or unrelated premium features"
+      ],
+      "regionPolicy": {
+        "selectionRule": "Nearest suitable supported US Render region to Arkansas",
+        "preference": "Ohio IF offered at provisioning time",
+        "ohioAvailability": "NEEDS TESTING",
+        "verificationBoundary": "Actual Render provisioning interface/current service availability must be checked; preference is not CONFIRMED availability",
+        "fallback": "If Ohio is unavailable, use the next nearest suitable US region only without material cost or architecture change; otherwise STOP for owner approval"
+      },
+      "httpsPolicy": {
+        "initialHostname": "Render-provided HTTPS hostname",
+        "customDomain": "DEFERRED",
+        "requirements": [
+          "Canonical HTTPS origin",
+          "Web and /api/v1 through approved same-origin boundary",
+          "No permissive credentialed CORS substitute",
+          "Exact callback on canonical HTTPS origin",
+          "Actual Secure cookie testing required"
+        ],
+        "domainRegistrationAuthorized": false
+      },
+      "tierPolicy": {
+        "selection": "Smallest normal paid/development service/database tier sufficient for stable controlled verification",
+        "objectives": [
+          "Stable availability long enough for Auth0 tests",
+          "API runtime",
+          "PostgreSQL 16",
+          "HTTPS",
+          "Secure environment variables"
+        ],
+        "pricingStatus": "NEEDS TESTING during provisioning",
+        "tierAvailability": "NEEDS TESTING during provisioning",
+        "costEscalationRule": "If tier/pricing creates materially greater cost than the smallest normal development option, STOP for separate owner approval before purchase",
+        "productionSizingAuthorized": false,
+        "annualCommitmentAuthorized": false
+      },
+      "auth0DevelopmentPolicy": {
+        "environment": "Dedicated ProjectX Auth0 DEVELOPMENT tenant/application; no production authentication infrastructure",
+        "purpose": "Staff authentication verification only",
+        "requirements": [
+          "OIDC Authorization Code flow",
+          "PKCE S256",
+          "Supported RS256/JWKS configuration",
+          "Exact callback allowlist",
+          "Exact logout allowlist",
+          "Exact origin configuration",
+          "No wildcard production callbacks",
+          "No production tenant",
+          "No committed credentials",
+          "Synthetic development test identity"
+        ],
+        "policyAuthority": "CORE-AUTH-D004 remains authoritative for provider, session and targeted privileged-assurance policy; not duplicated or replaced"
+      },
+      "databasePolicy": {
+        "target": "Render managed PostgreSQL DEVELOPMENT database",
+        "availability": "NEEDS TESTING — actual PostgreSQL 16 version/tier availability during provisioning",
+        "runtimeLogin": "Distinct restricted non-owner PostgreSQL login",
+        "requirements": [
+          "No SUPERUSER",
+          "No BYPASSRLS",
+          "No database ownership",
+          "No migration-owner credentials for runtime requests",
+          "No ability to assume elevated roles",
+          "Only reviewed People/auth grants"
+        ],
+        "credentialBoundary": "Migration administration and application runtime credentials remain separate"
+      },
+      "secretManagementPolicy": {
+        "mechanism": "Render/deployment-native environment-variable or secret injection",
+        "serverSideOnly": true,
+        "prohibitedLocations": [
+          "Git",
+          "Documentation",
+          "Vite variables",
+          "Screenshots",
+          "Chat",
+          "CI output",
+          "Public logs"
+        ],
+        "serverInputNames": [
+          "STAFF_AUTH_ENABLED",
+          "AUTH0_ISSUER",
+          "AUTH0_CLIENT_ID",
+          "AUTH0_CLIENT_SECRET",
+          "AUTH0_CALLBACK_URI",
+          "AUTH0_POST_LOGOUT_URI",
+          "STAFF_APP_ORIGIN",
+          "STAFF_RUNTIME_DATABASE_URL"
+        ],
+        "webFlagName": "VITE_STAFF_AUTH_ENABLED",
+        "actualValuesRecorded": false
+      },
+      "testIdentityPolicy": {
+        "identity": "Synthetic development-only Auth0 staff identity; no real production employee required",
+        "mapping": "Exact verified issuer + subject -> existing ProjectX AuthIdentity (AuthenticatedIdentity) -> User",
+        "controlledAccess": [
+          "OrganizationMembership",
+          "VenueAccess"
+        ],
+        "emailOnlyAuthoritativeLinking": false
+      },
+      "environmentBlocker": {
+        "id": "CORE-AUTH-02-ENV-001",
+        "status": "BLOCKED",
+        "ownerSelectionStatus": "RESOLVED",
+        "provisioningStatus": "OUTSTANDING",
+        "resolved": [
+          "Hosting platform selection",
+          "Region selection rule",
+          "Hostname policy",
+          "Development tier policy",
+          "Auth0 development environment policy"
+        ],
+        "outstanding": [
+          "Actual Render resources",
+          "Actual region availability",
+          "Actual pricing/tier availability",
+          "Actual Auth0 development tenant/application",
+          "HTTPS endpoint",
+          "PostgreSQL target",
+          "Restricted runtime role",
+          "Secret injection",
+          "Synthetic identity",
+          "Sanitized controlled logs/evidence"
+        ]
+      },
+      "affectedRoadmapTasks": [
+        "CORE-AUTH-02",
+        "SETTINGS-CORE-01"
+      ],
+      "priorityPart": 2,
+      "architectureChange": false,
+      "productionDeploymentApproval": false,
+      "stagingDeploymentApproval": false,
+      "newReferenceEvidence": false,
+      "parityClaim": false,
+      "specificationFile": "docs/security/staff-access-integration.md",
+      "verificationFile": "docs/security/staff-session-verification.md",
+      "notes": "Development target policy specializes existing approved architecture and D004; no new ADR or production approval. No resources provisioned or secrets recorded here. CORE-AUTH-02 remains IMPLEMENTED; controlled provider verification NEEDS TESTING. Provision in a separate task, then resume the existing real-provider matrix, not more authentication code."
     }
   ],
   "unresolvedQuestions": [
@@ -1765,7 +1938,8 @@
     "CORE-AUTH-D001",
     "CORE-AUTH-D002",
     "CORE-AUTH-D003",
-    "CORE-AUTH-D004"
+    "CORE-AUTH-D004",
+    "CORE-AUTH-D005"
   ],
   "projectDocumentGap": "decisions.json was absent before ARCH-001; created in the previous checkpoint. Owner approvals and corresponding ADRs are now recorded.",
   "evidenceLabels": [
