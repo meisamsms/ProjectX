@@ -1500,6 +1500,172 @@
       "newReferenceEvidence": false,
       "parityClaim": false,
       "nextExactTask": "CORE-AUTH-02-DEPLOY-002-FIX-001 — Correct nginx proxy buffer configuration and restore gateway startup"
+    },
+    {
+      "id": "CHK-066",
+      "taskId": "CORE-AUTH-02-DEPLOY-002-FIX-001",
+      "date": "2026-10-06",
+      "status": "BLOCKED",
+      "baseCommit": "c1b854ff47e31dbc310dc00e7cc3813300a47752",
+      "fixCommit": "3f228a17af42269801b05966350d1809ba4381ae",
+      "remoteBase": "75da5c2adb9a99049945d2df2401537d9e92e675",
+      "scope": "Only nginx proxy buffer relationship and four evidence documents; no second functional correction, application/test/migration/package edits, system changes, provisioning or push",
+      "result": "Buffer correction IMPLEMENTED; image build PASS; actual nginx configuration check FAIL on read-only auxiliary temp path; DEPLOY-002 IMPLEMENTED / VERIFICATION INCOMPLETE",
+      "bufferBefore": {
+        "proxy_buffer_size": "16k",
+        "proxy_buffers": "ABSENT — default not silently inferred",
+        "proxy_busy_buffers_size": "ABSENT — default not silently inferred",
+        "proxy_max_temp_file_size": "ABSENT",
+        "proxy_temp_file_write_size": "ABSENT"
+      },
+      "bufferAfter": {
+        "proxy_buffer_size": "16k",
+        "proxy_buffers": "8 16k",
+        "proxy_busy_buffers_size": "32k",
+        "proxy_max_temp_file_size": "ABSENT",
+        "proxy_temp_file_write_size": "ABSENT"
+      },
+      "findings": [
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F020",
+          "classification": "CONFIRMED",
+          "finding": "Exact preferred buffer correction changes only two directives; first-response/header capacity remains16KiB. Historical CHK-065 failure unchanged"
+        },
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F021",
+          "classification": "CONFIRMED",
+          "finding": "Same recorded pinned Node/nginx base digests resolved; rebuild PASS at local image sha256:c5096edf599e84db5de65c1781b1e18212062a0754fa96eb21e060918201d971"
+        },
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F022",
+          "classification": "CONFIRMED",
+          "finding": "Actual nginx -t reports configuration syntax is ok, then mkdir() \"/var/cache/nginx/fastcgi_temp\" failed (30: Read-only file system); configuration file test failed. Overall syntax/configuration gate FAIL; no second speculative change"
+        },
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F023",
+          "classification": "NEEDS TESTING",
+          "finding": "Harness inadvertently launched before successful syntax gate. One run:14 setup failures,0 PASS; shared waitForPort reports local gateway did not listen. No individual GW body executed; not14 independent behavior defects. Disposable containers cleaned; no rerun"
+        }
+      ],
+      "commands": [
+        {
+          "command": "docker build -f deploy/gateway/Dockerfile -t projectx-dev-gateway:local .",
+          "result": "PASS — unchanged pinned references; public VITE_STAFF_AUTH_ENABLED warning is not evidence of a credential leak"
+        },
+        {
+          "command": "Actual --read-only container, /tmp tmpfs, unchanged start.sh; nginx -t -c /tmp/projectx-gateway/nginx.conf",
+          "result": "FAIL — syntax is ok, then mkdir() \"/var/cache/nginx/fastcgi_temp\" failed (30: Read-only file system)"
+        },
+        {
+          "command": "node --test deploy/gateway/gateway.test.mjs",
+          "result": "FAIL — premature launch contrary to syntax-first condition;14 setup failures,0 PASS; GW-01–12 bodies NOT EXECUTED; no rerun"
+        },
+        {
+          "command": "docker ps -a --format '{{.Names}} {{.Status}}'",
+          "result": "PASS — no containers remain after harness cleanup"
+        },
+        {
+          "command": "pnpm map:check; git diff --check; documentation preservation audit",
+          "result": "PASS — project-map consistency, whitespace and preservation checked before documentation commit"
+        }
+      ],
+      "gatewayChecks": [
+        {
+          "id": "GW-01",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared startup failure"
+        },
+        {
+          "id": "GW-02",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared startup failure"
+        },
+        {
+          "id": "GW-03",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared startup failure"
+        },
+        {
+          "id": "GW-04",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared startup failure"
+        },
+        {
+          "id": "GW-05",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared startup failure"
+        },
+        {
+          "id": "GW-06",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared startup failure"
+        },
+        {
+          "id": "GW-07",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared startup failure"
+        },
+        {
+          "id": "GW-08",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared startup failure"
+        },
+        {
+          "id": "GW-09",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared startup failure"
+        },
+        {
+          "id": "GW-10",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared startup failure"
+        },
+        {
+          "id": "GW-11",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared startup failure"
+        },
+        {
+          "id": "GW-12",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared startup failure"
+        }
+      ],
+      "deferredVerification": {
+        "imageSecretReview": "NOT RUN after failed configuration gate; no complete filesystem/layer claim",
+        "apiBuild": "NOT RUN; entrypoint source unchanged, current runtime proof NOT EXECUTED",
+        "dbCurrent": "NOT RUN",
+        "dbParent": "NOT RUN",
+        "dbClassification": "UNDETERMINED — no controlled current/base comparison",
+        "searchPath": "INFERRED only; CHK-064207/210 historical failure unchanged, not called flaky or waived",
+        "postgresql": "NOT RUN this task; historical CHK-06416.15 only",
+        "regressions": "format/lint/typecheck/contract/test:auth/verify/verify:db NOT RUN after stop; map check only validates documentation"
+      },
+      "preservedState": {
+        "deploy002": "IMPLEMENTED / VERIFICATION INCOMPLETE",
+        "parent": "CORE-AUTH-02 IMPLEMENTED",
+        "environment": "BLOCKED BY DEPLOYMENT TOPOLOGY",
+        "provider": "NEEDS TESTING",
+        "environmentReady": false,
+        "decisions": "D004/D005 APPROVED unchanged",
+        "reference": "All classifications and U-001/U-002/U-003 unchanged; no new SevenRooms evidence or parity claim"
+      },
+      "filesModified": [
+        "deploy/gateway/nginx.conf.template",
+        "docs/project-map/roadmap.json",
+        "docs/project-map/verification.json",
+        "docs/project-map/handoff.md",
+        "docs/security/staff-session-verification.md"
+      ],
+      "noApplicationChanges": true,
+      "noTestChanges": true,
+      "noMigrations": true,
+      "noResources": true,
+      "noSystemChangesDuringVerification": true,
+      "noPush": true,
+      "newReferenceEvidence": false,
+      "parityClaim": false,
+      "nextExactTask": "CORE-AUTH-02-DEPLOY-002-FIX-002 — Correct nginx auxiliary temp paths for read-only runtime"
     }
   ],
   "unresolvedQuestions": [

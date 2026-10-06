@@ -5,6 +5,53 @@ CORE-AUTH-D004. Base 84ed2938d7d1fa6155e744a50ef3d6aebe6f978c.
 Parent task IMPLEMENTED; controlled Auth0/production assurance remains NEEDS TESTING.
 No SevenRooms evidence or parity claims.
 
+## Buffer correction and new startup blocker — CHK-066 / DEPLOY-002-FIX-001
+
+2026-10-06. Clean starting HEAD `c1b854ff47e31dbc310dc00e7cc3813300a47752`,
+parent `7bf65b39ed51eb7d39053138b5b1a1328b0c3e21`, fetched remote/base
+`75da5c2adb9a99049945d2df2401537d9e92e675`. Local functional child
+`3f228a17af42269801b05966350d1809ba4381ae` changes only two buffer directives.
+Before: `proxy_buffer_size 16k`; `proxy_buffers`, `proxy_busy_buffers_size`,
+`proxy_max_temp_file_size` and `proxy_temp_file_write_size` absent (defaults
+not silently inferred). After: header buffer16k, `proxy_buffers 8 16k`,
+`proxy_busy_buffers_size 32k`; both temp-file sizing directives remain absent.
+No routing, Host, cookie, cache, logging, application, test or migration edits.
+
+**CONFIRMED: image rebuild PASS, actual nginx configuration check FAIL.** Both
+unchanged pinned base references resolved; local image digest
+`sha256:c5096edf599e84db5de65c1781b1e18212062a0754fa96eb21e060918201d971`.
+Actual unchanged entrypoint with read-only root and writable `/tmp` tmpfs generated
+the configuration; direct `nginx -t` reported:
+
+```text
+nginx: the configuration file /tmp/projectx-gateway/nginx.conf syntax is ok
+mkdir() "/var/cache/nginx/fastcgi_temp" failed (30: Read-only file system)
+nginx: configuration file /tmp/projectx-gateway/nginx.conf test failed
+```
+
+Parsing success is not an overall gate PASS. No second speculative configuration
+change was made. The harness was mistakenly launched before the syntax gate
+passed; this procedural deviation is recorded, not hidden. Its single run exited1:
+14 shared-setup failures,0 PASS, `Local gateway did not listen`. GW-01–GW-12
+test bodies **NOT EXECUTED**, not independently failed behavior assertions.
+Disposable containers were cleaned; `docker ps -a` returned empty. No rerun.
+
+Final image filesystem/layer secret review, API build/entrypoint runtime proof,
+database current/base comparison and regression gates remain **NEEDS TESTING**,
+not executed after the failed first gate. CHK-064 PostgreSQL16.15 207/210 failure
+and **INFERRED** search_path hypothesis are unchanged; no A/B/C/D classification,
+flakiness claim or verify:db waiver. Documentation map/whitespace/preservation
+checks PASS only; they do not verify gateway or provider behavior.
+
+DEPLOY-002 **IMPLEMENTED / VERIFICATION INCOMPLETE**; CORE-AUTH-02 IMPLEMENTED;
+ENV-001 BLOCKED BY DEPLOYMENT TOPOLOGY; provider NEEDS TESTING; readiness NO.
+Next exact prerequisite: **CORE-AUTH-02-DEPLOY-002-FIX-002 — Correct nginx
+auxiliary temp paths for read-only runtime**, requiring separate bounded
+authorization. Do not change Docker/runtime protections to bypass the failure.
+No resources, system changes, credentials or push. D004/D005, all VERIFIED tasks,
+reference classifications and U-001/U-002/U-003 unchanged. CHK-065 below remains
+historical evidence, including its original buffer failure.
+
 ## Local gateway verification attempt — CHK-065 / DEPLOY-002-VERIFY-001
 
 2026-10-06; exact clean local implementation
