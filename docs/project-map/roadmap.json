@@ -1949,7 +1949,7 @@
         "dependency": "Provisioned Render/Auth0 DEVELOPMENT environment under APPROVED CORE-AUTH-D005, canonical HTTPS endpoint, synthetic staff identity and restricted PostgreSQL runtime",
         "reason": "BLOCKED BY DEPLOYMENT TOPOLOGY: the existing separate API/Vite runtimes lack a reviewed canonical same-origin web + /api/v1 deployment gateway. D005 owner selections remain resolved. No purchases or provisioning; see CORE-AUTH-02-ENV-002 / CHK-062. Resolve the narrow deployment prerequisite before actual environment setup.",
         "affectedModules": ["CORE-AUTH-02", "SETTINGS-CORE-01", "RESERVATIONS-CORE-01"],
-        "requiredPredecessor": "CORE-AUTH-02-DEPLOY-001 — Specify and verify the same-origin Render gateway prerequisite",
+        "requiredPredecessor": "CORE-AUTH-02-DEPLOY-002 — Implement and locally verify the approved development same-origin gateway",
         "evidenceId": "CHK-060",
         "ownerDecisionRequired": false,
         "status": "BLOCKED",
@@ -1975,7 +1975,7 @@
           "Sanitized controlled logs/evidence"
         ],
         "approvalEvidenceId": "CHK-061",
-        "currentEvidenceId": "CHK-062",
+        "currentEvidenceId": "CHK-063",
         "environmentStatus": "BLOCKED BY DEPLOYMENT TOPOLOGY",
         "engineeringDecisionRequired": true,
         "deploymentTopology": {
@@ -2063,13 +2063,115 @@
           "resourcesCreated": false,
           "purchasesMade": false,
           "secretValuesRecorded": false
+        },
+        "deploymentReview": {
+          "id": "CORE-AUTH-02-DEPLOY-001",
+          "status": "DOCUMENTED",
+          "classification": "PROJECTX DEPLOYMENT ENGINEERING REVIEW",
+          "evidenceId": "CHK-063",
+          "recommendation": "RECOMMEND A",
+          "implementationStatus": "NOT_IMPLEMENTED",
+          "historicalEvidenceBoundary": "ENV-002 retains the original blocked DEPLOY-001 proposal as historical evidence; this deploymentReview records the current DOCUMENTED review, not a verified gateway",
+          "specificationFile": "docs/security/staff-session-verification.md",
+          "candidateC": {
+            "result": "NOT YET PROVEN",
+            "publicCapability": "CONFIRMED PUBLIC RENDER CAPABILITY — full publicly accessible rewrite destinations and official Redwood static frontend -> API service URL example",
+            "criticalBoundaryStatus": "UNKNOWN / NEEDS TESTING — methods/body/query/custom headers/request cookies/multiple Set-Cookie/redirects/status/no-store/canonical Host/forwarded-header stripping/size/timeouts/edge cache/API fallthrough and secret-safe logging not established for this rewrite contract",
+            "referenceEvidence": "Current https://render.com/docs/redirects-rewrites and https://render.com/docs/deploy-redwood; no live proof or universal Render incompatibility claim"
+          },
+          "candidateA": {
+            "classification": "INFERRED — recommended specification; actual configuration and platform behavior NEEDS TESTING",
+            "topology": "One public nginx Docker Web Service containing web dist; existing API in a same-workspace/same-region paid Private Service; managed PostgreSQL 16 later under ENV-001. No third web service or SSR",
+            "apiExposure": "A1 private API preferred; A2 public API not selected, operational obscurity is not an access control, basic paid plan lacks documented public service IP allowlist",
+            "host": "Gateway rejects unexpected canonical authority, sends configured constant canonical Host, removes X-Forwarded-Host/Forwarded/client IP forwarding, sets trusted HTTPS metadata only under verified Render TLS ingress; Origin/Referer untouched; current auth guard unchanged",
+            "securityContract": "Reserved API precedence; complete original path/query/method/body; required headers and Cookie unchanged; separate Set-Cookie preserved, no cookie/redirect rewriting; no cache/SPA fallback/error interception/retries; safe logging and explicit bounds. Detailed normative contract and future GW-01–GW-12 matrix in specificationFile",
+            "runtimeEvidence": "Build/start commands derived from package manifests and tsconfig; no existing production start script. Future Blueprint supplies node apps/api/dist/main.js from repo root; no application/package edits proposed; Linux deployment/startup and dependency closure NEEDS TESTING",
+            "futureFiles": [
+              "render.yaml",
+              ".dockerignore",
+              "deploy/gateway/Dockerfile",
+              "deploy/gateway/nginx.conf.template",
+              "deploy/gateway/start.sh",
+              "deploy/gateway/gateway.test.mjs"
+            ],
+            "localProof": "NOT RUN — no nginx/Caddy/Docker command available; no substitute proxy proof, install or disposable artifact created"
+          },
+          "cost": {
+            "classification": "CONFIRMED public list prices; INFERRED arithmetic scenarios; actual smallest WORKABLE total UNKNOWN",
+            "servicePlan": "0.5c-512mb / legacy starter: 7 USD/month per public/private service",
+            "databasePlan": "0.1c-256mb: 6 USD/month compute baseline",
+            "candidateCComputeUsdPerMonth": 13,
+            "candidateAComputeUsdPerMonth": 20,
+            "incrementalGatewayComputeUsdPerMonth": 7,
+            "limitations": "Excludes workspace/storage/usage/tax/Auth0 charges; no account quote, tier/load or version availability verified; build/runtime suitability NEEDS TESTING",
+            "purchaseGate": "Separate approval before material escalation, including added gateway service where material; no purchase or budget amendment here"
+          },
+          "outstandingGates": [
+            "Separate authorization of deployment-only implementation; recommendation is not owner approval",
+            "Pinned images, local nginx behavior, Linux API startup/dependency closure and dynamic private DNS",
+            "Actual account region/tier/cost quote and PostgreSQL 16 availability",
+            "Render ingress canonical Host/TLS/forwarding, edge-cache bypass and platform log/query redaction before any real callback",
+            "Restricted runtime role/migrations/database TLS/secrets/identity and complete real-provider matrix remain ENV-001/CORE-AUTH-02 gates"
+          ],
+          "nextTaskProposal": {
+            "id": "CORE-AUTH-02-DEPLOY-002",
+            "name": "Implement and locally verify the approved development same-origin gateway",
+            "status": "PLANNED",
+            "priorityPart": 2,
+            "coreWorkflowAdvanced": "Safe staff-provider deployment foundation before SETTINGS-CORE-01 and RESERVATIONS-CORE-01 staff book/check-in/seating",
+            "dependencies": [
+              {
+                "taskId": "CORE-AUTH-01",
+                "status": "VERIFIED"
+              },
+              {
+                "taskId": "PEOPLE-CORE-01",
+                "status": "VERIFIED"
+              },
+              {
+                "reviewId": "CORE-AUTH-02-DEPLOY-001",
+                "status": "DOCUMENTED"
+              },
+              {
+                "decisionId": "CORE-AUTH-D004",
+                "status": "APPROVED"
+              },
+              {
+                "decisionId": "CORE-AUTH-D005",
+                "status": "APPROVED"
+              }
+            ],
+            "whyRequiredNow": "Existing entrypoints cannot expose approved same-origin staff authentication; an explicit tested gateway must precede ENV-001",
+            "scope": "Six listed future deployment/configuration/local-harness files only, existing web/API builds, GW-01–GW-12 local nginx/Host/cookie/cache/log proof. No live provisioning or auth logic changes",
+            "excludedScope": "Render/Auth0 purchases/provisioning, databases/migrations, app/auth/web-client semantics, existing tests/contracts/packages, production/staging, Settings/reservations/Export",
+            "acceptanceCriteria": [
+              "Actual nginx image local tests satisfy every normative routing/header/cookie/cache/log requirement",
+              "Existing API builds/starts unchanged; fail closed on invalid config, no API secrets in web image or logs",
+              "No deployment/Blueprint sync/resource mutation; environment remains BLOCKED and provider NEEDS TESTING",
+              "All historical verified/reference/decision records preserved; existing regression gates pass"
+            ],
+            "verificationCommands": [
+              "pnpm map:check",
+              "git diff --check",
+              "node --test deploy/gateway/gateway.test.mjs — FUTURE file, not present/executed in this review",
+              "docker build -f deploy/gateway/Dockerfile -t projectx-dev-gateway:local . — FUTURE Dockerfile, not executed",
+              "pnpm test:auth",
+              "pnpm verify",
+              "pnpm verify:db — only existing disposable PostgreSQL 16 test authority"
+            ],
+            "regressionChecks": [
+              "Unchanged staff Host/same-origin/CSRF/no-store/fail-closed policy",
+              "No fake privileged assurance; prior People/RLS/tenant and web/browser regressions retained"
+            ],
+            "executionGate": "Requires separate explicit owner implementation authorization and publication approval; no automatic start"
+          }
         }
       },
       "ownerPolicyDecisionId": "CORE-AUTH-D004",
       "developmentDeploymentDecisionId": "CORE-AUTH-D005",
       "readinessEvidence": "CHK-058 owner-decision documentation only. Published CORE-AUTH-01 CI run 37253348486 attempt 2/job 111586842967 green at 95d4d1b1cc9f8a6dc69a1d8a3edea38df9e00923; original failed attempt preserved. Not production auth, new implementation or core readiness proof.",
       "coreWorkflowAdvanced": "Secure authenticated staff access for reservation-required Venue settings and future reservation book/check-in/seating.",
-      "remainingWork": "CORE-AUTH-02-ENV-001 BLOCKED BY DEPLOYMENT TOPOLOGY (ENV-002 / CHK-062). A reviewed same-origin gateway/build/start configuration is missing; separate explicit owner/engineering corrective authorization required. Do not replace same-origin guards with CORS or invent an unreviewed deployment architecture. No Render/Auth0/database resources or secret injection created. D004/D005 remain approved; actual provisioning, restricted role/migrations/TLS, synthetic identity and real-provider verification remain outstanding. After the gateway prerequisite, resume approved ENV-001 provisioning; only when ready resume the existing provider matrix. Parent IMPLEMENTED, provider NEEDS TESTING; Settings/reservations/Export not started.",
+      "remainingWork": "CHK-063 documents DEPLOY-001 engineering review: RECOMMEND A, public nginx/static gateway + same-region private existing API; Candidate C URL-rewrite capability CONFIRMED but ProjectX auth behavior NOT YET PROVEN. No gateway implemented, no resources or secrets configured. DEPLOY-002 requires separate bounded implementation approval and local verification; ENV-001 remains BLOCKED BY DEPLOYMENT TOPOLOGY, CORE-AUTH-02 IMPLEMENTED, provider NEEDS TESTING. Then resume ENV-001 and only when ready the existing real-provider matrix. Actual cost/log/edge/role/TLS gates remain; Settings/reservations/Export unstarted.",
       "specificationFile": "docs/security/staff-access-integration.md",
       "requiredOwnerDecisionIds": [
         "CORE-AUTH-D001",
@@ -2154,7 +2256,7 @@
         "developmentDeploymentDecisionId": "CORE-AUTH-D005",
         "ownerSelectionStatus": "RESOLVED",
         "provisioningStatus": "OUTSTANDING",
-        "currentEnvironmentEvidenceId": "CHK-062",
+        "currentEnvironmentEvidenceId": "CHK-063",
         "deploymentTopologyFindingId": "CORE-AUTH-02-ENV-002"
       }
     },
@@ -2566,7 +2668,7 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "CORE-AUTH-02-DEPLOY-001 — Specify and verify the same-origin Render gateway prerequisite",
+  "nextExactTask": "CORE-AUTH-02-DEPLOY-002 — Implement and locally verify the approved development same-origin gateway",
   "deliveryPriority": {
     "decisionId": "PRIORITY-D001",
     "primaryTarget": "PART 1 — CORE ONLINE RESERVATION SYSTEM",

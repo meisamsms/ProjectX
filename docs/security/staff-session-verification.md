@@ -5,6 +5,326 @@ CORE-AUTH-D004. Base 84ed2938d7d1fa6155e744a50ef3d6aebe6f978c.
 Parent task IMPLEMENTED; controlled Auth0/production assurance remains NEEDS TESTING.
 No SevenRooms evidence or parity claims.
 
+## Gateway engineering review — CHK-063 / CORE-AUTH-02-DEPLOY-001
+
+2026-10-05; exact clean base
+`dd30e475b60ee6154e778b51bc221b8f0328d6b3`, branch people-03-accounts-read.
+**RECOMMEND A.** Review status DOCUMENTED; this is a recommendation/specification,
+not an owner-approved architecture change, gateway implementation or live proof.
+Historical CHK-059–062 / ENV-002 findings below remain unchanged. The existing
+repository absence findings are reconfirmed, not reversed.
+
+TASK ID: CORE-AUTH-02-DEPLOY-001. PRIORITY PART: 2 REQUIRED FOUNDATION.
+CORE WORKFLOW ADVANCED: safe real-provider staff access before SETTINGS-CORE-01
+and future RESERVATIONS-CORE-01 book/check-in/seating. Dependencies CORE-AUTH-01
+and PEOPLE-CORE-01 VERIFIED; D004/D005 APPROVED. DECISION: PROCEED review only.
+Owned scope: native-rewrite evidence, minimal gateway contract, future files,
+transport tests and cost comparison. Excluded: implementation, provisioning,
+purchases, application/auth/test/migration/contract/package changes, Settings,
+reservation domain and Export. Acceptance: assess C before A, specify every
+critical boundary and unknown, preserve history and pass documentation checks.
+No new reference evidence or parity claim; U-001/U-002/U-003 unchanged.
+
+### Repository and public evidence
+
+CONFIRMED repository evidence: API app/main serve existing JSON API and health,
+not web assets. Vite has no API proxy; staffEndpoint/staffFetch reject another
+origin and fetch with same-origin credentials. No tracked gateway artifact.
+The staff hook requires exact configured Host and rejects **any** X-Forwarded-Host.
+All proposed handling below preserves those application checks.
+
+CONFIRMED PUBLIC RENDER CAPABILITY: the
+[rewrite reference](https://render.com/docs/redirects-rewrites) permits a full
+public URL destination, retains the browser-visible URL and documents wildcard
+routing. The official [Redwood guide](https://render.com/docs/deploy-redwood)
+specifically instructs a static frontend rewrite to an API service URL. This
+adds precise public evidence; it does not erase CHK-062's missing-repository-seam
+finding or establish safe authenticated proxy semantics. No Redwood code/setup
+command, reference demo, account or example resource was used.
+
+The [hybrid guide](https://render.com/tutorials/web-service-vs-static-site/the-hybrid-pattern)
+also describes separate public browser/API origins. It is one deployment pattern,
+not proof that every Render static frontend must use cross-origin requests.
+
+### Candidate C — native static-site rewrite, assessed first
+
+Potential routing: canonical Static Site /api/v1/* rewrite to public API URL,
+before /* -> /index.html. This cannot target a Private Service: static sites
+are outside [Render private networking](https://render.com/docs/private-network).
+The API would need a public service. Documentation of routing is not a guarantee
+of the following transport/security details for this particular rewrite.
+
+| Required behavior | Classification / finding for Candidate C |
+|---|---|
+| GET, POST, PUT, PATCH, DELETE, OPTIONS (HEAD also tested later) | UNKNOWN — rewrite content routing documented, no complete method/auth contract established |
+| Request body forwarding | UNKNOWN |
+| Complete query preservation, duplicates and encoding | UNKNOWN |
+| Content-Type, X-ProjectX-CSRF, X-ProjectX-Context-Version | UNKNOWN |
+| Request Cookie forwarding | UNKNOWN |
+| Upstream Set-Cookie forwarding | UNKNOWN |
+| Multiple distinct Set-Cookie fields | UNKNOWN |
+| Redirect status and Location preservation | UNKNOWN — rewrite's own no-browser-redirect property is not upstream-redirect proof |
+| API response status preservation | UNKNOWN |
+| Cache-Control / Pragma / no-store | NEEDS TESTING — static CDN content behavior is not authenticated rewrite cache proof |
+| Sensitive callback query handling | NEEDS TESTING — forwarding and log exclusion must both hold |
+| Host seen by upstream | UNKNOWN — must match current fixed canonical Host guard |
+| X-Forwarded-Host | UNKNOWN — any forwarded value would fail the current guard |
+| X-Forwarded-Proto | UNKNOWN |
+| Client-supplied forwarding-header stripping/overwrite | UNKNOWN |
+| Request/response/header size constraints | UNKNOWN for rewrite transport |
+| Timeout behavior | UNKNOWN for rewrite transport |
+| Rewrite edge caching | UNKNOWN; static sites are CDN-backed, not proof of rewrite cache safety |
+| No API/auth fallthrough to index.html | NEEDS TESTING — ordering/resource matching documented; failed upstream and existing-file cases unproven |
+| Query/cookie/Authorization/CSRF logging | NEEDS TESTING — no static-site logs in Render dashboard is not proof of no platform capture or upstream logs |
+
+Candidate C = **NOT YET PROVEN**. Not recommended without every critical boundary
+being proven. Do not infer failure of every method, unsafe forwarding or Render
+incompatibility from missing documentation. No real rewrite test was attempted.
+
+### Candidate A1 — minimal explicit gateway recommendation
+
+INFERRED specification, with implementation/deployment behavior NEEDS TESTING:
+
+Browser HTTPS -> Render public nginx Gateway Web Service
+-> web assets/SPA from its immutable web-build image;
+reserved API requests -> existing Node/Fastify Private Service
+-> separately provisioned restricted-runtime PostgreSQL 16 later under ENV-001.
+
+One gateway plus one API service: no extra web service, SSR, Node business wrapper,
+new application framework, generic auth middleware or public API URL in the browser.
+The gateway contains no business logic and no Auth0/database credentials.
+
+[Private Services](https://render.com/docs/private-services) have no public
+onrender.com endpoint. The gateway, API and database must share one compatible
+region/workspace; private networking is not a cross-region link or a per-service
+authorization system. Other same-workspace services are inside this network trust
+boundary; do not claim network isolation from them without separate controls.
+Use documented Blueprint fromService hostport, not a guessed/internal hostname,
+fixed IP or client-selected upstream. Private DNS changes across deploys require
+bounded resolver/reload tests; never fall back to a public API if resolution fails.
+
+A2 (public gateway + public API) is not selected: public obscurity/Host checking
+alone is not a gateway-only access control. Blueprint public service IP allowlists
+require Scale/Enterprise per [reference](https://render.com/docs/blueprint-spec),
+not the minimum development tier. Do not buy premium networking to simulate A1.
+
+### Normative gateway contract — future implementation, not installed config
+
+All requirements in this section are INFERRED deployment requirements; executable
+proof and actual Render behavior remain NEEDS TESTING.
+
+1. **Canonical authority and TLS.** One exact configured Render development
+   hostname, no wildcard/alternate authority, no request-derived upstream/origin.
+   For application routes validate incoming Host/HTTP2 authority before setting
+   upstream Host to the configured canonical hostname (no private port/host).
+   Reject missing/foreign/duplicate/ambiguous Host and absolute-form spoofing,
+   including foreign Host with a forged canonical forwarding header.
+   Render terminates HTTPS; [TLS docs](https://render.com/docs/tls) document HTTP
+   redirects to HTTPS. Verify this ingress behavior before real cookies/callbacks.
+   Do not treat nginx's internal HTTP scheme as the public scheme or trust
+   arbitrary client X-Forwarded-Proto. On this fixed, verified HTTPS ingress send
+   X-Forwarded-Proto=https; remove X-Forwarded-Host and Forwarded completely, plus
+   client X-Forwarded-For/X-Real-IP/forwarded port/original-host metadata.
+   No IP-based authorization is introduced. Current Fastify trust/Host guard stays
+   unchanged. Strip-and-ignore a spoofed forwarded host is safe only after the
+   independently accepted Host; it can never establish authority.
+   Exactly GET/HEAD /health may accept the platform's health-check Host, exposing
+   only upstream /health; this exception must never apply to /api or SPA routing.
+2. **API precedence.** Reserve exact /api and all /api/ paths ahead of file/SPA
+   matching, including /api/v1 and /api/v1/*. No trailing-slash redirect or prefix
+   removal. Unknown API path/version remains API 404, never index.html.
+   Explicitly cover /api/v1/staff-auth/login, callback, session, logout and context.
+   No error_page-to-SPA, proxy_intercept_errors, X-Accel-Redirect processing or
+   extension-regex override may turn API/auth errors into web content.
+   Reject ambiguous path encodings/normalization (dot segments, encoded separators,
+   duplicate slashes, case variants) before they can escape the reserved namespace;
+   apply this to the path only, not sensitive query encoding. Test raw requests.
+3. **Transparent transport.** nginx proxy_pass to a fixed private upstream with
+   no URI suffix/path rewrite; preserve original path and complete query (including
+   duplicate keys/encoding for the API's own rejection), original methods/body,
+   Content-Type, Cookie, Origin, Referer, X-ProjectX-CSRF and
+   X-ProjectX-Context-Version. Do not override method/body, synthesize headers,
+   enable permissive CORS, fake same-origin or drop valid CSRF/context values.
+   Forward normal headers except explicitly unsafe/hop-by-hop forwarding values.
+   Preserve upstream statuses (including 400/401/403/404/409/500), redirect Location,
+   Referrer-Policy and other end-to-end response headers; proxy_redirect off.
+   No automatic upstream retries, including GET login/callback: these consume
+   one-use protocol state. proxy_next_upstream off; upstream failure is a safe
+   non-cacheable 502/504, no replay, fake success or partial-readiness claim.
+4. **Cookies.** Do not introduce Domain, change Path/flags/values, coalesce multiple
+   Set-Cookie fields, hide them, or rewrite cookie domain/path. Preserve separate
+   callback login-cookie removal + session-cookie creation and logout Max-Age=0.
+   Existing __Host cookies remain Secure, HttpOnly, SameSite=Lax, host-only, Path=/.
+   Nothing in the browser targets the private API origin.
+5. **Cache isolation.** Disable nginx proxy caching and Render gateway edge caching
+   for this controlled milestone; no accidental service-worker/auth caching.
+   Preserve upstream Cache-Control/Pragma; gateway-generated API errors also use
+   no-store. Ensure CDN-Cache-Control cannot override this with a cacheable policy:
+   suppress any conflicting upstream CDN header and emit no-store for API routes,
+   without weakening the application's no-store header. No stale/cache fallback,
+   request collapsing for API responses or forced caching of Set-Cookie responses.
+   Local hashed assets may use immutable caching; index.html revalidates.
+   Unknown assets return 404, not index.html. SPA fallback only for web GET/HEAD,
+   never mutations or API. [Render edge caching](https://render.com/docs/web-service-caching)
+   documents Cache-Control overrides and CDN-Cache-Control precedence; actual
+   disabled-cache/account setting and two-client authenticated isolation still
+   require live verification.
+6. **Logging and callback secrecy.** Disable default combined access logs; permitted
+   gateway metadata is generated request ID, numeric status, bytes and duration,
+   without request line/path/query, Referer, IP/User-Agent, headers/body, upstream
+   body, or cookie/Location values. Disable URI-bearing runtime error/debug logs
+   (including nginx error output to /dev/null for the controlled canary stage);
+   losing verbose diagnostics is explicit, not a durable-audit solution.
+   Startup only emits fixed non-secret validation errors; never dump env or request
+   config. Preserve existing API request-URL logging suppression/redaction.
+   Callback queries pass untouched but never enter these gateway logs.
+   [Render logging](https://render.com/docs/logging) documents Pro+ public HTTP
+   request logs with requested URLs, no private-network request logs, and no
+   static-site dashboard logs. nginx cannot redact an upstream platform edge log.
+   Actual workspace logging/stream/query retention and Auth0 logging safety remain
+   NEEDS TESTING: before any real login, use synthetic canaries and verify approved
+   platform log surfaces, or obtain a documented exclusion/redaction guarantee.
+   If sensitive callback values are captured and cannot be excluded, STOP ENV-001;
+   do not declare safety merely because logs are inaccessible or a Hobby view hides them.
+7. **Bounds and failures.** Proposed development transport bounds: request body
+   1 MiB (matches inspected Fastify default; no app override), four 16 KiB large
+   request-header buffers, 16 KiB response-header buffer, 5s upstream connect and
+   60s send/read inactivity timeouts; no claim these are end-to-end deadlines.
+   Malformed/oversized input rejects safely without request logging; timeouts fail
+   without retry. Disable response buffering/temp response persistence and avoid
+   request-body disk spill for bounded auth/People traffic; verify memory impact.
+   Specify proxy_http_version 1.1, proxy_request_buffering off,
+   proxy_buffering off, client_max_body_size 1m and client_body_buffer_size 1m
+   in the future configuration; verify chunked and ordinary bodies and that the
+   chosen image does not persist canaries in temporary files. Do not enable
+   X-Accel-Buffering overrides or internal X-Accel-Redirect processing.
+   Response-size/outer Render limits remain UNKNOWN until measured/documented;
+   do not invent an unlimited guarantee. Verify boundary values, two Set-Cookie
+   fields, slow/disconnected upstream and current API DTO/body-limit behavior.
+8. **Startup and health.** Non-root pinned nginx image; foreground exec with
+   SIGTERM handling, writable temporary dirs only as needed. Validate canonical
+   hostname, private hostport and numeric port against bounded syntax; substitute
+   only those non-secret template names, never the entire environment or nginx
+   runtime variables. Reject arbitrary upstream URLs/config injection. Use actual
+   Render private DNS resolver/reload behavior; no invented resolver IP.
+   /health passes through solely to the existing API /health, no SPA fallback.
+   Health reachability does not verify auth, database grants, login or the core gate.
+
+nginx primary references establish available mechanisms, not a configured result:
+[proxy module](https://nginx.org/en/docs/http/ngx_http_proxy_module.html),
+[core routing](https://nginx.org/en/docs/http/ngx_http_core_module.html),
+[logging](https://nginx.org/en/docs/http/ngx_http_log_module.html).
+Use explicit directives in the future file, not implicit defaults or blindly
+copied proxy examples. In particular, default upstream Host is not our canonical
+Host. This contract needs no auth-guard relaxation or migration/package change.
+
+### Existing builds and smallest future artifact set
+
+CONFIRMED commands derive from manifests/tsconfig, not nonexistent start scripts:
+
+- Repo-root frozen workspace install: pnpm install --frozen-lockfile.
+- Web build: pnpm --filter @projectx/web build; artifact apps/web/dist.
+  Build flag VITE_STAFF_AUTH_ENABLED=1; API base absent/default /api/v1/ or exact
+  relative /api/v1/. No auth/database secret in any VITE variable.
+- API build: pnpm --filter @projectx/api build; tsconfig rootDir src / outDir dist
+  implies apps/api/dist/main.js. From repo root use node apps/api/dist/main.js
+  as the future Render start command, NOT pnpm start (no such package script).
+  Existing .node-version=24 and packageManager pnpm@11.25.0 remain unchanged.
+  Pin/verify those tools during build, install dev build dependencies before
+  compilation, and retain API runtime modules/workspace links. API native runtime
+  is the minimal proposed choice; Linux module closure/startup NEEDS TESTING.
+  Configure HOST=0.0.0.0, explicit PORT (proposed 10000), development-only scope,
+  STAFF_AUTH_ENABLED=1 and existing secure server inputs later under ENV-001.
+  If a bootstrap script becomes necessary, record a bounded deployment dependency
+  before adding one; do not silently add app scripts or use dev/tsx-watch in deployment.
+
+Future files only — NONE created here:
+
+| Future path | Responsibility |
+|---|---|
+| render.yaml | Two DEVELOPMENT service declarations: Docker public gateway + native Node private API; one region/workspace, fixed build/start/private hostport references and manual deploy. No DB creation/migration hooks or secret values; do not apply/sync in DEPLOY-002. |
+| .dockerignore | Exclude Git, env/secret files, logs and local artifacts from build context. |
+| deploy/gateway/Dockerfile | Pinned Node24/pnpm web-build stage, then pinned unprivileged nginx; explicit input copies and web dist only in final image; no API/auth credentials or app source/runtime in final image. |
+| deploy/gateway/nginx.conf.template | Routing/Host/header/cookie/cache/log/transport contract above; no business logic. |
+| deploy/gateway/start.sh | Validate/substitute only non-secret bounded values; nginx syntax check and foreground exec, no env/config echo. |
+| deploy/gateway/gateway.test.mjs | Local disposable harness for the actual nginx image, fixed mock upstream and synthetic canaries; no app-test changes, real Auth0 or database. |
+
+These six future files include one proof harness; no Compose, extra API Dockerfile,
+SSR, new dependency/framework, migrations or generic infrastructure subsystem.
+Blueprint deployment must remain manually gated; even an unapplied Blueprint is
+not authorization to create resources. Secrets are deployment-native API-only,
+never a build ARG, gateway environment, Blueprint literal or copied env file.
+Private hostport/canonical hostname are non-secret inputs; region/cost/actual
+hostnames remain unselected. ADR-0001 separate-web/modular-backend and ADR-0004
+identity policy are preserved. Recommendation is not a silently accepted ADR.
+
+### Price comparison — public evidence, not a purchase quote
+
+CONFIRMED public baseline from [pricing](https://render.com/pricing) and
+[compute plans](https://render.com/docs/compute-plans): 0.5c-512mb / legacy Starter
+service compute USD 7/month; Postgres 0.1c-256mb compute USD 6/month.
+Static frontend has no compute plan. Smallest paid candidates only, not selections.
+
+| Candidate | INFERRED compute-only scenario / month |
+|---|---|
+| C: static site + paid public API + PostgreSQL | USD 0 + 7 + 6 = 13 |
+| A1: paid public gateway + paid private API + PostgreSQL | USD 7 + 7 + 6 = 20 |
+| Increment for explicit gateway | USD 7 |
+
+**Actual current minimum WORKABLE recurring total: UNKNOWN.** Workspace plan,
+storage/usage/egress/build overages, taxes and Auth0 charges are outside these
+compute sums; current account quote, PostgreSQL16/tier/region availability,
+memory/load/build fit and platform logging are not tested. Private API networking
+does not itself require buying premium private-link/Scale isolation. Do not use
+spin-down/free service tiers as stable-verification proof. Do not buy HA, replicas,
+autoscaling, annual commitments or extra instances. D005 remains approved; seek
+separate approval BEFORE any material increase, including this gateway increment
+if material. A recommendation does not silently expand the owner's cost authority.
+
+### Future verification / execution gate
+
+No local proxy proof was executed: nginx/Caddy/Docker commands were absent on PATH.
+No substitute handwritten proxy, downloads, installs or temporary artifacts used.
+All following GW checks are NEEDS TESTING and require the **actual pinned nginx**
+image/config, not a mocked replacement. Temporary processes/fixtures must bind
+loopback and be cleaned up; canaries are synthetic, never real auth credentials.
+
+| Future ID | Required local proof |
+|---|---|
+| GW-01 | Startup validation, nginx syntax, static index/deep links/assets, /health API upstream; missing assets 404, web mutations not SPA |
+| GW-02 | GET/HEAD/POST/PUT/PATCH/DELETE/OPTIONS method + body hash + query encoding/duplicates preserved |
+| GW-03 | Content-Type/CSRF/context/Cookie/Origin/Referer forwarded unchanged; no synthesized CORS/identity/CSRF |
+| GW-04 | Canonical/foreign/missing/duplicate Host, HTTP2 authority where supported, absolute-form spoof and forwarded-header combinations; upstream sees fixed Host, no XFH, fixed HTTPS |
+| GW-05 | Two distinct Set-Cookie headers/host-only flags, login removal+session creation, logout expiry; no Domain or coalescing |
+| GW-06 | 204/302/400/401/403/404/409/500 and Location/no-store/Pragma preserved, unknown API never SPA, edge-cache fixture assertions |
+| GW-07 | Callback query canaries preserved only to upstream; duplicates rejected by unchanged API, errors/logs/build artifacts contain no canaries |
+| GW-08 | Upstream unavailable/slow/disconnected: safe no-store 502/504, no retries/replay/SPA success |
+| GW-09 | API-like paths with extensions, encoded separators/dot/duplicate/case variants cannot escape API reservation |
+| GW-10 | Body/header/response-header boundary sizes, no secret temp-file persistence; documented timeout semantics |
+| GW-11 | Actual unchanged compiled API entrypoint/module closure with controlled dependencies; auth Host/origin/CSRF failures remain fail-closed |
+| GW-12 | Image/build-context secret exclusion, safe stdout/stderr, template injection rejection, graceful shutdown, private DNS refresh; no live sync |
+
+Future focused commands (files do not yet exist; NOT executed here):
+node --test deploy/gateway/gateway.test.mjs;
+docker build -f deploy/gateway/Dockerfile -t projectx-dev-gateway:local .;
+nginx -t inside that image. Existing regression gates after separately approved
+implementation: pnpm test:auth, pnpm verify, pnpm verify:db using only existing
+disposable PostgreSQL16 test authority. Missing Docker/test DB/tooling is reported,
+never silently replaced or treated as PASS. Full real-provider matrix is later.
+
+NEXT EXACT TASK: **CORE-AUTH-02-DEPLOY-002 — Implement and locally verify the
+approved development same-origin gateway**, PLANNED pending a separate explicit
+implementation prompt approving this bounded scope/recommendation. No automatic
+implementation or provisioning. After local proof, ENV-001 still requires actual
+approved deployment/role/TLS/cache/log evidence; only when environment ready YES
+resume the existing CORE-AUTH-02 provider matrix.
+
+CORE-AUTH-02 IMPLEMENTED; ENV-001 BLOCKED BY DEPLOYMENT TOPOLOGY; provider NEEDS
+TESTING; environment ready NO. SETTINGS-CORE-01 remains PLANNED pending VERIFIED
+CORE-AUTH-02; reservation domain and deferred PEOPLE-09/09B/10 unstarted,
+IMPL-MOD-14 IN_PROGRESS. D004/D005, accepted ADRs and prior VERIFIED/check/reference
+history unchanged. No resources, purchases, gateway configs or new auth code here.
+
 ## Provisioning stopped at topology gate — CHK-062 / CORE-AUTH-02-ENV-002
 
 2026-10-05; exact clean starting HEAD

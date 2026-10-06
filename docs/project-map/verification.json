@@ -1040,6 +1040,152 @@
       "newReferenceEvidence": false,
       "parityClaim": false,
       "nextExactTask": "CORE-AUTH-02-DEPLOY-001 — Specify and verify the same-origin Render gateway prerequisite"
+    },
+    {
+      "id": "CHK-063",
+      "taskId": "CORE-AUTH-02-DEPLOY-001",
+      "date": "2026-10-05",
+      "status": "DOCUMENTED",
+      "baseCommit": "dd30e475b60ee6154e778b51bc221b8f0328d6b3",
+      "scope": "Bounded documentation-only deployment review: Candidate C first, then Candidate A; no gateway implementation, disposable proof, live infrastructure or provider verification",
+      "recommendation": "RECOMMEND A",
+      "result": "Specification complete. Candidate C NOT YET PROVEN for ProjectX auth despite CONFIRMED native full-URL/API rewrite capability. Recommend minimal public nginx/static gateway and same-region private existing API; future local/platform proof and explicit authorization remain required",
+      "findings": [
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F001",
+          "classification": "CONFIRMED",
+          "finding": "Current API has no static serving, Vite no proxy, client rejects cross-origin with same-origin credentials; no tracked gateway; current staff guard requires exact configured Host and rejects any X-Forwarded-Host",
+          "evidence": [
+            "apps/api/src/app.ts",
+            "apps/api/src/main.ts",
+            "apps/web/vite.config.ts",
+            "apps/web/src/staff-auth/client.ts",
+            "apps/api/src/staff-auth/routes.ts"
+          ]
+        },
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F002",
+          "classification": "CONFIRMED",
+          "finding": "CONFIRMED PUBLIC RENDER CAPABILITY: full public URL rewrite destination; official Redwood static frontend rewrite to API service URL example. Refines public evidence, not the historical missing-repository-seam finding",
+          "sources": [
+            "https://render.com/docs/redirects-rewrites",
+            "https://render.com/docs/deploy-redwood"
+          ]
+        },
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F003",
+          "classification": "UNKNOWN",
+          "finding": "Candidate C all-method/body/query/header/cookie/redirect/status/Host/no-store/log/security contract not established by reviewed docs. Table of all 20 criteria, including multiple cookies, constraints and fallthrough, in staff-session-verification.md; no deployed rewrite proof"
+        },
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F004",
+          "classification": "INFERRED",
+          "finding": "Candidate A1 is the recommended minimal explicit gateway under ADR-0001/0004, not a new framework or approved architecture change. nginx contract derives from primary module docs; implementation, Linux startup, DNS and live edge behavior NEEDS TESTING",
+          "sources": [
+            "https://render.com/docs/private-services",
+            "https://render.com/docs/private-network",
+            "https://render.com/docs/web-services",
+            "https://render.com/docs/blueprint-spec",
+            "https://nginx.org/en/docs/http/ngx_http_proxy_module.html",
+            "https://nginx.org/en/docs/http/ngx_http_core_module.html",
+            "https://nginx.org/en/docs/http/ngx_http_log_module.html"
+          ]
+        },
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F005",
+          "classification": "NEEDS TESTING",
+          "finding": "Platform request-log query redaction and canonical Host/TLS/header/cache behavior are hard exposure gates. nginx controls cannot promise Render edge log safety; no real callback until proven",
+          "sources": [
+            "https://render.com/docs/logging",
+            "https://render.com/docs/tls",
+            "https://render.com/docs/web-service-caching"
+          ]
+        },
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F006",
+          "classification": "CONFIRMED",
+          "finding": "Public price baseline: 0.5c-512mb service/private compute 7 USD/month, 0.1c-256mb Postgres compute 6 USD/month. INFERRED compute-only C 13 USD/month versus A 20, delta 7. Actual minimum WORKABLE recurring total UNKNOWN; no account quote/load/billing/storage/Auth0 validation or approval of material escalation",
+          "sources": [
+            "https://render.com/pricing",
+            "https://render.com/docs/compute-plans"
+          ]
+        }
+      ],
+      "candidateCResult": "NOT YET PROVEN",
+      "candidateAResult": "SPECIFIED / RECOMMENDED; NOT IMPLEMENTED OR RENDER VERIFIED",
+      "specificationFile": "docs/security/staff-session-verification.md",
+      "plannedFutureFiles": [
+        {
+          "path": "render.yaml",
+          "responsibility": "Future DEVELOPMENT-only public Docker gateway and native Node private API declarations; same workspace/region, pinned commands, manual deployment, no database creation or migration hooks, secret references only; never sync in DEPLOY-002"
+        },
+        {
+          "path": ".dockerignore",
+          "responsibility": "Exclude Git, credentials/environment files, logs and local artifacts from gateway build context"
+        },
+        {
+          "path": "deploy/gateway/Dockerfile",
+          "responsibility": "Pinned Node 24/pnpm 11.25.0 web build stage and pinned unprivileged nginx runtime; copy only web dist to final image, never API secrets"
+        },
+        {
+          "path": "deploy/gateway/nginx.conf.template",
+          "responsibility": "Canonical Host, reserved API namespace, fixed private upstream, cookies/CSRF preservation, no caching/retries, static-only SPA fallback and safe logs"
+        },
+        {
+          "path": "deploy/gateway/start.sh",
+          "responsibility": "Fail-closed validation/substitution of only non-secret canonical hostname, private API hostport and port; nginx syntax check and foreground exec; no arbitrary shell/env expansion"
+        },
+        {
+          "path": "deploy/gateway/gateway.test.mjs",
+          "responsibility": "Future local-only Node test harness: disposable upstream/canaries, actual pinned nginx image forwarding/security/startup/log checks and cleanup; no real Auth0/database or app-test edits"
+        }
+      ],
+      "localProof": {
+        "executed": false,
+        "classification": "NEEDS TESTING",
+        "reason": "No nginx/Caddy/Docker command on current PATH. Optional proof not substituted with a different proxy; no downloads, installs or temporary artifacts"
+      },
+      "preservedState": {
+        "parent": "IMPLEMENTED",
+        "environment": "BLOCKED BY DEPLOYMENT TOPOLOGY",
+        "provider": "NEEDS TESTING",
+        "environmentReady": false,
+        "decisions": "D004/D005 APPROVED unchanged",
+        "history": "All 62 earlier check objects, 26 VERIFIED task objects, 54 unrelated task objects, ENV-002 historical topology finding, decisions/ADRs and SevenRooms classifications preserved"
+      },
+      "commands": [
+        {
+          "command": "git rev-parse HEAD; git status --short; branch check",
+          "result": "PASS — exact approved clean base"
+        },
+        {
+          "command": "Current repository/security/primary Render/nginx documentation review",
+          "result": "PASS — specification and explicit unknowns only; no executed gateway/provider proof"
+        },
+        {
+          "command": "pnpm map:check; git diff --check; JSON/DAG/history/scope/secret-content checks",
+          "result": "PASS — documentation validation, not deployed auth verification"
+        }
+      ],
+      "noApplicationChanges": true,
+      "noTestChanges": true,
+      "noMigrations": true,
+      "noContracts": true,
+      "noPackageChanges": true,
+      "noDeploymentArtifacts": true,
+      "noResources": true,
+      "noPurchases": true,
+      "noSecretValues": true,
+      "noPush": true,
+      "newReferenceEvidence": false,
+      "parityClaim": false,
+      "nextExactTask": "CORE-AUTH-02-DEPLOY-002 — Implement and locally verify the approved development same-origin gateway",
+      "filesModified": [
+        "docs/project-map/roadmap.json",
+        "docs/project-map/verification.json",
+        "docs/project-map/handoff.md",
+        "docs/security/staff-session-verification.md"
+      ]
     }
   ],
   "unresolvedQuestions": [
