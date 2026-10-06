@@ -841,6 +841,205 @@
         "docs/security/staff-access-integration.md",
         "docs/security/staff-session-verification.md"
       ]
+    },
+    {
+      "id": "CHK-062",
+      "taskId": "CORE-AUTH-02-ENV-001",
+      "status": "BLOCKED",
+      "date": "2026-10-05",
+      "baseCommit": "12eb57b2d4edbad0b7238e9df8107c686e27e4f5",
+      "verificationScope": "Provisioning prerequisite review and sanitized deployment-topology blocker; no resource creation or live Auth0 matrix",
+      "method": "Confirmed exact clean local HEAD/branch; read required security/project/config/runtime records; inspected API/web build and start entrypoints and tracked deployment artifacts. Read current official Render regions/PostgreSQL/tiers/pricing/TLS/secret/routing documentation; no account login or provisioning attempted. Named local environment presence checks only, without values.",
+      "result": "BLOCKED BY DEPLOYMENT TOPOLOGY (CORE-AUTH-02-ENV-002). Existing repository has no reviewed canonical same-origin web/API deployment seam. Stop before purchase or account mutation; narrow gateway prerequisite requires a separate corrective authorization. CORE-AUTH-02 remains IMPLEMENTED and provider NEEDS TESTING.",
+      "findingId": "CORE-AUTH-02-ENV-002",
+      "topologyFinding": {
+        "id": "CORE-AUTH-02-ENV-002",
+        "classification": "CONFIRMED — repository deployment seam missing; provider-specific solution NEEDS TESTING",
+        "status": "BLOCKED",
+        "category": "NEEDS OWNER/ENGINEERING DECISION",
+        "result": "CORE-AUTH-02-ENV-001 = BLOCKED BY DEPLOYMENT TOPOLOGY",
+        "reason": "Existing Fastify app serves health/auth/People API routes, not the Vite web build. Vite server/preview has no API proxy; staff client rejects cross-origin API URLs and sends same-origin credentials. No tracked Render/Docker/reverse-proxy deployment artifact supplies the required web + /api/v1 boundary. Adding an unreviewed gateway/server wrapper or weakening the client/Host/CORS guards is outside this provisioning task.",
+        "affectedModules": [
+          "CORE-AUTH-02",
+          "CORE-AUTH-02-ENV-001",
+          "SETTINGS-CORE-01",
+          "RESERVATIONS-CORE-01"
+        ],
+        "repositoryEvidence": [
+          "apps/api/src/app.ts",
+          "apps/api/src/main.ts",
+          "apps/api/package.json",
+          "apps/web/package.json",
+          "apps/web/vite.config.ts",
+          "apps/web/src/staff-auth/client.ts",
+          "apps/api/src/staff-auth/routes.ts",
+          "docs/architecture/ADR-0001-deployment-topology.md"
+        ],
+        "providerEvidence": [
+          {
+            "url": "https://render.com/docs/web-services",
+            "finding": "Render forwards public HTTP traffic to one port per web service; separate services have separate hostnames"
+          },
+          {
+            "url": "https://render.com/tutorials/web-service-vs-static-site/the-hybrid-pattern",
+            "finding": "Render describes its static-site/API hybrid as direct browser-to-API calls over separate public origins, not a static-site API proxy"
+          },
+          {
+            "url": "https://render.com/docs/redirects-rewrites",
+            "finding": "Redirect/rewrite syntax alone does not establish authenticated all-method proxying, canonical Host, forwarded-header stripping, Set-Cookie/no-store or secret-safe logging; do not claim safe proxy support or universal impossibility"
+          }
+        ],
+        "limitation": "No account provisioning interface or deployed gateway tested. This is not a claim that Render cannot host a suitable gateway or that every solution requires authentication application-code changes. The missing, reviewed gateway configuration/deployment artifact is the narrow prerequisite.",
+        "correctiveTaskProposal": {
+          "id": "CORE-AUTH-02-DEPLOY-001",
+          "name": "Specify and verify the same-origin Render gateway prerequisite",
+          "status": "BLOCKED",
+          "scope": "Review a minimal deployment-only gateway for the existing separate web/API architecture; define canonical routing, Host/forwarded-header boundary, cookies/CSRF/cache/log safety, build/start wiring and smallest-tier cost. Implement only with a separate explicit corrective prompt; preserve existing auth application behavior.",
+          "excludedScope": "Auth/session redesign, cross-origin CORS workaround, new framework, production/staging infrastructure, migrations, Settings/reservations/Export",
+          "dependencies": [
+            {
+              "taskId": "CORE-AUTH-01",
+              "status": "VERIFIED"
+            },
+            {
+              "taskId": "PEOPLE-CORE-01",
+              "status": "VERIFIED"
+            },
+            {
+              "decisionId": "CORE-AUTH-D004",
+              "status": "APPROVED"
+            },
+            {
+              "decisionId": "CORE-AUTH-D005",
+              "status": "APPROVED"
+            }
+          ],
+          "acceptanceCriteria": [
+            "One canonical Render-provided HTTPS origin serves web/SPA routes and /api/v1 using the existing architecture",
+            "All needed HTTP methods/body/query, redirects and cookie headers pass correctly; auth routes never become SPA fallback or cacheable",
+            "Preserve canonical Host; reject/strip untrusted X-Forwarded-Host without changing the auth guard",
+            "No callback query, cookie, token or credential values in gateway logs; no API secrets in web assets",
+            "Smallest sufficient normal development cost established before purchase; no material escalation without approval",
+            "Bounded deployment configuration and negative/regression checks approved before resuming ENV-001; no full provider matrix here"
+          ],
+          "verificationCommands": [
+            "pnpm map:check",
+            "git diff --check",
+            "Exact focused gateway/HTTP/Host/cookie/SPA/secret-canary commands to be specified before a separate corrective implementation; do not invent nonexistent scripts"
+          ],
+          "regressionChecks": [
+            "Preserve auth same-origin/Host/CSRF/no-store/fail-closed boundaries",
+            "Preserve all previously VERIFIED tasks, historical checks, D004/D005 and SevenRooms classifications"
+          ],
+          "executionGate": "Separate owner/engineering authorization of a bounded gateway corrective task required; not implemented here"
+        },
+        "stopPoint": "Pre-provisioning same-origin topology gate, before purchases, Render/Auth0 account configuration, database connections or synthetic identity creation",
+        "resourcesCreated": false,
+        "purchasesMade": false,
+        "secretValuesRecorded": false
+      },
+      "publicDocumentationReview": {
+        "classification": "CONFIRMED public documentation only; account-specific availability and selection NEEDS TESTING",
+        "regions": {
+          "documentedUsRegions": [
+            "Oregon",
+            "Ohio",
+            "Virginia"
+          ],
+          "selectedRegion": "NOT SELECTED",
+          "actualAccountAvailability": "NEEDS TESTING",
+          "source": "https://render.com/docs/regions"
+        },
+        "postgresql": {
+          "documentedSupportedMajors": "13 through 18, including 16",
+          "provisionedVersion": "NOT CONFIGURED",
+          "actualAccountVersionTier": "NEEDS TESTING",
+          "source": "https://render.com/docs/postgresql-creating-connecting"
+        },
+        "tiersAndCost": {
+          "source": "https://render.com/pricing",
+          "computeSource": "https://render.com/docs/compute-plans",
+          "databaseCandidate": "0.1c-256mb / legacy basic-256mb; public list price 6 USD/month for compute only; not selected or purchased",
+          "apiTier": "NOT SELECTED",
+          "databaseTier": "NOT SELECTED",
+          "completeRecurringMonthlyCost": "UNKNOWN — requires viable topology and actual account quote, including storage/workspace/usage; not inferred from a single compute price",
+          "costGate": "NOT REACHED; no purchase, annual commitment, HA/replica/autoscaling or premium feature"
+        },
+        "https": {
+          "source": "https://render.com/docs/tls",
+          "publicCapability": "CONFIRMED managed TLS certificates",
+          "actualEndpoint": "NOT CONFIGURED"
+        },
+        "secretInjection": {
+          "source": "https://render.com/docs/configure-environment-variables",
+          "publicCapability": "CONFIRMED environment variables/secret files",
+          "actualInjection": "NOT CONFIGURED"
+        },
+        "databaseTls": {
+          "source": "https://render.com/docs/postgresql-creating-connecting",
+          "actualConnectionTls": "NEEDS TESTING / BLOCKED",
+          "limitation": "Public TLS documentation is not a deployed connection verification"
+        }
+      },
+      "localConfigurationPresence": {
+        "classification": "CONFIRMED local Process/User/Machine scopes only; external configuration UNKNOWN",
+        "serverInputs": {
+          "STAFF_AUTH_ENABLED": "ABSENT",
+          "AUTH0_ISSUER": "ABSENT",
+          "AUTH0_CLIENT_ID": "ABSENT",
+          "AUTH0_CLIENT_SECRET": "ABSENT",
+          "AUTH0_CALLBACK_URI": "ABSENT",
+          "AUTH0_POST_LOGOUT_URI": "ABSENT",
+          "STAFF_APP_ORIGIN": "ABSENT",
+          "STAFF_RUNTIME_DATABASE_URL": "ABSENT"
+        },
+        "webFlag": {
+          "VITE_STAFF_AUTH_ENABLED": "ABSENT"
+        },
+        "valuesPrinted": false
+      },
+      "readiness": {
+        "render": "NOT CONFIGURED",
+        "database": "NOT CONFIGURED",
+        "runtimeRoleAndGrants": "NEEDS TESTING / BLOCKED",
+        "auth0": "NOT CONFIGURED by this task; pre-existing external resources UNKNOWN",
+        "identityMapping": "NOT CONFIGURED by this task",
+        "mfaTestCapability": "NEEDS TESTING / BLOCKED",
+        "multiInstance": "NEEDS TESTING",
+        "logRedaction": "NEEDS TESTING",
+        "environmentReadyForControlledVerification": false,
+        "parentTaskStatus": "IMPLEMENTED",
+        "providerVerificationStatus": "NEEDS TESTING",
+        "liveAuth0Tested": false
+      },
+      "preservation": "All 61 previous verification checks, 26 VERIFIED task objects, 54 unrelated task objects, D001–D005, accepted ADRs and reference classification records unchanged. No runtime/tests/migrations/contracts/packages/deployment artifacts or main changes.",
+      "commands": [
+        {
+          "command": "git rev-parse HEAD; git status --short; branch check",
+          "result": "PASS — exact approved base and clean worktree"
+        },
+        {
+          "command": "Repository topology inspection; current official Render documentation; local input presence-only checks",
+          "result": "BLOCKED — missing reviewed same-origin gateway; no resource creation"
+        },
+        {
+          "command": "pnpm map:check; git diff --check; JSON/DAG/history/docs-only/Git secret-content review",
+          "result": "PASS — documentation integrity; no deployment/provider verification inferred"
+        }
+      ],
+      "filesModified": [
+        "docs/project-map/roadmap.json",
+        "docs/project-map/verification.json",
+        "docs/project-map/handoff.md",
+        "docs/security/staff-session-verification.md"
+      ],
+      "noRuntimeChanges": true,
+      "noResourceCreation": true,
+      "noSecrets": true,
+      "noPush": true,
+      "newReferenceEvidence": false,
+      "parityClaim": false,
+      "nextExactTask": "CORE-AUTH-02-DEPLOY-001 — Specify and verify the same-origin Render gateway prerequisite"
     }
   ],
   "unresolvedQuestions": [

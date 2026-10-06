@@ -5,6 +5,115 @@ CORE-AUTH-D004. Base 84ed2938d7d1fa6155e744a50ef3d6aebe6f978c.
 Parent task IMPLEMENTED; controlled Auth0/production assurance remains NEEDS TESTING.
 No SevenRooms evidence or parity claims.
 
+## Provisioning stopped at topology gate — CHK-062 / CORE-AUTH-02-ENV-002
+
+2026-10-05; exact clean starting HEAD
+`12eb57b2d4edbad0b7238e9df8107c686e27e4f5`, branch people-03-accounts-read.
+**CORE-AUTH-02-ENV-001 = BLOCKED BY DEPLOYMENT TOPOLOGY.**
+Classification: CONFIRMED missing repository deployment seam; solution/provider
+integration NEEDS TESTING / NEEDS OWNER/ENGINEERING DECISION.
+
+No Render/Auth0 account configuration, purchase, resource creation, DB connection,
+migration, synthetic identity, secret injection, endpoint deployment or full
+provider matrix was attempted. No browser account authentication was reached;
+external pre-existing infrastructure remains UNKNOWN, not proven absent.
+D004/D005 APPROVED and prior verification evidence remain unchanged.
+
+### Concrete repository evidence
+
+- `apps/api/src/app.ts` registers health/auth/People API routes and a JSON not-found
+  handler, not static web assets or SPA routing. `main.ts` starts that one server.
+- `apps/web/package.json` builds a separate Vite bundle; `vite.config.ts` configures
+  loopback dev/preview servers with no API proxy. Exposing that server does not
+  create the required web/API gateway.
+- `apps/web/src/staff-auth/client.ts` rejects API URLs outside the browser's origin
+  and uses same-origin credentials. Changing VITE_API_BASE_URL to a separate API
+  hostname is not a solution; do not weaken this guard or substitute CORS.
+- `apps/api/src/staff-auth/routes.ts` requires canonical Host and rejects
+  X-Forwarded-Host. A gateway must preserve that boundary and sensitive-cookie,
+  callback-query, body/method, no-store and logging behavior.
+- Tracked deployment artifact inspection found no Render manifest, Dockerfile or
+  reverse-proxy configuration implementing this boundary at this base.
+
+### Current public Render documentation, not account/deployment proof
+
+[Web services](https://render.com/docs/web-services) expose one public HTTP port
+per service and provide managed HTTPS. The
+[static frontend/API hybrid guide](https://render.com/tutorials/web-service-vs-static-site/the-hybrid-pattern)
+describes browser-to-API requests over separate public origins; it does not supply
+the approved same-origin gateway. The
+[redirect/rewrite page](https://render.com/docs/redirects-rewrites) allows path/URL
+destinations but does not establish this authenticated all-method proxy contract.
+Do not infer safe header/cookie/cache/log handling from rewrite syntax, or claim
+that Render universally cannot host a suitable gateway.
+
+[Regions](https://render.com/docs/regions) currently list US Oregon/Ohio/Virginia.
+Ohio remains the owner preference; no actual region selected or account availability
+confirmed. [PostgreSQL creation](https://render.com/docs/postgresql-creating-connecting)
+documents majors 13–18, including 16. No database version provisioned; actual
+version/tier and restricted-role/migration/TLS verification remain NEEDS TESTING.
+[Compute plans](https://render.com/docs/compute-plans) and
+[pricing](https://render.com/pricing) were reviewed: the public database candidate
+0.1c-256mb lists USD 6/month for compute only, not a selected tier or complete
+environment quote. Service topology, workspace/storage/usage and account-specific
+cost must be established before purchase; no invented total or approved cost
+escalation. Managed [TLS](https://render.com/docs/tls) and
+[environment/secret injection](https://render.com/docs/configure-environment-variables)
+are documented capabilities, not configured endpoints or injected secrets here.
+
+Named Process/User/Machine presence checks: all seven required Auth0/origin/runtime
+inputs plus STAFF_AUTH_ENABLED and VITE_STAFF_AUTH_ENABLED ABSENT. Values never
+printed. This local finding does not establish external account configuration.
+MFA, multi-instance and deployed log-redaction capability NEEDS TESTING.
+
+### Narrow corrective prerequisite, not another authentication implementation
+
+Proposed task: **CORE-AUTH-02-DEPLOY-001 — Specify and verify the same-origin Render
+gateway prerequisite**. Status BLOCKED pending a separate bounded corrective prompt.
+Affected modules: CORE-AUTH-02 / ENV-001, SETTINGS-CORE-01, RESERVATIONS-CORE-01.
+Dependencies: CORE-AUTH-01 and PEOPLE-CORE-01 VERIFIED; D004/D005 APPROVED.
+Owned scope: minimal deployment gateway/build/start wiring and safe routing proof
+under the existing separate-web/modular-backend architecture. Excluded: auth/session
+redesign, cross-origin workaround, new framework, migrations, production/staging,
+Settings, reservations and Export. Exact focused commands must be specified before
+implementation; no nonexistent gateway test script claimed here.
+
+QUESTION: Which bounded gateway approach may be reviewed and implemented separately?
+WHY IT MATTERS: the approved canonical origin cannot be exposed safely using only
+the current API/Vite entrypoints; routing must preserve auth and cost boundaries.
+
+- OPTION A: review minimal reverse-proxy deployment configuration for the existing
+  separately served web/API. Pros: preserves ADR-0001 and auth behavior.
+  Cons: requires reviewed deployment artifacts, header/log tests and a cost check.
+- OPTION B: add static/SPA serving to the API entrypoint in a separate corrective
+  task. Pros: one HTTP listener. Cons: runtime application/deployment-contract
+  change requires explicit approval and regression coverage; not authorized here.
+- OPTION C: demonstrate a platform-native same-origin routing solution before
+  buying resources. Pros: could avoid application changes. Cons: cookie/method/
+  Host/cache/log behavior is unproven; generic rewrite syntax is insufficient.
+- OPTION D: defer environment provisioning. Pros: no spending or unsafe exposure.
+  Cons: blocks real-provider verification and dependent core delivery.
+
+RECOMMENDED TECHNICAL DEFAULT: A, only after bounded engineering review confirms
+compatibility and minimum-development cost. No option selected/implemented or new
+architecture approved here. Any actual architecture change requires a separately
+approved decision/ADR; preserve D004/D005 and fail-closed auth.
+
+Acceptance for the predecessor: one HTTPS web + /api/v1 origin, SPA/API separation,
+correct methods/body/query/redirect/cookie handling, canonical Host and rejection/
+stripping of untrusted forwarded Host, auth no-store, secret-safe logs, web assets
+without API secrets, startup/health and regression checks, and confirmed smallest
+suitable cost before purchase. No extra instance solely for this precheck.
+
+CORE-AUTH-02 remains IMPLEMENTED; provider NEEDS TESTING, liveAuth0Tested false.
+ENV-001 remains BLOCKED, owner-selection portion RESOLVED, provisioning OUTSTANDING.
+ENVIRONMENT READY FOR CONTROLLED VERIFICATION: NO.
+SETTINGS-CORE-01 stays PLANNED pending VERIFIED CORE-AUTH-02; reservations and
+Part-3 Export remain unstarted/deferred. After a separately authorized gateway
+correction, resume ENV-001 provisioning; only after readiness resume the existing
+real-provider matrix. Documentation-only checks do not verify that matrix.
+No secrets, new SevenRooms evidence or parity claims; U-001/U-002/U-003 preserved.
+
 ## Owner-approved development target checkpoint — D005 / CHK-061
 
 2026-10-05; documentation base `cf6d4354eec1408a4f004857cdb944978e948c83`.

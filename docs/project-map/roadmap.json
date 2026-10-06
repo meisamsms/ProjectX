@@ -1947,9 +1947,9 @@
         "id": "CORE-AUTH-02-ENV-001",
         "classification": "CONFIRMED — required configuration unavailable to this verification session; external deployment existence UNKNOWN",
         "dependency": "Provisioned Render/Auth0 DEVELOPMENT environment under APPROVED CORE-AUTH-D005, canonical HTTPS endpoint, synthetic staff identity and restricted PostgreSQL runtime",
-        "reason": "Owner-selection portion RESOLVED by D005: platform, region selection rule, hostname, development-tier and Auth0 development policies. Actual provisioning/availability and sanitized evidence remain outstanding. CHK-060 precheck retained; no environment readiness or live Auth0 verification claimed.",
+        "reason": "BLOCKED BY DEPLOYMENT TOPOLOGY: the existing separate API/Vite runtimes lack a reviewed canonical same-origin web + /api/v1 deployment gateway. D005 owner selections remain resolved. No purchases or provisioning; see CORE-AUTH-02-ENV-002 / CHK-062. Resolve the narrow deployment prerequisite before actual environment setup.",
         "affectedModules": ["CORE-AUTH-02", "SETTINGS-CORE-01", "RESERVATIONS-CORE-01"],
-        "requiredPredecessor": "CORE-AUTH-02-ENV-001 — Provision approved Render/Auth0 development environment",
+        "requiredPredecessor": "CORE-AUTH-02-DEPLOY-001 — Specify and verify the same-origin Render gateway prerequisite",
         "evidenceId": "CHK-060",
         "ownerDecisionRequired": false,
         "status": "BLOCKED",
@@ -1974,13 +1974,102 @@
           "Synthetic identity",
           "Sanitized controlled logs/evidence"
         ],
-        "approvalEvidenceId": "CHK-061"
+        "approvalEvidenceId": "CHK-061",
+        "currentEvidenceId": "CHK-062",
+        "environmentStatus": "BLOCKED BY DEPLOYMENT TOPOLOGY",
+        "engineeringDecisionRequired": true,
+        "deploymentTopology": {
+          "id": "CORE-AUTH-02-ENV-002",
+          "classification": "CONFIRMED — repository deployment seam missing; provider-specific solution NEEDS TESTING",
+          "status": "BLOCKED",
+          "category": "NEEDS OWNER/ENGINEERING DECISION",
+          "result": "CORE-AUTH-02-ENV-001 = BLOCKED BY DEPLOYMENT TOPOLOGY",
+          "reason": "Existing Fastify app serves health/auth/People API routes, not the Vite web build. Vite server/preview has no API proxy; staff client rejects cross-origin API URLs and sends same-origin credentials. No tracked Render/Docker/reverse-proxy deployment artifact supplies the required web + /api/v1 boundary. Adding an unreviewed gateway/server wrapper or weakening the client/Host/CORS guards is outside this provisioning task.",
+          "affectedModules": [
+            "CORE-AUTH-02",
+            "CORE-AUTH-02-ENV-001",
+            "SETTINGS-CORE-01",
+            "RESERVATIONS-CORE-01"
+          ],
+          "repositoryEvidence": [
+            "apps/api/src/app.ts",
+            "apps/api/src/main.ts",
+            "apps/api/package.json",
+            "apps/web/package.json",
+            "apps/web/vite.config.ts",
+            "apps/web/src/staff-auth/client.ts",
+            "apps/api/src/staff-auth/routes.ts",
+            "docs/architecture/ADR-0001-deployment-topology.md"
+          ],
+          "providerEvidence": [
+            {
+              "url": "https://render.com/docs/web-services",
+              "finding": "Render forwards public HTTP traffic to one port per web service; separate services have separate hostnames"
+            },
+            {
+              "url": "https://render.com/tutorials/web-service-vs-static-site/the-hybrid-pattern",
+              "finding": "Render describes its static-site/API hybrid as direct browser-to-API calls over separate public origins, not a static-site API proxy"
+            },
+            {
+              "url": "https://render.com/docs/redirects-rewrites",
+              "finding": "Redirect/rewrite syntax alone does not establish authenticated all-method proxying, canonical Host, forwarded-header stripping, Set-Cookie/no-store or secret-safe logging; do not claim safe proxy support or universal impossibility"
+            }
+          ],
+          "limitation": "No account provisioning interface or deployed gateway tested. This is not a claim that Render cannot host a suitable gateway or that every solution requires authentication application-code changes. The missing, reviewed gateway configuration/deployment artifact is the narrow prerequisite.",
+          "correctiveTaskProposal": {
+            "id": "CORE-AUTH-02-DEPLOY-001",
+            "name": "Specify and verify the same-origin Render gateway prerequisite",
+            "status": "BLOCKED",
+            "scope": "Review a minimal deployment-only gateway for the existing separate web/API architecture; define canonical routing, Host/forwarded-header boundary, cookies/CSRF/cache/log safety, build/start wiring and smallest-tier cost. Implement only with a separate explicit corrective prompt; preserve existing auth application behavior.",
+            "excludedScope": "Auth/session redesign, cross-origin CORS workaround, new framework, production/staging infrastructure, migrations, Settings/reservations/Export",
+            "dependencies": [
+              {
+                "taskId": "CORE-AUTH-01",
+                "status": "VERIFIED"
+              },
+              {
+                "taskId": "PEOPLE-CORE-01",
+                "status": "VERIFIED"
+              },
+              {
+                "decisionId": "CORE-AUTH-D004",
+                "status": "APPROVED"
+              },
+              {
+                "decisionId": "CORE-AUTH-D005",
+                "status": "APPROVED"
+              }
+            ],
+            "acceptanceCriteria": [
+              "One canonical Render-provided HTTPS origin serves web/SPA routes and /api/v1 using the existing architecture",
+              "All needed HTTP methods/body/query, redirects and cookie headers pass correctly; auth routes never become SPA fallback or cacheable",
+              "Preserve canonical Host; reject/strip untrusted X-Forwarded-Host without changing the auth guard",
+              "No callback query, cookie, token or credential values in gateway logs; no API secrets in web assets",
+              "Smallest sufficient normal development cost established before purchase; no material escalation without approval",
+              "Bounded deployment configuration and negative/regression checks approved before resuming ENV-001; no full provider matrix here"
+            ],
+            "verificationCommands": [
+              "pnpm map:check",
+              "git diff --check",
+              "Exact focused gateway/HTTP/Host/cookie/SPA/secret-canary commands to be specified before a separate corrective implementation; do not invent nonexistent scripts"
+            ],
+            "regressionChecks": [
+              "Preserve auth same-origin/Host/CSRF/no-store/fail-closed boundaries",
+              "Preserve all previously VERIFIED tasks, historical checks, D004/D005 and SevenRooms classifications"
+            ],
+            "executionGate": "Separate owner/engineering authorization of a bounded gateway corrective task required; not implemented here"
+          },
+          "stopPoint": "Pre-provisioning same-origin topology gate, before purchases, Render/Auth0 account configuration, database connections or synthetic identity creation",
+          "resourcesCreated": false,
+          "purchasesMade": false,
+          "secretValuesRecorded": false
+        }
       },
       "ownerPolicyDecisionId": "CORE-AUTH-D004",
       "developmentDeploymentDecisionId": "CORE-AUTH-D005",
       "readinessEvidence": "CHK-058 owner-decision documentation only. Published CORE-AUTH-01 CI run 37253348486 attempt 2/job 111586842967 green at 95d4d1b1cc9f8a6dc69a1d8a3edea38df9e00923; original failed attempt preserved. Not production auth, new implementation or core readiness proof.",
       "coreWorkflowAdvanced": "Secure authenticated staff access for reservation-required Venue settings and future reservation book/check-in/seating.",
-      "remainingWork": "CORE-AUTH-02-ENV-001 remains BLOCKED: D005 resolves owner-selection policies only, not provisioning. Provision approved Render/Auth0 DEVELOPMENT resources securely outside Git; verify actual region/pricing/tier/PostgreSQL 16 availability, canonical same-origin HTTPS/cookies, restricted non-owner runtime, exact synthetic issuer/subject binding and sanitized logs. Then resume the existing real-provider matrix, not another authentication code task. Real provider/deployment gates remain NEEDS TESTING; high-risk writes stay denied. No production/staging, Settings, reservation or Export implementation. SETTINGS-CORE-01 remains PLANNED pending VERIFIED CORE-AUTH-02.",
+      "remainingWork": "CORE-AUTH-02-ENV-001 BLOCKED BY DEPLOYMENT TOPOLOGY (ENV-002 / CHK-062). A reviewed same-origin gateway/build/start configuration is missing; separate explicit owner/engineering corrective authorization required. Do not replace same-origin guards with CORS or invent an unreviewed deployment architecture. No Render/Auth0/database resources or secret injection created. D004/D005 remain approved; actual provisioning, restricted role/migrations/TLS, synthetic identity and real-provider verification remain outstanding. After the gateway prerequisite, resume approved ENV-001 provisioning; only when ready resume the existing provider matrix. Parent IMPLEMENTED, provider NEEDS TESTING; Settings/reservations/Export not started.",
       "specificationFile": "docs/security/staff-access-integration.md",
       "requiredOwnerDecisionIds": [
         "CORE-AUTH-D001",
@@ -2052,19 +2141,21 @@
         "databaseReview": "docs/security/staff-session-database-review.md",
         "providerEvidenceBoundary": "Mock/deterministic tests do not verify production Auth0; no tenants or real credentials created."
       },
-      "verificationEvidence": "CHK-059 local implementation evidence retained. CHK-060 confirms exact published SHA 8469fd5e21df350e4e6f59c5183ae0c347dbf6f0 and CI 37378038188/job 111992282747: pnpm verify and verify:db PASS, focused auth 56/56, auth DB 27/27, all DB 210/210 across 21 files, PostgreSQL 16.15. Environment-only precheck blocked controlled Auth0/deployment verification; parent remains IMPLEMENTED. All previous VERIFIED task objects/checks, owner decisions and reference evidence unchanged. CHK-061 records APPROVED D005 development target policy and documentation preservation checks only; it does not verify provisioning or Auth0 behavior.",
+      "verificationEvidence": "CHK-059 local implementation evidence retained. CHK-060 confirms exact published SHA 8469fd5e21df350e4e6f59c5183ae0c347dbf6f0 and CI 37378038188/job 111992282747: pnpm verify and verify:db PASS, focused auth 56/56, auth DB 27/27, all DB 210/210 across 21 files, PostgreSQL 16.15. Environment-only precheck blocked controlled Auth0/deployment verification; parent remains IMPLEMENTED. All previous VERIFIED task objects/checks, owner decisions and reference evidence unchanged. CHK-061 records APPROVED D005 development target policy and documentation preservation checks only; it does not verify provisioning or Auth0 behavior. CHK-062 records the pre-provisioning same-origin deployment-topology blocker; no new auth implementation or provider verification.",
       "providerVerification": {
         "status": "NEEDS TESTING",
         "classification": "PROJECTX DEPLOYMENT / PROVIDER GATE",
         "privilegedAssurance": "UNVERIFIED — high-risk Add User writes denied; approximately 5m policy unchanged",
         "evidenceFile": "docs/security/staff-session-verification.md",
         "liveAuth0Tested": false,
-        "environmentStatus": "BLOCKED BY ENVIRONMENT SETUP",
+        "environmentStatus": "BLOCKED BY DEPLOYMENT TOPOLOGY",
         "blockerId": "CORE-AUTH-02-ENV-001",
         "evidenceId": "CHK-060",
         "developmentDeploymentDecisionId": "CORE-AUTH-D005",
         "ownerSelectionStatus": "RESOLVED",
-        "provisioningStatus": "OUTSTANDING"
+        "provisioningStatus": "OUTSTANDING",
+        "currentEnvironmentEvidenceId": "CHK-062",
+        "deploymentTopologyFindingId": "CORE-AUTH-02-ENV-002"
       }
     },
     {
@@ -2475,7 +2566,7 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "CORE-AUTH-02-ENV-001 — Provision approved Render/Auth0 development environment",
+  "nextExactTask": "CORE-AUTH-02-DEPLOY-001 — Specify and verify the same-origin Render gateway prerequisite",
   "deliveryPriority": {
     "decisionId": "PRIORITY-D001",
     "primaryTarget": "PART 1 — CORE ONLINE RESERVATION SYSTEM",
