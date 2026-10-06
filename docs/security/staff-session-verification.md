@@ -5,6 +5,72 @@ CORE-AUTH-D004. Base 84ed2938d7d1fa6155e744a50ef3d6aebe6f978c.
 Parent task IMPLEMENTED; controlled Auth0/production assurance remains NEEDS TESTING.
 No SevenRooms evidence or parity claims.
 
+## Shared-loopback reachability diagnosis — CHK-068 / DEPLOY-002-VERIFY-002
+
+2026-10-06. Diagnostic-only task; clean starting
+`6029f6512ad89722c05f0fc7a9f101d903f1f827`, exact ancestry and fetched remote
+`75da5c2adb9a99049945d2df2401537d9e92e675` confirmed. Docker29.8.2 local
+desktop-linux/npipe, Linux/WSL2 unchanged. No rebuild, full GW harness rerun,
+functional file change, system setting change, provider resource or purchase.
+
+Harness inspection: random UUID container names; `--network host`, no published
+port; read-only root, `/tmp:rw,noexec,nosuid,size=32m`, ALL capabilities dropped,
+no-new-privileges. Windows Node mock binds `127.0.0.1:${apiPort}` before container
+start. nginx receives `PORT=${gatewayPort}`, `GATEWAY_LISTEN_ADDRESS=127.0.0.1`,
+canonical `gateway.test.invalid`, upstream `127.0.0.1:${apiPort}`. Windows readiness
+requests `http://127.0.0.1:${gatewayPort}/health` with the canonical Host,100 attempts
+and100ms retry delay. Request socket deadline75s; this is not a strict10s overall
+timeout. Any HTTP response counts as readiness, including502. Cleanup closes
+owned apps/processes/mock/sockets and removes exact owned containers.
+
+One disposable container used those same parameters, actual existing pinned image,
+synthetic Windows mock port62215 and gateway port62216. Selected inspect showed
+RUNNING before/after proof, exit field0 while running, OOMKilled=false, restart0,
+empty state error; root read-only and tmpfs preserved. Actual generated config and
+netstat showed `listen 127.0.0.1:62216 default_server`, canonical server_name;
+no IPv6 listener at this gateway port. `docker port` empty; PortBindings and
+NetworkSettings.Ports both empty. Nothing was published to an explicit Windows
+host address/port.
+
+**CONFIRMED LOCAL DIAGNOSTIC EVIDENCE — PRIMARY REACH-02, not GW PASS:**
+built-in wget inside container: canonical root200, default/foreign Host403.
+Windows curl with all three Host variants: HTTP000/connect timeout (~1s).
+Exact Windows Node readiness: ECONNREFUSED. Windows mock control:200; gateway
+inside `/health`:502. Thus the assumed shared Windows/Linux loopback does not
+provide the required host-to-gateway or gateway-to-Windows-mock path here.
+The Host header and numeric target port match; no Host/port-number mismatch.
+Numeric upstream does not need hostname DNS;502 alone cannot explain readiness
+connection failure because readiness accepts any HTTP response.
+
+Start request22:14:56.781Z; Docker StartedAt22:15:03.827682747Z; first inside HTTP200
+8.631s after request (~1.585s after container start). Windows never reached gateway
+in this proof. Final probe12.375s after request (~5.3s after Docker start), not a
+full10s post-start waiting proof. No nginx startup race demonstrated; no timeout
+increase justified. Initial logs empty; final metadata-only statuses200/403/403/502.
+No observed startup rejection/host-not-found message, but error logging is disabled,
+so absent logs alone do not establish upstream success. Container/mock cleaned;
+final Docker container listing empty.
+
+**UNKNOWN / NEEDS TESTING:** underlying Docker Desktop host-network setting state
+or contributing platform mechanics. No claim that Docker cannot support host
+networking. REACH-09 prerequisites (0.0.0.0 listener and correct published port)
+are not met. No Docker Desktop/firewall/WSL/security setting inspected or changed.
+The confirmed correction scope is the harness network contract, not app/nginx
+semantics; no functional fix authorized here.
+
+Next exact task: **CORE-AUTH-02-DEPLOY-002-FIX-003 — Correct the confirmed
+gateway/harness reachability defect**, separately authorized and limited to
+`deploy/gateway/gateway.test.mjs`. Verify both directions using the actual image
+without replacing nginx or weakening guards. Any need for another causal file
+or system setting requires a separate stop/approval, not inferred permission.
+GW-01–12 remain NOT EXECUTED; DB remains deferred/UNDETERMINED, search_path
+INFERRED; historical207PASS/3FAIL on PostgreSQL16.15 not waived. Full image secret
+review/API/regressions still incomplete. Documentation map/whitespace/preservation
+checks PASS only. All67 prior checks, VERIFIED tasks, D004/D005, reference
+classifications and U-001/U-002/U-003 preserved. DEPLOY-002 IMPLEMENTED /
+VERIFICATION INCOMPLETE; CORE-AUTH-02 IMPLEMENTED; ENV-001 BLOCKED; provider
+NEEDS TESTING; readiness NO. No SevenRooms evidence/parity claim or push.
+
 ## Runtime-path correction and harness blocker — CHK-067 / DEPLOY-002-FIX-002
 
 2026-10-06. Exact clean starting HEAD `e5d49f7fec5fadfb5296c961b7dda81dc83d2a22`

@@ -1857,6 +1857,219 @@
       "newReferenceEvidence": false,
       "parityClaim": false,
       "nextExactTask": "CORE-AUTH-02-DEPLOY-002-VERIFY-002 — Diagnose GW-01 harness reachability after nginx startup"
+    },
+    {
+      "id": "CHK-068",
+      "taskId": "CORE-AUTH-02-DEPLOY-002-VERIFY-002",
+      "date": "2026-10-06",
+      "status": "BLOCKED",
+      "baseCommit": "6029f6512ad89722c05f0fc7a9f101d903f1f827",
+      "remoteBase": "75da5c2adb9a99049945d2df2401537d9e92e675",
+      "scope": "Diagnostic only: one disposable actual gateway container with unchanged harness parameters, synthetic Windows-host mock and built-in socket/HTTP checks; four evidence docs only",
+      "result": "CONFIRMED REACH-02 — no published port; cross-runtime loopback contract does not provide Windows host reachability. Actual nginx runs and inside canonical HTTP200; Windows exact readiness ECONNREFUSED. No functional fix or full harness rerun",
+      "harnessContract": {
+        "image": "projectx-dev-gateway:local",
+        "containerName": "projectx-gw-test-${randomUUID()}",
+        "network": "--network host; no -p/--publish",
+        "containerPort": "Windows getPort() dynamically selects gatewayPort",
+        "hostPort": "Readiness assumes same numeric gatewayPort; no explicit published host port",
+        "listenAddress": "127.0.0.1",
+        "canonicalHost": "gateway.test.invalid",
+        "readinessURL": "http://127.0.0.1:${gatewayPort}/health",
+        "readinessHostHeader": "gateway.test.invalid",
+        "retryCount": 100,
+        "retryIntervalMs": 100,
+        "timeout": "100 retries (~10s delay plus request duration), request socket timeout75s; not an overall strict10s deadline",
+        "readOnlyRoot": true,
+        "tmpfs": "/tmp:rw,noexec,nosuid,size=32m",
+        "security": "ALL capabilities dropped; no-new-privileges",
+        "environment": [
+          "GATEWAY_CANONICAL_HOST=gateway.test.invalid",
+          "GATEWAY_API_HOSTPORT=127.0.0.1:${apiPort}",
+          "PORT=${gatewayPort}",
+          "GATEWAY_LISTEN_ADDRESS=127.0.0.1"
+        ],
+        "mockUpstream": "Windows Node HTTP listener127.0.0.1:${apiPort}, started before docker run; numeric IPv4, no hostname DNS requirement",
+        "cleanup": "after hook closes apps/processes/sockets/mock; exact harness-owned container names removed even on setup failure"
+      },
+      "manualProof": {
+        "container": "projectx-reach-diag-de012488-7590-42e8-a1ad-1b14b8eca5d1",
+        "classification": "CONFIRMED LOCAL DIAGNOSTIC EVIDENCE — not GW-01 PASS",
+        "apiPort": 62215,
+        "gatewayPort": 62216,
+        "containerState": "RUNNING before/after proof",
+        "exitCodeWhileRunning": 0,
+        "stateError": "",
+        "oomKilled": false,
+        "restartCount": 0,
+        "networkMode": "host",
+        "portBindings": {},
+        "networkSettingsPorts": {},
+        "dockerPortOutput": "EMPTY",
+        "listenIPv4": "127.0.0.1:62216 LISTEN",
+        "listenIPv6": "No IPv6 listener at diagnostic gateway port",
+        "effectiveListen": "listen127.0.0.1:62216 default_server",
+        "serverName": "gateway.test.invalid",
+        "insideCanonicalHTTP": 200,
+        "insideDefaultHTTP": 403,
+        "insideForeignHTTP": 403,
+        "windowsCanonicalHTTP": "curl28,HTTP000,connect timeout1001ms",
+        "windowsDefaultHTTP": "curl28,HTTP000,connect timeout1001ms",
+        "windowsForeignHTTP": "curl28,HTTP000,connect timeout1000ms",
+        "exactWindowsReadiness": "ECONNREFUSED",
+        "insideHealthHTTP": 502,
+        "windowsMockControlHTTP": 200,
+        "startRequestAt": "2026-10-06T22:14:56.781Z",
+        "dockerStartedAt": "2026-10-06T22:15:03.827682747Z",
+        "firstInsideSuccessElapsedFromRequestMs": 8631,
+        "firstInsideSuccessElapsedFromDockerStartMs": 1585,
+        "firstHostReachable": "NOT ACHIEVED",
+        "finalProbeElapsedFromRequestMs": 12375,
+        "timingLimitation": "Final probe ~5.3s after Docker StartedAt, not proof of a full10s post-start waiting window. Inside ready within1.585s; no evidence justifying timeout increase; long-term host recovery not measured",
+        "logs": "Initially empty; final metadata-only statuses200/403/403/502; no startup rejection or host-not-found diagnostic observed. Error logging deliberately disabled, so absent logs alone do not prove absence of upstream problems",
+        "cleanup": "Container stopped/removed, synthetic mock closed; docker ps -a empty"
+      },
+      "findings": [
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F029",
+          "classification": "CONFIRMED",
+          "finding": "Exact clean starting SHA/ancestry/fetched remote match; Docker29.8.2 desktop-linux local npipe Linux/WSL2 unchanged"
+        },
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F030",
+          "classification": "CONFIRMED",
+          "finding": "Same harness runtime starts nginx; running/no OOM/no restart/no state error. Actual generated listen is IPv4 loopback127.0.0.1:62216 default_server; canonical inside root200, default/foreign403"
+        },
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F031",
+          "classification": "CONFIRMED",
+          "finding": "REACH-02 no port publishing: HostConfig.PortBindings and NetworkSettings.Ports empty, docker port empty; Windows Node readiness ECONNREFUSED and curltimeout while Linux-side HTTP works. Host-network/shared127.0.0.1 assumption does not establish the needed Windows/Linux boundary in this environment"
+        },
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F032",
+          "classification": "CONFIRMED",
+          "finding": "Mock Windows127.0.0.1:62215 returns200 locally, but actual gateway /health502. Numeric upstream requires no hostname resolution; readiness Host and numeric port match config. Readiness accepts any HTTP response, so upstream502 alone would not explain its connection failure"
+        },
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F033",
+          "classification": "UNKNOWN",
+          "finding": "Underlying Docker Desktop host-network enablement/system setting state not inspected or changed. Do not claim REACH-09 prerequisites (0.0.0.0 listener + correct published port) are met, or recommend system change without approval. No nginx startup race demonstrated; no delay-only fix justified"
+        }
+      ],
+      "commands": [
+        {
+          "command": "git state/ancestry; git fetch origin; Docker context/info",
+          "result": "PASS exact expected state; local Linux Docker29.8.2/WSL2"
+        },
+        {
+          "command": "One same-parameter docker run; ps/selected inspect/logs/generated config/netstat/docker port",
+          "result": "PASS diagnostic capture; running read-only root/tmpfs, IPv4 loopback listener, no published port"
+        },
+        {
+          "command": "Built-in wget inside and Windows curl.exe with canonical/default/foreign Host; exact Node readiness and synthetic mock controls",
+          "result": "CONFIRMED split reachability: inside200/403/403, Windows curl timeout/NodeECONNREFUSED, upstream Windows200/gatewayhealth502"
+        },
+        {
+          "command": "Exact container/mock cleanup; docker ps -a",
+          "result": "PASS — disposable resources removed; no shared Docker pruning"
+        },
+        {
+          "command": "pnpm map:check; git diff --check; preservation/scope audit",
+          "result": "PASS — documentation validation only"
+        }
+      ],
+      "gatewayChecks": [
+        {
+          "id": "GW-01",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — no full harness run; manual diagnostics not GW proof"
+        },
+        {
+          "id": "GW-02",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — no full harness run; manual diagnostics not GW proof"
+        },
+        {
+          "id": "GW-03",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — no full harness run; manual diagnostics not GW proof"
+        },
+        {
+          "id": "GW-04",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — no full harness run; manual diagnostics not GW proof"
+        },
+        {
+          "id": "GW-05",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — no full harness run; manual diagnostics not GW proof"
+        },
+        {
+          "id": "GW-06",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — no full harness run; manual diagnostics not GW proof"
+        },
+        {
+          "id": "GW-07",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — no full harness run; manual diagnostics not GW proof"
+        },
+        {
+          "id": "GW-08",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — no full harness run; manual diagnostics not GW proof"
+        },
+        {
+          "id": "GW-09",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — no full harness run; manual diagnostics not GW proof"
+        },
+        {
+          "id": "GW-10",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — no full harness run; manual diagnostics not GW proof"
+        },
+        {
+          "id": "GW-11",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — no full harness run; manual diagnostics not GW proof"
+        },
+        {
+          "id": "GW-12",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — no full harness run; manual diagnostics not GW proof"
+        }
+      ],
+      "database": {
+        "status": "DEFERRED",
+        "historicalResult": "207 PASS /3FAIL PostgreSQL16.15 CHK-064 unchanged",
+        "classification": "UNDETERMINED",
+        "searchPath": "INFERRED"
+      },
+      "preservedState": {
+        "deploy002": "IMPLEMENTED / VERIFICATION INCOMPLETE",
+        "coreAuth02": "IMPLEMENTED",
+        "environment": "BLOCKED BY DEPLOYMENT TOPOLOGY",
+        "provider": "NEEDS TESTING",
+        "environmentReady": false,
+        "history": "All67 prior CHK records and26VERIFIED tasks unchanged; both locally resolved startup failures retained",
+        "reference": "All classifications/U-001/U-002/U-003 unchanged; no new SevenRooms evidence or parity"
+      },
+      "filesModified": [
+        "docs/project-map/roadmap.json",
+        "docs/project-map/verification.json",
+        "docs/project-map/handoff.md",
+        "docs/security/staff-session-verification.md"
+      ],
+      "noFunctionalChanges": true,
+      "noTestChanges": true,
+      "noMigrations": true,
+      "noResources": true,
+      "noSystemChanges": true,
+      "noPush": true,
+      "newReferenceEvidence": false,
+      "parityClaim": false,
+      "nextExactTask": "CORE-AUTH-02-DEPLOY-002-FIX-003 — Correct the confirmed gateway/harness reachability defect"
     }
   ],
   "unresolvedQuestions": [

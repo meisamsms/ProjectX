@@ -1949,7 +1949,7 @@
         "dependency": "Provisioned Render/Auth0 DEVELOPMENT environment under APPROVED CORE-AUTH-D005, canonical HTTPS endpoint, synthetic staff identity and restricted PostgreSQL runtime",
         "reason": "BLOCKED BY DEPLOYMENT TOPOLOGY: the existing separate API/Vite runtimes lack a reviewed canonical same-origin web + /api/v1 deployment gateway. D005 owner selections remain resolved. No purchases or provisioning; see CORE-AUTH-02-ENV-002 / CHK-062. Resolve the narrow deployment prerequisite before actual environment setup.",
         "affectedModules": ["CORE-AUTH-02", "SETTINGS-CORE-01", "RESERVATIONS-CORE-01"],
-        "requiredPredecessor": "CORE-AUTH-02-DEPLOY-002-VERIFY-002 — Diagnose GW-01 harness reachability after nginx startup",
+        "requiredPredecessor": "CORE-AUTH-02-DEPLOY-002-FIX-003 — Correct the confirmed gateway/harness reachability defect",
         "evidenceId": "CHK-060",
         "ownerDecisionRequired": false,
         "status": "BLOCKED",
@@ -2170,7 +2170,7 @@
           "id": "CORE-AUTH-02-DEPLOY-002",
           "status": "IMPLEMENTED",
           "classification": "PROJECTX DEPLOYMENT IMPLEMENTATION",
-          "evidenceId": "CHK-067",
+          "evidenceId": "CHK-068",
           "authorization": "Explicit owner implementation prompt approves Candidate A1 and six deployment paths plus four evidence docs; no resource/purchase/Blueprint-sync or push approval",
           "priorityPart": 2,
           "coreWorkflowAdvanced": "Canonical staff-auth transport prerequisite for SETTINGS-CORE-01 and future reservation book/check-in/seating",
@@ -2182,27 +2182,27 @@
           "localStaticEvidence": "Node/shell syntax, scoped harness lint, static artifact audit and pre-nginx invalid-input rejection PASS. API/web builds and loopback compiled API health/missing-identity 401 PASS; not Linux/image/provider proof",
           "regressionEvidence": "pnpm verify PASS (4 unit / 56 auth / 19 integration / 178 web / 32 E2E, builds/static gates), after explicit cleanup of task-owned stuck Vite server; no test rerun. pnpm verify:db FAIL 207/210 across 21 files on PostgreSQL16.15; three existing PEOPLE-04 unqualified admin-query relation-not-found assertions. No fix or DB rerun",
           "blocker": {
-            "id": "CORE-AUTH-02-DEPLOY-002-GW-001",
+            "id": "CORE-AUTH-02-DEPLOY-002-REACH-02",
             "status": "BLOCKED",
-            "dependency": "Bounded separately authorized diagnosis of GW-01 shared startup/loopback reachability, preserving actual nginx/read-only/tmpfs and unchanged security/application behavior",
-            "reason": "CONFIRMED CHK-067: isolated actual nginx startup and configuration validation PASS. Unchanged harness once fails waitForPort: Local gateway did not listen;14 shared-hook failures and no GW bodies execute. Root cause UNKNOWN / NEEDS TESTING; do not claim nginx configuration or security assertions failed independently",
+            "dependency": "Separately authorized harness-only network contract correction for Windows-host Node and Linux Docker runtime; explicitly verify both host-to-gateway and gateway-to-synthetic-upstream reachability without changing gateway/app semantics or system settings",
+            "reason": "CONFIRMED CHK-068 REACH-02: same harness --network host, no published ports; running Linux nginx listens127.0.0.1:62216 and canonical inside HTTP200, while Windows curl times out and exact Node readiness ECONNREFUSED. Windows mock127.0.0.1:62215 returns200 on Windows but gateway health502 inside. Shared cross-runtime loopback assumption invalid here; underlying Docker setting cause UNKNOWN. No Host/port-number mismatch, exit/OOM or demonstrated nginx startup race",
             "affectedModules": [
               "CORE-AUTH-02",
               "SETTINGS-CORE-01",
               "RESERVATIONS-CORE-01"
             ],
-            "requiredPredecessor": "CORE-AUTH-02-DEPLOY-002-VERIFY-002 — Diagnose GW-01 harness reachability after nginx startup"
+            "requiredPredecessor": "CORE-AUTH-02-DEPLOY-002-FIX-003 — Correct the confirmed gateway/harness reachability defect"
           },
           "nextTaskProposal": {
-            "id": "CORE-AUTH-02-DEPLOY-002-VERIFY-002",
+            "id": "CORE-AUTH-02-DEPLOY-002-FIX-003",
             "status": "READY",
-            "scope": "Diagnose only why the Windows-host Node harness cannot reach the loopback gateway despite actual container nginx validation/startup passing. Capture runtime state and host-network reachability with synthetic values; no code/config/system modification without separate corrective authorization; no speculative reruns",
+            "scope": "Separate bounded correction owned by deploy/gateway/gateway.test.mjs only: establish explicit actual-image reachability for gateway and synthetic upstream across Windows/Linux runtime boundaries. Preserve pinned image, read-only/tmpfs, canonical Host, security assertions and cleanup; no nginx/start/Dockerfile/Blueprint/app/DB edits or system settings without separate approval",
             "acceptanceCriteria": [
               "Actual-nginx GW-01–GW-12 and image syntax/build pass",
               "Existing regression gates including PostgreSQL16 verify:db green, prior failures preserved",
               "No live Render/Auth0 resources or provider-readiness claim"
             ],
-            "executionGate": "Separate bounded diagnostic authorization required. FIX-002 stops after one shared-setup harness failure; no harness edit, rerun, DB/regression suite, provisioning or push"
+            "executionGate": "Separate explicit FIX-003 authorization required; VERIFY-002 is diagnostic/documentation only, no full harness rerun, functional edits, DB comparison, provisioning or push. If correction requires another causal file or system setting, stop for approval"
           }
         }
       },
@@ -2210,7 +2210,7 @@
       "developmentDeploymentDecisionId": "CORE-AUTH-D005",
       "readinessEvidence": "CHK-058 owner-decision documentation only. Published CORE-AUTH-01 CI run 37253348486 attempt 2/job 111586842967 green at 95d4d1b1cc9f8a6dc69a1d8a3edea38df9e00923; original failed attempt preserved. Not production auth, new implementation or core readiness proof.",
       "coreWorkflowAdvanced": "Secure authenticated staff access for reservation-required Venue settings and future reservation book/check-in/seating.",
-      "remainingWork": "CHK-067: FIX-002 runtime temp-path correction committed locally; exact pinned image build and actual read-only nginx configuration/startup PASS. Unchanged harness fails shared waitForPort setup; no GW-01–12 body executed. Runtime/harness reachability root cause UNKNOWN / NEEDS TESTING; isolated startup does not prove gateway contracts. Secret review/API build/DB comparison/regression gates deferred after stop. CHK-064/065/066 preserved, search_path INFERRED, no DB waiver. Separate VERIFY-002 prerequisite. DEPLOY-002 IMPLEMENTED / VERIFICATION INCOMPLETE; CORE-AUTH-02 IMPLEMENTED; ENV-001 BLOCKED; provider NEEDS TESTING; readiness NO",
+      "remainingWork": "CHK-068 confirms REACH-02: disposable same-parameter host-network nginx remains running, listens on Linux loopback, inside canonical HTTP200; no Docker published ports; Windows exact probe ECONNREFUSED and curl timeout. Synthetic Windows upstream healthy locally but gateway health502. Correct harness cross-runtime loopback reachability through separately authorized FIX-003; Docker settings root cause UNKNOWN, no automatic settings change. GW-01–12 remain NOT EXECUTED; no full harness rerun, DB comparison or gate waiver. Previous67checks and both resolved startup failures preserved; CORE-AUTH-02 IMPLEMENTED, DEPLOY-002 VERIFICATION INCOMPLETE, ENV-001 BLOCKED, provider NEEDS TESTING, readiness NO",
       "specificationFile": "docs/security/staff-access-integration.md",
       "requiredOwnerDecisionIds": [
         "CORE-AUTH-D001",
@@ -2707,7 +2707,7 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "CORE-AUTH-02-DEPLOY-002-VERIFY-002 — Diagnose GW-01 harness reachability after nginx startup",
+  "nextExactTask": "CORE-AUTH-02-DEPLOY-002-FIX-003 — Correct the confirmed gateway/harness reachability defect",
   "deliveryPriority": {
     "decisionId": "PRIORITY-D001",
     "primaryTarget": "PART 1 — CORE ONLINE RESERVATION SYSTEM",
