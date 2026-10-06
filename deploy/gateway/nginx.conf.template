@@ -1,7 +1,7 @@
 # Entire config: vendor snippets/log defaults are intentionally not included.
 worker_processes 1;
 worker_shutdown_timeout 25s;
-pid /tmp/projectx-gateway/nginx.pid;
+pid /tmp/nginx.pid;
 error_log /dev/null crit;
 events { worker_connections 512; }
 http {
@@ -18,8 +18,11 @@ http {
     client_header_timeout 15s;
     send_timeout 60s;
     keepalive_timeout 15s;
-    client_body_temp_path /tmp/projectx-gateway/client;
-    proxy_temp_path /tmp/projectx-gateway/proxy;
+    client_body_temp_path /tmp/client_temp;
+    proxy_temp_path /tmp/proxy_temp;
+    fastcgi_temp_path /tmp/fastcgi_temp;
+    uwsgi_temp_path /tmp/uwsgi_temp;
+    scgi_temp_path /tmp/scgi_temp;
 
     map $http_host $canonical_authority {
         default 0;
