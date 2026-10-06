@@ -21,6 +21,8 @@ import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../../", import.meta.url));
 const image = "projectx-dev-gateway:local";
+const containerPort = 10000;
+const hostAlias = "host.docker.internal"; // Docker Desktop local tests only.
 const canonical = "gateway.test.invalid";
 const origin = `https://${canonical}`;
 const canary = "SYNTHETIC_GATEWAY_CANARY_71d909";
@@ -51,7 +53,7 @@ const dockerReady =
   dockerInfo.stdout.trim() === "linux" &&
   /^(unix:|npipe:)/.test(dockerContext?.stdout.trim() ?? "");
 const blocked =
-  "BLOCKED BY TOOLING: local Linux Docker engine/host networking required; do not install or substitute a Node proxy";
+  "BLOCKED BY TOOLING: local Linux Docker Desktop bridge/host-alias support required; do not install or substitute a Node proxy";
 if (!dockerReady) {
   console.error(blocked);
   process.exitCode = 2;
@@ -92,6 +94,7 @@ function request(target = "/", options = {}) {
     body,
     headers = {},
     port: selectedPort = gatewayPort,
+    timeoutMs = 75000,
   } = options;
   return new Promise((resolve, reject) => {
     const req = http.request(
@@ -115,9 +118,11 @@ function request(target = "/", options = {}) {
         );
       },
     );
-    req.setTimeout(75000, () =>
-      req.destroy(new Error("Local request deadline")),
+    const deadline = setTimeout(
+      () => req.destroy(new Error("Local request deadline")),
+      timeoutMs,
     );
+    req.on("close", () => clearTimeout(deadline));
     req.on("error", reject);
     if (body !== undefined) req.write(body);
     req.end();
@@ -146,18 +151,35 @@ function rawRequest(firstLine, headers) {
     );
   });
 }
-async function waitForPort(selectedPort) {
-  for (let i = 0; i < 100; i++) {
+async function waitForPort(selectedPort, expectedStatus = 200) {
+  const deadline = Date.now() + 10000;
+  let lastResult = "no response";
+  while (Date.now() < deadline) {
     try {
-      await request("/health", { port: selectedPort });
-      return;
-    } catch {
-      await sleep(100);
+      const response = await request("/health", {
+        port: selectedPort,
+        timeoutMs: Math.min(1000, deadline - Date.now()),
+      });
+      lastResult = `HTTP ${response.status}`;
+      if (expectedStatus === null || response.status === expectedStatus) return;
+    } catch (error) {
+      lastResult = error.code ?? error.message;
     }
+    await sleep(Math.min(100, Math.max(0, deadline - Date.now())));
   }
   assert.fail(
-    "Local gateway did not listen; check actual image/tooling, not application guards",
+    `Local readiness failed within 10s on 127.0.0.1:${selectedPort}: ${lastResult}`,
   );
+}
+function publishedPort(name) {
+  const mappings = JSON.parse(
+    docker(["inspect", "--format", "{{json .NetworkSettings.Ports}}", name]),
+  )[`${containerPort}/tcp`];
+  assert.equal(mappings?.length, 1);
+  assert.equal(mappings[0].HostIp, "127.0.0.1");
+  const selectedPort = Number(mappings[0].HostPort);
+  assert(Number.isInteger(selectedPort) && selectedPort > 0);
+  return selectedPort;
 }
 function runContainer(env = {}, args = []) {
   const name = `projectx-gw-test-${randomUUID()}`;
@@ -168,7 +190,9 @@ function runContainer(env = {}, args = []) {
     "--name",
     name,
     "--network",
-    "host",
+    "bridge",
+    "--publish",
+    `127.0.0.1::${containerPort}`,
     "--read-only",
     "--tmpfs",
     "/tmp:rw,noexec,nosuid,size=32m",
@@ -179,11 +203,11 @@ function runContainer(env = {}, args = []) {
     "-e",
     `GATEWAY_CANONICAL_HOST=${canonical}`,
     "-e",
-    `GATEWAY_API_HOSTPORT=127.0.0.1:${apiPort}`,
+    `GATEWAY_API_HOSTPORT=${hostAlias}:${apiPort}`,
     "-e",
-    `PORT=${gatewayPort}`,
+    `PORT=${containerPort}`,
     "-e",
-    "GATEWAY_LISTEN_ADDRESS=127.0.0.1",
+    "GATEWAY_LISTEN_ADDRESS=0.0.0.0",
     ...Object.entries(env).flatMap(([key, value]) => ["-e", `${key}=${value}`]),
     ...args,
     image,
@@ -251,11 +275,18 @@ function mock(req, res) {
   });
 }
 
-// Small synthetic DNS fixture only: one loopback hostname, no recursive resolver.
+// Synthetic DNS on Windows loopback, reached through Docker Desktop's host alias.
+// Rotate the A record host -> unavailable container loopback -> host, proving
+// actual nginx refresh/recovery without requiring two Windows loopback aliases.
 async function dnsRefreshProof() {
   const dns = dgram.createSocket("udp4");
   const hostname = "api.gateway.test.invalid";
-  let address = [127, 0, 0, 1];
+  const hostAddress = docker(["exec", gateway, "getent", "hosts", hostAlias])
+    .trim()
+    .split(/\s+/)[0];
+  assert.equal(net.isIP(hostAddress), 4);
+  const reachableAddress = hostAddress.split(".").map(Number);
+  let address = reachableAddress;
   dns.on("message", (packet, peer) => {
     if (packet.length < 17 || packet.readUInt16BE(4) !== 1) return;
     let offset = 12;
@@ -295,23 +326,16 @@ async function dnsRefreshProof() {
     res.setHeader("X-DNS-Backend", "one");
     res.end("one");
   });
-  const second = http.createServer((_req, res) => {
-    res.setHeader("X-DNS-Backend", "two");
-    res.end("two");
-  });
   let container;
   try {
-    await writeFile(resolverFile, "nameserver 127.0.0.1\n", { mode: 0o444 });
+    await writeFile(resolverFile, `nameserver ${hostAddress}\n`, {
+      mode: 0o444,
+    });
     await new Promise((resolve) =>
       first.listen(backendPort, "127.0.0.1", resolve),
     );
-    await new Promise((resolve) =>
-      second.listen(backendPort, "127.0.0.2", resolve),
-    );
-    const selectedPort = await port();
     container = runContainer(
       {
-        PORT: String(selectedPort),
         GATEWAY_API_HOSTPORT: `${hostname}:${backendPort}`,
         GATEWAY_DNS_PORT: String(dns.address().port),
       },
@@ -320,6 +344,7 @@ async function dnsRefreshProof() {
         `type=bind,source=${resolverFile},target=/etc/resolv.conf,readonly`,
       ],
     );
+    const selectedPort = publishedPort(container);
     await waitForPort(selectedPort);
     let seen;
     for (let i = 0; i < 100; i++) {
@@ -331,19 +356,22 @@ async function dnsRefreshProof() {
     address = [127, 0, 0, 2];
     for (let i = 0; i < 160; i++) {
       seen = await request("/api/v1/dns", { port: selectedPort });
-      if (seen.headers["x-dns-backend"] === "two") break;
+      if (seen.status === 502) break;
       await sleep(100);
     }
-    assert.equal(seen.headers["x-dns-backend"], "two");
+    assert.equal(seen.status, 502);
+    address = reachableAddress;
+    for (let i = 0; i < 160; i++) {
+      seen = await request("/api/v1/dns", { port: selectedPort });
+      if (seen.headers["x-dns-backend"] === "one") break;
+      await sleep(100);
+    }
+    assert.equal(seen.headers["x-dns-backend"], "one");
     assert.equal(seen.status, 200); // actual nginx, no restart/public fallback.
   } finally {
     if (container) stopContainer(container);
     first.closeAllConnections();
-    second.closeAllConnections();
-    await Promise.all([
-      new Promise((resolve) => first.close(resolve)),
-      new Promise((resolve) => second.close(resolve)),
-    ]);
+    await new Promise((resolve) => first.close(resolve));
     await new Promise((resolve) => dns.close(resolve));
     const absolute = await realpath(folder),
       parent = await realpath(os.tmpdir());
@@ -429,7 +457,6 @@ before(async () => {
   if (!dockerReady) return;
   docker(["image", "inspect", image]); // Build explicitly first; never implicit download/install.
   apiPort = await port();
-  gatewayPort = await port();
   upstream = http.createServer(mock);
   upstream.on("connection", (socket) => {
     sockets.add(socket);
@@ -439,6 +466,7 @@ before(async () => {
     upstream.listen(apiPort, "127.0.0.1", resolve),
   );
   gateway = runContainer();
+  gatewayPort = publishedPort(gateway);
   await waitForPort(gatewayPort);
 });
 after(async () => {
@@ -457,8 +485,49 @@ after(async () => {
     });
   }
 });
+let gatewayFailed = false;
 const gw = (id, name, fn, timeout = 15000) =>
-  test(`${id} ${name}`, { skip: dockerReady ? false : blocked, timeout }, fn);
+  test(`${id} ${name}`, {
+    skip: dockerReady ? false : blocked,
+    timeout,
+  }, async (t) => {
+    if (gatewayFailed) return t.skip("Stopped after prior GW failure");
+    try {
+      await fn();
+    } catch (error) {
+      gatewayFailed = true;
+      throw error;
+    }
+  });
+
+test("Focused bridge reachability", {
+  skip: dockerReady ? false : blocked,
+}, async () => {
+  const state = JSON.parse(docker(["inspect", gateway]))[0];
+  assert.equal(state.State.Running, true);
+  assert.equal(state.HostConfig.NetworkMode, "bridge");
+  assert.equal(state.HostConfig.ReadonlyRootfs, true);
+  assert.equal(
+    state.HostConfig.Tmpfs["/tmp"],
+    "/tmp:rw,noexec,nosuid,size=32m".slice(5),
+  );
+  assert.equal(publishedPort(gateway), gatewayPort);
+  const mapping = docker(["port", gateway, `${containerPort}/tcp`]).trim();
+  assert.equal(mapping, `127.0.0.1:${gatewayPort}`);
+  assert.equal((await request("/")).status, 200);
+  for (const host of [`127.0.0.1:${gatewayPort}`, "foreign.invalid"])
+    assert.equal((await request("/", { headers: { Host: host } })).status, 403);
+  const before = records.length;
+  const health = await request("/health");
+  assert.equal(health.status, 200);
+  assert.equal(JSON.parse(health.body).status, "ok");
+  assert.equal(records.length, before + 1);
+  assert.equal(records.at(-1).url, "/health");
+  assert.equal(records.at(-1).headers.host, canonical);
+  console.log(
+    `Focused PASS: RUNNING; ${mapping} -> ${containerPort}; Windows mock 127.0.0.1:${apiPort} via ${hostAlias}; canonical/default/foreign=200/403/403; upstream health=200`,
+  );
+});
 
 test("Static implementation audit (NOT nginx/runtime proof)", async () => {
   const [config, start, dockerfile, ignore, blueprint] = await Promise.all([
@@ -781,13 +850,12 @@ gw(
     assert.equal(slow.status, 504);
     assert.equal(slow.headers["cache-control"], "no-store");
     const unused = await port();
-    const deadPort = await port();
     const dead = runContainer({
-      GATEWAY_API_HOSTPORT: `127.0.0.1:${unused}`,
-      PORT: String(deadPort),
+      GATEWAY_API_HOSTPORT: `${hostAlias}:${unused}`,
     });
     try {
-      await waitForPort(deadPort);
+      const deadPort = publishedPort(dead);
+      await waitForPort(deadPort, 502);
       const r = await request("/api/v1/echo", { port: deadPort });
       assert.equal(r.status, 502);
       assert.equal(r.headers["cache-control"], "no-store");
@@ -924,13 +992,12 @@ gw(
       },
     );
     await realApp.listen({ host: "127.0.0.1", port: 0 });
-    const realPort = realApp.server.address().port,
-      guardedPort = await port();
+    const realPort = realApp.server.address().port;
     const guarded = runContainer({
-      GATEWAY_API_HOSTPORT: `127.0.0.1:${realPort}`,
-      PORT: String(guardedPort),
+      GATEWAY_API_HOSTPORT: `${hostAlias}:${realPort}`,
     });
     try {
+      const guardedPort = publishedPort(guarded);
       await waitForPort(guardedPort);
       assert.equal(
         (await request("/api/v1/staff-auth/session", { port: guardedPort }))
