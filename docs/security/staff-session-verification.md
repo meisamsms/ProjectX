@@ -5,6 +5,179 @@ CORE-AUTH-D004. Base 84ed2938d7d1fa6155e744a50ef3d6aebe6f978c.
 Parent task IMPLEMENTED; controlled Auth0/production assurance remains NEEDS TESTING.
 No SevenRooms evidence or parity claims.
 
+## Gateway implementation checkpoint — CHK-064 / CORE-AUTH-02-DEPLOY-002
+
+2026-10-05; clean base 75da5c2adb9a99049945d2df2401537d9e92e675,
+people-03-accounts-read. Explicit owner prompt APPROVES Candidate A1 implementation
+in six deployment files plus four evidence docs only. PROJECTX DEPLOYMENT
+IMPLEMENTATION, not SevenRooms evidence or a new authentication architecture.
+DEPLOY-001 / CHK-063 below is retained as historical review, not overwritten.
+
+**DEPLOY-002 IMPLEMENTED; LOCAL NGINX VERIFICATION BLOCKED BY TOOLING.**
+No actual pinned-image build/run/nginx syntax/GW runtime pass is claimed.
+CORE-AUTH-02 IMPLEMENTED, not VERIFIED; ENV-001 BLOCKED BY DEPLOYMENT TOPOLOGY;
+provider NEEDS TESTING; ENVIRONMENT READY FOR CONTROLLED VERIFICATION: NO.
+
+### Scope and current files
+
+Task-selection gate: Part 2 required foundation for SETTINGS-CORE-01 and later
+reservation book/check-in/seating. CORE-AUTH-01 and PEOPLE-CORE-01 VERIFIED,
+DEPLOY-001 DOCUMENTED, D004/D005 APPROVED. Separate web/API entrypoints need a
+canonical transport boundary before real-provider verification. DECISION: PROCEED
+bounded implementation; local proof/provisioning gate remains BLOCKED.
+
+Created only render.yaml, .dockerignore and deploy/gateway/{Dockerfile,
+nginx.conf.template,start.sh,gateway.test.mjs}. The four evidence docs are the only
+other changes. No API/web/auth code, existing tests, migrations, contracts,
+packages/lockfile, production/staging, Settings/reservations/Export, resource,
+purchase, Blueprint sync or push. The API remains the existing private Node/Fastify
+service; static gateway contains no business/auth/database logic.
+
+Unapplied development Blueprint: exactly one public Docker gateway and one native
+private API, manual autoDeployTrigger "off", one instance each, fixed existing
+build/entrypoint and API-only sync:false secret input names. Ohio/starter are
+conditional D005 baseline candidates, NOT actual selected/provisioned region/tier.
+Review actual availability, quote and memory fit BEFORE any future sync. Omitted
+DB declaration: PostgreSQL16/tier/storage/runtime role/TLS must not be invented.
+No hooks create/migrate databases. Both services must later share workspace/region.
+GW configuration/source presence does not authorize applying this Blueprint.
+
+Images are version + immutable multi-architecture index digest pinned:
+
+- Node: node:24.19.0-bookworm-slim@sha256:a9f5f7c91a432850b2a8a7797adf5eadb6c733ceed61167806cee7ea7fbc29df.
+- Runtime: nginxinc/nginx-unprivileged:1.30.5-alpine3.24@sha256:15c994d10d6d78658721c3bcafff14cb281fba2a4bdf9d5ba92c416a472516e3.
+- Intended local tag projectx-dev-gateway:local, NOT built.
+
+CONFIRMED public registry metadata for
+[Node](https://hub.docker.com/v2/repositories/library/node/tags/24.19.0-bookworm-slim)
+and [nginx](https://hub.docker.com/v2/repositories/nginxinc/nginx-unprivileged/tags/1.30.5-alpine3.24).
+No image pull/runtime proof. Existing pinned pnpm11.25.0 only; no new repository
+dependency. Web build fixed public VITE_STAFF_AUTH_ENABLED=1 and relative /api/v1/.
+Allowlisted context/COPY inputs exclude API/runtime/credentials/tests; final image
+receives only web dist and gateway config/start. No ARG or env-file/secret copy.
+Container build normalizes gateway script/template CRLF for Windows Git checkouts.
+Static input audit includes the contracts routes.json runtime import; test/spec
+source is excluded. GW-12 adds actual Docker context filtering with disposable
+synthetic included/secret fixtures, but that proof has NOT executed without Docker.
+Existing API build emits apps/api/dist/main.js; future start uses that entrypoint,
+not a nonexistent package start script. Native Linux/Render startup remains unproven.
+
+### Implemented configuration contract — runtime NEEDS TESTING
+
+- One lower-case validated canonical DNS hostname; exact incoming Host match before
+  fixed upstream Host. Foreign/missing/ambiguous/absolute-form authority fails
+  closed (duplicate Host also nginx-parser boundary NEEDS TESTING). Only exact
+  GET/HEAD /health may use platform probe Host; never auth/SPA bypass.
+- Reserve /api and /api/ ahead of static/SPA, including all five staff-auth paths.
+  No URI suffix/rewrite on proxy_pass; original methods/body/query/duplicates
+  preserved; no redirects/retries/error interception or API-to-index.html.
+- Fail-closed raw-path policy rejects percent-encoded paths, backslashes, duplicate
+  slashes, dot segments and API namespace case variants before normalized routing.
+  This deliberately also rejects otherwise benign percent-encoded web paths in
+  this development milestone; query encoding remains untouched. Not a reference
+  application rule. Actual parser/normalization proof still requires nginx.
+- Origin/Referer/CSRF/context/Cookie remain real browser values. No identity/scope/
+  permission/CSRF synthesis or CORS workaround. Remove X-Forwarded-Host, Forwarded,
+  client IP/original-host/port metadata; fixed HTTPS forwarding only under the
+  eventual verified Render HTTPS ingress. No current Fastify guard change.
+- Separate Set-Cookie/host-only Secure/HttpOnly/SameSite=Lax/Path=/, logout expiry,
+  status/Location preserved; no cookie-domain/path/flag rewrite. proxy_redirect
+  off; X-Accel-Redirect/Buffering ignored, no internal redirect by upstream.
+- No proxy cache/store/retry; preserve application Cache-Control/Pragma. Missing
+  upstream Cache-Control and generated errors use no-store; conflicting CDN header
+  hidden and fixed CDN-Cache-Control:no-store. index revalidates, generated assets
+  may be immutable; missing asset 404; SPA only web GET/HEAD. Render edge cache
+  actual bypass and two-browser separation remain NEEDS TESTING.
+- Allowlisted request-ID/status/bytes/duration log only; no URI/query/request/header/
+  body/Referer/cookie/Authorization/Location. URI-bearing error log disabled to
+  /dev/null, explicit diagnostics loss. Syntax-check diagnostics suppressed and
+  fixed startup failure message only; no environment/config printing.
+- Body 1MiB, body buffer1MiB; initial header1KiB, four large16KiB buffers; upstream
+  header16KiB. Connect5s, send/read60s inactivity (not total deadlines), client
+  header15s/body60s, keepalive15s; no response buffering or body temp spill intended.
+  Temporary-file/memory/boundary behavior still requires actual-image tests.
+- start.sh validates canonical/upstream labels/ports and binds only 0.0.0.0 (future
+  deployment) or 127.0.0.1 (local harness). Missing/malformed inputs/known credential
+  variables rejected; explicit bounded substitutions only, no eval/envsubst.
+  nginx -t before foreground exec; nonroot UID101, PID/temp paths under /tmp.
+- Private DNS resolver IPv4 addresses derive from actual /etc/resolv.conf; no
+  invented Render hostname/resolver IP/public fallback. nginx shared upstream zone
+  with resolve, valid10s/resolver timeout5s. GATEWAY_DNS_PORT defaults53; bounded
+  optional port exists solely for disposable loopback synthetic DNS fixture, never
+  configured in Blueprint. IPv6-only resolver is a fail-closed documented limitation.
+  GATEWAY_LISTEN_ADDRESS likewise is only a bounded local-isolation override.
+
+The DNS mechanisms follow the
+[nginx upstream reference](https://nginx.org/en/docs/http/ngx_http_upstream_module.html);
+available directives are not proof of this configuration. Actual Render DNS/Host/
+HTTP2/TLS/edge-cache/platform log semantics remain ENV-001 gates. nginx cannot
+redact Render's ingress logs; NO real callback until platform query safety proven.
+
+### Executed local evidence and preserved failures
+
+CONFIRMED: Docker/nginx/Caddy absent on PATH; conventional Docker Desktop CLI absent.
+No system installation/download or substitute handwritten proxy. docker build
+could not execute. Node harness explicitly returns nonzero when tooling unavailable:
+two static/pre-nginx checks PASS, twelve actual-nginx GW groups SKIPPED. Its
+test-file failure is the intentional tooling blocker, not an nginx assertion result.
+
+GW-01 through GW-12 all NEEDS TESTING / BLOCKED BY TOOLING. Harness implements
+static/API/health, seven methods and binary hashes/query, headers/Host raw spoofs,
+multiple cookies/logout, status/cache, callback/log/artifact canaries, real60s
+timeout/disconnect/no replay, raw API-like paths, sizes/temp files, compiled API
+guards, invalid inputs and shutdown. GW-12 includes a disposable loopback-only
+synthetic DNS A-record change (actual nginx must refresh without restart). This
+is a DNS fixture, not a replacement proxy. Its context probe reuses the built image
+without pulls/network and cleans only its disposable image/directory. Uses local Linux Docker host networking,
+127.0.0.1 gateway and mock API, temporary read-only synthetic resolver file and
+cleanup; no real provider/DB. Windows Docker Desktop host-network compatibility
+also needs proof. Missing tool/tests are never converted to PASS.
+
+- Node syntax and existing Git sh -n PASS; scoped Biome stdin audit PASS (root
+  format/lint commands do not include deploy/). Static/input checks are not nginx.
+- pnpm --filter @projectx/api build PASS; actual emitted apps/api/dist/main.js starts
+  on a random loopback port, /health200 and unauthenticated People route401.
+  Disposable process stopped; no DB/provider. This is Windows module closure only.
+- Flagged existing web build PASS, apps/web/dist, no server credential input.
+- pnpm format:check/lint/typecheck/contract:check/map:check PASS; test:auth56/56 PASS.
+- One pnpm verify PASS: unit4/4, auth56/56, integration19/19, web178/178, browser
+  E2E32/32, static gates and builds. Browser-server cleanup stalled after all32;
+  exact task-owned Vite process confirmed by command line and terminated, then the
+  same command completed exit0. No test rerun or existing test modification.
+- One pnpm verify:db FAIL: PostgreSQL16.15,207PASS/3FAIL across21files. Existing
+  apps/api/tests/people/add-user.test.ts failed "atomically creates User, membership,
+  explicit grants, venue access and pending provisioning"; "preserves nullable
+  names/job title and notification null/false/true"; "returns one logical effect
+  for an identical idempotent retry". Raw admin SELECTs report relation
+  user_provisioning_invites/users does not exist. Existing files unchanged.
+  INFERRED bounded cause: unqualified assertions rely on search_path after
+  transaction-local fixture setup; new admin pool defaults differ. Not proven
+  application regression, not a harmless warning, not fixed or silently rerun.
+  Separately review/authorize test-environment verification; no out-of-scope fix.
+- Test DB used existing portable PostgreSQL16.15 binaries and new loopback-only
+  disposable cluster/random port/test-only owner, suffix_test, NODE_ENV=test/
+  TEST_DATABASE=1; no existing/external DB touched. Stopped and removed afterward.
+- JSON/DAG/ID/history/scope/diff/secret checks PASS. All63 prior check objects,
+ 26 VERIFIED tasks,54 unrelated task objects, D004/D005/ADRs and SevenRooms
+  classifications/U-001/U-002/U-003 unchanged. Synthetic canaries only.
+
+Shell-spawn deprecation/color/React Router build directives are non-blocking
+maintenance warnings, unlike the recorded DB failures. No historical result
+rewritten, no gateway/provider/reference parity or complete core readiness claim.
+
+NEXT EXACT TASK: CORE-AUTH-02-DEPLOY-002-VERIFY-001 — Provide approved local Docker
+tooling and complete gateway/regression verification. Separate authorization:
+provide existing approved local Linux Docker/host-network tooling or explicitly
+authorize installation; build actual image and run GW harness; review the preserved
+DB failure and authorize scoped environment/rerun steps. No silent test/code fix.
+
+Do NOT proceed to ENV-001 provisioning before required actual-nginx and regression
+proof unless separately re-authorized. After local proof, actual environment gates
+still remain; only environment ready YES permits the existing provider matrix.
+SETTINGS-CORE-01 PLANNED, PEOPLE-09 READY / PART3 DEFERRED, PEOPLE-09B/10 PLANNED /
+DEFERRED, IMPL-MOD-14 IN_PROGRESS. Local commit permitted with accurate blocker
+record; separate exact-SHA push approval required. No push in DEPLOY-002.
+
 ## Gateway engineering review — CHK-063 / CORE-AUTH-02-DEPLOY-001
 
 2026-10-05; exact clean base

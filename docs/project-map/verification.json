@@ -1186,6 +1186,227 @@
         "docs/project-map/handoff.md",
         "docs/security/staff-session-verification.md"
       ]
+    },
+    {
+      "id": "CHK-064",
+      "taskId": "CORE-AUTH-02-DEPLOY-002",
+      "date": "2026-10-05",
+      "status": "IMPLEMENTED",
+      "baseCommit": "75da5c2adb9a99049945d2df2401537d9e92e675",
+      "scope": "Owner-approved Candidate A1 implementation restricted to six deployment files and four evidence docs; local-only commit, no push/provisioning/purchase/Blueprint sync",
+      "result": "IMPLEMENTED; LOCAL NGINX VERIFICATION BLOCKED BY TOOLING. Static/input/compiled-entrypoint proof only. pnpm verify PASS after task-owned Vite cleanup; verify:db FAIL 207/210. Not locally VERIFIED, not provider/environment verification",
+      "authorization": {
+        "classification": "OWNER APPROVED / PROJECTX DEPLOYMENT IMPLEMENTATION SCOPE",
+        "basis": "Explicit CORE-AUTH-02-DEPLOY-002 prompt approves Candidate A1",
+        "notAuthorized": [
+          "Software installation",
+          "Render/Auth0/database resource provisioning",
+          "Purchases or Blueprint sync",
+          "Application/existing-test/migration/contract/package changes",
+          "Push",
+          "Settings/reservations/Export"
+        ]
+      },
+      "findings": [
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F007",
+          "classification": "CONFIRMED",
+          "finding": "Six approved artifacts created, public gateway + private API Blueprint manual/off; no DB declaration or migration hook, no resources selected/created. Ohio/starter fields are conditional baseline candidates and must be reviewed before any future sync"
+        },
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F008",
+          "classification": "CONFIRMED",
+          "finding": "Public registry metadata confirms exact versioned image/index digests; pull/build/run not executed. Existing Node24.19/API compiler entrypoint health/missing-identity 401 and flagged web build PASS; Windows proof, not Linux module closure or image proof"
+        },
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F009",
+          "classification": "INFERRED",
+          "finding": "nginx transport configuration implements specified canonical authority/API namespace/cookie/CSRF/cache/log/bounds; source inspection and pre-nginx rejection PASS. Required context inputs include contracts routes.json; test/spec source excluded. Executable actual-nginx GW-01–GW-12, disposable Docker context secret-filter probe, synthetic DNS refresh and image-secret/temp-file proof NEEDS TESTING"
+        },
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F010",
+          "classification": "CONFIRMED",
+          "finding": "Docker/nginx unavailable on PATH and conventional Docker Desktop CLI absent. Build command could not execute; harness returns nonzero, static/input checks 2 PASS and 12 actual-image GW checks SKIPPED. No substitute proxy or software install"
+        },
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F011",
+          "classification": "CONFIRMED",
+          "finding": "One full pnpm verify completed exit0: unit4/4, auth56/56, integration19/19, web178/178, E2E32/32 and builds/static gates. Browser teardown stalled; only exact command-line-confirmed task-owned Vite process terminated to complete cleanup. No assertion/test rerun"
+        },
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F012",
+          "classification": "CONFIRMED",
+          "finding": "One verify:db attempt on new disposable loopback-only PostgreSQL16.15 cluster: 207/210 across21files, three failures in existing apps/api/tests/people/add-user.test.ts at raw admin SELECT assertions: user_provisioning_invites/users relation not found. Existing tests/app/migration files unchanged; no correction or rerun"
+        },
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F013",
+          "classification": "INFERRED",
+          "finding": "Failed admin assertions use unqualified relations while fixture uses transaction-local projectx_test search_path and a new admin pool. Test search_path assumption is a bounded diagnosis, not confirmed production regression; separately verify before changing any test/environment or rerunning"
+        },
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F014",
+          "classification": "NEEDS TESTING",
+          "finding": "Actual Render canonical TLS/Host/forwarding/HTTP2 authority, DNS/edge cache/log redaction, region/tier/cost/PostgreSQL/runtime-role/TLS/secrets/identity and provider matrix remain ENV-001 gates. Local A1 configuration does not prove any of them"
+        }
+      ],
+      "images": {
+        "node": "node:24.19.0-bookworm-slim@sha256:a9f5f7c91a432850b2a8a7797adf5eadb6c733ceed61167806cee7ea7fbc29df",
+        "nginx": "nginxinc/nginx-unprivileged:1.30.5-alpine3.24@sha256:15c994d10d6d78658721c3bcafff14cb281fba2a4bdf9d5ba92c416a472516e3",
+        "localGateway": "projectx-dev-gateway:local — intended tag, not built",
+        "metadataSources": [
+          "https://hub.docker.com/v2/repositories/library/node/tags/24.19.0-bookworm-slim",
+          "https://hub.docker.com/v2/repositories/nginxinc/nginx-unprivileged/tags/1.30.5-alpine3.24"
+        ]
+      },
+      "commands": [
+        {
+          "command": "pnpm --filter @projectx/api build; emitted apps/api/dist/main.js loopback startup/health/missing-identity control",
+          "result": "PASS; compiled Windows entrypoint; disposable process stopped; no provider or DB"
+        },
+        {
+          "command": "pnpm --filter @projectx/web build (VITE_STAFF_AUTH_ENABLED=1, relative /api/v1/)",
+          "result": "PASS; apps/web/dist, public fixed flags only"
+        },
+        {
+          "command": "docker build -f deploy/gateway/Dockerfile -t projectx-dev-gateway:local .",
+          "result": "BLOCKED — docker command absent; not built"
+        },
+        {
+          "command": "node --test deploy/gateway/gateway.test.mjs",
+          "result": "NONZERO / TOOLING BLOCKED; 2 static/pre-nginx checks PASS, GW-01–GW-12 SKIPPED; test-runner file failure due intentional nonzero blocker is not an executed nginx assertion failure"
+        },
+        {
+          "command": "Node syntax, existing Git sh -n, scoped Biome stdin audit",
+          "result": "PASS; not nginx syntax validation"
+        },
+        {
+          "command": "pnpm format:check; pnpm lint; pnpm typecheck; pnpm contract:check; pnpm map:check; pnpm test:auth",
+          "result": "PASS; focused auth56/56"
+        },
+        {
+          "command": "pnpm verify",
+          "result": "PASS; single run, manual cleanup of task-owned Vite test server required; no test rerun"
+        },
+        {
+          "command": "pnpm verify:db",
+          "result": "FAIL; PostgreSQL16.15,207PASS/3FAIL across21files; no DB rerun"
+        },
+        {
+          "command": "git diff --check; JSON/DAG/history/authorized-scope/secret review",
+          "result": "PASS; all63 earlier check objects,26 VERIFIED objects,54 unrelated tasks, D004/D005/ADRs/reference records preserved"
+        }
+      ],
+      "databaseFailure": {
+        "file": "apps/api/tests/people/add-user.test.ts",
+        "tests": [
+          "atomically creates User, membership, explicit grants, venue access and pending provisioning",
+          "preserves nullable names/job title and notification null/false/true",
+          "returns one logical effect for an identical idempotent retry"
+        ],
+        "errors": [
+          "relation \"user_provisioning_invites\" does not exist",
+          "relation \"users\" does not exist"
+        ],
+        "disposition": "STOP DB verification; no test/code/migration fix or silent rerun; preserve failure and obtain separate scoped verification direction",
+        "environment": "Existing portable PostgreSQL16.15 binaries; new disposable cluster on127.0.0.1/random port, test-only owner and database suffix_test, TEST_DATABASE=1/NODE_ENV=test. No external or existing DB touched; cluster stopped and removed"
+      },
+      "gatewayChecks": [
+        {
+          "id": "GW-01",
+          "status": "NEEDS TESTING",
+          "result": "BLOCKED BY TOOLING — actual pinned nginx image not available"
+        },
+        {
+          "id": "GW-02",
+          "status": "NEEDS TESTING",
+          "result": "BLOCKED BY TOOLING — actual pinned nginx image not available"
+        },
+        {
+          "id": "GW-03",
+          "status": "NEEDS TESTING",
+          "result": "BLOCKED BY TOOLING — actual pinned nginx image not available"
+        },
+        {
+          "id": "GW-04",
+          "status": "NEEDS TESTING",
+          "result": "BLOCKED BY TOOLING — actual pinned nginx image not available"
+        },
+        {
+          "id": "GW-05",
+          "status": "NEEDS TESTING",
+          "result": "BLOCKED BY TOOLING — actual pinned nginx image not available"
+        },
+        {
+          "id": "GW-06",
+          "status": "NEEDS TESTING",
+          "result": "BLOCKED BY TOOLING — actual pinned nginx image not available"
+        },
+        {
+          "id": "GW-07",
+          "status": "NEEDS TESTING",
+          "result": "BLOCKED BY TOOLING — actual pinned nginx image not available"
+        },
+        {
+          "id": "GW-08",
+          "status": "NEEDS TESTING",
+          "result": "BLOCKED BY TOOLING — actual pinned nginx image not available"
+        },
+        {
+          "id": "GW-09",
+          "status": "NEEDS TESTING",
+          "result": "BLOCKED BY TOOLING — actual pinned nginx image not available"
+        },
+        {
+          "id": "GW-10",
+          "status": "NEEDS TESTING",
+          "result": "BLOCKED BY TOOLING — actual pinned nginx image not available"
+        },
+        {
+          "id": "GW-11",
+          "status": "NEEDS TESTING",
+          "result": "Actual-nginx proof BLOCKED; separate Windows API build/start/health/401 PASS only"
+        },
+        {
+          "id": "GW-12",
+          "status": "NEEDS TESTING",
+          "result": "BLOCKED BY TOOLING — actual pinned nginx image not available"
+        }
+      ],
+      "preservedState": {
+        "parent": "IMPLEMENTED",
+        "environment": "BLOCKED BY DEPLOYMENT TOPOLOGY",
+        "provider": "NEEDS TESTING",
+        "environmentReady": false,
+        "decisions": "D004/D005 APPROVED unchanged",
+        "review": "CHK-063 / DEPLOY-001 DOCUMENTED / RECOMMEND A and CandidateC NOT YET PROVEN unchanged"
+      },
+      "filesCreated": [
+        "render.yaml",
+        ".dockerignore",
+        "deploy/gateway/Dockerfile",
+        "deploy/gateway/nginx.conf.template",
+        "deploy/gateway/start.sh",
+        "deploy/gateway/gateway.test.mjs"
+      ],
+      "filesModified": [
+        "docs/project-map/roadmap.json",
+        "docs/project-map/verification.json",
+        "docs/project-map/handoff.md",
+        "docs/security/staff-session-verification.md"
+      ],
+      "noApplicationChanges": true,
+      "noExistingTestChanges": true,
+      "noMigrations": true,
+      "noContracts": true,
+      "noPackageChanges": true,
+      "noResources": true,
+      "noPurchases": true,
+      "noBlueprintSync": true,
+      "noSecretValues": true,
+      "noPush": true,
+      "newReferenceEvidence": false,
+      "parityClaim": false,
+      "nextExactTask": "CORE-AUTH-02-DEPLOY-002-VERIFY-001 — Provide approved local Docker tooling and complete gateway/regression verification"
     }
   ],
   "unresolvedQuestions": [

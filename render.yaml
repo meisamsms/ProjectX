@@ -1,0 +1,65 @@
+# DEVELOPMENT SPECIFICATION ONLY. DO NOT APPLY/SYNC during DEPLOY-002.
+# No purchase authority. ENV-001 must check account cost, region, ingress/log/cache
+# safety and restricted PostgreSQL 16 separately before any deployment.
+# Ohio/starter are conditional D005 baseline candidates, NOT selected resources.
+# Stop/review this file before sync if either candidate is unavailable/unsuitable.
+# No DB declaration: actual version/tier/storage/role/TLS remain unresolved.
+services:
+  - type: web
+    name: projectx-development-gateway
+    runtime: docker
+    branch: people-03-accounts-read
+    region: ohio
+    plan: starter
+    numInstances: 1
+    autoDeployTrigger: "off"
+    dockerfilePath: deploy/gateway/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    maxShutdownDelaySeconds: 30
+    envVars:
+      - key: PORT
+        value: "10000"
+      - key: GATEWAY_CANONICAL_HOST
+        sync: false
+      - key: GATEWAY_API_HOSTPORT
+        fromService:
+          name: projectx-development-api
+          type: pserv
+          property: hostport
+  - type: pserv
+    name: projectx-development-api
+    runtime: node
+    branch: people-03-accounts-read
+    region: ohio
+    plan: starter
+    numInstances: 1
+    autoDeployTrigger: "off"
+    buildCommand: npm install --global pnpm@11.25.0 --ignore-scripts && pnpm install --frozen-lockfile --prod=false && pnpm --filter @projectx/api build
+    startCommand: node apps/api/dist/main.js
+    maxShutdownDelaySeconds: 30
+    envVars:
+      - key: NODE_VERSION
+        value: "24.19.0"
+      - key: NODE_ENV
+        value: development
+      - key: HOST
+        value: 0.0.0.0
+      - key: PORT
+        value: "10000"
+      - key: STAFF_AUTH_ENABLED
+        value: "1"
+      - key: STAFF_APP_ORIGIN
+        sync: false
+      - key: AUTH0_ISSUER
+        sync: false
+      - key: AUTH0_CLIENT_ID
+        sync: false
+      - key: AUTH0_CLIENT_SECRET
+        sync: false
+      - key: AUTH0_CALLBACK_URI
+        sync: false
+      - key: AUTH0_POST_LOGOUT_URI
+        sync: false
+      - key: STAFF_RUNTIME_DATABASE_URL
+        sync: false

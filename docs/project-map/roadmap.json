@@ -1949,7 +1949,7 @@
         "dependency": "Provisioned Render/Auth0 DEVELOPMENT environment under APPROVED CORE-AUTH-D005, canonical HTTPS endpoint, synthetic staff identity and restricted PostgreSQL runtime",
         "reason": "BLOCKED BY DEPLOYMENT TOPOLOGY: the existing separate API/Vite runtimes lack a reviewed canonical same-origin web + /api/v1 deployment gateway. D005 owner selections remain resolved. No purchases or provisioning; see CORE-AUTH-02-ENV-002 / CHK-062. Resolve the narrow deployment prerequisite before actual environment setup.",
         "affectedModules": ["CORE-AUTH-02", "SETTINGS-CORE-01", "RESERVATIONS-CORE-01"],
-        "requiredPredecessor": "CORE-AUTH-02-DEPLOY-002 — Implement and locally verify the approved development same-origin gateway",
+        "requiredPredecessor": "CORE-AUTH-02-DEPLOY-002-VERIFY-001 — Provide approved local Docker tooling and complete gateway/regression verification",
         "evidenceId": "CHK-060",
         "ownerDecisionRequired": false,
         "status": "BLOCKED",
@@ -1975,7 +1975,7 @@
           "Sanitized controlled logs/evidence"
         ],
         "approvalEvidenceId": "CHK-061",
-        "currentEvidenceId": "CHK-063",
+        "currentEvidenceId": "CHK-064",
         "environmentStatus": "BLOCKED BY DEPLOYMENT TOPOLOGY",
         "engineeringDecisionRequired": true,
         "deploymentTopology": {
@@ -2165,13 +2165,52 @@
             ],
             "executionGate": "Requires separate explicit owner implementation authorization and publication approval; no automatic start"
           }
+        },
+        "deploymentImplementation": {
+          "id": "CORE-AUTH-02-DEPLOY-002",
+          "status": "IMPLEMENTED",
+          "classification": "PROJECTX DEPLOYMENT IMPLEMENTATION",
+          "evidenceId": "CHK-064",
+          "authorization": "Explicit owner implementation prompt approves Candidate A1 and six deployment paths plus four evidence docs; no resource/purchase/Blueprint-sync or push approval",
+          "priorityPart": 2,
+          "coreWorkflowAdvanced": "Canonical staff-auth transport prerequisite for SETTINGS-CORE-01 and future reservation book/check-in/seating",
+          "dependencies": "CORE-AUTH-01 / PEOPLE-CORE-01 VERIFIED; DEPLOY-001 DOCUMENTED; D004/D005 APPROVED",
+          "ownedScope": "render.yaml, .dockerignore, deploy/gateway/{Dockerfile,nginx.conf.template,start.sh,gateway.test.mjs}; four evidence docs only",
+          "excludedScope": "Application/auth/existing tests/migrations/contracts/packages; provisioning/purchases/production/staging/Settings/reservations/Export",
+          "implementation": "Digest-pinned Node24 web build and unprivileged nginx; canonical Host, private hostport/DNS, API precedence, transparent cookies/CSRF/Origin/status/body/query, no proxy cache/retry/SPA interception, metadata-only logs, bounded inputs/limits; manual development-only Blueprint unapplied",
+          "localNginxVerification": "BLOCKED BY TOOLING — Docker/nginx unavailable; no actual-image build, nginx syntax or GW-01–GW-12 pass claimed",
+          "localStaticEvidence": "Node/shell syntax, scoped harness lint, static artifact audit and pre-nginx invalid-input rejection PASS. API/web builds and loopback compiled API health/missing-identity 401 PASS; not Linux/image/provider proof",
+          "regressionEvidence": "pnpm verify PASS (4 unit / 56 auth / 19 integration / 178 web / 32 E2E, builds/static gates), after explicit cleanup of task-owned stuck Vite server; no test rerun. pnpm verify:db FAIL 207/210 across 21 files on PostgreSQL16.15; three existing PEOPLE-04 unqualified admin-query relation-not-found assertions. No fix or DB rerun",
+          "blocker": {
+            "id": "CORE-AUTH-02-DEPLOY-002-TOOLING-001",
+            "status": "BLOCKED",
+            "dependency": "Approved local Linux Docker engine with local host networking and actual pinned image proof; separate review of failed disposable DB regression attempt",
+            "reason": "Cannot validate nginx/image/runtime behavior without Docker; failed existing DB gate prevents declaring all regression gates green",
+            "affectedModules": [
+              "CORE-AUTH-02",
+              "SETTINGS-CORE-01",
+              "RESERVATIONS-CORE-01"
+            ],
+            "requiredPredecessor": "CORE-AUTH-02-DEPLOY-002-VERIFY-001 — Provide approved local Docker tooling and complete gateway/regression verification"
+          },
+          "nextTaskProposal": {
+            "id": "CORE-AUTH-02-DEPLOY-002-VERIFY-001",
+            "status": "PLANNED",
+            "scope": "Provide existing approved local Linux Docker/host-network tooling or separately authorize installation; build actual pinned image, run unchanged GW harness; review preserved failed DB attempt and authorize any scoped test-environment rerun. No app/test fix without additional scope approval",
+            "acceptanceCriteria": [
+              "Actual-nginx GW-01–GW-12 and image syntax/build pass",
+              "Existing regression gates including PostgreSQL16 verify:db green, prior failures preserved",
+              "No live Render/Auth0 resources or provider-readiness claim"
+            ],
+            "executionGate": "Separate task/verification authorization; do not automatically install software, provision or silently rerun failed DB tests"
+          }
         }
       },
       "ownerPolicyDecisionId": "CORE-AUTH-D004",
       "developmentDeploymentDecisionId": "CORE-AUTH-D005",
       "readinessEvidence": "CHK-058 owner-decision documentation only. Published CORE-AUTH-01 CI run 37253348486 attempt 2/job 111586842967 green at 95d4d1b1cc9f8a6dc69a1d8a3edea38df9e00923; original failed attempt preserved. Not production auth, new implementation or core readiness proof.",
       "coreWorkflowAdvanced": "Secure authenticated staff access for reservation-required Venue settings and future reservation book/check-in/seating.",
-      "remainingWork": "CHK-063 documents DEPLOY-001 engineering review: RECOMMEND A, public nginx/static gateway + same-region private existing API; Candidate C URL-rewrite capability CONFIRMED but ProjectX auth behavior NOT YET PROVEN. No gateway implemented, no resources or secrets configured. DEPLOY-002 requires separate bounded implementation approval and local verification; ENV-001 remains BLOCKED BY DEPLOYMENT TOPOLOGY, CORE-AUTH-02 IMPLEMENTED, provider NEEDS TESTING. Then resume ENV-001 and only when ready the existing real-provider matrix. Actual cost/log/edge/role/TLS gates remain; Settings/reservations/Export unstarted.",
+      "remainingWork": "CHK-064 records owner-approved Candidate A1 DEPLOY-002 IMPLEMENTED in six deployment files only, with digest pins and actual-nginx GW harness. LOCAL NGINX VERIFICATION BLOCKED BY TOOLING; no Docker/image/syntax/GW runtime PASS claimed. Existing pnpm verify PASS after task-owned Vite cleanup; verify:db FAIL 207/210 on PostgreSQL16.15 at three existing PEOPLE-04 raw admin assertions, preserved without repair/rerun. Complete separately authorized local tooling/gateway/regression verification before ENV-001. CORE-AUTH-02 IMPLEMENTED, ENV-001 BLOCKED BY DEPLOYMENT TOPOLOGY, provider NEEDS TESTING, readiness NO; actual Render ingress/DNS/cache/log/cost/runtime/TLS/identity gates remain. DEPLOY-001/CHK-063 and all prior verified/reference/decision history unchanged; no provisioning, purchases, Blueprint sync, app/test/migration/contract/package change or push.",
       "specificationFile": "docs/security/staff-access-integration.md",
       "requiredOwnerDecisionIds": [
         "CORE-AUTH-D001",
@@ -2256,7 +2295,7 @@
         "developmentDeploymentDecisionId": "CORE-AUTH-D005",
         "ownerSelectionStatus": "RESOLVED",
         "provisioningStatus": "OUTSTANDING",
-        "currentEnvironmentEvidenceId": "CHK-063",
+        "currentEnvironmentEvidenceId": "CHK-064",
         "deploymentTopologyFindingId": "CORE-AUTH-02-ENV-002"
       }
     },
@@ -2668,7 +2707,7 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "CORE-AUTH-02-DEPLOY-002 — Implement and locally verify the approved development same-origin gateway",
+  "nextExactTask": "CORE-AUTH-02-DEPLOY-002-VERIFY-001 — Provide approved local Docker tooling and complete gateway/regression verification",
   "deliveryPriority": {
     "decisionId": "PRIORITY-D001",
     "primaryTarget": "PART 1 — CORE ONLINE RESERVATION SYSTEM",

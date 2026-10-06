@@ -1,0 +1,136 @@
+# Entire config: vendor snippets/log defaults are intentionally not included.
+worker_processes 1;
+worker_shutdown_timeout 25s;
+pid /tmp/projectx-gateway/nginx.pid;
+error_log /dev/null crit;
+events { worker_connections 512; }
+http {
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+    server_tokens off;
+    log_format safe escape=json '{"requestId":"$request_id","status":$status,"bytes":$body_bytes_sent,"duration":$request_time}';
+    access_log /dev/stdout safe;
+    client_max_body_size 1m;
+    client_body_buffer_size 1m;
+    client_header_buffer_size 1k;
+    large_client_header_buffers 4 16k;
+    client_body_timeout 60s;
+    client_header_timeout 15s;
+    send_timeout 60s;
+    keepalive_timeout 15s;
+    client_body_temp_path /tmp/projectx-gateway/client;
+    proxy_temp_path /tmp/projectx-gateway/proxy;
+
+    map $http_host $canonical_authority {
+        default 0;
+        "~^@@CANONICAL_REGEX@@$" 1;
+    }
+    # Inspect original path, not nginx's decoded/normalized $uri or query values.
+    map $request_uri $raw_path { "~^(?<original_path>[^?]*)" $original_path; }
+    map $raw_path $unsafe_path {
+        default 0;
+        ~% 1;
+        ~// 1;
+        "~(^|/)[.]{1,2}(/|$)" 1;
+        "~\\\\" 1;
+    }
+    map $raw_path $unsafe_api_case {
+        default 0;
+        ~^/api(/|$) 0;
+        ~*^/api(/|$) 1;
+    }
+    map $request $absolute_form { default 0; "~^[A-Z]+ [^/]" 1; }
+    map "$request_method:$raw_path" $health_probe {
+        default 0;
+        "GET:/health" 1;
+        "HEAD:/health" 1;
+    }
+    map "$canonical_authority:$health_probe" $allowed_authority {
+        default 0;
+        "1:0" 1;
+        "1:1" 1;
+        "0:1" 1;
+    }
+    map $upstream_http_cache_control $missing_cache_control {
+        default "";
+        "" "no-store";
+    }
+    resolver @@DNS_RESOLVERS@@ valid=10s ipv6=off;
+    resolver_timeout 5s;
+    upstream projectx_api {
+        zone projectx_api 64k;
+        server @@API_HOSTPORT@@ resolve;
+    }
+    proxy_http_version 1.1;
+    proxy_set_header Host @@CANONICAL_HOST@@;
+    proxy_set_header Connection "";
+    proxy_set_header Upgrade "";
+    proxy_set_header TE "";
+    proxy_set_header Trailer "";
+    proxy_set_header Keep-Alive "";
+    proxy_set_header Proxy-Connection "";
+    proxy_set_header Proxy-Authorization "";
+    proxy_set_header X-Forwarded-Host "";
+    proxy_set_header Forwarded "";
+    proxy_set_header X-Forwarded-For "";
+    proxy_set_header X-Real-IP "";
+    proxy_set_header X-Forwarded-Port "";
+    proxy_set_header X-Original-Host "";
+    proxy_set_header X-Original-URL "";
+    proxy_set_header X-Rewrite-URL "";
+    # Only safe behind the fixed HTTPS Render ingress, verified later in ENV-001.
+    proxy_set_header X-Forwarded-Proto https;
+    proxy_pass_request_headers on;
+    proxy_pass_request_body on;
+    proxy_redirect off;
+    proxy_intercept_errors off;
+    proxy_next_upstream off;
+    proxy_cache off;
+    proxy_store off;
+    proxy_buffering off;
+    proxy_request_buffering off;
+    proxy_ignore_headers X-Accel-Redirect X-Accel-Buffering;
+    proxy_hide_header CDN-Cache-Control;
+    proxy_connect_timeout 5s;
+    proxy_send_timeout 60s;
+    proxy_read_timeout 60s;
+    proxy_buffer_size 16k;
+    server {
+        listen @@LISTEN_ADDRESS@@:@@PORT@@ default_server;
+        server_name @@CANONICAL_HOST@@;
+        root /usr/share/nginx/html;
+        # Safe return-only rewrite checks; no location rewrite/replay.
+        if ($absolute_form) { return 400; }
+        if ($unsafe_path) { return 400; }
+        if ($unsafe_api_case) { return 400; }
+        if ($allowed_authority = 0) { return 403; }
+        # Upstream Cache-Control stays intact; absent header/gateway errors no-store.
+        add_header Cache-Control $missing_cache_control always;
+        add_header CDN-Cache-Control "no-store" always;
+        location = /health {
+            limit_except GET { deny all; }
+            proxy_pass http://projectx_api;
+        }
+        location = /api { proxy_pass http://projectx_api; }
+        location ^~ /api/ { proxy_pass http://projectx_api; }
+        location = /index.html {
+            limit_except GET { deny all; }
+            add_header Cache-Control "no-cache" always;
+            add_header CDN-Cache-Control "no-store" always;
+        }
+        location ^~ /assets/ {
+            limit_except GET { deny all; }
+            try_files $uri =404;
+            add_header Cache-Control "public, max-age=31536000, immutable";
+            add_header CDN-Cache-Control "no-store" always;
+        }
+        location ~* \.(js|css|map|svg|ico|png|jpg|jpeg|gif|webp|woff2?|json|txt|html)$ {
+            limit_except GET { deny all; }
+            try_files $uri =404;
+        }
+        location / {
+            limit_except GET { deny all; }
+            try_files $uri /index.html;
+        }
+    }
+}
