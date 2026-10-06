@@ -1666,6 +1666,197 @@
       "newReferenceEvidence": false,
       "parityClaim": false,
       "nextExactTask": "CORE-AUTH-02-DEPLOY-002-FIX-002 — Correct nginx auxiliary temp paths for read-only runtime"
+    },
+    {
+      "id": "CHK-067",
+      "taskId": "CORE-AUTH-02-DEPLOY-002-FIX-002",
+      "date": "2026-10-06",
+      "status": "BLOCKED",
+      "baseCommit": "e5d49f7fec5fadfb5296c961b7dda81dc83d2a22",
+      "fixCommit": "e0a8d63ead4ce3b6885b44435dba03d6693ea077",
+      "remoteBase": "75da5c2adb9a99049945d2df2401537d9e92e675",
+      "scope": "Only nginx runtime temp paths and four evidence docs. Existing harness already provides writable /tmp; left unchanged. No other code/tests/migrations/packages/system/provider/push changes",
+      "result": "Temp-path correction IMPLEMENTED; pinned image build PASS; actual read-only nginx syntax/startup PASS; unchanged harness shared setup FAIL, no GW bodies executed. DEPLOY-002 IMPLEMENTED / VERIFICATION INCOMPLETE",
+      "officialRuntimeEvidence": {
+        "url": "https://github.com/nginx/docker-nginx-unprivileged",
+        "classification": "CONFIRMED — official deployment/runtime guidance, not SevenRooms behavior",
+        "finding": "Unprivileged image relocates PID and *_temp_path into /tmp; custom full config must explicitly retain those paths"
+      },
+      "pathsBefore": {
+        "pid": "/tmp/projectx-gateway/nginx.pid",
+        "client_body_temp_path": "/tmp/projectx-gateway/client",
+        "proxy_temp_path": "/tmp/projectx-gateway/proxy",
+        "fastcgi_temp_path": "ABSENT",
+        "uwsgi_temp_path": "ABSENT",
+        "scgi_temp_path": "ABSENT"
+      },
+      "pathsAfter": {
+        "pid": "/tmp/nginx.pid",
+        "client_body_temp_path": "/tmp/client_temp",
+        "proxy_temp_path": "/tmp/proxy_temp",
+        "fastcgi_temp_path": "/tmp/fastcgi_temp",
+        "uwsgi_temp_path": "/tmp/uwsgi_temp",
+        "scgi_temp_path": "/tmp/scgi_temp"
+      },
+      "runtimeContract": {
+        "classification": "PROJECTX LOCAL HARDENING / VERIFICATION CONFIGURATION",
+        "readOnlyRoot": true,
+        "tmpfs": "/tmp:rw,noexec,nosuid,size=32m",
+        "capabilities": "ALL dropped; no-new-privileges",
+        "harnessChanged": false,
+        "renderProof": false
+      },
+      "findings": [
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F024",
+          "classification": "CONFIRMED",
+          "finding": "Only six runtime-path directives changed; prior16k/8x16k/32k buffer relationship and all routing/security semantics unchanged"
+        },
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F025",
+          "classification": "CONFIRMED",
+          "finding": "Same pinned Node/nginx references resolved and image build PASS: sha256:db224107d88e066d13b2377f0d35eabd0abbf742b8f332288009e32b59b8b1af"
+        },
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F026",
+          "classification": "CONFIRMED",
+          "finding": "Actual read-only image with32MiB /tmp tmpfs starts; direct nginx -t successful. /tmp/nginx.pid and all five temp directories exist. Container Running=true. No observed /var/cache/nginx,/run,/var/run writable-state error; both historical startup defects preserved"
+        },
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F027",
+          "classification": "CONFIRMED",
+          "finding": "One unchanged harness run only after syntax PASS exits1:14 shared-before-hook failures,0PASS; waitForPort Local gateway did not listen at line158, hook line442. No individual GW body executes; not14 independent behavior failures"
+        },
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F028",
+          "classification": "UNKNOWN",
+          "finding": "Cause of harness loopback reachability failure not determined. Isolated nginx startup PASS does not establish Windows Node/Docker host-network connectivity, gateway contracts or provider behavior. No speculative correction, settings change or rerun"
+        }
+      ],
+      "commands": [
+        {
+          "command": "git state/ancestry; git fetch origin",
+          "result": "PASS — exact clean expected start and remote base"
+        },
+        {
+          "command": "docker build -f deploy/gateway/Dockerfile -t projectx-dev-gateway:local .",
+          "result": "PASS — unchanged immutable base references resolved; public VITE_STAFF_AUTH_ENABLED warning not a test failure or secret finding"
+        },
+        {
+          "command": "Disposable actual read-only container with existing /tmp tmpfs; nginx -t -c /tmp/projectx-gateway/nginx.conf; six runtime-path checks; inspect read-only/tmpfs/Running",
+          "result": "PASS — configuration syntax/test successful; PID/temp paths exist under /tmp; read-only=true; Running=true; exact container stopped/removed"
+        },
+        {
+          "command": "node --test deploy/gateway/gateway.test.mjs",
+          "result": "FAIL —14 setup failures,0PASS; test bodies NOT EXECUTED; no rerun"
+        },
+        {
+          "command": "docker ps -a --format '{{.Names}} {{.Status}}'",
+          "result": "PASS — disposable container cleanup confirmed, empty listing"
+        },
+        {
+          "command": "pnpm map:check; git diff --check; historical/reference preservation audit",
+          "result": "PASS — documentation-only checks, not runtime/provider verification"
+        }
+      ],
+      "gatewayChecks": [
+        {
+          "id": "GW-01",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared harness reachability setup failed"
+        },
+        {
+          "id": "GW-02",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared harness reachability setup failed"
+        },
+        {
+          "id": "GW-03",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared harness reachability setup failed"
+        },
+        {
+          "id": "GW-04",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared harness reachability setup failed"
+        },
+        {
+          "id": "GW-05",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared harness reachability setup failed"
+        },
+        {
+          "id": "GW-06",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared harness reachability setup failed"
+        },
+        {
+          "id": "GW-07",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared harness reachability setup failed"
+        },
+        {
+          "id": "GW-08",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared harness reachability setup failed"
+        },
+        {
+          "id": "GW-09",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared harness reachability setup failed"
+        },
+        {
+          "id": "GW-10",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared harness reachability setup failed"
+        },
+        {
+          "id": "GW-11",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared harness reachability setup failed"
+        },
+        {
+          "id": "GW-12",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared harness reachability setup failed"
+        }
+      ],
+      "deferredVerification": {
+        "imageSecretReview": "NOT RUN — full filesystem/generated-config/layer/environment/log review remains incomplete after stop",
+        "apiBuild": "NOT RUN — API entrypoint unchanged; runtime proof NOT EXECUTED",
+        "dbCurrent": "NOT RUN",
+        "dbParent": "NOT RUN",
+        "dbClassification": "UNDETERMINED — A/B/C/D not established",
+        "searchPath": "INFERRED only; historical CHK-064207/210 remains unwaived",
+        "postgresql": "NOT RUN this task; historical16.15",
+        "regression": "format/lint/typecheck/contract/test:auth/verify/verify:db NOT RUN after setup failure; map validates documentation only"
+      },
+      "preservedState": {
+        "deploy002": "IMPLEMENTED / VERIFICATION INCOMPLETE",
+        "coreAuth02": "IMPLEMENTED",
+        "environment": "BLOCKED BY DEPLOYMENT TOPOLOGY",
+        "provider": "NEEDS TESTING",
+        "environmentReady": false,
+        "decisions": "D004/D005 APPROVED unchanged",
+        "history": "All66 prior checks and VERIFIED tasks unchanged",
+        "reference": "No SevenRooms evidence/parity claim; all classifications and U-001/U-002/U-003 unchanged"
+      },
+      "filesModified": [
+        "deploy/gateway/nginx.conf.template",
+        "docs/project-map/roadmap.json",
+        "docs/project-map/verification.json",
+        "docs/project-map/handoff.md",
+        "docs/security/staff-session-verification.md"
+      ],
+      "noApplicationChanges": true,
+      "noTestChanges": true,
+      "noMigrations": true,
+      "noResources": true,
+      "noSystemChangesDuringVerification": true,
+      "noPush": true,
+      "newReferenceEvidence": false,
+      "parityClaim": false,
+      "nextExactTask": "CORE-AUTH-02-DEPLOY-002-VERIFY-002 — Diagnose GW-01 harness reachability after nginx startup"
     }
   ],
   "unresolvedQuestions": [

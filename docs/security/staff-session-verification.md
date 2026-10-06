@@ -5,6 +5,60 @@ CORE-AUTH-D004. Base 84ed2938d7d1fa6155e744a50ef3d6aebe6f978c.
 Parent task IMPLEMENTED; controlled Auth0/production assurance remains NEEDS TESTING.
 No SevenRooms evidence or parity claims.
 
+## Runtime-path correction and harness blocker — CHK-067 / DEPLOY-002-FIX-002
+
+2026-10-06. Exact clean starting HEAD `e5d49f7fec5fadfb5296c961b7dda81dc83d2a22`
+and fetched remote `75da5c2adb9a99049945d2df2401537d9e92e675` confirmed.
+New local functional child `e0a8d63ead4ce3b6885b44435dba03d6693ea077`
+changes only six runtime-path directives in `nginx.conf.template`; no security,
+routing, logging, timeout, limits, application, test, migration or package edits.
+The prior buffer relationship16k/8x16k/32k is unchanged.
+
+Official deployment/runtime guidance: [nginx-unprivileged upstream README](https://github.com/nginx/docker-nginx-unprivileged)
+relocates PID and temporary state into `/tmp` and requires explicit temp-path
+directives when overriding the full configuration. This is not SevenRooms evidence.
+Before: PID `/tmp/projectx-gateway/nginx.pid`, client `/tmp/projectx-gateway/client`,
+proxy `/tmp/projectx-gateway/proxy`; fastcgi/uwsgi/scgi directives absent.
+After: PID `/tmp/nginx.pid`; client `/tmp/client_temp`; proxy `/tmp/proxy_temp`;
+fastcgi `/tmp/fastcgi_temp`; uwsgi `/tmp/uwsgi_temp`; scgi `/tmp/scgi_temp`.
+
+**PROJECTX LOCAL HARDENING / VERIFICATION CONFIGURATION:** existing harness already
+uses read-only root, `/tmp:rw,noexec,nosuid,size=32m`, dropped ALL capabilities and
+no-new-privileges. Harness unchanged; no persistent/repository write mount or system
+setting change. Config and runtime state are ephemeral; no real credentials supplied.
+
+**CONFIRMED: actual pinned image build and nginx syntax/startup PASS.** Both existing
+immutable base references resolved unchanged. Local image digest
+`sha256:db224107d88e066d13b2377f0d35eabd0abbf742b8f332288009e32b59b8b1af`.
+Disposable actual read-only image started through unchanged entrypoint;
+`nginx -t -c /tmp/projectx-gateway/nginx.conf` reported syntax/test successful.
+PID and all five temp directories exist under `/tmp`; container Running=true.
+No observed required-state error under `/var/cache/nginx`, `/run` or `/var/run`.
+This proves isolated nginx startup, not an end-to-end gateway contract.
+
+Only after the hard gate passed, one unchanged actual-image harness run failed:
+`Local gateway did not listen` at waitForPort line158/shared before hook line442.
+14 setup failures,0 PASS; GW-01–GW-12 bodies **NOT EXECUTED**. **UNKNOWN / NEEDS
+TESTING:** exact runtime/Windows-host Docker loopback reachability cause. Do not
+reinterpret shared setup failures as independent Host/cookie/CSRF/log defects.
+No harness rerun, second speculative correction or system/network change.
+Disposable containers cleaned; final `docker ps -a` empty.
+
+Stopped before full image secret/filesystem/layer/generated-config/log review,
+API build/entrypoint runtime proof, current/base DB comparison and regression
+suite. Historical CHK-064 PostgreSQL16.15 207/210 remains unwaived; search_path
+**INFERRED** only, no A/B/C/D classification or flakiness claim. Documentation
+map/whitespace/preservation checks PASS only. Both historical startup failures,
+all66 prior CHK records, VERIFIED tasks, D004/D005 and reference classifications
+remain unchanged.
+
+DEPLOY-002 IMPLEMENTED / VERIFICATION INCOMPLETE; CORE-AUTH-02 IMPLEMENTED;
+ENV-001 BLOCKED BY DEPLOYMENT TOPOLOGY; provider NEEDS TESTING; readiness NO.
+Next exact prerequisite: **CORE-AUTH-02-DEPLOY-002-VERIFY-002 — Diagnose GW-01
+harness reachability after nginx startup**, separately authorized bounded
+diagnosis before any further functional correction. No provisioning, push,
+Settings/reservation/Export implementation or SevenRooms parity claim.
+
 ## Buffer correction and new startup blocker — CHK-066 / DEPLOY-002-FIX-001
 
 2026-10-06. Clean starting HEAD `c1b854ff47e31dbc310dc00e7cc3813300a47752`,
