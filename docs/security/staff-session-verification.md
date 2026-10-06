@@ -5,6 +5,50 @@ CORE-AUTH-D004. Base 84ed2938d7d1fa6155e744a50ef3d6aebe6f978c.
 Parent task IMPLEMENTED; controlled Auth0/production assurance remains NEEDS TESTING.
 No SevenRooms evidence or parity claims.
 
+## Local gateway verification attempt — CHK-065 / DEPLOY-002-VERIFY-001
+
+2026-10-06; exact clean local implementation
+`7bf65b39ed51eb7d39053138b5b1a1328b0c3e21`, parent and fetched remote base
+`75da5c2adb9a99049945d2df2401537d9e92e675`. Docker Desktop29.8.2 is usable
+with local `desktop-linux`, Linux x86_64 and WSL2 kernel. No Docker/Windows
+setting, application code, gateway source, test, migration or provider resource
+was changed.
+
+**IMAGE BUILD PASS; ACTUAL NGINX SYNTAX/STARTUP FAIL.** The exact Dockerfile
+resolved both recorded immutable base digests and built
+`projectx-dev-gateway:local` at local digest
+`sha256:ef0c5c0c249540f62f8bfb5e1ee3c30617e0ce6d329aba277d7919df2a035754`.
+The build warning identifies public boolean `VITE_STAFF_AUTH_ENABLED`, not a
+credential. Source secret-pattern review remains PASS; final image secret/filesystem
+proof is incomplete because gateway verification stopped.
+
+One unchanged harness run failed in the shared startup hook: the gateway never
+listened, so GW-01–GW-12 did not independently execute and none is PASS. One
+bounded disposable actual-image trace confirmed input validation and template
+generation succeed. Direct actual-image `nginx -t` then reported:
+`proxy_busy_buffers_size must be less than the size of all proxy_buffers minus one
+buffer`, at generated config line136. The template sets `proxy_buffer_size 16k`
+without a compatible explicit proxy buffer/busy-buffer relationship; this is a
+CONFIRMED gateway configuration/startup defect, not Docker tooling failure or a
+provider result.
+
+Required STOP preserved. No harness rerun, database current/parent comparison,
+format/lint/typecheck/contracts/map/auth/verify/verify:db rerun, source correction,
+Render/Auth0 provisioning or push. CHK-064's PostgreSQL16.15 207/210 result and
+three Add User failures remain historical unresolved evidence; search_path remains
+INFERRED, not confirmed or waived.
+
+CORE-AUTH-02-DEPLOY-002 remains IMPLEMENTED / VERIFICATION INCOMPLETE.
+CORE-AUTH-02 remains IMPLEMENTED; ENV-001 remains BLOCKED BY DEPLOYMENT TOPOLOGY;
+provider verification NEEDS TESTING; environment ready NO. D004/D005, all prior
+VERIFIED history and SevenRooms U-001/U-002/U-003/classifications remain unchanged.
+
+NEXT EXACT TASK: **CORE-AUTH-02-DEPLOY-002-FIX-001 — Correct nginx proxy buffer
+configuration and restore gateway startup.** Separate bounded corrective
+authorization is required. After correction, rebuild and run unchanged GW-01–GW-12,
+then complete DB current-vs-parent classification and regression gates. No
+provisioning before those local gates pass.
+
 ## Gateway implementation checkpoint — CHK-064 / CORE-AUTH-02-DEPLOY-002
 
 2026-10-05; clean base 75da5c2adb9a99049945d2df2401537d9e92e675,

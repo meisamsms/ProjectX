@@ -1407,6 +1407,99 @@
       "newReferenceEvidence": false,
       "parityClaim": false,
       "nextExactTask": "CORE-AUTH-02-DEPLOY-002-VERIFY-001 — Provide approved local Docker tooling and complete gateway/regression verification"
+    },
+    {
+      "id": "CHK-065",
+      "taskId": "CORE-AUTH-02-DEPLOY-002-VERIFY-001",
+      "date": "2026-10-06",
+      "status": "BLOCKED",
+      "baseCommit": "7bf65b39ed51eb7d39053138b5b1a1328b0c3e21",
+      "scope": "Verification/diagnostic only: exact local Docker image build, actual-nginx harness and bounded startup diagnosis; no source correction, provider provisioning or push",
+      "result": "IMAGE BUILD PASS; ACTUAL NGINX SYNTAX/STARTUP FAIL. Shared harness startup failed before GW-01–GW-12 executed. Regression and database parent-comparison gates not run after required stop; DEPLOY-002 remains IMPLEMENTED / VERIFICATION INCOMPLETE",
+      "findings": [
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F015",
+          "classification": "CONFIRMED",
+          "finding": "Docker Desktop29.8.2 is usable through local desktop-linux with Linux x86_64 and WSL2 kernel; no Docker or Windows setting changed during verification"
+        },
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F016",
+          "classification": "CONFIRMED",
+          "finding": "Exact Dockerfile build resolved the recorded immutable Node24.19.0 and nginx1.30.5 image digests and built projectx-dev-gateway:local at sha256:ef0c5c0c249540f62f8bfb5e1ee3c30617e0ce6d329aba277d7919df2a035754"
+        },
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F017",
+          "classification": "CONFIRMED",
+          "finding": "Actual image input validation and template generation complete, then nginx -t rejects generated config line136: proxy_busy_buffers_size must be less than the size of all proxy_buffers minus one buffer. proxy_buffer_size is16k while compatible explicit proxy buffer/busy-buffer sizing is absent"
+        },
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F018",
+          "classification": "NEEDS TESTING",
+          "finding": "GW-01–GW-12 did not independently execute because the shared startup hook could not reach a gateway that had already exited after syntax rejection; no gateway contract is PASS"
+        },
+        {
+          "id": "CORE-AUTH-02-DEPLOY-F019",
+          "classification": "NEEDS TESTING",
+          "finding": "Final image filesystem/layer/log secret inspection, DB current-vs-parent classification and all regression gates remain incomplete. CHK-064 database failure and INFERRED search_path hypothesis are preserved, not rerun or waived"
+        }
+      ],
+      "commands": [
+        {
+          "command": "docker --version; docker info; docker context inspect",
+          "result": "PASS — client/server29.8.2, desktop-linux, Linux x86_64, WSL2, local npipe"
+        },
+        {
+          "command": "docker build -f deploy/gateway/Dockerfile -t projectx-dev-gateway:local .",
+          "result": "PASS — exact pinned references resolved and image built; scanner warning names public VITE_STAFF_AUTH_ENABLED boolean, not a secret value"
+        },
+        {
+          "command": "node --test deploy/gateway/gateway.test.mjs",
+          "result": "FAIL — shared before hook: local gateway did not listen; all12 GW tests receive setup failure and did not independently execute; no rerun"
+        },
+        {
+          "command": "One disposable actual-image startup trace and direct nginx -t with synthetic values",
+          "result": "FAIL CONFIRMED — proxy_busy_buffers_size relationship invalid at generated config line136; disposable diagnostic container removed"
+        }
+      ],
+      "gatewayChecks": [
+        { "id": "GW-01", "status": "NEEDS TESTING", "result": "NOT EXECUTED — shared nginx startup/syntax failure" },
+        { "id": "GW-02", "status": "NEEDS TESTING", "result": "NOT EXECUTED — shared nginx startup/syntax failure" },
+        { "id": "GW-03", "status": "NEEDS TESTING", "result": "NOT EXECUTED — shared nginx startup/syntax failure" },
+        { "id": "GW-04", "status": "NEEDS TESTING", "result": "NOT EXECUTED — shared nginx startup/syntax failure" },
+        { "id": "GW-05", "status": "NEEDS TESTING", "result": "NOT EXECUTED — shared nginx startup/syntax failure" },
+        { "id": "GW-06", "status": "NEEDS TESTING", "result": "NOT EXECUTED — shared nginx startup/syntax failure" },
+        { "id": "GW-07", "status": "NEEDS TESTING", "result": "NOT EXECUTED — shared nginx startup/syntax failure" },
+        { "id": "GW-08", "status": "NEEDS TESTING", "result": "NOT EXECUTED — shared nginx startup/syntax failure" },
+        { "id": "GW-09", "status": "NEEDS TESTING", "result": "NOT EXECUTED — shared nginx startup/syntax failure" },
+        { "id": "GW-10", "status": "NEEDS TESTING", "result": "NOT EXECUTED — shared nginx startup/syntax failure" },
+        { "id": "GW-11", "status": "NEEDS TESTING", "result": "NOT EXECUTED — shared nginx startup/syntax failure" },
+        { "id": "GW-12", "status": "NEEDS TESTING", "result": "NOT EXECUTED — shared nginx startup/syntax failure" }
+      ],
+      "preservedState": {
+        "deploy002": "IMPLEMENTED / VERIFICATION INCOMPLETE",
+        "parent": "CORE-AUTH-02 IMPLEMENTED",
+        "environment": "BLOCKED BY DEPLOYMENT TOPOLOGY",
+        "provider": "NEEDS TESTING",
+        "environmentReady": false,
+        "database": "CHK-064 207/210 failure unresolved; search_path INFERRED only",
+        "decisions": "D004/D005 APPROVED unchanged"
+      },
+      "filesModified": [
+        "docs/project-map/roadmap.json",
+        "docs/project-map/verification.json",
+        "docs/project-map/handoff.md",
+        "docs/security/staff-session-verification.md"
+      ],
+      "noGatewaySourceChanges": true,
+      "noApplicationChanges": true,
+      "noTestChanges": true,
+      "noMigrations": true,
+      "noResources": true,
+      "noSystemChangesDuringVerification": true,
+      "noPush": true,
+      "newReferenceEvidence": false,
+      "parityClaim": false,
+      "nextExactTask": "CORE-AUTH-02-DEPLOY-002-FIX-001 — Correct nginx proxy buffer configuration and restore gateway startup"
     }
   ],
   "unresolvedQuestions": [

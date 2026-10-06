@@ -1949,7 +1949,7 @@
         "dependency": "Provisioned Render/Auth0 DEVELOPMENT environment under APPROVED CORE-AUTH-D005, canonical HTTPS endpoint, synthetic staff identity and restricted PostgreSQL runtime",
         "reason": "BLOCKED BY DEPLOYMENT TOPOLOGY: the existing separate API/Vite runtimes lack a reviewed canonical same-origin web + /api/v1 deployment gateway. D005 owner selections remain resolved. No purchases or provisioning; see CORE-AUTH-02-ENV-002 / CHK-062. Resolve the narrow deployment prerequisite before actual environment setup.",
         "affectedModules": ["CORE-AUTH-02", "SETTINGS-CORE-01", "RESERVATIONS-CORE-01"],
-        "requiredPredecessor": "CORE-AUTH-02-DEPLOY-002-VERIFY-001 — Provide approved local Docker tooling and complete gateway/regression verification",
+        "requiredPredecessor": "CORE-AUTH-02-DEPLOY-002-FIX-001 — Correct nginx proxy buffer configuration and restore gateway startup",
         "evidenceId": "CHK-060",
         "ownerDecisionRequired": false,
         "status": "BLOCKED",
@@ -2170,7 +2170,7 @@
           "id": "CORE-AUTH-02-DEPLOY-002",
           "status": "IMPLEMENTED",
           "classification": "PROJECTX DEPLOYMENT IMPLEMENTATION",
-          "evidenceId": "CHK-064",
+          "evidenceId": "CHK-065",
           "authorization": "Explicit owner implementation prompt approves Candidate A1 and six deployment paths plus four evidence docs; no resource/purchase/Blueprint-sync or push approval",
           "priorityPart": 2,
           "coreWorkflowAdvanced": "Canonical staff-auth transport prerequisite for SETTINGS-CORE-01 and future reservation book/check-in/seating",
@@ -2178,31 +2178,31 @@
           "ownedScope": "render.yaml, .dockerignore, deploy/gateway/{Dockerfile,nginx.conf.template,start.sh,gateway.test.mjs}; four evidence docs only",
           "excludedScope": "Application/auth/existing tests/migrations/contracts/packages; provisioning/purchases/production/staging/Settings/reservations/Export",
           "implementation": "Digest-pinned Node24 web build and unprivileged nginx; canonical Host, private hostport/DNS, API precedence, transparent cookies/CSRF/Origin/status/body/query, no proxy cache/retry/SPA interception, metadata-only logs, bounded inputs/limits; manual development-only Blueprint unapplied",
-          "localNginxVerification": "BLOCKED BY TOOLING — Docker/nginx unavailable; no actual-image build, nginx syntax or GW-01–GW-12 pass claimed",
+          "localNginxVerification": "FAIL — Docker Desktop29.8.2 desktop-linux/WSL2 is usable and the exact digest-pinned image builds, but actual nginx -t rejects the generated configuration: proxy_busy_buffers_size must be less than all proxy_buffers minus one buffer. Shared harness startup fails before GW-01–GW-12 execute",
           "localStaticEvidence": "Node/shell syntax, scoped harness lint, static artifact audit and pre-nginx invalid-input rejection PASS. API/web builds and loopback compiled API health/missing-identity 401 PASS; not Linux/image/provider proof",
           "regressionEvidence": "pnpm verify PASS (4 unit / 56 auth / 19 integration / 178 web / 32 E2E, builds/static gates), after explicit cleanup of task-owned stuck Vite server; no test rerun. pnpm verify:db FAIL 207/210 across 21 files on PostgreSQL16.15; three existing PEOPLE-04 unqualified admin-query relation-not-found assertions. No fix or DB rerun",
           "blocker": {
-            "id": "CORE-AUTH-02-DEPLOY-002-TOOLING-001",
+            "id": "CORE-AUTH-02-DEPLOY-002-NGINX-001",
             "status": "BLOCKED",
-            "dependency": "Approved local Linux Docker engine with local host networking and actual pinned image proof; separate review of failed disposable DB regression attempt",
-            "reason": "Cannot validate nginx/image/runtime behavior without Docker; failed existing DB gate prevents declaring all regression gates green",
+            "dependency": "Correct the bounded nginx proxy buffer configuration, rebuild the unchanged digest-pinned topology and rerun the actual-nginx proof; database regression comparison remains outstanding after gateway success",
+            "reason": "Actual image build passes, but nginx syntax/startup fails before any GW case executes. Regression and parent-comparison gates were not run after the required stop",
             "affectedModules": [
               "CORE-AUTH-02",
               "SETTINGS-CORE-01",
               "RESERVATIONS-CORE-01"
             ],
-            "requiredPredecessor": "CORE-AUTH-02-DEPLOY-002-VERIFY-001 — Provide approved local Docker tooling and complete gateway/regression verification"
+            "requiredPredecessor": "CORE-AUTH-02-DEPLOY-002-FIX-001 — Correct nginx proxy buffer configuration and restore gateway startup"
           },
           "nextTaskProposal": {
-            "id": "CORE-AUTH-02-DEPLOY-002-VERIFY-001",
-            "status": "PLANNED",
-            "scope": "Provide existing approved local Linux Docker/host-network tooling or separately authorize installation; build actual pinned image, run unchanged GW harness; review preserved failed DB attempt and authorize any scoped test-environment rerun. No app/test fix without additional scope approval",
+            "id": "CORE-AUTH-02-DEPLOY-002-FIX-001",
+            "status": "READY",
+            "scope": "Make the smallest gateway-only correction to the nginx proxy buffer directives so actual nginx -t and startup pass; rebuild and rerun GW-01–GW-12 before resuming database comparison/regression gates. No app/auth/test/migration/provider change",
             "acceptanceCriteria": [
               "Actual-nginx GW-01–GW-12 and image syntax/build pass",
               "Existing regression gates including PostgreSQL16 verify:db green, prior failures preserved",
               "No live Render/Auth0 resources or provider-readiness claim"
             ],
-            "executionGate": "Separate task/verification authorization; do not automatically install software, provision or silently rerun failed DB tests"
+            "executionGate": "Separate corrective implementation authorization; do not modify the gateway in this diagnostic task, provision resources or rerun unrelated gates"
           }
         }
       },
@@ -2210,7 +2210,7 @@
       "developmentDeploymentDecisionId": "CORE-AUTH-D005",
       "readinessEvidence": "CHK-058 owner-decision documentation only. Published CORE-AUTH-01 CI run 37253348486 attempt 2/job 111586842967 green at 95d4d1b1cc9f8a6dc69a1d8a3edea38df9e00923; original failed attempt preserved. Not production auth, new implementation or core readiness proof.",
       "coreWorkflowAdvanced": "Secure authenticated staff access for reservation-required Venue settings and future reservation book/check-in/seating.",
-      "remainingWork": "CHK-064 records owner-approved Candidate A1 DEPLOY-002 IMPLEMENTED in six deployment files only, with digest pins and actual-nginx GW harness. LOCAL NGINX VERIFICATION BLOCKED BY TOOLING; no Docker/image/syntax/GW runtime PASS claimed. Existing pnpm verify PASS after task-owned Vite cleanup; verify:db FAIL 207/210 on PostgreSQL16.15 at three existing PEOPLE-04 raw admin assertions, preserved without repair/rerun. Complete separately authorized local tooling/gateway/regression verification before ENV-001. CORE-AUTH-02 IMPLEMENTED, ENV-001 BLOCKED BY DEPLOYMENT TOPOLOGY, provider NEEDS TESTING, readiness NO; actual Render ingress/DNS/cache/log/cost/runtime/TLS/identity gates remain. DEPLOY-001/CHK-063 and all prior verified/reference/decision history unchanged; no provisioning, purchases, Blueprint sync, app/test/migration/contract/package change or push.",
+      "remainingWork": "CHK-065 confirms Docker Desktop29.8.2 desktop-linux/WSL2 and the exact digest-pinned image build PASS, but actual nginx syntax/startup FAILS because proxy_busy_buffers_size is incompatible with proxy_buffer_size16k/default proxy_buffers. The harness shared startup fails; GW-01–GW-12 did not execute and are not PASS. Stop preserved: no DB current/parent comparison, regression rerun, gateway code change, provisioning or push. CHK-064 and its prior verify:db207/210 failure remain historical evidence. Complete the separately authorized gateway-only FIX-001, then resume actual GW and database/regression verification before ENV-001. CORE-AUTH-02 IMPLEMENTED, ENV-001 BLOCKED BY DEPLOYMENT TOPOLOGY, provider NEEDS TESTING, readiness NO.",
       "specificationFile": "docs/security/staff-access-integration.md",
       "requiredOwnerDecisionIds": [
         "CORE-AUTH-D001",
@@ -2707,7 +2707,7 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "CORE-AUTH-02-DEPLOY-002-VERIFY-001 — Provide approved local Docker tooling and complete gateway/regression verification",
+  "nextExactTask": "CORE-AUTH-02-DEPLOY-002-FIX-001 — Correct nginx proxy buffer configuration and restore gateway startup",
   "deliveryPriority": {
     "decisionId": "PRIORITY-D001",
     "primaryTarget": "PART 1 — CORE ONLINE RESERVATION SYSTEM",
