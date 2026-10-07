@@ -149,13 +149,13 @@ describe("PEOPLE-04 Add User command on real PostgreSQL", () => {
       `SELECT p.email,p.normalized_email,p.status,p.requested_by_user_id,
         u.first_name,u.last_name,u.disabled_at,
         m.job_title,m.email_notifications_enabled,
-        (SELECT count(*)::int FROM authenticated_identities i WHERE i.user_id=u.id) identity_count,
-        (SELECT count(*)::int FROM organization_role_grants g WHERE g.membership_id=m.id AND g.revoked_at IS NULL) org_grants,
-        (SELECT count(*)::int FROM venue_access va WHERE va.membership_id=m.id AND va.revoked_at IS NULL) venue_accesses,
-        (SELECT count(*)::int FROM venue_role_grants vg JOIN venue_access va ON va.id=vg.venue_access_id WHERE va.membership_id=m.id AND vg.revoked_at IS NULL) venue_grants
-       FROM user_provisioning_invites p
-       JOIN users u ON u.id=p.user_id
-       JOIN organization_memberships m ON m.id=p.membership_id
+        (SELECT count(*)::int FROM projectx_test.authenticated_identities i WHERE i.user_id=u.id) identity_count,
+        (SELECT count(*)::int FROM projectx_test.organization_role_grants g WHERE g.membership_id=m.id AND g.revoked_at IS NULL) org_grants,
+        (SELECT count(*)::int FROM projectx_test.venue_access va WHERE va.membership_id=m.id AND va.revoked_at IS NULL) venue_accesses,
+        (SELECT count(*)::int FROM projectx_test.venue_role_grants vg JOIN projectx_test.venue_access va ON va.id=vg.venue_access_id WHERE va.membership_id=m.id AND vg.revoked_at IS NULL) venue_grants
+       FROM projectx_test.user_provisioning_invites p
+       JOIN projectx_test.users u ON u.id=p.user_id
+       JOIN projectx_test.organization_memberships m ON m.id=p.membership_id
        WHERE p.id=$1`,
       [created.provisioningId],
     );
@@ -200,7 +200,7 @@ describe("PEOPLE-04 Add User command on real PostgreSQL", () => {
       expect(response.statusCode).toBe(201);
       const created = response.json();
       const values = await adminPool.query(
-        "SELECT u.first_name,u.last_name,m.job_title,m.email_notifications_enabled FROM users u JOIN organization_memberships m ON m.user_id=u.id WHERE u.id=$1",
+        "SELECT u.first_name,u.last_name,m.job_title,m.email_notifications_enabled FROM projectx_test.users u JOIN projectx_test.organization_memberships m ON m.user_id=u.id WHERE u.id=$1",
         [created.userId],
       );
       expect(values.rows[0]).toEqual({
@@ -234,7 +234,7 @@ describe("PEOPLE-04 Add User command on real PostgreSQL", () => {
     expect(second.statusCode).toBe(201);
     expect(second.json()).toEqual(first.json());
     const counts = await adminPool.query(
-      "SELECT (SELECT count(*)::int FROM user_provisioning_invites WHERE organization_id=$1 AND idempotency_key=$2) invites,(SELECT count(*)::int FROM organization_memberships WHERE user_id=$3) memberships",
+      "SELECT (SELECT count(*)::int FROM projectx_test.user_provisioning_invites WHERE organization_id=$1 AND idempotency_key=$2) invites,(SELECT count(*)::int FROM projectx_test.organization_memberships WHERE user_id=$3) memberships",
       [f.orgA, key, first.json().userId],
     );
     expect(counts.rows[0]).toEqual({ invites: 1, memberships: 1 });
