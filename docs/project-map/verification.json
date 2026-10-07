@@ -2070,6 +2070,244 @@
       "newReferenceEvidence": false,
       "parityClaim": false,
       "nextExactTask": "CORE-AUTH-02-DEPLOY-002-FIX-003 — Correct the confirmed gateway/harness reachability defect"
+    },
+    {
+      "id": "CHK-069",
+      "taskId": "CORE-AUTH-02-DEPLOY-002-FIX-003",
+      "date": "2026-10-06",
+      "status": "BLOCKED",
+      "baseCommit": "1a02c885527119fecbe2194c75697ee2e2a6c5e5",
+      "functionalCommit": "3816d972771e0ca2c47dacda9985a53cb9dc5d71",
+      "remoteBase": "75da5c2adb9a99049945d2df2401537d9e92e675",
+      "scope": "Authorized harness-only bridge/loopback reachability correction; four evidence documents. No application, existing application test, migration, package, production deployment configuration or system changes",
+      "result": "Gateway correction verified: focused 1/1 and complete suite 15/15, including GW-01–GW-12. Deployment verification remains incomplete: verify fails before browser execution; verify:db fails 3 historical assertions. Stop for owner decision without fixes, gate waiver or push",
+      "network": {
+        "before": "--network host; no published port; invalid assumed shared Windows/Linux loopback contract (CHK-068 REACH-02 preserved)",
+        "after": "--network bridge --publish 127.0.0.1::10000; inspect/discover exactly one loopback host mapping",
+        "containerListen": "0.0.0.0:10000",
+        "hostIP": "127.0.0.1",
+        "mockBind": "127.0.0.1",
+        "mockContainerTarget": "host.docker.internal:<mock-port>",
+        "readinessURL": "http://127.0.0.1:<discovered-host-port>/health",
+        "readinessHost": "gateway.test.invalid",
+        "readinessDeadlineMs": 10000,
+        "attemptTimeoutMs": 1000,
+        "retryIntervalMs": 100,
+        "hardening": "Read-only root, /tmp:rw,noexec,nosuid,size=32m, ALL capabilities dropped, no-new-privileges preserved. Request deadline 75s retained only for normal requests including actual 60s proxy timeout",
+        "localOnly": "Docker Desktop test transport only; no host.docker.internal dependency introduced into Render configuration",
+        "dnsFixture": "Synthetic UDP DNS rotates actual host alias IPv4 to unavailable container loopback127.0.0.2 and back; actual nginx resolution/failure/recovery without restart. Does not infer production private DNS behavior"
+      },
+      "focusedProof": {
+        "command": "node --test --test-name-pattern=\"^Focused bridge reachability$\" deploy/gateway/gateway.test.mjs",
+        "result": "PASS 1/1",
+        "container": "RUNNING",
+        "hostMapping": "127.0.0.1:49584 -> 10000/tcp",
+        "mockBind": "127.0.0.1:49580",
+        "canonical": 200,
+        "defaultHost": 403,
+        "foreignHost": 403,
+        "mockHealth": 200,
+        "hostToGateway": "PASS",
+        "gatewayToMockAPI": "PASS — exact request observed by synthetic mock"
+      },
+      "fullHarness": {
+        "command": "node --test deploy/gateway/gateway.test.mjs",
+        "result": "PASS 15/15; no skips/failures; executed once after focused proof",
+        "durationSeconds": 113.488,
+        "hostMapping": "127.0.0.1:52292 -> 10000/tcp",
+        "mockBind": "127.0.0.1:52291",
+        "composition": "12 GW cases plus focused reachability/static/input checks"
+      },
+      "gatewayMatrix": [
+        {
+          "id": "GW-01",
+          "status": "PASS",
+          "result": "Actual nginx startup/syntax, static/deep SPA/health and missing assets"
+        },
+        {
+          "id": "GW-02",
+          "status": "PASS",
+          "result": "Methods/body/query preservation"
+        },
+        {
+          "id": "GW-03",
+          "status": "PASS",
+          "result": "Headers, no invented authority, Origin/Referer unchanged"
+        },
+        {
+          "id": "GW-04",
+          "status": "PASS",
+          "result": "Canonical Host accepted; foreign rejected; client X-Forwarded-Host/Forwarded removed; fixed trusted upstream Host/HTTPS metadata"
+        },
+        {
+          "id": "GW-05",
+          "status": "PASS",
+          "result": "Distinct Set-Cookie, no introduced Domain, Secure/HttpOnly/SameSite=Lax/Path and logout expiration preserved"
+        },
+        {
+          "id": "GW-06",
+          "status": "PASS",
+          "result": "Statuses/no-store/API precedence"
+        },
+        {
+          "id": "GW-07",
+          "status": "PASS",
+          "result": "Callback canary reaches upstream, absent from nginx logs/generated configuration/static assets"
+        },
+        {
+          "id": "GW-08",
+          "status": "PASS",
+          "result": "Safe unavailable502 and actual timeout504; no retry/replay/SPA fallback; non-cacheable errors; ~61.185s"
+        },
+        {
+          "id": "GW-09",
+          "status": "PASS",
+          "result": "Raw-path rejection"
+        },
+        {
+          "id": "GW-10",
+          "status": "PASS",
+          "result": "Limits/temp-path assertions"
+        },
+        {
+          "id": "GW-11",
+          "status": "PASS",
+          "result": "Unchanged compiled API entrypoint and missing-identity guards"
+        },
+        {
+          "id": "GW-12",
+          "status": "PASS",
+          "result": "Build context/input/secret-env rejection, actual DNS rotation failure/recovery, logs and shutdown"
+        }
+      ],
+      "imageReview": {
+        "status": "PASS — bounded review",
+        "image": "projectx-dev-gateway:local",
+        "imageId": "sha256:db224107d88e066d13b2377f0d35eabd0abbf742b8f332288009e32b59b8b1af",
+        "rebuilt": false,
+        "user": "101:101",
+        "evidence": "No real credentials supplied. No .env/.env.*/*.key filename matches in final filesystem; no private-key/credential PostgreSQL URL/callback-canary pattern matches in final web/runtime/generated configuration; credential environment names absent; image history and logs reviewed without observed secret indicators",
+        "limitations": "Bounded pattern/name inspection, not proof against arbitrary secret encodings or extraction of every layer. Initial whole-filesystem scan as UID101 exited1 on permissions; completed read-only diagnostic inspection as UID0, while nginx remained101:101 with read-only root. No cookie/token/real Auth0 or DB secret introduced"
+      },
+      "database": {
+        "postgresql": "16.15",
+        "authority": "Disposable loopback-only PostgreSQL cluster port53232, same test-only owner and separate current/base databases; no existing/external DB touched",
+        "currentCommit": "3816d972771e0ca2c47dacda9985a53cb9dc5d71",
+        "comparisonBase": "75da5c2adb9a99049945d2df2401537d9e92e675",
+        "focusedCommand": "pnpm exec vitest run apps/api/tests/people/add-user.test.ts --testNamePattern 'atomically creates User|preserves nullable names|returns one logical effect' --no-file-parallelism",
+        "currentFocused": "3 FAIL / 8 skipped, once",
+        "baseFocused": "3 FAIL / 8 skipped, once; full base verify:db NOT RUN",
+        "classification": "A — identical failures on published base and current under same PostgreSQL16.15 authority",
+        "failures": [
+          {
+            "test": "atomically creates User, membership, explicit grants, venue access and pending provisioning",
+            "line": 148,
+            "error": "relation \"user_provisioning_invites\" does not exist"
+          },
+          {
+            "test": "preserves nullable names/job title and notification null/false/true",
+            "line": 202,
+            "error": "relation \"users\" does not exist"
+          },
+          {
+            "test": "returns one logical effect for an identical idempotent retry",
+            "line": 236,
+            "error": "relation \"user_provisioning_invites\" does not exist"
+          }
+        ],
+        "currentFullGate": "pnpm verify:db FAIL: 207 PASS / 3 FAIL across21files,20files pass/1fails; migrations PASS; executed once",
+        "searchPath": {
+          "classification": "CONFIRMED in controlled disposable environment",
+          "evidence": "SHOW search_path = \"$user\", public; schema-qualified projectx_test.users/invites exist; unqualified to_regclass null. BEGIN/SET LOCAL search_path TO projectx_test, public works; COMMIT resets default. Subsequent raw unqualified SELECT produces SQLSTATE42P01; schema-qualified counterparts succeed",
+          "limitation": "Does not retrospectively measure every historical environment. Prior INFERRED records unchanged"
+        },
+        "unchanged": "Affected test/fixture/DB harness/migrations/lockfile unchanged between published base and current; no database correction authorized or made",
+        "gate": "Not waived; owner decision required"
+      },
+      "commands": [
+        {
+          "command": "node --check deploy/gateway/gateway.test.mjs",
+          "result": "PASS"
+        },
+        {
+          "command": "pnpm --filter @projectx/api build",
+          "result": "PASS; tsc; node apps/api/dist/main.js exercised by GW-11"
+        },
+        {
+          "command": "pnpm format:check",
+          "result": "PASS 99files"
+        },
+        {
+          "command": "pnpm lint",
+          "result": "PASS 100files"
+        },
+        {
+          "command": "pnpm typecheck",
+          "result": "PASS"
+        },
+        {
+          "command": "pnpm contract:check",
+          "result": "PASS"
+        },
+        {
+          "command": "pnpm map:check",
+          "result": "PASS 144screens/16modules/55tasks; final documentation checked separately"
+        },
+        {
+          "command": "pnpm test:auth",
+          "result": "PASS 56/56 across4files"
+        },
+        {
+          "command": "pnpm verify",
+          "result": "FAIL, once. Preceding install/static/contract/map gates and unit4/4,auth56/56,integration19/19,web178/178 pass. E2E32 launch/setup failures before browser bodies: browserType.launch missing chromium_headless_shell-1243 executable. Aggregate build phase not reached; separate API build passed"
+        },
+        {
+          "command": "pnpm verify:db",
+          "result": "FAIL 207/210 across21files PostgreSQL16.15, same3 focused failures; once"
+        },
+        {
+          "command": "git diff --check; final map and preservation/scope audit",
+          "result": "PASS: final map144screens/16modules/55tasks; whitespace clean; all68prior checks,26VERIFIED tasks,54unrelated tasks and existing security sections unchanged; exact one functional file plus four docs scope"
+        }
+      ],
+      "browserBlocker": {
+        "classification": "CONFIRMED TOOLING BLOCKER, not established application regression",
+        "missingExecutable": "C:\\Users\\barak\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1243\\chrome-headless-shell-win64\\chrome-headless-shell.exe",
+        "action": "No browser installation or rerun; requires separately authorized tooling verification"
+      },
+      "toolingNotes": [
+        "First sandbox regression command attempts aborted in pnpm with EPERM store symlink access before gates executed; authorized elevated reruns were the first actual gate executions, not repeats to get green",
+        "Direct scoped Biome commands ignored deploy path; stdin formatting applied. Auxiliary stdin lint reported contents not fixed, not a scoped lint PASS. Repository format/lint excludes deploy; node syntax and actual harness PASS provide separate evidence",
+        "Temporary base checkout used existing dependency junctions; pnpm metadata found lockfile up-to-date. No package/lockfile changes",
+        "Node shell-spawn/color warnings non-blocking; genuine missing browser and DB failures remain blockers"
+      ],
+      "cleanup": "Owned Docker containers/mock servers closed/removed; disposable PG16.15 cluster stopped and deleted; temporary detached base checkout/dependency junctions removed after clean-state check. Existing binaries/dependencies preserved; only main workspace remains attached",
+      "preservedState": {
+        "deploy002": "IMPLEMENTED / VERIFICATION INCOMPLETE",
+        "coreAuth02": "IMPLEMENTED",
+        "environment": "BLOCKED pending locally verified DEPLOY-002",
+        "provider": "NEEDS TESTING",
+        "environmentReady": false,
+        "history": "All68 prior checks unchanged; all26 previously VERIFIED tasks and54 unrelated task objects preserved",
+        "reference": "U-001/U-002/U-003 and all SevenRooms classifications unchanged; no new evidence/parity",
+        "decisions": "CORE-AUTH-D004/D005 remain APPROVED; no provisioning/system changes"
+      },
+      "filesModified": [
+        "deploy/gateway/gateway.test.mjs",
+        "docs/project-map/roadmap.json",
+        "docs/project-map/verification.json",
+        "docs/project-map/handoff.md",
+        "docs/security/staff-session-verification.md"
+      ],
+      "noApplicationChanges": true,
+      "noMigrationChanges": true,
+      "noPackageChanges": true,
+      "noSystemChanges": true,
+      "noProvisioning": true,
+      "noPush": true,
+      "newReferenceEvidence": false,
+      "parityClaim": false,
+      "nextExactTask": "Owner decision — authorize bounded PEOPLE-04 database assertion correction and Playwright tooling verification"
     }
   ],
   "unresolvedQuestions": [

@@ -5,6 +5,111 @@ CORE-AUTH-D004. Base 84ed2938d7d1fa6155e744a50ef3d6aebe6f978c.
 Parent task IMPLEMENTED; controlled Auth0/production assurance remains NEEDS TESTING.
 No SevenRooms evidence or parity claims.
 
+## Docker Desktop bridge correction — CHK-069 / DEPLOY-002-FIX-003
+
+2026-10-06. Authorized harness-only correction, clean start
+`1a02c885527119fecbe2194c75697ee2e2a6c5e5`; fetched published base
+`75da5c2adb9a99049945d2df2401537d9e92e675`. Functional child
+`3816d972771e0ca2c47dacda9985a53cb9dc5d71` changes only
+`deploy/gateway/gateway.test.mjs`. No application/auth/database/migration,
+package, nginx template, startup script, Dockerfile or Render configuration changes.
+No Docker/WSL/firewall settings changed. Prior buffer/temp-path failures and
+CHK-068 REACH-02 evidence remain unchanged below.
+
+The harness now uses bridge networking and `127.0.0.1::<container-port>`
+publication, inspects the actual single loopback mapping, and configures the
+existing listener input as `0.0.0.0:10000` inside the container. The Windows mock
+still binds only `127.0.0.1`; nginx targets `host.docker.internal:<mock-port>`.
+This is local Docker Desktop transport, not Render topology.
+[Docker Desktop networking](https://docs.docker.com/desktop/features/networking/)
+and [Docker run reference](https://docs.docker.com/reference/cli/docker/container/run/)
+document the host alias and loopback publication. No SevenRooms inference.
+
+Readiness uses `http://127.0.0.1:<discovered-port>/health` with
+`Host: gateway.test.invalid`: 10s overall deadline, at most1s per attempt,
+100ms retry, expected HTTP status required. Normal request deadline75s remains
+for the actual nginx60s timeout case. Read-only root,32MiB hardened /tmp tmpfs,
+ALL capabilities dropped, no-new-privileges and nginx UID101:101 preserved.
+Synthetic DNS fixture now rotates host-alias IPv4 to unavailable container
+loopback127.0.0.2 and back; actual nginx DNS failure/recovery is tested without
+restart. No production DNS behavior is inferred.
+
+**Focused proof PASS1/1:** running container, mapping
+`127.0.0.1:49584 -> 10000/tcp`, Windows mock `127.0.0.1:49580`.
+Canonical/default/foreign Host200/403/403; health200 with matching mock request.
+HOST_TO_GATEWAY and GATEWAY_TO_MOCK_API independently PASS.
+Then full harness executed once: **PASS15/15**, no skips/failures,113.488s;
+mapping `127.0.0.1:52292 -> 10000/tcp`, mock `127.0.0.1:52291`.
+
+| Gate | Result |
+| --- | --- |
+| GW-01 | PASS — actual startup/syntax/static/deep SPA/health/missing asset behavior |
+| GW-02 | PASS — methods, body and query |
+| GW-03 | PASS — headers/no invented authority; unchanged Origin/Referer |
+| GW-04 | PASS — canonical/foreign Host, stripping client forwarding, fixed trusted Host/HTTPS |
+| GW-05 | PASS — distinct Set-Cookie, no Domain introduced, attributes/logout preserved |
+| GW-06 | PASS — statuses/no-store/API precedence |
+| GW-07 | PASS — callback canary reaches mock, absent from logs/config/static assets |
+| GW-08 | PASS — actual60s timeout, safe502/504, no retry/replay/SPA, no-cache |
+| GW-09 | PASS — raw-path rejection |
+| GW-10 | PASS — limits and temporary paths |
+| GW-11 | PASS — unchanged compiled API entrypoint and guards |
+| GW-12 | PASS — context/input/secret-env checks, actual DNS rotation recovery, logs/shutdown |
+
+**Bounded image secret review PASS:** unchanged `projectx-dev-gateway:local`,
+image ID `sha256:db224107d88e066d13b2377f0d35eabd0abbf742b8f332288009e32b59b8b1af`.
+No real secrets supplied; no .env/.env.*/*.key filename matches in final filesystem,
+no credential environment names, no private-key/credential PostgreSQL URL/callback
+canary pattern matches in final web/runtime/generated configuration. History/logs
+reviewed without observed secret indicators. Initial UID101 whole-filesystem scan
+exited1 on restricted directories; read-only diagnostic inspection as UID0 completed
+the review, without changing nginx UID/hardening. This is bounded pattern/name
+inspection, not proof against arbitrary secret encodings or every extracted layer.
+API build PASS; unchanged `node apps/api/dist/main.js` exercised by GW-11.
+
+**Database category A CONFIRMED:** identical focused scope once on current
+`3816d97` and isolated published `75da5c2`, same disposable loopback PostgreSQL16.15
+authority, separate test databases. Both3FAIL/8skipped in
+`apps/api/tests/people/add-user.test.ts`:
+
+- Atomic creation assertion line148: relation user_provisioning_invites missing.
+- Nullable names/job-title/notification assertion line202: relation users missing.
+- Identical idempotent retry assertion line236: relation user_provisioning_invites missing.
+
+Test/fixture/DB harness/migrations/lockfile unchanged across comparison.
+Controlled unchanged migrations plus one connection proved default search_path
+`"$user", public`, existing schema-qualified projectx_test relations, and
+transaction-local projectx_test search_path resetting at COMMIT. Subsequent
+unqualified raw SELECTs fail SQLSTATE42P01 while qualified counterparts succeed.
+The mechanism is CONFIRMED in this controlled environment; older INFERRED evidence
+is preserved and not retrospectively upgraded. Full current `pnpm verify:db`
+once: **207PASS/3FAIL across21files**, migrations PASS. Full base gate NOT RUN;
+only the same three failing tests were compared. No repair or gate waiver.
+
+**Other required gates:** format99files, lint100files, typecheck, contract, map,
+auth56/56 PASS. `pnpm verify` once FAILED before browser bodies: all32 E2E
+launch/setup failures report missing
+`C:\Users\barak\AppData\Local\ms-playwright\chromium_headless_shell-1243\chrome-headless-shell-win64\chrome-headless-shell.exe`.
+Preceding unit4/auth56/integration19/web178 and static gates PASS; aggregate build
+after E2E not reached. This establishes missing local browser tooling, not an
+application regression. No install or rerun performed.
+
+Tooling evidence: initial sandbox pnpm attempts failed EPERM store symlink access
+before gates ran; authorized access allowed first actual runs. Scoped Biome deploy
+file checks were ignored; stdin formatting used, auxiliary stdin lint did not
+establish a scoped PASS. Repository format/lint excludes deploy; syntax and actual
+harness results are separate. Node shell-spawn/color warnings non-blocking.
+Disposable containers/mock servers and PG cluster removed; clean temporary base
+checkout/junctions removed; existing binaries/dependencies retained.
+
+**Stop for owner decision:** authorize bounded PEOPLE-04 database assertion
+correction and Playwright tooling verification. No automatic test/runtime repair,
+new dependency install, provisioning, push or future-module work.
+DEPLOY-002 IMPLEMENTED / VERIFICATION INCOMPLETE; CORE-AUTH-02 IMPLEMENTED;
+ENV-001 BLOCKED; provider NEEDS TESTING; environment ready NO.
+All68 prior checks,26VERIFIED tasks, D004/D005, reference classifications and
+U-001/U-002/U-003 preserved. No SevenRooms evidence/parity claim.
+
 ## Shared-loopback reachability diagnosis — CHK-068 / DEPLOY-002-VERIFY-002
 
 2026-10-06. Diagnostic-only task; clean starting

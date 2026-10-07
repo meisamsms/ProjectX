@@ -1949,7 +1949,7 @@
         "dependency": "Provisioned Render/Auth0 DEVELOPMENT environment under APPROVED CORE-AUTH-D005, canonical HTTPS endpoint, synthetic staff identity and restricted PostgreSQL runtime",
         "reason": "BLOCKED BY DEPLOYMENT TOPOLOGY: the existing separate API/Vite runtimes lack a reviewed canonical same-origin web + /api/v1 deployment gateway. D005 owner selections remain resolved. No purchases or provisioning; see CORE-AUTH-02-ENV-002 / CHK-062. Resolve the narrow deployment prerequisite before actual environment setup.",
         "affectedModules": ["CORE-AUTH-02", "SETTINGS-CORE-01", "RESERVATIONS-CORE-01"],
-        "requiredPredecessor": "CORE-AUTH-02-DEPLOY-002-FIX-003 — Correct the confirmed gateway/harness reachability defect",
+        "requiredPredecessor": "Owner decision — authorize bounded PEOPLE-04 database assertion correction and Playwright tooling verification",
         "evidenceId": "CHK-060",
         "ownerDecisionRequired": false,
         "status": "BLOCKED",
@@ -2170,7 +2170,7 @@
           "id": "CORE-AUTH-02-DEPLOY-002",
           "status": "IMPLEMENTED",
           "classification": "PROJECTX DEPLOYMENT IMPLEMENTATION",
-          "evidenceId": "CHK-068",
+          "evidenceId": "CHK-069",
           "authorization": "Explicit owner implementation prompt approves Candidate A1 and six deployment paths plus four evidence docs; no resource/purchase/Blueprint-sync or push approval",
           "priorityPart": 2,
           "coreWorkflowAdvanced": "Canonical staff-auth transport prerequisite for SETTINGS-CORE-01 and future reservation book/check-in/seating",
@@ -2178,31 +2178,31 @@
           "ownedScope": "render.yaml, .dockerignore, deploy/gateway/{Dockerfile,nginx.conf.template,start.sh,gateway.test.mjs}; four evidence docs only",
           "excludedScope": "Application/auth/existing tests/migrations/contracts/packages; provisioning/purchases/production/staging/Settings/reservations/Export",
           "implementation": "Digest-pinned Node24 web build and unprivileged nginx; canonical Host, private hostport/DNS, API precedence, transparent cookies/CSRF/Origin/status/body/query, no proxy cache/retry/SPA interception, metadata-only logs, bounded inputs/limits; manual development-only Blueprint unapplied",
-          "localNginxVerification": "CHK-067 PASS — temp-path fix e0a8d63ead4ce3b6885b44435dba03d6693ea077; actual pinned read-only image starts and nginx -t succeeds. PID/client/proxy/fastcgi/uwsgi/scgi paths verified under writable32MiB /tmp tmpfs. Historical CHK-065/066 failures preserved. Separate unchanged harness shared reachability setup FAIL; GW bodies NOT EXECUTED",
+          "localNginxVerification": "CHK-069 PASS — focused bridge reachability and all GW-01–GW-12 pass on actual unchanged pinned image. Harness-only commit3816d972771e0ca2c47dacda9985a53cb9dc5d71 publishes dynamic Windows127.0.0.1 host ports to container0.0.0.0:10000; Windows127.0.0.1 mock reached via host.docker.internal. Read-only/tmpfs/security preserved. Historical CHK-065–068 failures remain unchanged",
           "localStaticEvidence": "Node/shell syntax, scoped harness lint, static artifact audit and pre-nginx invalid-input rejection PASS. API/web builds and loopback compiled API health/missing-identity 401 PASS; not Linux/image/provider proof",
-          "regressionEvidence": "pnpm verify PASS (4 unit / 56 auth / 19 integration / 178 web / 32 E2E, builds/static gates), after explicit cleanup of task-owned stuck Vite server; no test rerun. pnpm verify:db FAIL 207/210 across 21 files on PostgreSQL16.15; three existing PEOPLE-04 unqualified admin-query relation-not-found assertions. No fix or DB rerun",
+          "regressionEvidence": "CHK-069: format/lint/typecheck/contract/map PASS; auth56/56 PASS; API build/entrypoint PASS; bounded image secret review PASS. pnpm verify FAIL at E2E launch: missing Playwright chromium_headless_shell-1243 executable,32 setup failures/no browser bodies; earlier unit4/auth56/integration19/web178 PASS. verify:db FAIL207/210 across21files PostgreSQL16.15. Exact3 historical assertions fail identically current/base: categoryA, not waived. Controlled SQLSTATE42P01/search_path mechanism confirmed; no DB/test fix or browser install",
           "blocker": {
-            "id": "CORE-AUTH-02-DEPLOY-002-REACH-02",
+            "id": "CORE-AUTH-02-DEPLOY-002-REGRESSION-001",
             "status": "BLOCKED",
-            "dependency": "Separately authorized harness-only network contract correction for Windows-host Node and Linux Docker runtime; explicitly verify both host-to-gateway and gateway-to-synthetic-upstream reachability without changing gateway/app semantics or system settings",
-            "reason": "CONFIRMED CHK-068 REACH-02: same harness --network host, no published ports; running Linux nginx listens127.0.0.1:62216 and canonical inside HTTP200, while Windows curl times out and exact Node readiness ECONNREFUSED. Windows mock127.0.0.1:62215 returns200 on Windows but gateway health502 inside. Shared cross-runtime loopback assumption invalid here; underlying Docker setting cause UNKNOWN. No Host/port-number mismatch, exit/OOM or demonstrated nginx startup race",
+            "dependency": "Owner decision for narrow PEOPLE-04 unqualified database assertion correction and approved existing Playwright browser tooling verification; complete both required repository gates before local deployment verification",
+            "reason": "Gateway network defect resolved locally, all12GW cases PASS. Required gates remain red: categoryA historical DB assertions reproduce on current and published base under identical PostgreSQL16.15; fullcurrent207PASS/3FAIL. pnpm verify cannot launch missing Playwright Chromium;32 setup failures. Stop for owner decision; no automatic repairs, gate waiver, browser installation, provisioning or push",
             "affectedModules": [
               "CORE-AUTH-02",
               "SETTINGS-CORE-01",
               "RESERVATIONS-CORE-01"
             ],
-            "requiredPredecessor": "CORE-AUTH-02-DEPLOY-002-FIX-003 — Correct the confirmed gateway/harness reachability defect"
+            "requiredPredecessor": "Owner decision — authorize bounded PEOPLE-04 database assertion correction and Playwright tooling verification"
           },
           "nextTaskProposal": {
-            "id": "CORE-AUTH-02-DEPLOY-002-FIX-003",
-            "status": "READY",
-            "scope": "Separate bounded correction owned by deploy/gateway/gateway.test.mjs only: establish explicit actual-image reachability for gateway and synthetic upstream across Windows/Linux runtime boundaries. Preserve pinned image, read-only/tmpfs, canonical Host, security assertions and cleanup; no nginx/start/Dockerfile/Blueprint/app/DB edits or system settings without separate approval",
+            "id": "CORE-AUTH-02-DEPLOY-002-REGRESSION-001",
+            "status": "BLOCKED",
+            "scope": "Owner review of confirmed base-visible PEOPLE-04 admin assertion schema-path defect and missing browser executable. Recommended bounded test-only schema qualification, preserving runtime/migrations and existing successful assertions; restore/locate approved matching browser runtime in a separately authorized verification task. Do not waive verify:db or start ENV-001",
             "acceptanceCriteria": [
               "Actual-nginx GW-01–GW-12 and image syntax/build pass",
               "Existing regression gates including PostgreSQL16 verify:db green, prior failures preserved",
               "No live Render/Auth0 resources or provider-readiness claim"
             ],
-            "executionGate": "Separate explicit FIX-003 authorization required; VERIFY-002 is diagnostic/documentation only, no full harness rerun, functional edits, DB comparison, provisioning or push. If correction requires another causal file or system setting, stop for approval"
+            "executionGate": "Owner decision required after categoryA DB comparison and failed repository gates. No implementation, dependency install, repeated test attempts, provisioning or push in FIX-003"
           }
         }
       },
@@ -2210,7 +2210,7 @@
       "developmentDeploymentDecisionId": "CORE-AUTH-D005",
       "readinessEvidence": "CHK-058 owner-decision documentation only. Published CORE-AUTH-01 CI run 37253348486 attempt 2/job 111586842967 green at 95d4d1b1cc9f8a6dc69a1d8a3edea38df9e00923; original failed attempt preserved. Not production auth, new implementation or core readiness proof.",
       "coreWorkflowAdvanced": "Secure authenticated staff access for reservation-required Venue settings and future reservation book/check-in/seating.",
-      "remainingWork": "CHK-068 confirms REACH-02: disposable same-parameter host-network nginx remains running, listens on Linux loopback, inside canonical HTTP200; no Docker published ports; Windows exact probe ECONNREFUSED and curl timeout. Synthetic Windows upstream healthy locally but gateway health502. Correct harness cross-runtime loopback reachability through separately authorized FIX-003; Docker settings root cause UNKNOWN, no automatic settings change. GW-01–12 remain NOT EXECUTED; no full harness rerun, DB comparison or gate waiver. Previous67checks and both resolved startup failures preserved; CORE-AUTH-02 IMPLEMENTED, DEPLOY-002 VERIFICATION INCOMPLETE, ENV-001 BLOCKED, provider NEEDS TESTING, readiness NO",
+      "remainingWork": "CHK-069: FIX-003 harness bridge/loopback publication and host.docker.internal correction committed locally; focused proof1/1 and full actual-image suite15/15 (GW-01–12) PASS. Image review and API build/entrypoint PASS; individual repository static/auth gates PASS. verify FAIL missing Playwright browser; verify:db207PASS/3FAIL, same3 assertions on published base=>categoryA. Controlled search_path reset produces42P01 with schema-qualified counterparts succeeding. Stop for owner decision on bounded test/tooling correction; do not waive or repair. CORE-AUTH-02/DEPLOY-002 remain IMPLEMENTED, deployment verification incomplete; ENV-001 BLOCKED, provider NEEDS TESTING, readiness NO. Prior68checks/reference evidence preserved",
       "specificationFile": "docs/security/staff-access-integration.md",
       "requiredOwnerDecisionIds": [
         "CORE-AUTH-D001",
@@ -2707,7 +2707,7 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "CORE-AUTH-02-DEPLOY-002-FIX-003 — Correct the confirmed gateway/harness reachability defect",
+  "nextExactTask": "Owner decision — authorize bounded PEOPLE-04 database assertion correction and Playwright tooling verification",
   "deliveryPriority": {
     "decisionId": "PRIORITY-D001",
     "primaryTarget": "PART 1 — CORE ONLINE RESERVATION SYSTEM",
