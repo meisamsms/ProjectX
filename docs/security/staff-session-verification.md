@@ -5,6 +5,64 @@ CORE-AUTH-D004. Base 84ed2938d7d1fa6155e744a50ef3d6aebe6f978c.
 Parent task IMPLEMENTED; controlled Auth0/production assurance remains NEEDS TESTING.
 No SevenRooms evidence or parity claims.
 
+## Regression recovery — CHK-070 / DEPLOY-002-REGRESSION-001
+
+Tests completed2026-10-06; interrupted documentation finalized2026-10-08.
+Starting `37980004bdcf2a049b97fc054ea67b72b78168e9`; test-only child
+`d13912747e957480efb4f9e9f34daa46a1c98d9f` already existed at resume and was
+preserved unchanged. Fetched remote remains
+`75da5c2adb9a99049945d2df2401537d9e92e675`. No reset/amend/rebase/recreation/push.
+
+**CONFIRMED pre-existing assertion defect resolved:** CHK-069 categoryA comparison
+and controlled search_path diagnosis remain historical evidence. Transaction-local
+`SET LOCAL search_path` does not configure later raw `adminPool.query` calls.
+Only `apps/api/tests/people/add-user.test.ts` changed:12 explicit
+`projectx_test.` prefixes in three administrative assertion areas (atomic stored
+state8, nullable names/notification values2, idempotent counts2). All other
+test-owned raw table references were already qualified; no additional query fixed.
+Expected values, business assertions, SQL semantics, shared harness, global
+search_path, production code, migrations and other tests unchanged. This was not
+a production database defect or a regression introduced by the gateway.
+
+**Local verification PASS, not rerun on resume:**
+
+- Whole Add User file11/11, including all three previous failures, on PostgreSQL16.15.
+- `pnpm verify:db`210/210 across21files, migrations PASS; executed once.
+- Playwright1.63.0: required Chromium initially missing. Approved
+  `pnpm exec playwright install chromium` installed Chromium/headless-shell1243
+  (Chrome for Testing153.0.8010.12), plus required FFmpeg/Winldd helper tools,
+  into the per-user cache. No system/admin/restart/paid-software change required.
+- `pnpm verify` PASS once: unit4, auth56, integration19, web178, browser32/32,
+  API/web builds. Chromium launched via unchanged Playwright config with no
+  executable override or substitute Chrome.
+- Separate format99files, lint100files, typecheck, contract, map and auth56/56 PASS.
+  Node shell-spawn/color and Vite react-router directive warnings were non-blocking.
+- Gateway files, Render configuration, packages/lockfile and browser configuration
+  unchanged. CHK-069 GW-01–12, both transport directions, bounded image secret
+  review, API build and entrypoint PASS preserved; no gateway rerun or rebuild.
+
+Temporary loopback-only PostgreSQL cluster was stopped/deleted after testing;
+existing binaries retained. Per-user Playwright cache remains outside Git.
+No browser binary/cache or install artifact staged, tracked or committed.
+Resume verified the tested source equivalence and completed only documentation,
+map/whitespace/preservation/commit-chain and bounded secret-indicator checks.
+No expensive rerun required merely for a commit or interrupted response.
+
+**Current state:** DEPLOY-002 IMPLEMENTED / LOCALLY VERIFIED;
+CORE-AUTH-02 remains IMPLEMENTED, not VERIFIED. ENV-001 READY TO RESUME APPROVED
+ENVIRONMENT PROVISIONING; provider NEEDS TESTING; environment ready NO.
+Actual Render/Auth0 resources, HTTPS, restricted runtime and real-provider matrix
+remain outstanding. D004/D005, all69 prior checks,26 previously VERIFIED tasks,
+SevenRooms classifications and U-001/U-002/U-003 preserved.
+SETTINGS-CORE-01 remains PLANNED pending VERIFIED CORE-AUTH-02.
+People Export remains Part3 deferred. No new reference evidence or parity claim.
+
+Next exact task: **CORE-AUTH-02-ENV-001 — Resume approved Render/Auth0 development
+environment provisioning using the locally verified Candidate A1 gateway.**
+The full unpublished local chain requires separate exact-SHA publication approval.
+This task stops after the documentation-only child commit, without publishing,
+provisioning or starting another implementation.
+
 ## Docker Desktop bridge correction — CHK-069 / DEPLOY-002-FIX-003
 
 2026-10-06. Authorized harness-only correction, clean start

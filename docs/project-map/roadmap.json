@@ -1947,12 +1947,12 @@
         "id": "CORE-AUTH-02-ENV-001",
         "classification": "CONFIRMED — required configuration unavailable to this verification session; external deployment existence UNKNOWN",
         "dependency": "Provisioned Render/Auth0 DEVELOPMENT environment under APPROVED CORE-AUTH-D005, canonical HTTPS endpoint, synthetic staff identity and restricted PostgreSQL runtime",
-        "reason": "BLOCKED BY DEPLOYMENT TOPOLOGY: the existing separate API/Vite runtimes lack a reviewed canonical same-origin web + /api/v1 deployment gateway. D005 owner selections remain resolved. No purchases or provisioning; see CORE-AUTH-02-ENV-002 / CHK-062. Resolve the narrow deployment prerequisite before actual environment setup.",
+        "reason": "CHK-070 resolves the local deployment verification prerequisite: Candidate A1 gateway evidence CHK-069 preserved unchanged, test-only Add User schema qualification and local Chromium tooling restore all required regression gates. READY TO RESUME APPROVED ENVIRONMENT PROVISIONING under D005; actual Render/Auth0 resources, HTTPS and provider matrix remain outstanding. No provisioning or production assurance in this task.",
         "affectedModules": ["CORE-AUTH-02", "SETTINGS-CORE-01", "RESERVATIONS-CORE-01"],
-        "requiredPredecessor": "Owner decision — authorize bounded PEOPLE-04 database assertion correction and Playwright tooling verification",
+        "requiredPredecessor": "CORE-AUTH-02-DEPLOY-002 — local verification prerequisite satisfied by CHK-069/070; separate exact-SHA publication approval required before publication",
         "evidenceId": "CHK-060",
         "ownerDecisionRequired": false,
-        "status": "BLOCKED",
+        "status": "READY",
         "ownerSelectionStatus": "RESOLVED",
         "ownerSelectionDecisionId": "CORE-AUTH-D005",
         "resolvedOwnerSelections": [
@@ -1975,9 +1975,9 @@
           "Sanitized controlled logs/evidence"
         ],
         "approvalEvidenceId": "CHK-061",
-        "currentEvidenceId": "CHK-064",
-        "environmentStatus": "BLOCKED BY DEPLOYMENT TOPOLOGY",
-        "engineeringDecisionRequired": true,
+        "currentEvidenceId": "CHK-070",
+        "environmentStatus": "READY TO RESUME APPROVED ENVIRONMENT PROVISIONING",
+        "engineeringDecisionRequired": false,
         "deploymentTopology": {
           "id": "CORE-AUTH-02-ENV-002",
           "classification": "CONFIRMED — repository deployment seam missing; provider-specific solution NEEDS TESTING",
@@ -2169,8 +2169,9 @@
         "deploymentImplementation": {
           "id": "CORE-AUTH-02-DEPLOY-002",
           "status": "IMPLEMENTED",
+          "verificationStatus": "LOCALLY VERIFIED",
           "classification": "PROJECTX DEPLOYMENT IMPLEMENTATION",
-          "evidenceId": "CHK-069",
+          "evidenceId": "CHK-070",
           "authorization": "Explicit owner implementation prompt approves Candidate A1 and six deployment paths plus four evidence docs; no resource/purchase/Blueprint-sync or push approval",
           "priorityPart": 2,
           "coreWorkflowAdvanced": "Canonical staff-auth transport prerequisite for SETTINGS-CORE-01 and future reservation book/check-in/seating",
@@ -2180,29 +2181,29 @@
           "implementation": "Digest-pinned Node24 web build and unprivileged nginx; canonical Host, private hostport/DNS, API precedence, transparent cookies/CSRF/Origin/status/body/query, no proxy cache/retry/SPA interception, metadata-only logs, bounded inputs/limits; manual development-only Blueprint unapplied",
           "localNginxVerification": "CHK-069 PASS — focused bridge reachability and all GW-01–GW-12 pass on actual unchanged pinned image. Harness-only commit3816d972771e0ca2c47dacda9985a53cb9dc5d71 publishes dynamic Windows127.0.0.1 host ports to container0.0.0.0:10000; Windows127.0.0.1 mock reached via host.docker.internal. Read-only/tmpfs/security preserved. Historical CHK-065–068 failures remain unchanged",
           "localStaticEvidence": "Node/shell syntax, scoped harness lint, static artifact audit and pre-nginx invalid-input rejection PASS. API/web builds and loopback compiled API health/missing-identity 401 PASS; not Linux/image/provider proof",
-          "regressionEvidence": "CHK-069: format/lint/typecheck/contract/map PASS; auth56/56 PASS; API build/entrypoint PASS; bounded image secret review PASS. pnpm verify FAIL at E2E launch: missing Playwright chromium_headless_shell-1243 executable,32 setup failures/no browser bodies; earlier unit4/auth56/integration19/web178 PASS. verify:db FAIL207/210 across21files PostgreSQL16.15. Exact3 historical assertions fail identically current/base: categoryA, not waived. Controlled SQLSTATE42P01/search_path mechanism confirmed; no DB/test fix or browser install",
+          "regressionEvidence": "CHK-070 PASS: Add User11/11 including previous3failures; verify:db210/210 across21files PostgreSQL16.15; verify unit4/auth56/integration19/web178/E2E32 and API/web builds PASS. Playwright1.63.0 Chromium/headless-shell1243 installed per-user and launched via unchanged configuration. Separate format/lint/typecheck/contract/map/auth56 and diff checks PASS. CHK-069 categoryA and search_path/missing-browser failures remain historical evidence; no runtime or gateway changes.",
           "blocker": {
             "id": "CORE-AUTH-02-DEPLOY-002-REGRESSION-001",
-            "status": "BLOCKED",
-            "dependency": "Owner decision for narrow PEOPLE-04 unqualified database assertion correction and approved existing Playwright browser tooling verification; complete both required repository gates before local deployment verification",
-            "reason": "Gateway network defect resolved locally, all12GW cases PASS. Required gates remain red: categoryA historical DB assertions reproduce on current and published base under identical PostgreSQL16.15; fullcurrent207PASS/3FAIL. pnpm verify cannot launch missing Playwright Chromium;32 setup failures. Stop for owner decision; no automatic repairs, gate waiver, browser installation, provisioning or push",
+            "status": "VERIFIED",
+            "dependency": "Explicit owner-authorized test-only schema qualification and per-user matching Chromium installation completed; required local gates green. Published base/current categoryA comparison remains preserved in CHK-069.",
+            "reason": "RESOLVED LOCALLY by CHK-070: only12schema-prefix additions across3raw Add User assertion queries; focused11/11 and fullDB210/210 PASS. Matching Playwright Chromium installed; verify including32E2E PASS. Prior gateway evidence retained without rerun; no production database defect inferred or gate waived.",
             "affectedModules": [
               "CORE-AUTH-02",
               "SETTINGS-CORE-01",
               "RESERVATIONS-CORE-01"
             ],
-            "requiredPredecessor": "Owner decision — authorize bounded PEOPLE-04 database assertion correction and Playwright tooling verification"
+            "requiredPredecessor": "None — regression correction locally VERIFIED; environment provisioning is the separate next task"
           },
           "nextTaskProposal": {
-            "id": "CORE-AUTH-02-DEPLOY-002-REGRESSION-001",
-            "status": "BLOCKED",
-            "scope": "Owner review of confirmed base-visible PEOPLE-04 admin assertion schema-path defect and missing browser executable. Recommended bounded test-only schema qualification, preserving runtime/migrations and existing successful assertions; restore/locate approved matching browser runtime in a separately authorized verification task. Do not waive verify:db or start ENV-001",
+            "id": "CORE-AUTH-02-ENV-001",
+            "status": "READY",
+            "scope": "Resume approved D005 development-only Render/Auth0 environment provisioning using locally verified Candidate A1. Securely configure actual canonical HTTPS, restricted PostgreSQL runtime and synthetic identity outside Git, then resume existing provider verification matrix. No provisioning in REGRESSION-001.",
             "acceptanceCriteria": [
-              "Actual-nginx GW-01–GW-12 and image syntax/build pass",
-              "Existing regression gates including PostgreSQL16 verify:db green, prior failures preserved",
-              "No live Render/Auth0 resources or provider-readiness claim"
+              "Preserve satisfied local gateway/regression prerequisites CHK-069/070 and approved D005 development-only boundaries",
+              "Provision canonical HTTPS and restricted runtime with secrets outside Git under the separate approved environment task",
+              "Keep provider verification NEEDS TESTING until the existing real-provider matrix passes; no premature environment-ready or core-readiness claim"
             ],
-            "executionGate": "Owner decision required after categoryA DB comparison and failed repository gates. No implementation, dependency install, repeated test attempts, provisioning or push in FIX-003"
+            "executionGate": "REGRESSION-001 stops after separate test/docs commits; no push. The full unpublished chain requires separate exact-SHA publication approval. Provisioning proceeds only in the separate approved environment task; provider remains NEEDS TESTING and environment readiness NO."
           }
         }
       },
@@ -2210,7 +2211,7 @@
       "developmentDeploymentDecisionId": "CORE-AUTH-D005",
       "readinessEvidence": "CHK-058 owner-decision documentation only. Published CORE-AUTH-01 CI run 37253348486 attempt 2/job 111586842967 green at 95d4d1b1cc9f8a6dc69a1d8a3edea38df9e00923; original failed attempt preserved. Not production auth, new implementation or core readiness proof.",
       "coreWorkflowAdvanced": "Secure authenticated staff access for reservation-required Venue settings and future reservation book/check-in/seating.",
-      "remainingWork": "CHK-069: FIX-003 harness bridge/loopback publication and host.docker.internal correction committed locally; focused proof1/1 and full actual-image suite15/15 (GW-01–12) PASS. Image review and API build/entrypoint PASS; individual repository static/auth gates PASS. verify FAIL missing Playwright browser; verify:db207PASS/3FAIL, same3 assertions on published base=>categoryA. Controlled search_path reset produces42P01 with schema-qualified counterparts succeeding. Stop for owner decision on bounded test/tooling correction; do not waive or repair. CORE-AUTH-02/DEPLOY-002 remain IMPLEMENTED, deployment verification incomplete; ENV-001 BLOCKED, provider NEEDS TESTING, readiness NO. Prior68checks/reference evidence preserved",
+      "remainingWork": "CHK-070: test-only Add User schema qualification resolves pre-existing categoryA assertion defects; focused11/11 and fullDB210/210 PostgreSQL16.15 PASS. Matching per-user Chromium installed; verify32E2E and all other gates PASS. Unchanged gateway GW-01–12/two-direction/image/API evidence CHK-069 retained without rerun. DEPLOY-002 IMPLEMENTED / LOCALLY VERIFIED; ENV-001 READY TO RESUME APPROVED ENVIRONMENT PROVISIONING. CORE-AUTH-02 remains IMPLEMENTED; real-provider verification NEEDS TESTING; environment readiness NO. No provisioning/push here; separate exact-SHA publication approval required.",
       "specificationFile": "docs/security/staff-access-integration.md",
       "requiredOwnerDecisionIds": [
         "CORE-AUTH-D001",
@@ -2289,13 +2290,13 @@
         "privilegedAssurance": "UNVERIFIED — high-risk Add User writes denied; approximately 5m policy unchanged",
         "evidenceFile": "docs/security/staff-session-verification.md",
         "liveAuth0Tested": false,
-        "environmentStatus": "BLOCKED BY DEPLOYMENT TOPOLOGY",
+        "environmentStatus": "READY TO RESUME APPROVED ENVIRONMENT PROVISIONING",
         "blockerId": "CORE-AUTH-02-ENV-001",
         "evidenceId": "CHK-060",
         "developmentDeploymentDecisionId": "CORE-AUTH-D005",
         "ownerSelectionStatus": "RESOLVED",
         "provisioningStatus": "OUTSTANDING",
-        "currentEnvironmentEvidenceId": "CHK-064",
+        "currentEnvironmentEvidenceId": "CHK-070",
         "deploymentTopologyFindingId": "CORE-AUTH-02-ENV-002"
       }
     },
@@ -2707,7 +2708,7 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "Owner decision — authorize bounded PEOPLE-04 database assertion correction and Playwright tooling verification",
+  "nextExactTask": "CORE-AUTH-02-ENV-001 — Resume approved Render/Auth0 development environment provisioning using the locally verified Candidate A1 gateway",
   "deliveryPriority": {
     "decisionId": "PRIORITY-D001",
     "primaryTarget": "PART 1 — CORE ONLINE RESERVATION SYSTEM",

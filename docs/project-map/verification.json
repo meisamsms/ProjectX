@@ -2308,6 +2308,188 @@
       "newReferenceEvidence": false,
       "parityClaim": false,
       "nextExactTask": "Owner decision — authorize bounded PEOPLE-04 database assertion correction and Playwright tooling verification"
+    },
+    {
+      "id": "CHK-070",
+      "taskId": "CORE-AUTH-02-DEPLOY-002-REGRESSION-001",
+      "date": "2026-10-06",
+      "documentationFinalizedAt": "2026-10-08",
+      "resumeEvidence": "Interrupted after test commit d13912747e957480efb4f9e9f34daa46a1c98d9f and partial docs. Exact tested source unchanged; existing commit preserved, no expensive gate rerun. Fetched remote still75da5c2adb9a99049945d2df2401537d9e92e675; only final documentation/integrity checks resumed",
+      "status": "VERIFIED",
+      "baseCommit": "37980004bdcf2a049b97fc054ea67b72b78168e9",
+      "functionalCommit": "d13912747e957480efb4f9e9f34daa46a1c98d9f",
+      "remoteBase": "75da5c2adb9a99049945d2df2401537d9e92e675",
+      "scope": "Bounded owner-authorized test-only Add User assertion schema qualification plus matching per-user Playwright Chromium tooling; separate four-file documentation child; no push",
+      "result": "All required local gates PASS. Pre-existing test assertion defect corrected, not a production database or gateway defect. DEPLOY-002 IMPLEMENTED / LOCALLY VERIFIED; ENV-001 READY TO RESUME APPROVED ENVIRONMENT PROVISIONING; no resources created or provider verification",
+      "taskSelectionGate": {
+        "priorityPart": 2,
+        "decision": "PROCEED",
+        "coreWorkflowAdvanced": "Remove unwaived staff deployment verification blockers before SETTINGS-CORE-01 and staff reservation book/check-in/seating",
+        "dependencies": "CORE-AUTH-01/PEOPLE-CORE-01 VERIFIED; D004/D005 APPROVED; CHK-069 actual gateway/transport/image/API PASS and DB categoryA/search_path cause CONFIRMED",
+        "ownedScope": "Only apps/api/tests/people/add-user.test.ts schema prefixes; approved per-user Chromium install; four evidence docs",
+        "excludedScope": "Application/runtime/migrations/shared fixtures/other tests/packages/browser config/gateway/system settings/provisioning/Settings/reservations/Export/push",
+        "acceptanceCriteria": "Whole Add User file and previous3tests PASS; fullDB210/210 PG16.15; matching Chromium launch through existing config; verify/all remaining gates PASS; gateway unchanged"
+      },
+      "correction": {
+        "file": "apps/api/tests/people/add-user.test.ts",
+        "classification": "CONFIRMED pre-existing test assertion schema-qualification defect; categoryA CHK-069 preserved",
+        "mechanism": "SET LOCAL search_path in withTransaction does not persist for subsequent adminPool.query outside that transaction. No withTransaction/global connection search_path/runtime SQL change",
+        "changes": [
+          {
+            "area": "Atomic User/membership/grants/venue/provisioning stored-row assertion",
+            "tables": [
+              "user_provisioning_invites",
+              "users",
+              "organization_memberships",
+              "authenticated_identities",
+              "organization_role_grants",
+              "venue_access (two occurrences)",
+              "venue_role_grants"
+            ],
+            "prefixesAdded": 8
+          },
+          {
+            "area": "Nullable names/job-title/notification tri-state assertion",
+            "tables": [
+              "users",
+              "organization_memberships"
+            ],
+            "prefixesAdded": 2
+          },
+          {
+            "area": "Identical idempotent retry count assertion",
+            "tables": [
+              "user_provisioning_invites",
+              "organization_memberships"
+            ],
+            "prefixesAdded": 2
+          }
+        ],
+        "additionalCorrectedQueries": [],
+        "consistencyReview": "Remaining adminPool.query projectx_test-owned table references already qualified; information_schema/pg_catalog queries unchanged",
+        "diffAudit": "PASS: exact source comparison allows only12 projectx_test. prefixes after FROM/JOIN. No expected-value/business assertion changes, removal, skip, timeout increase, retry, SET search_path or additional functional file changes",
+        "resolution": "CONFIRMED by focused11/11 and fullDB210/210"
+      },
+      "database": {
+        "version": "16.15",
+        "authority": "Existing portable PostgreSQL16.15 binaries; task-owned disposable loopback-only cluster127.0.0.1:56624, projectx_regression001_test, test-only owner. NODE_ENV=test,TEST_DATABASE=1; no real/external DB touched",
+        "focused": {
+          "command": "pnpm exec vitest run apps/api/tests/people/add-user.test.ts --no-file-parallelism",
+          "result": "PASS11/11, one file,5.98s, executed once; all previous3failures PASS"
+        },
+        "full": {
+          "command": "pnpm verify:db",
+          "result": "PASS210/210 across21files,88.31s; migrations PASS; executed once"
+        },
+        "historicalEvidence": "CHK-069207PASS/3FAIL and identical published-base/current focused failures remain unchanged; categoryA not caused by DEPLOY-002. Prior search_path confirmed diagnostic and historical INFERRED records retained",
+        "cleanup": "Stopped disposable cluster and removed exact task directory after verifying no postmaster.pid; existing PostgreSQL installation retained"
+      },
+      "playwright": {
+        "versionBefore": "1.63.0",
+        "chromiumBefore": "MISSING: Chromium1243 and chromium_headless_shell1243; no custom executable override",
+        "installCommand": "pnpm exec playwright install chromium",
+        "installResult": "PASS; Chrome for Testing153.0.8010.12 / Chromium1243 and matching headless shell, plus installer-required FFmpeg1011/Winldd1007 in per-user ms-playwright cache",
+        "versionAfter": "1.63.0",
+        "chromiumAfter": "Both expected executables exist; no alternate Chrome substitution",
+        "browserLaunch": "PASS through unchanged playwright.config.ts in pnpm verify:32/32 E2E tests,16.5s,5workers; default chromium/headless configuration, no PROJECTX_CHROMIUM_PATH override",
+        "boundary": "No administrator/system feature/restart/paid software requirement, package/lock/config change or browser artifacts committed. Tool sandbox permission allowed per-user cache download; no Windows elevation requested"
+      },
+      "commands": [
+        {
+          "command": "git state/log; git fetch origin; ancestry",
+          "result": "PASS exact starting/remote SHA, clean worktree, remote ancestor; no history rewrite"
+        },
+        {
+          "command": "git diff -- apps/api/tests/people/add-user.test.ts; git diff --check; schema-only source audit",
+          "result": "PASS12schema-prefix additions only; initial read-only audit command had PowerShell quoting SyntaxError, corrected audit then PASS without source change"
+        },
+        {
+          "command": "pnpm verify",
+          "result": "PASS once: Node24.19.0 policy/static/contract/map; unit4/4,auth56/56,integration19/19,web178/178,E2E32/32; API/web builds PASS"
+        },
+        {
+          "command": "pnpm format:check",
+          "result": "PASS99files; separately executed after aggregate gate"
+        },
+        {
+          "command": "pnpm lint",
+          "result": "PASS100files; separately executed"
+        },
+        {
+          "command": "pnpm typecheck",
+          "result": "PASS; separately executed"
+        },
+        {
+          "command": "pnpm contract:check",
+          "result": "PASS; separately executed"
+        },
+        {
+          "command": "pnpm map:check",
+          "result": "PASS144screens/16modules/55tasks; separately executed; final docs revalidated"
+        },
+        {
+          "command": "pnpm test:auth",
+          "result": "PASS56/56 across4files; separately executed"
+        },
+        {
+          "command": "git diff --check; final scope/history/status audit",
+          "result": "PASS2026-10-08: map144screens/16modules/55tasks; whitespace clean; exact tested12schema-prefix additions preserved in existing test-only commit. All69prior checks,26VERIFIED tasks,54unrelated tasks and prior security sections unchanged. Ten existing unpublished commits inspected: only expected deployment/test/docs paths, no binary/install artifacts or bounded secret-indicator matches. Four docs only pending for separate child commit"
+        }
+      ],
+      "gatewayEvidence": {
+        "source": "CHK-069",
+        "status": "CONFIRMED PASS preserved, not rerun",
+        "checks": [
+          "GW-01 PASS",
+          "GW-02 PASS",
+          "GW-03 PASS",
+          "GW-04 PASS",
+          "GW-05 PASS",
+          "GW-06 PASS",
+          "GW-07 PASS",
+          "GW-08 PASS",
+          "GW-09 PASS",
+          "GW-10 PASS",
+          "GW-11 PASS",
+          "GW-12 PASS"
+        ],
+        "hostToGateway": "PASS",
+        "gatewayToMockAPI": "PASS",
+        "imageSecretReview": "PASS — prior bounded review limitation preserved",
+        "apiBuild": "PASS",
+        "apiEntrypoint": "PASS",
+        "unchanged": "Gateway files, render.yaml and .dockerignore byte-identical to starting HEAD; no rebuild/redesign/rerun"
+      },
+      "warnings": "Non-blocking Node DEP0190, NO_COLOR/FORCE_COLOR and Vite react-router use-client directive warnings; all processes exited0. Not test failures",
+      "preservedState": {
+        "deploy002": "IMPLEMENTED / LOCALLY VERIFIED",
+        "coreAuth02": "IMPLEMENTED",
+        "environment": "READY TO RESUME APPROVED ENVIRONMENT PROVISIONING",
+        "provider": "NEEDS TESTING",
+        "environmentReady": false,
+        "coreReadinessGate": "UNMET",
+        "history": "All69prior checks,26VERIFIED tasks,54unrelated task objects and existing security sections preserved",
+        "reference": "All SevenRooms classifications and U-001/U-002/U-003 unchanged; no new evidence or parity claims",
+        "decisions": "D004/D005 APPROVED unchanged; Part3 deferrals unchanged"
+      },
+      "filesModified": [
+        "apps/api/tests/people/add-user.test.ts",
+        "docs/project-map/roadmap.json",
+        "docs/project-map/verification.json",
+        "docs/project-map/handoff.md",
+        "docs/security/staff-session-verification.md"
+      ],
+      "noApplicationChanges": true,
+      "noMigrationChanges": true,
+      "noPackageChanges": true,
+      "noGatewayChanges": true,
+      "noSystemSettingsChanges": true,
+      "noProvisioning": true,
+      "noPush": true,
+      "newReferenceEvidence": false,
+      "parityClaim": false,
+      "publicationGate": "Full unpublished local chain needs separate exact-SHA publication approval; no push authorized",
+      "nextExactTask": "CORE-AUTH-02-ENV-001 — Resume approved Render/Auth0 development environment provisioning using the locally verified Candidate A1 gateway"
     }
   ],
   "unresolvedQuestions": [
