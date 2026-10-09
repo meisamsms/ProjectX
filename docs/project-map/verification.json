@@ -2490,6 +2490,73 @@
       "parityClaim": false,
       "publicationGate": "Full unpublished local chain needs separate exact-SHA publication approval; no push authorized",
       "nextExactTask": "CORE-AUTH-02-ENV-001 — Resume approved Render/Auth0 development environment provisioning using the locally verified Candidate A1 gateway"
+    },
+    {
+      "id": "CHK-071",
+      "taskId": "CORE-AUTH-02-ENV-001",
+      "date": "2026-10-08",
+      "status": "BLOCKED",
+      "classification": "CONFIRMED repository configuration gap; external deployment UNKNOWN / NEEDS TESTING",
+      "method": "Exact HEAD/clean-worktree/fetched-remote precheck; repository configuration, route and documentation inspection; preliminary official Render documentation review; no account UI or provisioning",
+      "startingSha": "287844bba926c1b9938026544b64afc120aca667",
+      "branch": "people-03-accounts-read",
+      "publishedEvidence": {
+        "run": "37856040839",
+        "job": "113580328511",
+        "result": "SUCCESS — previously verified publication evidence, not a new run",
+        "pnpmVerify": "PASS",
+        "pnpmVerifyDb": "PASS — 210/210 across21files",
+        "postgresql": "16.15 — CI only, not a deployed database"
+      },
+      "result": "AUTH0_POST_LOGOUT_URI EXACT PATH = UNRESOLVED; stopped at first material blocker before resources, purchases or secrets",
+      "blockerId": "CORE-AUTH-02-ENV-003",
+      "repositoryEvidence": [
+        "apps/api/.env.example leaves AUTH0_POST_LOGOUT_URI empty; render.yaml marks it sync:false without a value",
+        "apps/api/src/staff-auth/config.ts requires a same-origin HTTPS URL without query but does not prescribe the pathname",
+        "apps/api/tests/staff-auth/fixtures.ts uses synthetic https://app.test/; this is not approved deployment configuration",
+        "apps/api/src/staff-auth/routes.ts local logout revokes session/expires cookie and returns204, without a redirect",
+        "docs/security/staff-access-integration.md identifies post-logout URI as validated configuration, not implemented federated logout"
+      ],
+      "publicPlatformEvidence": {
+        "classification": "CONFIRMED public documentation only; account availability/suitability UNKNOWN",
+        "regionsSource": "https://render.com/docs/regions",
+        "regions": "Public docs list Ohio, Oregon and Virginia in the US; no region selected and account selectability not checked",
+        "databaseSource": "https://render.com/docs/postgresql-creating-connecting",
+        "database": "Public docs list PostgreSQL13–18 for new instances including16; actual database/version/TLS remain NEEDS TESTING",
+        "pricing": "Exact current service/database/storage/workspace costs not established; no cost gate pass or purchase"
+      },
+      "ownerDecision": {
+        "status": "PENDING — not a change to APPROVED D004/D005",
+        "question": "Which exact same-origin development AUTH0_POST_LOGOUT_URI path is approved?",
+        "recommendation": "Option A: / on the future actual canonical HTTPS gateway origin, configuration-only; no assigned hostname invented and no federated logout claim",
+        "options": "A root /; B another owner-specified existing route after suitability review; C separately authorized dedicated signed-out page; D defer provisioning. Pros/cons in staff-session-verification.md"
+      },
+      "environment": {
+        "ready": false,
+        "resourcesCreated": false,
+        "accountUiAccessed": false,
+        "purchaseMade": false,
+        "regionOrTierSelected": false,
+        "secretConfigured": false,
+        "syntheticIdentityCreated": false,
+        "externalState": "UNKNOWN — not inspected; no claim that external resources or variables are absent",
+        "remainingChecks": "Costs/account availability, actual canonical origin, PostgreSQL16/migrations/TLS/restricted grants, Auth0 application/allowlists/secrets/identity, same-origin/ingress/forwarding/cache/platform-log safety all outstanding; no real callback attempted"
+      },
+      "preservedState": {
+        "deploy002": "IMPLEMENTED / LOCALLY VERIFIED / PUBLISHED",
+        "coreAuth02": "IMPLEMENTED",
+        "provider": "NEEDS TESTING",
+        "coreReadiness": "UNMET",
+        "history": "All70prior checks,26VERIFIED tasks and54unrelated task objects preserved",
+        "decisions": "D004/D005 APPROVED unchanged",
+        "reference": "U-001/U-002/U-003 and all SevenRooms classifications unchanged; no new reference evidence or parity claim",
+        "secondary": "PEOPLE-09 READY / PART3 DEFERRED; PEOPLE-09B/10 PLANNED / DEFERRED; IMPL-MOD-14 IN_PROGRESS; SETTINGS-CORE-01 PLANNED pending VERIFIED CORE-AUTH-02"
+      },
+      "documentationValidation": "PASS: pnpm map:check (144screens/16modules/55tasks, JSON/DAG); git diff --check; all70prior checks,26VERIFIED tasks,54unrelated tasks and prior security history unchanged; only four permitted documentation files; no credential/private-key indicators in added text. No runtime tests rerun",
+      "noApplicationChanges": true,
+      "noProvisioning": true,
+      "noPush": true,
+      "nextExactTask": "Owner decision — confirm exact development AUTH0_POST_LOGOUT_URI path"
     }
   ],
   "unresolvedQuestions": [

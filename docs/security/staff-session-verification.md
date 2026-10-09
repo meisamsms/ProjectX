@@ -5,6 +5,82 @@ CORE-AUTH-D004. Base 84ed2938d7d1fa6155e744a50ef3d6aebe6f978c.
 Parent task IMPLEMENTED; controlled Auth0/production assurance remains NEEDS TESTING.
 No SevenRooms evidence or parity claims.
 
+## Development provisioning preflight — CHK-071 / ENV-003
+
+2026-10-08. CONFIRMED: branch `people-03-accounts-read` started clean at
+`287844bba926c1b9938026544b64afc120aca667`, matching freshly fetched origin.
+Candidate A1 is PUBLISHED / LOCALLY VERIFIED. Prior publication CI
+`37856040839`, job `113580328511`, passed `pnpm verify` and `pnpm verify:db`
+(210/210 across21files, PostgreSQL16.15). No test rerun or history rewrite.
+
+**AUTH0_POST_LOGOUT_URI EXACT PATH = UNRESOLVED.** Provisioning stopped at this
+first material blocker, as the active owner prompt requires. ENV-001 is BLOCKED
+by ENV-003, a configuration decision, not a gateway failure or provider incompatibility.
+
+CONFIRMED repository evidence:
+
+- `apps/api/.env.example` has an empty value; `render.yaml` has `sync: false`.
+- `apps/api/src/staff-auth/config.ts` validates same-origin HTTPS without query;
+  it does not select the pathname.
+- `apps/api/tests/staff-auth/fixtures.ts` uses `https://app.test/`, a synthetic
+  test fixture, not an approved deployment destination.
+- `apps/api/src/staff-auth/routes.ts` local logout revokes the session, expires
+  its cookie and returns204; it does not redirect to this configured URI.
+- `staff-access-integration.md` explicitly distinguishes validated configuration
+  from an implemented federated logout endpoint. Callback success redirect to
+  the root is not approval of a logout destination.
+
+### Owner configuration decision — pending
+
+QUESTION: Which exact development post-logout path is approved, on the actual
+canonical gateway HTTPS origin once Render assigns it?
+
+WHY IT MATTERS: This required API configuration and exact Auth0 logout allowlist
+must agree without inventing a path or implying unimplemented logout behavior.
+
+| Option | Pros | Cons |
+| --- | --- | --- |
+| A — root `/` (recommended technical default) | Existing application entry; no new route or code required for the configuration choice | Does not establish a dedicated signed-out screen or federated logout; provider behavior remains unverified |
+| B — owner specifies another existing same-origin route | Owner chooses a known destination | Exact route and signed-out suitability must be reviewed; not defined yet |
+| C — separately specify a dedicated signed-out page | Explicit signed-out UX | Requires separate review/implementation authorization; outside this provisioning task |
+| D — defer until owner supplies the exact path | No guessed configuration | Provisioning and real-provider verification remain blocked |
+
+Recommendation is NOT approval. No hostname, URL allowlist, route or secret was
+configured. D004/D005 remain APPROVED unchanged; this missing exact-path choice
+does not revoke their provider, region-rule, tier-policy or session decisions.
+
+### Public preflight evidence and unexecuted gates
+
+CONFIRMED public documentation only, checked2026-10-08:
+[Render regions](https://render.com/docs/regions) lists Ohio/Oregon/Virginia US
+regions; [PostgreSQL creation](https://render.com/docs/postgresql-creating-connecting)
+lists supported new-instance majors13–18, including16. Neither establishes actual
+account selectability, co-location suitability or a provisioned database.
+Exact current recurring costs were not established; cost gate INCOMPLETE.
+
+No account UI was accessed. No Render project/service/database, Auth0 tenant/app,
+purchase, region/tier selection, secret configuration, migration application,
+synthetic identity or access mapping was performed. Existing external resources
+and variable presence are UNKNOWN, not asserted absent. No real callback occurred.
+
+Actual region/plans/costs/hostname, private API networking, PostgreSQL16/TLS,
+migrations/restricted non-owner login/grants/RLS, Auth0 Code/PKCE/RS256/JWKS and
+allowlists, API variables, synthetic issuer/subject membership/VenueAccess, ingress
+Host/forwarding, edge caching and platform-log safety remain UNKNOWN / NEEDS TESTING.
+Do not apply conditional `render.yaml` blindly or send a live callback before the
+platform logging gate passes. No secrets read, displayed or added in this task.
+
+CORE-AUTH-02 remains IMPLEMENTED; provider verification NEEDS TESTING; environment
+ready NO. Local gateway and prior verified task/check history remain unchanged.
+SETTINGS-CORE-01 remains PLANNED pending VERIFIED CORE-AUTH-02; Part3 People Export
+stays deferred and core readiness UNMET. U-001/U-002/U-003 and all SevenRooms
+classifications remain unchanged; deployment findings are not reference evidence.
+
+NEXT EXACT TASK: Owner decision — confirm exact development AUTH0_POST_LOGOUT_URI
+path. Then resume remaining approved provisioning gates, and only after readiness
+YES resume the existing real-provider matrix; no new authentication implementation.
+Documentation-only local commit; no push authorized.
+
 ## Regression recovery — CHK-070 / DEPLOY-002-REGRESSION-001
 
 Tests completed2026-10-06; interrupted documentation finalized2026-10-08.
