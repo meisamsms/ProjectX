@@ -1655,6 +1655,75 @@
       "specificationFile": "docs/security/staff-access-integration.md",
       "verificationFile": "docs/security/staff-session-verification.md",
       "notes": "Development target policy specializes existing approved architecture and D004; no new ADR or production approval. No resources provisioned or secrets recorded here. CORE-AUTH-02 remains IMPLEMENTED; controlled provider verification NEEDS TESTING. Provision in a separate task, then resume the existing real-provider matrix, not more authentication code."
+    },
+    {
+      "id": "CORE-AUTH-D006",
+      "title": "Development post-logout URI policy",
+      "status": "APPROVED",
+      "category": "OWNER APPROVED",
+      "classification": "PROJECTX DEPLOYMENT DECISION",
+      "ownerDecision": {
+        "optionId": "A",
+        "approvedBy": "Product owner",
+        "approvedAt": "2026-10-09",
+        "basis": "Explicit owner approval of Option A in documentation-only recording prompt"
+      },
+      "specializesDecisionIds": [
+        "CORE-AUTH-D004",
+        "CORE-AUTH-D005"
+      ],
+      "developmentPostLogoutPath": "/",
+      "approvedPolicy": {
+        "environment": "DEVELOPMENT only",
+        "uri": "https://<actual-canonical-development-host>/",
+        "hostname": "Actual Render canonical development gateway hostname determined only after approved provisioning; placeholder is not an assigned hostname",
+        "allowedLogoutUrls": "Must contain that exact canonical development HTTPS root URL",
+        "prohibited": [
+          "Wildcard logout URL",
+          "Localhost production-style fallback",
+          "Alternate hostname"
+        ],
+        "configurationTiming": "Apply in separate approved provisioning task; no environment values configured here"
+      },
+      "rationale": [
+        "Root / is already served by the approved SPA gateway",
+        "Successful staff authentication already returns to the canonical application root",
+        "No new application route or UI implementation required",
+        "Same-origin HTTPS invariant preserved",
+        "Dedicated signed-out UX may be considered later if product need arises"
+      ],
+      "localLogoutContract": {
+        "method": "POST",
+        "path": "/api/v1/staff-auth/logout",
+        "behavior": [
+          "Validates authenticated session and CSRF",
+          "Durably revokes local ProjectX session",
+          "Removes ProjectX session cookie",
+          "Returns 204"
+        ],
+        "changed": false
+      },
+      "semanticBoundary": [
+        "Federated Auth0 logout is not verified",
+        "ProjectX does not currently call an Auth0 logout endpoint",
+        "Auth0 SSO/session termination is not implemented",
+        "No dedicated signed-out page exists",
+        "No production/staging logout approval",
+        "No SevenRooms behavior or parity claim"
+      ],
+      "resolvesBlockerId": "CORE-AUTH-02-ENV-003",
+      "resolutionScope": "Only the exact development AUTH0_POST_LOGOUT_URI path; ENV-001 provisioning remains outstanding",
+      "affectedRoadmapTasks": [
+        "CORE-AUTH-02",
+        "SETTINGS-CORE-01"
+      ],
+      "priorityPart": 2,
+      "architectureChange": false,
+      "newReferenceEvidence": false,
+      "parityClaim": false,
+      "verificationFile": "docs/security/staff-session-verification.md",
+      "evidenceId": "CHK-072",
+      "notes": "PROJECTX OWNER DECISION, not reference-app evidence. D004/D005 unchanged. CORE-AUTH-02 IMPLEMENTED; provider NEEDS TESTING; environment ready NO. No provisioning, secrets, runtime edits or push."
     }
   ],
   "unresolvedQuestions": [
@@ -1939,7 +2008,8 @@
     "CORE-AUTH-D002",
     "CORE-AUTH-D003",
     "CORE-AUTH-D004",
-    "CORE-AUTH-D005"
+    "CORE-AUTH-D005",
+    "CORE-AUTH-D006"
   ],
   "projectDocumentGap": "decisions.json was absent before ARCH-001; created in the previous checkpoint. Owner approvals and corresponding ADRs are now recorded.",
   "evidenceLabels": [

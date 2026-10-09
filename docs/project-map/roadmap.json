@@ -1947,12 +1947,12 @@
         "id": "CORE-AUTH-02-ENV-001",
         "classification": "CONFIRMED — required configuration unavailable to this verification session; external deployment existence UNKNOWN",
         "dependency": "Provisioned Render/Auth0 DEVELOPMENT environment under APPROVED CORE-AUTH-D005, canonical HTTPS endpoint, synthetic staff identity and restricted PostgreSQL runtime",
-        "reason": "CHK-071: approved provisioning resumed at published SHA 287844bba926c1b9938026544b64afc120aca667, then stopped at repository preflight because AUTH0_POST_LOGOUT_URI EXACT PATH = UNRESOLVED. Configuration validates a same-origin HTTPS URL but does not prescribe the path; synthetic test fixture is not deployment approval. No resources, purchases, secrets or identities created. Local gateway/regression verification remains satisfied.",
+        "reason": "CHK-072 records owner-approved CORE-AUTH-D006 Option A: developmentPostLogoutPath = /. ENV-003 exact-path decision blocker RESOLVED; actual canonical Render hostname is still unknown. ENV-001 READY TO RESUME approved provisioning, not complete. All resource/cost/region/database/secret/identity/platform verification gates remain outstanding.",
         "affectedModules": ["CORE-AUTH-02", "SETTINGS-CORE-01", "RESERVATIONS-CORE-01"],
-        "requiredPredecessor": "Owner decision — confirm exact development AUTH0_POST_LOGOUT_URI path; then resume approved development provisioning and remaining cost/security gates",
+        "requiredPredecessor": "Resume approved Render/Auth0 development provisioning under D004/D005/D006; then existing real-provider matrix after environment readiness YES",
         "evidenceId": "CHK-060",
-        "ownerDecisionRequired": true,
-        "status": "BLOCKED",
+        "ownerDecisionRequired": false,
+        "status": "READY",
         "ownerSelectionStatus": "RESOLVED",
         "ownerSelectionDecisionId": "CORE-AUTH-D005",
         "resolvedOwnerSelections": [
@@ -1975,23 +1975,28 @@
           "Sanitized controlled logs/evidence"
         ],
         "approvalEvidenceId": "CHK-061",
-        "currentEvidenceId": "CHK-071",
-        "environmentStatus": "BLOCKED — exact development post-logout path unresolved",
+        "currentEvidenceId": "CHK-072",
+        "environmentStatus": "READY TO RESUME APPROVED ENVIRONMENT PROVISIONING",
         "engineeringDecisionRequired": false,
         "provisioningPrecheck": {
           "id": "CORE-AUTH-02-ENV-003",
-          "status": "BLOCKED",
-          "classification": "CONFIRMED — missing approved exact configuration path; deployed behavior NEEDS TESTING",
-          "evidenceId": "CHK-071",
-          "result": "AUTH0_POST_LOGOUT_URI EXACT PATH = UNRESOLVED",
-          "ownerQuestion": "Approve / on the future actual canonical development HTTPS origin, or specify another exact same-origin path?",
-          "recommendedOption": "A — /; recommendation only, not approved or configured; no federated logout claim",
+          "status": "DOCUMENTED",
+          "classification": "CONFIRMED — owner-approved exact development path; deployed behavior NEEDS TESTING",
+          "evidenceId": "CHK-072",
+          "result": "AUTH0_POST_LOGOUT_URI exact path = RESOLVED by CORE-AUTH-D006",
+          "ownerQuestion": "Resolved by explicit owner approval of Option A",
+          "recommendedOption": "A — /; APPROVED by CORE-AUTH-D006; not configured and no federated logout claim",
           "optionsFile": "docs/security/staff-session-verification.md",
           "environmentReady": false,
           "provisioningPerformed": false,
           "accountState": "UNKNOWN — no account UI accessed",
           "regionAndCostGate": "INCOMPLETE — no region/tier selected or purchase made",
-          "decisions": "D004/D005 APPROVED unchanged; resolved platform selections do not resolve this exact path"
+          "decisions": "D004/D005 unchanged; D006 specializes their development configuration only",
+          "resolutionStatus": "RESOLVED",
+          "historicalEvidenceId": "CHK-071",
+          "decisionId": "CORE-AUTH-D006",
+          "developmentPostLogoutPath": "/",
+          "uriPolicy": "Actual canonical development HTTPS origin + /; exact Auth0 Allowed Logout URL, no wildcard/localhost fallback/alternate hostname"
         },
         "deploymentTopology": {
           "id": "CORE-AUTH-02-ENV-002",
@@ -2212,14 +2217,14 @@
           },
           "nextTaskProposal": {
             "id": "CORE-AUTH-02-ENV-001",
-            "status": "BLOCKED",
+            "status": "READY",
             "scope": "Resume approved D005 development-only Render/Auth0 environment provisioning using locally verified Candidate A1. Securely configure actual canonical HTTPS, restricted PostgreSQL runtime and synthetic identity outside Git, then resume existing provider verification matrix. No provisioning in REGRESSION-001.",
             "acceptanceCriteria": [
               "Preserve satisfied local gateway/regression prerequisites CHK-069/070 and approved D005 development-only boundaries",
               "Provision canonical HTTPS and restricted runtime with secrets outside Git under the separate approved environment task",
               "Keep provider verification NEEDS TESTING until the existing real-provider matrix passes; no premature environment-ready or core-readiness claim"
             ],
-            "executionGate": "Publication prerequisite satisfied. CHK-071 stops provisioning before resource creation until owner confirms exact AUTH0_POST_LOGOUT_URI path; remaining region/cost/account/security gates still required. No implementation or push authorized by this blocker documentation task."
+            "executionGate": "Publication prerequisite satisfied; CHK-072/D006 resolves only the exact logout path. Resume approved environment provisioning as a separate task with all region/cost/account/security gates intact. No provisioning or push in this documentation task."
           }
         }
       },
@@ -2227,7 +2232,7 @@
       "developmentDeploymentDecisionId": "CORE-AUTH-D005",
       "readinessEvidence": "CHK-058 owner-decision documentation only. Published CORE-AUTH-01 CI run 37253348486 attempt 2/job 111586842967 green at 95d4d1b1cc9f8a6dc69a1d8a3edea38df9e00923; original failed attempt preserved. Not production auth, new implementation or core readiness proof.",
       "coreWorkflowAdvanced": "Secure authenticated staff access for reservation-required Venue settings and future reservation book/check-in/seating.",
-      "remainingWork": "CHK-071: DEPLOY-002 PUBLISHED / LOCALLY VERIFIED at 287844bba926c1b9938026544b64afc120aca667; prior successful CI/local evidence unchanged. ENV-001 BLOCKED on exact development AUTH0_POST_LOGOUT_URI path owner decision (ENV-003). Then resume remaining region/cost/account and secure provisioning gates, followed by existing real-provider matrix, not new authentication code. CORE-AUTH-02 IMPLEMENTED; provider NEEDS TESTING; environment ready NO. No resources created or push in this task.",
+      "remainingWork": "CHK-072: D006 APPROVED, developmentPostLogoutPath /; ENV-003 exact-path decision RESOLVED. ENV-001 READY TO RESUME approved Render/Auth0 development provisioning. Actual resources, selected region/pricing/tier, canonical hostname, PostgreSQL16/restricted runtime, secret injection, tenant/application/issuer/client, synthetic identity/mapping and platform logging/cache/ingress checks remain outstanding. DEPLOY-002 PUBLISHED / LOCALLY VERIFIED; CORE-AUTH-02 IMPLEMENTED; provider NEEDS TESTING; environment ready NO.",
       "specificationFile": "docs/security/staff-access-integration.md",
       "requiredOwnerDecisionIds": [
         "CORE-AUTH-D001",
@@ -2306,13 +2311,13 @@
         "privilegedAssurance": "UNVERIFIED — high-risk Add User writes denied; approximately 5m policy unchanged",
         "evidenceFile": "docs/security/staff-session-verification.md",
         "liveAuth0Tested": false,
-        "environmentStatus": "BLOCKED — exact development post-logout path unresolved",
+        "environmentStatus": "READY TO RESUME APPROVED ENVIRONMENT PROVISIONING",
         "blockerId": "CORE-AUTH-02-ENV-001",
         "evidenceId": "CHK-060",
         "developmentDeploymentDecisionId": "CORE-AUTH-D005",
         "ownerSelectionStatus": "RESOLVED",
         "provisioningStatus": "OUTSTANDING",
-        "currentEnvironmentEvidenceId": "CHK-071",
+        "currentEnvironmentEvidenceId": "CHK-072",
         "deploymentTopologyFindingId": "CORE-AUTH-02-ENV-002"
       }
     },
@@ -2724,7 +2729,7 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "Owner decision — confirm exact development AUTH0_POST_LOGOUT_URI path",
+  "nextExactTask": "CORE-AUTH-02-ENV-001 — Resume approved Render/Auth0 development environment provisioning",
   "deliveryPriority": {
     "decisionId": "PRIORITY-D001",
     "primaryTarget": "PART 1 — CORE ONLINE RESERVATION SYSTEM",

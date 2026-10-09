@@ -2557,6 +2557,50 @@
       "noProvisioning": true,
       "noPush": true,
       "nextExactTask": "Owner decision — confirm exact development AUTH0_POST_LOGOUT_URI path"
+    },
+    {
+      "id": "CHK-072",
+      "taskId": "CORE-AUTH-02-ENV-001",
+      "date": "2026-10-09",
+      "status": "VERIFIED",
+      "classification": "CONFIRMED — OWNER APPROVED / PROJECTX DEPLOYMENT DECISION; documentation verification only",
+      "method": "Exact clean local HEAD and live remote check, owner prompt and repository contract inspection; documentation-only decision recording and preservation validation",
+      "startingLocalSha": "8e9e9e78199b4acc484708b1688d2012907e789a",
+      "remoteSha": "287844bba926c1b9938026544b64afc120aca667",
+      "branch": "people-03-accounts-read",
+      "decisionId": "CORE-AUTH-D006",
+      "decisionStatus": "APPROVED",
+      "result": "Option A recorded. developmentPostLogoutPath = /. Exact-path decision blocker ENV-003 RESOLVED; ENV-001 READY TO RESUME provisioning, not complete or environment-ready",
+      "developmentPostLogoutPath": "/",
+      "uriPolicy": "AUTH0_POST_LOGOUT_URI = https://<actual-canonical-development-host>/ after approved Render gateway provisioning assigns the actual canonical hostname",
+      "allowlistPolicy": "Auth0 Allowed Logout URLs must contain that exact development HTTPS root URL; no wildcard, localhost production-style fallback or alternate hostname",
+      "rationale": "Existing SPA root and successful staff authentication return destination; no new route/UI; same-origin HTTPS preserved. Dedicated signed-out UX may be considered later if needed",
+      "localLogout": "UNCHANGED: POST /api/v1/staff-auth/logout validates authenticated session/CSRF, durably revokes local ProjectX session, removes session cookie and returns204",
+      "semanticBoundary": "Not federated logout verification, not an Auth0 logout endpoint call or SSO/session termination implementation, not a dedicated signed-out page, no production/staging approval and no SevenRooms evidence",
+      "preservedState": {
+        "decisions": "All prior decisions including D004/D005 unchanged; D006 specializes without replacing",
+        "history": "All71prior CHK records,26VERIFIED tasks,54unrelated task objects and prior security verification sections unchanged",
+        "coreAuth02": "IMPLEMENTED",
+        "deploy002": "PUBLISHED / LOCALLY VERIFIED",
+        "providerVerification": "NEEDS TESTING",
+        "environmentReady": false,
+        "coreReadiness": "UNMET",
+        "priority": "SETTINGS-CORE-01 PLANNED; PEOPLE-09 READY / PART3 DEFERRED; PEOPLE-09B/10 PLANNED / DEFERRED; IMPL-MOD-14 IN_PROGRESS",
+        "reference": "All SevenRooms classifications and U-001/U-002/U-003 unchanged; no parity claims"
+      },
+      "outstandingProvisioning": [
+        "Actual Render resources, selected region, pricing/tier and canonical HTTPS hostname",
+        "PostgreSQL16 target, migrations, TLS, restricted runtime login and reviewed grants",
+        "Secret injection, Auth0 development tenant/application and exact issuer/client",
+        "Synthetic identity, exact issuer/subject ProjectX mapping, OrganizationMembership and VenueAccess",
+        "Platform logging, cache, ingress/forwarding and same-origin external verification"
+      ],
+      "validation": "PASS: pnpm map:check (144screens/16modules/55tasks, JSON/DAG); git diff --check; unique decision/check/task IDs; all71historical checks,26VERIFIED tasks,54unrelated tasks, prior decisions including D004/D005 and prior security sections preserved; five-document scope; no credential/private-key indicators in added text. No runtime changes or tests",
+      "noRuntimeChanges": true,
+      "noProvisioning": true,
+      "noSecrets": true,
+      "noPush": true,
+      "nextExactTask": "CORE-AUTH-02-ENV-001 — Resume approved Render/Auth0 development environment provisioning"
     }
   ],
   "unresolvedQuestions": [

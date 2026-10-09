@@ -5,6 +5,54 @@ CORE-AUTH-D004. Base 84ed2938d7d1fa6155e744a50ef3d6aebe6f978c.
 Parent task IMPLEMENTED; controlled Auth0/production assurance remains NEEDS TESTING.
 No SevenRooms evidence or parity claims.
 
+## Approved development post-logout policy — CHK-072 / CORE-AUTH-D006
+
+2026-10-09. CONFIRMED owner approval of Option A; OWNER APPROVED / PROJECTX
+DEPLOYMENT DECISION. D006 specializes D004/D005 without modifying or replacing
+them. Starting local `8e9e9e78199b4acc484708b1688d2012907e789a` was clean;
+live remote `people-03-accounts-read` was
+`287844bba926c1b9938026544b64afc120aca667`.
+
+Approved policy: `developmentPostLogoutPath = "/"`. Once the approved Render
+gateway has its actual canonical development hostname, configure:
+
+`AUTH0_POST_LOGOUT_URI = https://<actual-canonical-development-host>/`
+
+Auth0 Allowed Logout URLs must contain that exact HTTPS URL. No wildcard logout
+URL, localhost production-style fallback or alternate hostname. The placeholder
+is not an assigned hostname; no URL or provider configuration was applied here.
+
+Rationale (PROJECTX OWNER DECISION, not reference evidence): the approved SPA
+gateway already serves `/`, successful staff authentication returns to the
+canonical application root, no new route/UI is required, and same-origin HTTPS
+is preserved. Dedicated signed-out UX may be considered later if product need arises.
+
+Unchanged local contract: `POST /api/v1/staff-auth/logout` validates the
+authenticated session and CSRF, durably revokes the ProjectX session, removes
+its cookie and returns204. This approval does NOT verify federated Auth0 logout,
+introduce an Auth0 logout endpoint call, implement Auth0 SSO/session termination,
+create a dedicated signed-out page, approve production/staging logout behavior,
+or establish SevenRooms behavior.
+
+Only ENV-003's exact-path decision blocker is RESOLVED by D006. ENV-001 is READY
+TO RESUME APPROVED ENVIRONMENT PROVISIONING, not complete. CORE-AUTH-02 remains
+IMPLEMENTED; provider verification NEEDS TESTING; environment readiness NO.
+Actual resources, selected region, current pricing/tier, canonical HTTPS hostname,
+PostgreSQL16/migrations/TLS/restricted runtime, secrets, Auth0 development
+tenant/app/issuer/client, synthetic identity and ProjectX membership/VenueAccess
+mapping, and logging/cache/ingress/forwarding checks remain outstanding.
+
+No provisioning, purchase, runtime/test/migration/configuration change, secret
+recording or push. Prior sections, including the CHK-071 pending-choice state
+below, are historical evidence preserved unchanged, not the current decision.
+D004/D005, all prior VERIFIED tasks/CHK records, reservation-first deferrals and
+SevenRooms classifications including U-001/U-002/U-003 remain unchanged.
+
+NEXT EXACT TASK: CORE-AUTH-02-ENV-001 — Resume approved Render/Auth0 development
+environment provisioning. Use canonical development HTTPS origin + `/`; complete
+all existing cost/account/security gates. Only after readiness YES resume the
+existing CORE-AUTH-02 real-provider matrix, not new authentication code.
+
 ## Development provisioning preflight — CHK-071 / ENV-003
 
 2026-10-08. CONFIRMED: branch `people-03-accounts-read` started clean at
