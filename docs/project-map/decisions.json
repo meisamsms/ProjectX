@@ -1724,6 +1724,66 @@
       "verificationFile": "docs/security/staff-session-verification.md",
       "evidenceId": "CHK-072",
       "notes": "PROJECTX OWNER DECISION, not reference-app evidence. D004/D005 unchanged. CORE-AUTH-02 IMPLEMENTED; provider NEEDS TESTING; environment ready NO. No provisioning, secrets, runtime edits or push."
+    },
+    {
+      "id": "CORE-AUTH-D007",
+      "title": "Zero-cost current-stage provider verification policy",
+      "status": "APPROVED",
+      "category": "OWNER APPROVED",
+      "classification": "PROJECTX DEPLOYMENT DECISION",
+      "ownerDecision": {
+        "approvedBy": "Product owner",
+        "approvedAt": "2026-10-09",
+        "basis": "Explicit zero-cost documentation/design prompt; no implementation or provisioning authorization"
+      },
+      "currentStageBudget": "$0",
+      "preservesDecisionIds": [
+        "CORE-AUTH-D004",
+        "CORE-AUTH-D005",
+        "CORE-AUTH-D006"
+      ],
+      "renderPolicy": {
+        "currentStage": "DEFERRED — PAID RENDER ENVIRONMENT NOT REQUIRED AT CURRENT $0 STAGE",
+        "future": "D005 remains APPROVED for a later separately owner-authorized paid stage; budget decision, not Render incompatibility",
+        "prohibited": [
+          "Add Card",
+          "Paid Web Service",
+          "Paid Private Service",
+          "Paid PostgreSQL",
+          "Workspace upgrade",
+          "Infrastructure purchase"
+        ],
+        "finding": "CONFIRMED: free web services and temporary free PostgreSQL exist; Candidate A1 requires a private API; Private Services have no free compute plan, so exact Render A1 has non-zero recurring cost",
+        "source": "https://render.com/docs/free"
+      },
+      "candidateTopology": "Browser -> Cloudflare Quick Tunnel temporary HTTPS -> local Candidate A1 gateway -> local API -> local PostgreSQL16 restricted runtime; Auth0 Free dedicated development tenant/app and one synthetic identity",
+      "expectedRecurringInfrastructureCost": "$0 using existing local equipment/connectivity; no new subscriptions, paid trials or domain purchase",
+      "securityBoundary": "Only gateway exposed; no separate API/DB exposure; canonical Host, HTTPS, cookies, CSRF, RLS and migration/runtime separation unchanged; no secrets in Git or gateway/web assets",
+      "developmentPostLogoutPath": "/",
+      "temporaryHostnamePolicy": "Exact current HTTPS callback/logout/origin values only; remove obsolete allowlists and revoke local sessions/pending flows on hostname change. D006 root invariant applied to this candidate without rewriting historical Render wording",
+      "viability": {
+        "classification": "INFERRED baseline feasibility; safe end-to-end compatibility NOT ESTABLISHED",
+        "taskId": "CORE-AUTH-02-ENV-LOCAL-001",
+        "status": "BLOCKED",
+        "blockerIds": [
+          "LOCAL-GATE-001",
+          "LOCAL-GATE-002"
+        ],
+        "reason": "Callback/platform log confidentiality and effective HTTPS-only ingress contract remain UNKNOWN; actual Auth0 Free settings and assurance remain NEEDS TESTING. No unsupported READY/provider verification claim"
+      },
+      "auth0Boundary": "Baseline public features documented; actual Free entitlements unconfigured. Pro MFA not included; high-risk writes remain denied. Existing fail-closed exposure alternative requires its own controlled proof; required paid feature means STOP for owner decision",
+      "priorityPart": 2,
+      "affectedRoadmapTasks": [
+        "CORE-AUTH-02",
+        "CORE-AUTH-02-ENV-LOCAL-001",
+        "SETTINGS-CORE-01"
+      ],
+      "architectureFile": "docs/architecture/ADR-0017-zero-cost-provider-verification.md",
+      "verificationFile": "docs/security/staff-session-verification.md",
+      "evidenceId": "CHK-073",
+      "authorizationBoundary": "Documentation/design only. No cloudflared installation, tunnel, tenant/identity/configuration creation, infrastructure, code, purchase or push",
+      "newReferenceEvidence": false,
+      "parityClaim": false
     }
   ],
   "unresolvedQuestions": [
@@ -2009,7 +2069,8 @@
     "CORE-AUTH-D003",
     "CORE-AUTH-D004",
     "CORE-AUTH-D005",
-    "CORE-AUTH-D006"
+    "CORE-AUTH-D006",
+    "CORE-AUTH-D007"
   ],
   "projectDocumentGap": "decisions.json was absent before ARCH-001; created in the previous checkpoint. Owner approvals and corresponding ADRs are now recorded.",
   "evidenceLabels": [

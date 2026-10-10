@@ -5,6 +5,39 @@ CORE-AUTH-D004. Base 84ed2938d7d1fa6155e744a50ef3d6aebe6f978c.
 Parent task IMPLEMENTED; controlled Auth0/production assurance remains NEEDS TESTING.
 No SevenRooms evidence or parity claims.
 
+## Current zero-cost policy — CHK-073 / CORE-AUTH-D007
+
+2026-10-09. OWNER APPROVED / PROJECTX DEPLOYMENT DECISION; currentStageBudget = "$0".
+No card, paid resources, workspace upgrade or infrastructure purchase. Paid Render
+ENV-001 is DEFERRED (PLANNED plus deferral metadata), not the current provisioning
+instruction. D004/D005/D006 remain unchanged; D005 is approved future Render
+topology. All older sections below are historical evidence, not permission to spend.
+
+The [ADR-0017 compatibility review](../architecture/ADR-0017-zero-cost-provider-verification.md)
+specifies the local Candidate A1/API/PostgreSQL16 restricted-runtime + Quick Tunnel
+HTTPS + Auth0 Free candidate. Only the gateway would be public. No component was
+installed/provisioned/configured or exposed in this task.
+
+CORE-AUTH-02-ENV-LOCAL-001 is BLOCKED, not READY: LOCAL-GATE-001 (connector/platform
+callback query and header log confidentiality) and LOCAL-GATE-002 (effective
+HTTPS-only ingress with canonical Host for A1's hardcoded upstream proto) are not
+established. Baseline viability is INFERRED, not verified. ADR-0017 labels every
+Host/forwarding/Origin/Referer/cookie/Set-Cookie/SPA/query/platform/cache/hostname/
+CSRF check and specifies required non-secret proof before any real callback.
+
+Auth0 Free Pro MFA is unavailable; actual account entitlements and the existing
+privileged-assurance/fail-closed alternative remain NEEDS TESTING. D004 is not
+waived, high-risk writes remain denied, and a required paid feature means STOP for
+owner decision. Existing real-provider matrix remains unchanged. No production,
+federated logout, complete core, or SevenRooms parity claim.
+
+CORE-AUTH-02 IMPLEMENTED; provider NEEDS TESTING; environment ready NO.
+SETTINGS-CORE-01 remains PLANNED pending VERIFIED CORE-AUTH-02; Part3 stays deferred.
+Next: CORE-AUTH-02-ENV-LOCAL-001 — Zero-cost local HTTPS/Auth0 verification environment,
+bounded safety-prerequisite review first. No installation/exposure until resolved
+and separately authorized; resume the existing provider matrix only after environment
+readiness YES. No new authentication code.
+
 ## Approved development post-logout policy — CHK-072 / CORE-AUTH-D006
 
 2026-10-09. CONFIRMED owner approval of Option A; OWNER APPROVED / PROJECTX

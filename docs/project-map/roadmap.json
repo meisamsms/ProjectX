@@ -1909,13 +1909,72 @@
       }
     },
     {
+      "id": "CORE-AUTH-02-ENV-LOCAL-001",
+      "name": "Zero-cost local HTTPS/Auth0 verification environment",
+      "phaseId": "PHASE-04",
+      "status": "BLOCKED",
+      "dependencies": [
+        "CORE-AUTH-01",
+        "PEOPLE-CORE-01"
+      ],
+      "priorityPart": 2,
+      "priorityDecisionId": "PRIORITY-D001",
+      "ownerPolicyDecisionId": "CORE-AUTH-D007",
+      "currentStageBudget": "$0",
+      "scope": "Specify and, only after safety gates and separate authorization, create isolated local Candidate A1/API/PostgreSQL16 restricted-runtime environment with temporary Quick Tunnel HTTPS and Auth0 Free development OIDC for one synthetic identity",
+      "outOfScope": "Paid infrastructure/card/upgrades; Render provisioning; public API/DB; application/gateway implementation; production/staging; Settings/reservations/Export; new auth code",
+      "coreWorkflowAdvanced": "Safe real-provider staff sessions required before SETTINGS-CORE-01 and reservation book/check-in/seating; prevents unverified staff identity/transport and tenant access from reaching core workflows",
+      "whyRequiredNow": "Existing local gateway and CORE-AUTH-02 implementation cannot establish real-provider safety without a controlled environment; owner forbids paid current-stage provisioning",
+      "implementationPrerequisites": "CORE-AUTH-01/PEOPLE-CORE-01 VERIFIED; CORE-AUTH-02 IMPLEMENTED and DEPLOY-002 LOCALLY VERIFIED/PUBLISHED are existing artifacts, not a circular dependency on parent VERIFIED. D004/D005/D006/D007 APPROVED.",
+      "blocker": {
+        "ids": [
+          "LOCAL-GATE-001",
+          "LOCAL-GATE-002"
+        ],
+        "classification": "UNKNOWN",
+        "reason": "Cloudflare platform/connector callback-query confidentiality and effective HTTPS-only ingress for gateway hardcoded trusted proto have not been established",
+        "affectedModules": [
+          "CORE-AUTH-02",
+          "CORE-AUTH-02-ENV-LOCAL-001",
+          "SETTINGS-CORE-01",
+          "RESERVATIONS-CORE-01"
+        ],
+        "requiredPredecessor": "Bounded read-only connector/platform log and HTTPS/Host safety review; no installation, exposure or Auth0 setup",
+        "ownerDecisionRequired": false
+      },
+      "acceptanceCriteria": [
+        "$0/no-card/no-paid-trial feature eligibility confirmed before any setup; otherwise STOP",
+        "Resolve LOCAL-GATE-001/002 before READY/execution; satisfy every ADR-0017 compatibility gate before live callback",
+        "Only gateway tunnel-exposed; API/PG16 private, runtime non-owner/no SUPERUSER/no BYPASSRLS/elevated role, RLS and migration/runtime separation verified",
+        "Exact temporary HTTPS origin/Host/callback/logout root; Secure cookies/multiple Set-Cookie/CSRF/forwarding/cache/log safety and hostname rollover demonstrated",
+        "One synthetic exact issuer/subject binding with scoped membership/VenueAccess, no email linking; secure secret handling outside Git",
+        "Environment readiness YES only on complete environment proof; then existing full CORE-AUTH-02 real-provider matrix, not new authentication code. Positive assurance or existing fail-closed alternative needs its own evidence"
+      ],
+      "verificationCommands": [
+        "pnpm map:check",
+        "git diff --check",
+        "Future separately authorized local regression: node --test deploy/gateway/gateway.test.mjs; pnpm test:auth; pnpm verify; pnpm verify:db against disposable PostgreSQL16 only",
+        "Exact external canary/browser and provider commands must be reviewed before execution; ADR-0017 defines expected outcomes, no tunnel executed here"
+      ],
+      "regressionChecks": [
+        "All historical CHK/VERIFIED tasks and D004/D005/D006 unchanged",
+        "No weakening Host/HTTPS/CSRF/cookies/RLS or privileged fail-closed behavior",
+        "U-001/U-002/U-003 and all SevenRooms classifications unchanged; Part3 remains deferred"
+      ],
+      "specificationFile": "docs/architecture/ADR-0017-zero-cost-provider-verification.md",
+      "evidenceId": "CHK-073",
+      "environmentReady": false,
+      "executionGate": "BLOCKED pending bounded safety review; new explicit authorization required to install/expose/configure after prerequisites. No provisioning in D007"
+    },
+    {
       "id": "CORE-AUTH-02",
       "name": "Trusted staff session integration",
       "phaseId": "PHASE-04",
       "status": "IMPLEMENTED",
       "dependencies": [
         "CORE-AUTH-01",
-        "PEOPLE-CORE-01"
+        "PEOPLE-CORE-01",
+        "CORE-AUTH-02-ENV-LOCAL-001"
       ],
       "scope": "Auth0 standard OIDC Authorization Code + PKCE, secure callback/issuer-subject mapping, server session persistence/cookie middleware, CSRF, trusted staff resolver, Organization/Venue validation, restricted PostgreSQL pool, current-state revocation, logout/rotation and focused negative security tests under ADR-0004 and CORE-AUTH-D004. Review auth-only bootstrap/session least-privilege design before code; current People RLS is not anonymous identity lookup.",
       "outOfScope": "Public guest authentication, reservation domain implementation, PEOPLE-09 Export, broad People refactor, generic audit subsystem, unrelated settings, full administration redesign, new credential service or browser-authoritative identity.",
@@ -1945,14 +2004,18 @@
       "implementationGate": "Bounded implementation complete; deterministic security/full regression gates PASS (CHK-059). Exact implementation 8469fd5e21df350e4e6f59c5183ae0c347dbf6f0 published; branch-head CI 37378038188/job 111992282747 PASS on PostgreSQL 16.15 (CHK-060). Controlled provider verification BLOCKED BY ENVIRONMENT SETUP; no production/provider VERIFIED claim or dependent core exposure.",
       "blocker": {
         "id": "CORE-AUTH-02-ENV-001",
-        "classification": "CONFIRMED — required configuration unavailable to this verification session; external deployment existence UNKNOWN",
+        "classification": "CONFIRMED — paid Render provisioning deferred by owner budget policy CORE-AUTH-D007",
         "dependency": "Provisioned Render/Auth0 DEVELOPMENT environment under APPROVED CORE-AUTH-D005, canonical HTTPS endpoint, synthetic staff identity and restricted PostgreSQL runtime",
-        "reason": "CHK-072 records owner-approved CORE-AUTH-D006 Option A: developmentPostLogoutPath = /. ENV-003 exact-path decision blocker RESOLVED; actual canonical Render hostname is still unknown. ENV-001 READY TO RESUME approved provisioning, not complete. All resource/cost/region/database/secret/identity/platform verification gates remain outstanding.",
-        "affectedModules": ["CORE-AUTH-02", "SETTINGS-CORE-01", "RESERVATIONS-CORE-01"],
-        "requiredPredecessor": "Resume approved Render/Auth0 development provisioning under D004/D005/D006; then existing real-provider matrix after environment readiness YES",
+        "reason": "CHK-073: $0 current-stage budget; no card/paid resources/upgrade. D005 remains approved future Render topology. The zero-cost local candidate is not yet safely established; LOCAL-GATE-001/002 block execution. Historical ENV-002/003 and deployment evidence remain unchanged.",
+        "affectedModules": [
+          "CORE-AUTH-02",
+          "SETTINGS-CORE-01",
+          "RESERVATIONS-CORE-01"
+        ],
+        "requiredPredecessor": "CORE-AUTH-02-ENV-LOCAL-001 safety prerequisites, then separately authorized local setup and existing real-provider matrix after environment readiness YES",
         "evidenceId": "CHK-060",
         "ownerDecisionRequired": false,
-        "status": "READY",
+        "status": "PLANNED",
         "ownerSelectionStatus": "RESOLVED",
         "ownerSelectionDecisionId": "CORE-AUTH-D005",
         "resolvedOwnerSelections": [
@@ -1975,8 +2038,8 @@
           "Sanitized controlled logs/evidence"
         ],
         "approvalEvidenceId": "CHK-061",
-        "currentEvidenceId": "CHK-072",
-        "environmentStatus": "READY TO RESUME APPROVED ENVIRONMENT PROVISIONING",
+        "currentEvidenceId": "CHK-073",
+        "environmentStatus": "DEFERRED — PAID RENDER ENVIRONMENT NOT REQUIRED AT CURRENT $0 STAGE",
         "engineeringDecisionRequired": false,
         "provisioningPrecheck": {
           "id": "CORE-AUTH-02-ENV-003",
@@ -2217,22 +2280,29 @@
           },
           "nextTaskProposal": {
             "id": "CORE-AUTH-02-ENV-001",
-            "status": "READY",
+            "status": "PLANNED",
             "scope": "Resume approved D005 development-only Render/Auth0 environment provisioning using locally verified Candidate A1. Securely configure actual canonical HTTPS, restricted PostgreSQL runtime and synthetic identity outside Git, then resume existing provider verification matrix. No provisioning in REGRESSION-001.",
             "acceptanceCriteria": [
               "Preserve satisfied local gateway/regression prerequisites CHK-069/070 and approved D005 development-only boundaries",
               "Provision canonical HTTPS and restricted runtime with secrets outside Git under the separate approved environment task",
               "Keep provider verification NEEDS TESTING until the existing real-provider matrix passes; no premature environment-ready or core-readiness claim"
             ],
-            "executionGate": "Publication prerequisite satisfied; CHK-072/D006 resolves only the exact logout path. Resume approved environment provisioning as a separate task with all region/cost/account/security gates intact. No provisioning or push in this documentation task."
+            "executionGate": "DEFERRED by CORE-AUTH-D007 at current $0 stage; historical Render scope retained, not current provisioning authorization. Resume only with separate later paid-stage owner approval.",
+            "deferralDecisionId": "CORE-AUTH-D007"
           }
+        },
+        "deferral": {
+          "decisionId": "CORE-AUTH-D007",
+          "reason": "Current stage infrastructure budget $0",
+          "resumeCondition": "Separate owner approval for later paid Render stage; D005 remains APPROVED",
+          "prohibited": "No Add Card, paid web/private/database resources, workspace upgrade or purchase"
         }
       },
       "ownerPolicyDecisionId": "CORE-AUTH-D004",
       "developmentDeploymentDecisionId": "CORE-AUTH-D005",
       "readinessEvidence": "CHK-058 owner-decision documentation only. Published CORE-AUTH-01 CI run 37253348486 attempt 2/job 111586842967 green at 95d4d1b1cc9f8a6dc69a1d8a3edea38df9e00923; original failed attempt preserved. Not production auth, new implementation or core readiness proof.",
       "coreWorkflowAdvanced": "Secure authenticated staff access for reservation-required Venue settings and future reservation book/check-in/seating.",
-      "remainingWork": "CHK-072: D006 APPROVED, developmentPostLogoutPath /; ENV-003 exact-path decision RESOLVED. ENV-001 READY TO RESUME approved Render/Auth0 development provisioning. Actual resources, selected region/pricing/tier, canonical hostname, PostgreSQL16/restricted runtime, secret injection, tenant/application/issuer/client, synthetic identity/mapping and platform logging/cache/ingress checks remain outstanding. DEPLOY-002 PUBLISHED / LOCALLY VERIFIED; CORE-AUTH-02 IMPLEMENTED; provider NEEDS TESTING; environment ready NO.",
+      "remainingWork": "CHK-073: paid ENV-001 DEFERRED (PLANNED with deferral metadata); local ENV-LOCAL-001 BLOCKED on callback/platform log confidentiality and HTTPS-only ingress review. Auth0 Free account/client and full matrix remain NEEDS TESTING; privileged writes fail closed. D004/D005/D006 and DEPLOY-002 evidence preserved. No exposure/provisioning; environment ready NO.",
       "specificationFile": "docs/security/staff-access-integration.md",
       "requiredOwnerDecisionIds": [
         "CORE-AUTH-D001",
@@ -2311,15 +2381,19 @@
         "privilegedAssurance": "UNVERIFIED — high-risk Add User writes denied; approximately 5m policy unchanged",
         "evidenceFile": "docs/security/staff-session-verification.md",
         "liveAuth0Tested": false,
-        "environmentStatus": "READY TO RESUME APPROVED ENVIRONMENT PROVISIONING",
-        "blockerId": "CORE-AUTH-02-ENV-001",
+        "environmentStatus": "NO — local candidate safety prerequisites unresolved; paid Render deferred",
+        "blockerId": "CORE-AUTH-02-ENV-LOCAL-001",
         "evidenceId": "CHK-060",
         "developmentDeploymentDecisionId": "CORE-AUTH-D005",
         "ownerSelectionStatus": "RESOLVED",
-        "provisioningStatus": "OUTSTANDING",
-        "currentEnvironmentEvidenceId": "CHK-072",
-        "deploymentTopologyFindingId": "CORE-AUTH-02-ENV-002"
-      }
+        "provisioningStatus": "NOT STARTED — LOCAL-GATE-001/002 unresolved",
+        "currentEnvironmentEvidenceId": "CHK-073",
+        "deploymentTopologyFindingId": "CORE-AUTH-02-ENV-002",
+        "currentStageDecisionId": "CORE-AUTH-D007",
+        "currentStageBudget": "$0",
+        "environmentReady": false
+      },
+      "currentStageDecisionId": "CORE-AUTH-D007"
     },
     {
       "id": "SETTINGS-CORE-01",
@@ -2699,6 +2773,7 @@
     "PRIORITY-001",
     "PEOPLE-CORE-01",
     "CORE-AUTH-01",
+    "CORE-AUTH-02-ENV-LOCAL-001",
     "CORE-AUTH-02",
     "SETTINGS-CORE-01",
     "FLOORPLAN-CORE-01",
@@ -2729,7 +2804,7 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "CORE-AUTH-02-ENV-001 — Resume approved Render/Auth0 development environment provisioning",
+  "nextExactTask": "CORE-AUTH-02-ENV-LOCAL-001 — Zero-cost local HTTPS/Auth0 verification environment (resolve safety prerequisites before provisioning)",
   "deliveryPriority": {
     "decisionId": "PRIORITY-D001",
     "primaryTarget": "PART 1 — CORE ONLINE RESERVATION SYSTEM",
@@ -3065,6 +3140,12 @@
         "priorityPart": 1,
         "classification": "PART 1",
         "reason": "All ten AGENTS.md CORE READINESS GATE criteria verified together in isolated guest-to-staff integration before reconsidering Part 3."
+      },
+      {
+        "taskId": "CORE-AUTH-02-ENV-LOCAL-001",
+        "priorityPart": 2,
+        "classification": "PART 2 REQUIRED",
+        "reason": "Safe real-provider staff sessions required before SETTINGS-CORE-01 and reservation book/check-in/seating; prevents unverified staff identity/transport and tenant access from reaching core workflows"
       }
     ],
     "coreReadinessGate": {

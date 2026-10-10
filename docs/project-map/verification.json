@@ -2601,6 +2601,55 @@
       "noSecrets": true,
       "noPush": true,
       "nextExactTask": "CORE-AUTH-02-ENV-001 — Resume approved Render/Auth0 development environment provisioning"
+    },
+    {
+      "id": "CHK-073",
+      "taskId": "CORE-AUTH-D007",
+      "date": "2026-10-09",
+      "status": "DOCUMENTED",
+      "classification": "CONFIRMED owner policy and static/public-source review; deployment compatibility INFERRED / UNKNOWN / NEEDS TESTING",
+      "startingLocalSha": "40bca615f8f491281288ef690c760140661ba7b1",
+      "branch": "people-03-accounts-read",
+      "decisionId": "CORE-AUTH-D007",
+      "decisionStatus": "APPROVED",
+      "currentStageBudget": "$0",
+      "method": "Owner prompt, existing architecture/gateway/OIDC/roadmap evidence and current official Render/Cloudflare/Auth0 documentation; no live provider/tunnel tests",
+      "result": "Paid Render provisioning DEFERRED, D005 preserved. Local candidate specified; not yet safe to declare viable/READY. LOCAL-GATE-001/002 unresolved.",
+      "specificationFile": "docs/architecture/ADR-0017-zero-cost-provider-verification.md",
+      "compatibility": {
+        "host": "INFERRED / NEEDS TESTING",
+        "forwardedHeaders": "UNKNOWN — HTTPS-only ingress contract unresolved",
+        "cookies": "INFERRED / NEEDS TESTING; multiple Set-Cookie NEEDS TESTING",
+        "originRefererCsrf": "NEEDS TESTING",
+        "apiNoSpaFallback": "CONFIRMED local config / NEEDS TESTING tunnel",
+        "callbackQueryConfidentiality": "UNKNOWN",
+        "platformLogSafety": "UNKNOWN",
+        "cache": "INFERRED / NEEDS TESTING",
+        "hostnameChanges": "CONFIRMED lifecycle; safe rollover NEEDS TESTING"
+      },
+      "auth0": "Free baseline features documented, account settings NEEDS TESTING; Pro MFA excluded, high-risk writes remain denied; no existing acceptance gate waived",
+      "preservedState": {
+        "decisions": "All prior objects including D004/D005/D006 unchanged",
+        "history": "All72prior CHK records,26VERIFIED tasks and54unrelated task objects unchanged",
+        "coreAuth02": "IMPLEMENTED",
+        "providerVerification": "NEEDS TESTING",
+        "environmentReady": false,
+        "settings": "PLANNED pending VERIFIED CORE-AUTH-02",
+        "priority": "PEOPLE-09 READY / PART3 DEFERRED; PEOPLE-09B/10 PLANNED / DEFERRED; IMPL-MOD-14 IN_PROGRESS; core readiness UNMET",
+        "reference": "All SevenRooms classifications and U-001/U-002/U-003 unchanged; no parity evidence"
+      },
+      "unresolvedItems": [
+        "LOCAL-GATE-001 connector/platform callback log confidentiality",
+        "LOCAL-GATE-002 effective HTTPS-only ingress and canonical Host",
+        "LOCAL-GATE-003 actual Auth0 Free entitlements and assurance/fail-closed matrix proof",
+        "No local environment or synthetic mapping configured; full provider matrix outstanding"
+      ],
+      "validation": "PASS: pnpm map:check (144 screens/16 modules/56 tasks); git diff --check; unique IDs/allowed task statuses/task DAG; all72previous CHK records,29prior decision objects,26VERIFIED tasks,54unrelated tasks and prior security sections unchanged; six documentation files only. No runtime/provider tests.",
+      "noRuntimeChanges": true,
+      "noProvisioning": true,
+      "noSecrets": true,
+      "noPush": true,
+      "nextExactTask": "CORE-AUTH-02-ENV-LOCAL-001 — Zero-cost local HTTPS/Auth0 verification environment (resolve safety prerequisites before provisioning)"
     }
   ],
   "unresolvedQuestions": [
