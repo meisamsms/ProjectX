@@ -5,6 +5,59 @@ CORE-AUTH-D004. Base 84ed2938d7d1fa6155e744a50ef3d6aebe6f978c.
 Parent task IMPLEMENTED; controlled Auth0/production assurance remains NEEDS TESTING.
 No SevenRooms evidence or parity claims.
 
+## Current read-only safety review — CHK-074 / CORE-AUTH-02-ENV-LOCAL-001
+
+2026-10-10. CONFIRMED documentation/source review only; no runtime, provider or
+transport test. Starting HEAD and fetched remote were clean/exact
+4c31545a87e6ac3b2ec440953c310e034fbf1a38. Budget $0; D004/D005/D006/D007 unchanged.
+
+The dated [ADR-0017 CHK-074 review](../architecture/ADR-0017-zero-cost-provider-verification.md#2026-10-10-safety-review--chk-074--core-auth-02-env-local-001)
+contains the pinned sources, header matrix, Auth0 feature table, log standard,
+protected-tunnel caveats and six-case future experiment. Candidate cloudflared
+2026.10.0 was released 2026-10-05; it was NOT installed.
+
+- LOCAL-GATE-001 = BLOCKED. CONFIRMED QUIC dispatch-error path logs destination;
+  callback query inclusion INFERRED from URL construction, requiring fake failure
+  tests. Local info is not blanket safe. Debug dumps URL/request headers, and
+  management logging is independently filtered. Platform retention/redaction and
+  accountless operator-log access UNKNOWN. Real callback confidentiality BLOCKED.
+- LOCAL-GATE-002 = READY FOR INERT-CANARY TEST, not ready for ProjectX. Default
+  connector Host preservation supported by source; actual edge Host/HTTP/proto/
+  Origin/Referer/cookies/multiple Set-Cookie/cache behavior NEEDS TESTING. Gateway
+  fixed upstream https is not justified if public HTTP can reach the origin.
+- LOCAL-GATE-003 = BLOCKED on actual Free account/entitlement/settings checks.
+  Baseline protocol features documented; positive high-risk MFA unverified.
+  Existing controlled-matrix fail-closed privileged alternative explicitly permits
+  ordinary-positive verification only with its own evidence. No D004 waiver, new
+  acceptance interpretation or privileged success claim.
+
+No complete gate resolved by documentation. Default logging is a hard blocker for
+real callbacks, not proof that a fake-only diagnostic experiment is unsafe or that
+every configuration is impossible. Canary silence cannot certify inaccessible
+provider logs. Protected Quick Tunnel is OPTIONAL CANDIDATE / NEEDS TESTING, not
+adopted: its extra login can place the callback return query in signed, unencrypted
+state-cookie data and interfere with redirect timing and negative tests.
+
+CORE-AUTH-02 IMPLEMENTED; paid ENV-001 DEFERRED; LOCAL-001 BLOCKED; provider NEEDS
+TESTING; ENVIRONMENT READY FOR CONTROLLED VERIFICATION: NO. All historical sections
+below are retained, including previous failures and D007's earlier proposed order.
+Current next action supersedes that sequence: design before fake-only experiment,
+then gate review before any ProjectX/Auth0 setup; never automatic exposure.
+
+Next: CORE-AUTH-02-ENV-LOCAL-002 — Disposable inert-canary Quick Tunnel transport
+verification (PLANNED; requires separate authorization). Fixed disposable loopback
+mock only, fake query/cookies/Authorization; NO ProjectX, Auth0, PostgreSQL, real
+callback, secret or customer/reference data. No debug/trace/remote streaming/support
+bundles; no protected-email flow by default. No installation or tunnel in CHK-074.
+Stop on hard failure; no automatic runtime repair, purchase or provider change.
+
+Validation: pnpm map:check; git diff --check; unique IDs/task DAG, previous
+73CHK/26VERIFIED/decision/reference preservation and five-document-only scope.
+No regression/runtime/provider tests executed; prior evidence is not reclassified.
+SETTINGS-CORE-01 PLANNED awaiting VERIFIED auth; Part3 deferred; U-001/U-002/U-003
+and all SevenRooms classifications unchanged. No new reference evidence.
+
+
 ## Current zero-cost policy — CHK-073 / CORE-AUTH-D007
 
 2026-10-09. OWNER APPROVED / PROJECTX DEPLOYMENT DECISION; currentStageBudget = "$0".

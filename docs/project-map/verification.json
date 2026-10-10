@@ -2650,6 +2650,74 @@
       "noSecrets": true,
       "noPush": true,
       "nextExactTask": "CORE-AUTH-02-ENV-LOCAL-001 — Zero-cost local HTTPS/Auth0 verification environment (resolve safety prerequisites before provisioning)"
+    },
+    {
+      "id": "CHK-074",
+      "taskId": "CORE-AUTH-02-ENV-LOCAL-001",
+      "date": "2026-10-10",
+      "status": "DOCUMENTED",
+      "classification": "CONFIRMED source/doc findings; end-to-end compatibility INFERRED / UNKNOWN / NEEDS TESTING",
+      "startingLocalSha": "4c31545a87e6ac3b2ec440953c310e034fbf1a38",
+      "remoteSha": "4c31545a87e6ac3b2ec440953c310e034fbf1a38",
+      "branch": "people-03-accounts-read",
+      "currentStageBudget": "$0",
+      "method": "Read-only repository inspection, official Cloudflare/Auth0 documentation and tagged cloudflared source; no live tunnel/provider/account test",
+      "specificationFile": "docs/architecture/ADR-0017-zero-cost-provider-verification.md",
+      "cloudflared": {
+        "version": "2026.10.0",
+        "releasedAt": "2026-10-05T17:43:45Z",
+        "sourceCommit": "18cdfe0a6fc7b72a0702d255a1f984e776ce0498",
+        "releaseSource": "https://github.com/cloudflare/cloudflared/releases/tag/2026.10.0",
+        "installed": false
+      },
+      "result": "Safety review complete; environment BLOCKED. Known default failure-log destination risk and unknown platform confidentiality prevent real callback approval; fake-only diagnostic experiment designed, not executed.",
+      "gates": {
+        "LOCAL-GATE-001": "BLOCKED",
+        "LOCAL-GATE-002": "READY FOR INERT-CANARY TEST",
+        "LOCAL-GATE-003": "BLOCKED"
+      },
+      "findings": {
+        "callbackQueryConfidentiality": "BLOCKED — QUIC error destination can include URL/query; fake reproduction outstanding",
+        "normalLogs": "CONFIRMED error-level destination field; no blanket info-level safety; no claim every error includes cookies",
+        "debugLogs": "CONFIRMED full URL and request-header dump risk",
+        "managementLogs": "CONFIRMED independent management filtering; accountless accessible streaming/retention UNKNOWN",
+        "platform": "CONFIRMED TLS termination/processing; QT-specific callback field retention/redaction UNKNOWN; local canary cannot prove inaccessible logs",
+        "httpIngress": "UNKNOWN — no QT-specific proof HTTP cannot reach origin; fixed gateway https assertion remains unproven",
+        "host": "INFERRED compatible from default connector Host preservation; edge wrong/duplicate handling NEEDS TESTING",
+        "originRefererCsrf": "INFERRED pass-through; actual transport NEEDS TESTING, existing CSRF guards unchanged",
+        "cookies": "INFERRED normal attribute compatibility; connector separately serializes values CONFIRMED; edge/browser multiple Set-Cookie NEEDS TESTING",
+        "cache": "NEEDS TESTING — general CDN docs not actual QT zone evidence",
+        "hostname": "CONFIRMED temporary lifecycle; full safe rollover procedure documented, not exercised",
+        "protectedQuickTunnel": "OPTIONAL CANDIDATE / NEEDS TESTING; not adopted; additional signed unencrypted return-path cookie/redirect layer may affect callback and negative tests",
+        "auth0": "Public Free baseline documented; confidential Code/client_secret_post/PKCE S256/RS256/JWKS/settings CONFIRMED capabilities but actual Free account NEEDS ACCOUNT CHECK",
+        "assurance": "Positive privileged MFA unavailable/unverified; existing explicit ordinary-positive / privileged-fail-closed alternative retained, controlled proof absent; no D004 change"
+      },
+      "nextExperiment": {
+        "taskId": "CORE-AUTH-02-ENV-LOCAL-002",
+        "status": "PLANNED",
+        "authorization": "Separate explicit execution approval required",
+        "scope": "Disposable fixed-response loopback mock, fake queries/cookies/headers only; six-case transport/failure-log/cleanup matrix in ADR-0017",
+        "excluded": "NO ProjectX/Auth0/PostgreSQL/real callbacks/secrets/customer or reference data; no protected-email login by default",
+        "limitation": "Does not certify provider-internal logs, Free entitlements, ProjectX runtime or full environment readiness"
+      },
+      "preservedState": {
+        "history": "All73prior CHK records and26previous VERIFIED task objects unchanged;54unrelated task objects unchanged",
+        "decisions": "All30decision objects including D004/D005/D006/D007 unchanged",
+        "coreAuth02": "IMPLEMENTED",
+        "paidEnv001": "DEFERRED (PLANNED with deferral metadata)",
+        "localEnv001": "BLOCKED",
+        "providerVerification": "NEEDS TESTING",
+        "environmentReady": false,
+        "priority": "SETTINGS-CORE-01 PLANNED; PEOPLE-09 READY / PART3 DEFERRED; PEOPLE-09B/10 PLANNED / DEFERRED; IMPL-MOD-14 IN_PROGRESS; core readiness UNMET",
+        "reference": "All SevenRooms classifications and U-001/U-002/U-003 unchanged; no parity claims"
+      },
+      "ownerDecisionRequired": false,
+      "validation": "PASS: pnpm map:check (144screens/16modules/57tasks); git diff --check after correcting initial trailing blank line; JSON/uniqueIDs/taskDAG/allowedStatuses; all73priorCHK,26VERIFIED tasks,54unrelated tasks, all decisions/reference data and prior ADR/security sections preserved; five documentation files only; no runtime/provider tests",
+      "noRuntimeChanges": true,
+      "noProvisioning": true,
+      "noSecrets": true,
+      "noPush": true,
+      "nextExactTask": "CORE-AUTH-02-ENV-LOCAL-002 — Disposable inert-canary Quick Tunnel transport verification"
     }
   ],
   "unresolvedQuestions": [
