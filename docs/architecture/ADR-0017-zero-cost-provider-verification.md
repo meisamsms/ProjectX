@@ -425,3 +425,194 @@ Validation for this documentation task: pnpm map:check, git diff --check, task D
 unique IDs and comparison of all previous CHK/VERIFIED/decision/reference records.
 No runtime tests were executed. SevenRooms U-001/U-002/U-003 and every reference
 classification remain unchanged; no provider behavior is SevenRooms evidence.
+
+## 2026-10-10 inert-canary execution — CHK-075 / CORE-AUTH-02-ENV-LOCAL-002
+
+CONFIRMED: owner explicitly authorized one temporary accountless fake-only tunnel.
+Starting clean HEAD and fetched origin/people-03-accounts-read both equalled
+be765315ce0bacb94c3c577e25a0da69ce8ce725. No ProjectX/gateway/API, Auth0,
+PostgreSQL, real OAuth flow, real credentials/cookies or customer/reference data
+participated. $0; no account, card, service installation, firewall/PATH/startup
+change or paid resource. The earlier CHK-074 proposal and failures remain historical.
+
+### Artifact, isolation and execution
+
+CONFIRMED official pinned release: cloudflared 2026.10.0, published 2026-10-05.
+The [tagged release](https://github.com/cloudflare/cloudflared/releases/tag/2026.10.0)
+was still retrievable. Windows X64 matched cloudflared-windows-amd64.exe.
+Downloaded artifact SHA256 matched the release body and API asset digest:
+86aee4017b26625cee8484c113558f48effa4cd47f7aa05fcf425604e5d2b23c.
+Windows Authenticode reported Valid with Cloudflare, Inc. signer.
+Executed --version reported 2026.10.0 (built 2026-10-05T08:39 UTC).
+This is now actual binary-version evidence, not a rewrite of CHK-074's review-only claim.
+
+CONFIRMED test-only hostname: anti-writing-leadership-clerk.trycloudflare.com.
+Classification: CONFIRMED TEMPORARY TEST HOSTNAME; now stopped, never configured in
+ProjectX or Auth0. Exposure window was within 2026-10-11 03:20:32–03:20:59 UTC
+(2026-10-10 America/Chicago). Exactly one connector process/tunnel was started.
+Two initial external curl attempts failed DNS resolution; a later request through
+the same tunnel succeeded. No second tunnel/restart and no debug-mode run.
+
+Disposable files were outside the repository in a dedicated user-local test
+directory. Node mock listened only on 127.0.0.1:55004 (random OS-assigned port);
+cloudflared metrics listened only on loopback port55010. Connector subprocess used
+an explicit empty temporary config, cleared inherited application environment,
+info logging, no auto-update, disabled management diagnostics and no Host override.
+No login/named tunnel/certificate/token supplied; registered transport was QUIC.
+Disabling management diagnostics is NOT a claim that management logging is disabled.
+
+Command shape, not a new execution instruction:
+cloudflared tunnel --config <temporary-empty-config> --no-autoupdate
+--url http://127.0.0.1:<mock-port> --metrics 127.0.0.1:0 --loglevel info
+--management-diagnostics=false --grace-period 3s --label PX_FAKE_LOCAL002.
+Temporary Node orchestration/mock source SHA256:
+a0792885c871322af680bd9e0841892bad2a411049153466a402375d83cde8ad.
+
+The mock served fixed fake response logic only, with no filesystem/proxy/admin
+endpoint or secret/environment/credential reads. Requests without the fixed
+non-secret canary header received404. Request observations allowed only selected
+headers and fake query fields; actual IPs and CF-Ray values were redacted.
+It never routed to another local service. Tests used curl8.21.0 with certificate
+verification, HTTP/1.1, no proxy, bounded timeouts and no redirect following.
+A separate Node TLS socket sent the conflicting duplicate Host case explicitly;
+no inference that curl alone transmits duplicate Host fields.
+
+CONFIRMED direct-origin boundary: explicit loopback bind, no non-loopback listener
+created by the mock, no firewall/NAT changes. An independent LAN/WAN probe was not
+performed; do not describe this as a general machine network-security audit.
+Actual browser behavior, HTTP/2 and HTTP/3 remain NEEDS TESTING; curl does not prove
+browser cookie enforcement or CSRF.
+
+### Public transport and authority observations
+
+46 request observations included the local control, two initial DNS failures,
+successful external cases, the raw duplicate-Host case and post-shutdown check.
+Results below are CONFIRMED for this single ephemeral host and tested HTTP/1.1
+path, not a universal Cloudflare guarantee.
+
+| Case | External result | Mock observation / meaning |
+|---|---|---|
+| HTTPS normal | 200; certificate validation succeeded | Expected unique fake body and exact generated hostname arrived. HTTPS PUBLIC PATH = CONFIRMED. |
+| Plain HTTP GET / HEAD | 200, no HTTPS redirect followed or needed | Each reached origin with X-Forwarded-Proto=http. |
+| Plain HTTP POST / PUT / PATCH / DELETE | 200 | Each reached / with 16-byte fake body and proto=http. PUBLIC HTTP BOUNDARY = FAILED. |
+| Normal Host | 200 | Generated hostname preserved. Normal CANONICAL HOST TRANSPORT = CONFIRMED. |
+| Wrong Host fake-host.invalid | 403 | Origin request count unchanged. |
+| Host with :443 | 200 | Origin received hostname without the default port. |
+| Host with :8443, connection still to public443 | 200 | Origin received hostname:8443. Not a test of connecting to public8443. |
+| Malformed Host containing a space | 400 | Origin request count unchanged. |
+| Duplicate conflicting Host: valid first, fake-host.invalid second, raw TLS request | 200 | Origin received the first/canonical authority. No reliable rejection of duplicate authority can be claimed. Reverse order and other forms untested. |
+
+Plain HTTP was tested at /, not every auth/API route. The observed acceptance
+already fails the prompt's required boundary and establishes that this hostname
+does not universally enforce HTTPS. INFERRED implication for existing ProjectX
+design: its hardcoded upstream https cannot be justified by a fixed-HTTPS ingress
+assumption on this transport. No actual ProjectX assertion or auth request was
+executed. Normal Host pass-through does not establish strict end-to-end authority
+rejection, especially after duplicate/default-port normalization.
+
+| Header | Fake client input | Edge/connector result received by mock |
+|---|---|---|
+| X-Forwarded-Host | fake-host.invalid | Preserved unchanged; client-controlled authority survives. |
+| X-Forwarded-Proto | http over HTTPS | Replaced with https. Ordinary public HTTP requests arrived as http. |
+| Forwarded | for=192.0.2.44;host=fake-host.invalid;proto=http | Preserved unchanged; not trusted authority. |
+| X-Forwarded-For | 192.0.2.44 (documentation-only fake IP) | Fake value retained followed by an added real-client-address value, redacted from evidence. |
+| CF-Connecting-IP | Not supplied | Present at mock; actual IP omitted. No spoof test for this field. |
+| CF-Ray | Not supplied | Present at mock; actual identifier omitted. No spoof test for this field. |
+| Origin | Same-origin value, hostile fake-origin.invalid, absent | Supplied values preserved; absence preserved. |
+| Referer | Same-origin fake path, hostile fake path, absent | Supplied values preserved; absence preserved. |
+
+These are observed combined edge/connector outcomes; the experiment does not
+independently locate every rewrite within Cloudflare. ProjectX gateway stripping
+and CSRF remain existing source evidence only: no gateway was in this experiment.
+No credentialed CORS, Host override or cookie downgrade was introduced.
+
+### Cookie and cache transport
+
+CONFIRMED external response: two distinct Set-Cookie fields survived for PX_FAKE_A
+and PX_FAKE_B. Both retained Secure, HttpOnly, SameSite=Lax and Path=/; neither had
+a Domain attribute added. No folding observed. This is HTTP/1.1 response transport
+proof, not browser storage/JS exclusion/SameSite/delete-cookie/HTTP2/HTTP3 proof.
+Those unexecuted cases remain NEEDS TESTING.
+
+CONFIRMED SAFE FOR CANARY: 19 repeated cache cases produced a new origin marker and
+one additional origin request per response; no replay observed. Three repeats each
+for combined no-store/CDN-no-store, Cache-Control-only and CDN-Cache-Control-only;
+two repeats each of302/401/403/404/500 with both directives and two fake Set-Cookie
+fields, alternating fake Authorization and Cookie request headers. Repeated URLs
+were unchanged within each case; origin counters, not merely missing Age, proved
+fresh execution. All reported CF-Cache-Status=DYNAMIC and no Age; intended no-store
+headers survived. The302 used a fake local redirect, not Auth0.
+No browser cookie jars or real sessions were used. General edge cache safety for
+all paths/protocols/configurations remains NEEDS TESTING; these positive samples
+do not override the two hard blockers.
+
+### Callback-query and header logging result
+
+CONFIRMED successful fake callback: required code/state fake markers arrived intact
+at the mock. No gateway or OAuth/OIDC provider existed in the test. At info level,
+captured normal connector output contained zero occurrences of the successful
+fake code/state, fake Authorization and fake Cookie sentinels.
+
+CONFIRMED controlled failure: stopped the mock while keeping the same tunnel
+running, then sent only PX_FAKE_CODE_FAILURE_001 and PX_FAKE_STATE_FAILURE_001
+with fake Authorization/Cookie headers. External response502; no origin request.
+One error-level connector event contained both failure markers in its destination
+field (one occurrence each). Raw URL/log lines are deliberately not committed.
+
+CONNECTOR CALLBACK LOG CONFIDENTIALITY = FAILED.
+LOCAL-GATE-001 = BLOCKED FOR REAL CALLBACKS.
+The prior source-level concern is now reproduced with fake data, not real secrets.
+
+Authorization: Bearer PX_FAKE_AUTH_001 and the PX_FAKE_COOKIE_001 request cookie
+were received intact during their successful cases. Neither sentinel appeared in
+the captured normal or origin-refusal failure logs. This limited absence does not
+certify all errors, diagnostics, streaming or crash paths. Debug was NOT executed:
+prior pinned-source risk remains and another tunnel was not created. No debug,
+support bundle, remote log streaming or protected-email flow was enabled.
+
+PLATFORM INTERNAL LOG VISIBILITY = UNKNOWN. This experiment cannot establish
+absence of provider retention, internal edge/security logs or support access.
+No local-log result resolves that separate confidentiality requirement.
+
+### Teardown, dispositions and next boundary
+
+CONFIRMED: connector and mock terminated; their exact PIDs were absent, and neither
+test/metrics port had a listener. Post-shutdown external request returned502 with
+no fake response marker and zero origin requests. No cloudflared Windows service
+or scheduled startup task was found by read-only checks. Temporary executable,
+mock/config, raw connector log and temporary result file were removed from the
+validated dedicated directory; directory no longer exists. No persistent PATH,
+firewall, provider configuration or hostname configuration was created. Before
+documentation edits, git status --short was empty. No binary/log/request dump is
+included in the commit; sanitized outcomes are recorded here and in CHK-075.
+
+| Gate / task | Current result |
+|---|---|
+| LOCAL-GATE-001 | BLOCKED: CONFIRMED error-level fake callback-query disclosure; platform internals UNKNOWN. |
+| LOCAL-GATE-002 | BLOCKED: CONFIRMED public HTTP forwarding; normal authority/header/cookie/cache samples do not establish safe ProjectX ingress. Duplicate/default-port handling also requires independent review. |
+| LOCAL-GATE-003 | BLOCKED / NEEDS ACCOUNT CHECK: no Auth0 work performed. |
+| LOCAL-002 | BLOCKED: authorized experiment executed and cleaned up; intended real-provider transport safety failed. Not marked VERIFIED merely because measurements completed. |
+| LOCAL-001 / CORE-AUTH-02 | BLOCKED / IMPLEMENTED respectively; provider NEEDS TESTING; environment readiness NO. |
+
+No repair, rerun tunnel, provider switch, log suppression workaround or ProjectX
+exposure is authorized by these results. D004/D005/D006/D007, historical gateway
+evidence, all previous VERIFIED tasks/CHK records, and SevenRooms U-001/U-002/U-003
+classifications remain unchanged. Protected Quick Tunnel remains optional/unselected;
+positive privileged assurance remains unverified and high-risk operations denied.
+
+Proposed next task: CORE-AUTH-02-ENV-LOCAL-003 — Investigate zero-cost verification
+transport alternatives (PLANNED, separate design authorization). Documentation-only
+comparison of $0 transport candidates against callback confidentiality, accountable
+provider visibility/retention, effective HTTPS-only ingress, canonical authority,
+cookies/CSRF and no-trial dependence. Identify whether an existing secure option
+can satisfy every required boundary; do not assume any named alternative is safe.
+Owned scope is design/evidence, not installing/exposing, accepting risk, changing
+gateway/auth code, Auth0/PostgreSQL or purchasing. A materially changed trust
+boundary or unresolved owner risk choice needs its own explicit decision before
+implementation. This investigation is not started here.
+
+The prerequisite affects LOCAL-001, CORE-AUTH-02, SETTINGS-CORE-01 and future
+RESERVATIONS-CORE-01. Reservation-first scheduling and Part3 deferrals remain.
+Validation: pnpm map:check; git diff --check; JSON/IDs/DAG/history/status and
+five-document scope/secret checks. No application regression suite was rerun because
+no application, gateway, tests, migrations, contracts or dependency files changed.

@@ -1909,10 +1909,50 @@
       }
     },
     {
+      "id": "CORE-AUTH-02-ENV-LOCAL-003",
+      "name": "Investigate zero-cost verification transport alternatives",
+      "phaseId": "PHASE-04",
+      "status": "PLANNED",
+      "dependencies": [
+        "CORE-AUTH-01",
+        "PEOPLE-CORE-01"
+      ],
+      "priorityPart": 2,
+      "priorityDecisionId": "PRIORITY-D001",
+      "ownerPolicyDecisionId": "CORE-AUTH-D007",
+      "currentStageBudget": "$0",
+      "scope": "Separate documentation-only investigation of zero-cost verification transport candidates that can satisfy callback confidentiality and effective HTTPS-only ingress after CHK-075 failures; compare exact provider/account/authority/cookie/CSRF boundaries without live setup.",
+      "outOfScope": "Exposure, installation, new tunnel, Auth0/PostgreSQL, runtime/gateway/test edits, risk acceptance, provider selection/architecture reversal, payment, Settings/reservations/Export or push.",
+      "coreWorkflowAdvanced": "Required transport predecessor for trustworthy staff provider verification before reservation-required settings and staff reservation workflows.",
+      "whyRequiredNow": "One authorized Quick Tunnel experiment confirmed public HTTP forwarding and error-level fake callback-query disclosure. No real provider callback may proceed through this unresolved boundary.",
+      "implementationPrerequisites": "CORE-AUTH-01/PEOPLE-CORE-01 VERIFIED; CHK-074 review and CHK-075 failed experiment retained as evidence, not successful transport gates.",
+      "acceptanceCriteria": [
+        "Compare official version/plan-specific evidence for $0 alternatives; do not assume a named option is safe",
+        "Specify callback logging/access/retention and HTTPS-only/canonical authority/cookie/CSRF requirements without relaxing current controls",
+        "Identify actual account/trial constraints and unanswered questions; no platform confidentiality claim from local silence",
+        "Record any new architecture/owner decision required before selecting or implementing a changed trust boundary; do not silently replace D004–D007",
+        "Preserve historical failure evidence and all VERIFIED/CHK/reference classifications; keep environment NO until its complete prerequisites are verified"
+      ],
+      "verificationCommands": [
+        "pnpm map:check",
+        "git diff --check",
+        "Read-only primary-source/repository comparison and dependency/history checks; no live transport commands authorized"
+      ],
+      "regressionChecks": [
+        "No code/tests/migrations/contracts/credentials or provisioning",
+        "Reservation-first ordering and Part3 deferrals preserved",
+        "No weakening callback confidentiality/HTTPS/Host/CSRF/cookies/RLS/privileged denial"
+      ],
+      "specificationFile": "docs/architecture/ADR-0017-zero-cost-provider-verification.md",
+      "evidenceId": "CHK-075",
+      "environmentReady": false,
+      "executionGate": "PLANNED recommendation only; requires a separate owner-authorized design task. Not started by LOCAL-002."
+    },
+    {
       "id": "CORE-AUTH-02-ENV-LOCAL-002",
       "name": "Disposable inert-canary Quick Tunnel transport verification",
       "phaseId": "PHASE-04",
-      "status": "PLANNED",
+      "status": "BLOCKED",
       "dependencies": [
         "CORE-AUTH-01",
         "PEOPLE-CORE-01"
@@ -1946,9 +1986,40 @@
         "D004–D007 and historical CHK/VERIFIED/SevenRooms records unchanged"
       ],
       "specificationFile": "docs/architecture/ADR-0017-zero-cost-provider-verification.md",
-      "evidenceId": "CHK-074",
+      "evidenceId": "CHK-075",
       "environmentReady": false,
-      "executionGate": "PLANNED ONLY — separate authorization for installation and temporary public fake-only test required; not executed by CHK-074."
+      "executionGate": "Authorized single fake-only experiment completed and cleaned up. Confirmed public HTTP forwarding and error-level callback-query disclosure block real-provider use. No additional tunnel/exposure/repair authorized.",
+      "executionEvidence": {
+        "date": "2026-10-10",
+        "classification": "CONFIRMED fake-only transport results; not ProjectX/provider verification",
+        "cloudflared": "2026.10.0",
+        "tunnelCount": 1,
+        "https": "CONFIRMED",
+        "publicHttp": "FAILED — six methods at / reached mock; body-bearing requests accepted",
+        "callbackLogConfidentiality": "FAILED — both fake failure query markers appeared once in error destination",
+        "gate001": "BLOCKED",
+        "gate002": "BLOCKED",
+        "gate003": "BLOCKED / NEEDS ACCOUNT CHECK",
+        "platformInternalVisibility": "UNKNOWN",
+        "cleanup": "CONFIRMED no test processes/listeners/services/startup tasks; temporary files removed",
+        "browserHttp2Http3": "NEEDS TESTING; only HTTP/1.1 curl/raw TLS tested"
+      },
+      "blocker": {
+        "ids": [
+          "LOCAL-GATE-001",
+          "LOCAL-GATE-002"
+        ],
+        "classification": "CONFIRMED",
+        "reason": "Selected transport failed confidentiality and effective HTTPS-only requirements; do not expose ProjectX or silently accept risk",
+        "requiredPredecessor": "CORE-AUTH-02-ENV-LOCAL-003 — Investigate zero-cost verification transport alternatives",
+        "affectedModules": [
+          "CORE-AUTH-02-ENV-LOCAL-001",
+          "CORE-AUTH-02",
+          "SETTINGS-CORE-01",
+          "RESERVATIONS-CORE-01"
+        ],
+        "ownerDecisionRequired": false
+      }
     },
     {
       "id": "CORE-AUTH-02-ENV-LOCAL-001",
@@ -1958,7 +2029,8 @@
       "dependencies": [
         "CORE-AUTH-01",
         "PEOPLE-CORE-01",
-        "CORE-AUTH-02-ENV-LOCAL-002"
+        "CORE-AUTH-02-ENV-LOCAL-002",
+        "CORE-AUTH-02-ENV-LOCAL-003"
       ],
       "priorityPart": 2,
       "priorityDecisionId": "PRIORITY-D001",
@@ -1975,15 +2047,15 @@
           "LOCAL-GATE-002",
           "LOCAL-GATE-003"
         ],
-        "classification": "CONFIRMED default failure-log risk; platform/edge UNKNOWN / NEEDS TESTING; actual Auth0 account NEEDS TESTING",
-        "reason": "CHK-074: cloudflared2026.10.0 QUIC error logs can include destination URL/query; management filtering independent of local level. Platform confidentiality and public HTTP behavior unresolved; actual Auth0 Free eligibility unverified.",
+        "classification": "CONFIRMED transport failures; platform internal visibility UNKNOWN; actual Auth0 account NEEDS TESTING",
+        "reason": "CHK-075: one fake-only Quick Tunnel accepted public HTTP requests/bodies and logged both fake callback query markers at error level on origin refusal. No safe real-provider exposure. Platform retention unknown and Auth0 checks outstanding.",
         "affectedModules": [
           "CORE-AUTH-02",
           "CORE-AUTH-02-ENV-LOCAL-001",
           "SETTINGS-CORE-01",
           "RESERVATIONS-CORE-01"
         ],
-        "requiredPredecessor": "Separately authorize proposed LOCAL-002 fake-only transport experiment; resolve platform logging and Free account gates before real callbacks",
+        "requiredPredecessor": "CORE-AUTH-02-ENV-LOCAL-003 documentation-only transport alternative investigation; any replacement architecture requires separate authorization and evidence",
         "ownerDecisionRequired": false
       },
       "acceptanceCriteria": [
@@ -2006,9 +2078,9 @@
         "U-001/U-002/U-003 and all SevenRooms classifications unchanged; Part3 remains deferred"
       ],
       "specificationFile": "docs/architecture/ADR-0017-zero-cost-provider-verification.md",
-      "evidenceId": "CHK-074",
+      "evidenceId": "CHK-075",
       "environmentReady": false,
-      "executionGate": "BLOCKED: review completed, not setup authorization. LOCAL-002 PLANNED and requires separate execution approval. No ProjectX/Auth0 exposure before all safety gates.",
+      "executionGate": "BLOCKED: LOCAL-002 fake-only experiment failed both transport safety gates; no ProjectX/Auth0 setup, second tunnel or automatic repair authorized.",
       "safetyReview": {
         "evidenceId": "CHK-074",
         "date": "2026-10-10",
@@ -2020,6 +2092,15 @@
         "assuranceBoundary": "Existing ordinary-positive / privileged-fail-closed alternative explicitly permitted but unproven; D004 unchanged",
         "ownerDecisionRequired": false,
         "platformLimitation": "Local canary cannot certify inaccessible provider logs"
+      },
+      "transportEvidence": {
+        "evidenceId": "CHK-075",
+        "gate001": "BLOCKED",
+        "gate002": "BLOCKED",
+        "gate003": "BLOCKED / NEEDS ACCOUNT CHECK",
+        "environmentReady": false,
+        "sourceReviewEvidenceId": "CHK-074",
+        "nextInvestigation": "CORE-AUTH-02-ENV-LOCAL-003"
       }
     },
     {
@@ -2358,7 +2439,7 @@
       "developmentDeploymentDecisionId": "CORE-AUTH-D005",
       "readinessEvidence": "CHK-058 owner-decision documentation only. Published CORE-AUTH-01 CI run 37253348486 attempt 2/job 111586842967 green at 95d4d1b1cc9f8a6dc69a1d8a3edea38df9e00923; original failed attempt preserved. Not production auth, new implementation or core readiness proof.",
       "coreWorkflowAdvanced": "Secure authenticated staff access for reservation-required Venue settings and future reservation book/check-in/seating.",
-      "remainingWork": "CHK-074 safety review completed. LOCAL-001 BLOCKED on connector/platform log confidentiality, public HTTP/authority/transport proof and actual Auth0 Free account checks. LOCAL-002 PLANNED fake-only experiment requires separate authorization. Existing ordinary-positive/privileged-fail-closed acceptance unproven; environment NO; paid Render DEFERRED.",
+      "remainingWork": "CHK-075: fake-only LOCAL-002 completed/cleaned up but BLOCKED by confirmed public HTTP forwarding and error-level fake callback-query logging. LOCAL-001 remains BLOCKED; platform visibility UNKNOWN; Auth0 account checks outstanding. Propose separate LOCAL-003 design investigation; no ProjectX exposure/repair. Environment NO; paid Render and Part3 deferred.",
       "specificationFile": "docs/security/staff-access-integration.md",
       "requiredOwnerDecisionIds": [
         "CORE-AUTH-D001",
@@ -2442,8 +2523,8 @@
         "evidenceId": "CHK-060",
         "developmentDeploymentDecisionId": "CORE-AUTH-D005",
         "ownerSelectionStatus": "RESOLVED",
-        "provisioningStatus": "NOT STARTED — CHK-074; LOCAL-GATE-001/002/003 unresolved",
-        "currentEnvironmentEvidenceId": "CHK-074",
+        "provisioningStatus": "NOT STARTED — CHK-075 confirms transport failures; LOCAL-GATE-001/002/003 BLOCKED",
+        "currentEnvironmentEvidenceId": "CHK-075",
         "deploymentTopologyFindingId": "CORE-AUTH-02-ENV-002",
         "currentStageDecisionId": "CORE-AUTH-D007",
         "currentStageBudget": "$0",
@@ -2829,6 +2910,7 @@
     "PRIORITY-001",
     "PEOPLE-CORE-01",
     "CORE-AUTH-01",
+    "CORE-AUTH-02-ENV-LOCAL-003",
     "CORE-AUTH-02-ENV-LOCAL-002",
     "CORE-AUTH-02-ENV-LOCAL-001",
     "CORE-AUTH-02",
@@ -2861,7 +2943,7 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "CORE-AUTH-02-ENV-LOCAL-002 — Disposable inert-canary Quick Tunnel transport verification",
+  "nextExactTask": "CORE-AUTH-02-ENV-LOCAL-003 — Investigate zero-cost verification transport alternatives",
   "deliveryPriority": {
     "decisionId": "PRIORITY-D001",
     "primaryTarget": "PART 1 — CORE ONLINE RESERVATION SYSTEM",

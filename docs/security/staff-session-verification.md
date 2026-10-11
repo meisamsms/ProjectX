@@ -5,6 +5,63 @@ CORE-AUTH-D004. Base 84ed2938d7d1fa6155e744a50ef3d6aebe6f978c.
 Parent task IMPLEMENTED; controlled Auth0/production assurance remains NEEDS TESTING.
 No SevenRooms evidence or parity claims.
 
+## Current inert-canary evidence — CHK-075 / CORE-AUTH-02-ENV-LOCAL-002
+
+2026-10-10 America/Chicago (2026-10-11 03:20 UTC). CONFIRMED: one owner-authorized
+accountless Quick Tunnel with only a disposable loopback mock and fake markers.
+Starting clean local/fetched remote be765315ce0bacb94c3c577e25a0da69ce8ce725.
+No ProjectX/gateway/API, Auth0, PostgreSQL, real callback/credentials/cookies or
+customer/reference data. Budget $0; no system/service/startup/firewall/PATH changes.
+
+Actual Windows x64 cloudflared2026.10.0 matched official release SHA256
+86aee4017b26625cee8484c113558f48effa4cd47f7aa05fcf425604e5d2b23c and had a valid
+Cloudflare Authenticode signature. Info logging, default QUIC, no debug/streaming/
+support bundle; exactly one tunnel. Two initial DNS failures preceded success on
+that same tunnel. [ADR-0017 CHK-075](../architecture/ADR-0017-zero-cost-provider-verification.md#2026-10-10-inert-canary-execution--chk-075--core-auth-02-env-local-002)
+records command shape, sanitized matrix, time/host and limitations.
+
+- CONFIRMED HTTPS path200. Public HTTP GET/HEAD/POST/PUT/PATCH/DELETE to / also
+  reached mock200, with bodies on write methods and forwarded proto=http.
+  PUBLIC HTTP BOUNDARY FAILED; LOCAL-GATE-002 BLOCKED. Existing gateway fixed
+  HTTPS assertion cannot rely on this transport enforcing HTTPS. Gateway not run.
+- CONFIRMED normal Host preserved; wrong Host403, malformed Host400; :443
+  normalized away, :8443 preserved; raw duplicate conflicting Host accepted200
+  with first authority observed. No universal malformed-authority rejection claim.
+- CONFIRMED fake XFH and Forwarded survived; XFP http over HTTPS became https;
+  XFF retained fake value plus redacted client address. CF-Connecting-IP/CF-Ray
+  present/redacted. Same/hostile/absent Origin/Referer preserved. Not a CSRF test.
+- CONFIRMED two separate fake Set-Cookie fields and all requested attributes
+  survived HTTP/1.1. Nineteen no-store cases had unique origin markers/counters
+  and DYNAMIC responses, no observed replay. CONFIRMED SAFE FOR CANARY ONLY;
+  browser enforcement, HTTP2/3 and broader cache/session behavior NEEDS TESTING.
+- CONFIRMED successful fake callback query arrived intact; normal connector
+  logs had zero successful query/Auth/Cookie sentinel occurrences. After mock
+  shutdown, response502 and one ERR destination event contained both fake failure
+  code/state markers (one each). CONNECTOR CALLBACK LOG CONFIDENTIALITY FAILED;
+  LOCAL-GATE-001 BLOCKED for real callbacks. Fake Auth/Cookie headers transported;
+  their sentinels absent from sampled normal/failure logs, not universal safety.
+- PLATFORM INTERNAL LOG VISIBILITY UNKNOWN. LOCAL-GATE-003 BLOCKED / NEEDS ACCOUNT
+  CHECK. No provider-account or MFA work; D004 and privileged fail-closed unchanged.
+
+CONFIRMED cleanup: connector/mock PIDs absent; no listeners on mock/metrics ports;
+post-stop hostname returned502 with no fake marker. No cloudflared service/startup
+task found. Temporary executable/mock/config/log/result files and their dedicated
+directory removed. No raw log, binary, actual IP or request dump committed.
+Repository was clean before documentation edits.
+
+LOCAL-002 BLOCKED (experiment executed; intended safety failed), LOCAL-001 BLOCKED,
+CORE-AUTH-02 IMPLEMENTED, provider NEEDS TESTING, ENVIRONMENT READY: NO. No second
+tunnel, automatic workaround/repair, ProjectX exposure or paid fallback.
+Next proposed task: CORE-AUTH-02-ENV-LOCAL-003 — Investigate zero-cost verification
+transport alternatives; PLANNED documentation-only investigation requiring separate
+authorization. It must address both logging confidentiality and HTTP/authority
+boundary; any architecture/risk change needs explicit approval. Not started here.
+
+Validation: pnpm map:check; git diff --check; previous74CHK/26VERIFIED, D004–D007,
+reference/classification/DAG and five-document scope checks. No application/test/
+gateway changes; prior gateway results stay historical, not tunnel proof.
+All earlier sections below are historical and retained unchanged.
+
 ## Current read-only safety review — CHK-074 / CORE-AUTH-02-ENV-LOCAL-001
 
 2026-10-10. CONFIRMED documentation/source review only; no runtime, provider or
