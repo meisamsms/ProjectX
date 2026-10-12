@@ -5,6 +5,76 @@ CORE-AUTH-D004. Base 84ed2938d7d1fa6155e744a50ef3d6aebe6f978c.
 Parent task IMPLEMENTED; controlled Auth0/production assurance remains NEEDS TESTING.
 No SevenRooms evidence or parity claims.
 
+## Current transport design review — CHK-076 / CORE-AUTH-02-ENV-LOCAL-003
+
+2026-10-11. DOCUMENTED only, from clean local/fetched remote
+`f872bc034e029a64a6c18ed3bc958016b5b13ae0`. Read-only official-source/static review;
+no installation, certificates/trust change, public exposure, accounts, runtime
+changes, real OAuth or environment setup. Full comparison, citations, four owner
+options and proposed inert-test acceptance criteria are in
+[ADR-0017 CHK-076](../architecture/ADR-0017-zero-cost-provider-verification.md#chk-076--local-003-transport-alternatives-review-2026-10-11).
+
+INFERRED preferred family: **local-only trusted HTTPS — PREFERRED / NEEDS INERT
+TEST**, not an approved deployment. CONFIRMED Auth0 documentation uses a browser
+front-channel Code callback and HTTPS localhost Regular Web examples; no public
+inbound tunnel is inherently needed for that flow. Actual Auth0 Free registration
+remains NEEDS ACCOUNT CHECK. HTTPS IP-literal acceptance is INFERRED, not equated
+with documented HTTPS localhost.
+
+CONFIRMED static compatibility distinction: API `loadStaffAuthConfig` accepts a
+consistent exact HTTPS localhost/port/callback/root logout set. Existing gateway
+canonical validation requires a dot and rejects colons; bare localhost and
+non-default port authority are NOT drop-in compatible. External TLS alone does
+not resolve this. `127.0.0.1` at external443 may fit gateway syntax but its Auth0,
+TLS, bind and browser behavior remain NEEDS TESTING. No port-stripping/fake-Host
+or auth-validation relaxation is permitted. Gateway compatibility requires a
+separate bounded review/authorization before real setup.
+
+NEEDS TESTING: approved per-user certificate trust with exact SAN and safe key
+lifecycle/reversal; loopback-only IPv4/IPv6 exposure; HTTP rejection or edge-only
+redirect before application processing; no plaintext alternate trusted ingress;
+normal/failure/OS/browser log safety. Fixed upstream https and localhost Secure
+cookie exceptions are not proof of TLS. Browser history, DevTools, screenshots,
+referrers, crash diagnostics and local proxy logs can still expose callback data.
+Auth0 knowing its issued code is expected; unnecessary transport logging is not.
+
+INFERRED security compatibility after ingress proof: retain __Host-/Secure/
+HttpOnly/Lax/host-only/Path cookies, exact same-origin web/API, Host/Origin/Referer
+and CSRF, PKCE/state/nonce/one-use/server exchange/issuer-sub/RLS and privileged
+fail-closed behavior. Cookies share ports, origins do not; actual browser cookie
+storage/deletion/two Set-Cookie handling must be proven. Two API instances can
+conceptually use shared session state behind one origin; existing gateway takes
+one upstream, so deterministic test-only routing/switch still needs review and
+must not be presented as existing production load-balancing verification.
+
+CONFIRMED/UNKNOWN alternatives: Funnel relay cannot decrypt callback TLS, but
+ProjectX non-commercial Free eligibility and local/uploaded diagnostic contents
+are unproven. ngrok cloud TLS and request inspection add query visibility; not
+recommended. Cloudflare named-tunnel redirect configuration may address HTTP,
+but no documented safe correction for the known connector query-error logging
+was established; not recommended. Codespaces adds unverified quota/hosting/log
+boundaries. No provider's internal confidentiality is inferred from silent logs.
+
+OWNER DECISION REQUIRED: proposed CORE-AUTH-D008, NOT APPROVED, for exact local
+authority/callback/root logout (D006 specialization), tooling/per-user trust and
+disposable test authorization. D004-D007 unchanged; D005 remains future approved
+paid Render, deferred by D007's current $0 policy. No machine-wide trust,
+elevation/restart or certificate-warning bypass is implicitly authorized.
+
+NEXT: **CORE-AUTH-02-ENV-LOCAL-004 — Disposable localhost HTTPS transport
+verification**, PLANNED / execution blocked pending explicit approval. Fake app
+only initially; no Auth0, ProjectX or database. TLS/HTTP/authority/cookie/header/
+normal-and-failure-log proof and exact cleanup first. Its success alone does not
+authorize actual setup; gateway compatibility, owner specialization and actual
+Free account checks remain separate prerequisites.
+
+LOCAL-GATE-001 BLOCKED; LOCAL-GATE-002 BLOCKED; LOCAL-GATE-003 BLOCKED / NEEDS
+ACCOUNT CHECK. LOCAL-001 BLOCKED; CORE-AUTH-02 IMPLEMENTED; provider NEEDS TESTING;
+ENVIRONMENT READY NO. LOCAL-003 is DOCUMENTED, not VERIFIED. All previous
+verification/SevenRooms classifications, U-001/U-002/U-003 and core/Part3 deferrals
+are unchanged. The following historical CHK-075 evidence remains authoritative:
+Quick Tunnel NOT APPROVED for real callbacks; no suppression workaround or rerun.
+
 ## Current inert-canary evidence — CHK-075 / CORE-AUTH-02-ENV-LOCAL-002
 
 2026-10-10 America/Chicago (2026-10-11 03:20 UTC). CONFIRMED: one owner-authorized

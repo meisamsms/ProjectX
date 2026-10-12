@@ -616,3 +616,384 @@ RESERVATIONS-CORE-01. Reservation-first scheduling and Part3 deferrals remain.
 Validation: pnpm map:check; git diff --check; JSON/IDs/DAG/history/status and
 five-document scope/secret checks. No application regression suite was rerun because
 no application, gateway, tests, migrations, contracts or dependency files changed.
+
+## CHK-076 — LOCAL-003 transport alternatives review (2026-10-11)
+
+Status: DOCUMENTED; PROJECTX DESIGN RECOMMENDATION, NOT OWNER APPROVAL OR
+RUNTIME VERIFICATION. Starting clean local/fetched origin:
+`f872bc034e029a64a6c18ed3bc958016b5b13ae0`, branch `people-03-accounts-read`.
+Only read-only source research and five documentation updates are authorized.
+No installation, trust-store change, certificate, listener, tunnel, account,
+provider configuration, database, real login, paid resource or push occurred.
+
+### Outcome and unchanged gates
+
+INFERRED: local-only trusted HTTPS is the preferred transport family because it
+can remove the unnecessary public callback intermediary. Classification:
+**PREFERRED / NEEDS INERT TEST**, not a selected implementation. There is no
+currently proven replacement environment. LOCAL-GATE-001 and LOCAL-GATE-002
+remain BLOCKED; LOCAL-GATE-003 remains BLOCKED / NEEDS ACCOUNT CHECK.
+CORE-AUTH-02 remains IMPLEMENTED, LOCAL-001 BLOCKED, provider NEEDS TESTING and
+ENVIRONMENT READY NO. Existing gateway compatibility is a separate unresolved
+prerequisite, not concealed by API configuration compatibility.
+
+CONFIRMED historical CHK-075 remains unchanged: Quick Tunnel forwarded public
+HTTP to the mock and cloudflared error-level origin-failure logging included fake
+callback code/state. Quick Tunnel is NOT APPROVED for real provider verification
+under the current design. No repeated experiment, log suppression, or acceptance
+of this exposure is proposed. Its failed task remains historical evidence; it
+must not become a requirement to make that unsafe transport pass before a
+separately approved alternative can be considered.
+
+### Auth0 network model and exact local registration
+
+CONFIRMED documentation: for the selected Authorization Code query response,
+Auth0 redirects the user agent to the registered callback. The browser makes
+that request; the local server subsequently makes an outbound token exchange.
+Auth0 does not need an inbound server-to-server connection to this callback.
+This finding does not cover webhooks, back-channel logout or other response
+modes. See [Auth0 Authorization Code flow](https://auth0.com/docs/get-started/authentication-and-authorization-flow/authorization-code-flow/add-login-auth-code-flow).
+
+CONFIRMED documentation: Auth0's Regular Web Application example uses an exact
+HTTPS localhost callback with a non-default port and an HTTPS local root logout.
+The port is a chosen fixed registered value, not a native-app arbitrary-port
+exception. The application's callback path may be registered exactly; no wildcard
+is necessary. See [Auth0 HTTPS localhost example](https://auth0.com/blog/securing-razor-pages-applications-with-auth0/)
+and [application settings](https://auth0.com/docs/get-started/applications/application-settings).
+Allowed Web Origins, if needed by an approved feature, contain scheme/host/port,
+not a path. They are not permission to introduce credentialed cross-origin APIs.
+The present server-side Code flow does not itself require an Auth0 SPA/CORS design.
+
+CONFIRMED documentation: the [Regular Web PHP quickstart](https://auth0.com/docs/quickstart/webapp/php)
+uses HTTP `127.0.0.1`. That is not direct proof of HTTPS IP-literal support on the
+actual Free tenant. HTTPS `127.0.0.1` is INFERRED plausible, NEEDS ACCOUNT CHECK /
+TESTING; do not equate it with documented HTTPS `localhost`. Never use that HTTP
+example to relax ProjectX HTTPS requirements.
+
+CONFIRMED advertised [Auth0 Free pricing](https://auth0.com/pricing): $0 and no
+credit card for Free signup. INFERRED: ordinary Regular Web Code/PKCE local
+verification can use baseline features without a paid trial; actual tenant
+entitlements and the existing ordinary-positive / privileged-fail-closed route
+remain NEEDS ACCOUNT CHECK. No premium MFA, custom-domain/card feature or trial
+is assumed. Candidate comparison can precede account creation; LOCAL-GATE-003
+cannot pass from pricing documentation alone.
+
+### Static ProjectX compatibility and the gateway gap
+
+CONFIRMED source at starting SHA:
+
+- `apps/api/src/staff-auth/config.ts`: `loadStaffAuthConfig` requires HTTPS,
+  root app origin, same-origin exact `/api/v1/staff-auth/callback` without query,
+  and same-origin logout without query. Given all other valid configuration,
+  `https://localhost:8443`, its exact callback and root logout satisfy those
+  checks. A consistent `https://127.0.0.1:8443` set also satisfies them; mixed
+  hosts/ports do not. This is static control-flow evidence, not an executed test.
+- `deploy/gateway/start.sh`: the canonical host must contain a dot and cannot
+  contain a colon. Bare `localhost` and `localhost:8443` are rejected. The nginx
+  template checks raw Host and forwards the configured canonical host without a
+  port. Thus adding external TLS does NOT make the current gateway compatible
+  with the proposed non-default localhost authority. Do not strip the port,
+  fake a different canonical Host, or weaken the API check to disguise this gap.
+- A literal `127.0.0.1` canonical host passes that validator syntactically. An
+  external default HTTPS port 443 might avoid the authority-port conflict, but
+  requires separate Auth0 IP registration, port availability, TLS/SAN and gateway
+  proof. The gateway's internal unprivileged PORT is not the browser TLS port.
+  This alternative is INFERRED, not tested or approved.
+- `deploy/gateway/nginx.conf.template`: access log fields are allowlisted
+  request ID/status/size/timing, excluding URLs and headers; error destination
+  is `/dev/null` at crit. Existing forwarding/Host/cookie/cache controls stay
+  unchanged. Fixed upstream `X-Forwarded-Proto: https` only has meaning behind
+  a genuinely trusted HTTPS edge; it does not turn plaintext into TLS.
+- `apps/api/src/main.ts` starts the existing HTTP application, not a TLS wrapper;
+  `apps/api/src/app.ts` disables automatic request logging and uses safe error
+  logging. These facts do not prove a new terminator's logs safe.
+- `apps/web/src/staff-auth/client.ts` rejects a cross-origin API. Keeping web and
+  `/api/v1` on one exact HTTPS origin is required; no CORS workaround.
+
+NEEDS TESTING / bounded follow-up review: canonical authority compatibility of
+the chosen local edge with the unchanged gateway. A new gateway change, if
+necessary, requires separate authorization and regression evidence. LOCAL-004
+can test a fake endpoint without claiming it has solved this integration gap.
+
+### Local TLS choices and trust lifecycle
+
+These are design candidates, not installation instructions or authorization.
+No public domain, paid CA or public inbound listener is required for local TLS.
+
+| Method | Issuer / trust / private key | Suitability and limitations |
+| --- | --- | --- |
+| A: external TLS in front of existing gateway | Local CA from B/C; leaf and key outside Git on this machine | INFERRED architectural fit for retaining API-prefix, Host, forwarding and cookie rules. Does not resolve the canonical-host gap above. Browser TLS must terminate before the existing private HTTP hop. |
+| B: Caddy local HTTPS | Caddy local root/intermediate; locally stored keys; root must be trusted by the actual browser | CONFIRMED supports localhost and IP names. Explicit loopback bind required; default binds are unsuitable. Automatic HTTP redirect listener/admin endpoint require bounded configuration review. Proxy access/error logs need independent proof. |
+| C: mkcert + reviewed proxy | mkcert-generated local CA and leaf; local root-key file must remain secret; exact DNS/IP SANs | CONFIRMED certificate tooling, not a proxy. Can cover localhost/127.0.0.1/::1 distinctly. Each HTTP proxy adds authority/header/logging review. No assumption that installing a certificate makes the proxy safe. |
+| D: existing Node/native TLS wrapper | Would require an approved local issuer/trust arrangement | CONFIRMED no such ProjectX startup wrapper exists. Platform TLS capability alone is not an already compatible deployment path. Do not invent a bespoke auth-aware Node proxy or enable Windows server features for this task. |
+| E: stunnel + local certificate | Local CA/leaf as C; stunnel is a mature TLS byte-forwarder | INFERRED smallest parsing surface for a fake inert test: TLS termination without intentional HTTP URL parsing. Verify failure diagnostics, explicit loopback bind and HTTP/1.1 ALPN/upstream compatibility; not a claim of zero logging or complete ProjectX compatibility. |
+
+Evidence: [Caddy local HTTPS](https://caddyserver.com/docs/automatic-https),
+[bind](https://caddyserver.com/docs/caddyfile/directives/bind),
+[global options](https://caddyserver.com/docs/caddyfile/options),
+[mkcert](https://github.com/FiloSottile/mkcert),
+[stunnel HOWTO](https://www.stunnel.org/howto.html),
+[Windows configuration](https://www.stunnel.org/config_windows.html).
+
+CONFIRMED source/documentation: mkcert's Windows backend calls
+`CertOpenSystemStoreW` for ROOT, which Microsoft documents as current-user, not
+local-machine, access. A reviewed current-user-only trust route is preferable
+to machine-wide installation, but browser and organizational policy can still
+prevent trust. See [mkcert Windows source](https://raw.githubusercontent.com/FiloSottile/mkcert/master/truststore_windows.go)
+and [Microsoft certificate-store contract](https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certopensystemstorew).
+Pin/review the eventual executable/version before use; moving source is research,
+not verification of an installed binary.
+
+NEEDS TESTING for every viable option: actual browser store use, warning-free
+chain validation, SAN match, browser restart/reload requirement and any enterprise
+policy constraint. Windows trust-store changes require explicit owner approval;
+no automatic elevation or machine-store fallback. Caddy may attempt trust
+installation itself; a future test must bound/approve that behavior first.
+Never bypass certificate warnings, disable validation, or use insecure flags.
+
+Proposed cleanup: inventory existing roots first; track only the test CA's exact
+fingerprint and stores; stop exact test listeners; remove that CA from each
+approved store/profile (tool untrust/uninstall with identity verification), then
+remove its isolated leaf/key/CA files outside Git. Preserve all pre-existing
+trust. Verify distrust and absent listeners after cleanup. A browser restart may
+be necessary; an OS restart/elevation requires separate permission. A trusted
+local CA can impersonate other HTTPS sites if its key is stolen: use restricted
+ACLs, no synced folder/repository, minimal lifetime, no shared CA key, no service
+installation, and no persistent startup changes. This is not a production PKI.
+
+### Confidentiality, HTTP and browser behavior
+
+INFERRED target path: browser -> local trusted TLS -> private gateway -> API;
+API -> Auth0 outbound token/JWKS traffic; API -> private restricted PostgreSQL16.
+There is no public inbound tunnel. On a controlled browser/machine without a
+forward proxy intercepting loopback, the callback query is not routed through a
+third-party reverse proxy. Auth0 legitimately knows the code it issued. This
+removes a transport intermediary, not all OAuth/browser/local disclosure risks.
+
+NEEDS TESTING: only explicit loopback TLS is usable for browser/auth traffic;
+inspect IPv4/IPv6 and Docker host publications. No `0.0.0.0`/LAN/public bind,
+firewall change, public ACME validation or public DNS. Prefer no HTTP browser
+listener. If an HTTP listener is deliberately approved, reject auth/API writes
+before application processing; any redirect must be edge-only. Prove all six
+methods and fake bodies do not reach the app. Private gateway/API HTTP hops
+must not become an alternative trusted browser ingress; use private networking
+and documented exposure checks. Local malicious processes are a separate risk,
+not solved by loopback TLS or PKCE.
+
+CONFIRMED documentation: [Caddy access logging](https://caddyserver.com/docs/caddyfile/directives/log)
+has sensitive-header handling, but query filtering is a separate concern. Do
+not assume access filtering covers error logs. Stunnel's protocol-neutral design
+reduces HTTP-aware logging opportunity (INFERRED); normal/failure/debug, Windows
+service/event/crash logs and any telemetry remain NEEDS TESTING. Never solve a
+known leak merely by discarding logs. Prefer a component/configuration that
+does not collect callback URLs in the first place, with minimal useful safe
+error categories verified using fake sentinels.
+
+Minimum future procedure: isolated browser profile without sync/extensions or
+remote debugging; synthetic data only; no HAR/net-export, preserved DevTools
+network log, screenshots of callback address bars, screen recording, or crash
+upload containing URLs. Review browser history/address bar and OS/proxy/app
+diagnostics using fake values first. Existing callback responses set no-store
+and no-referrer and redirect to a clean root; this reduces exposure but does not
+prove absence from history, diagnostics or extensions. Retain only redacted
+results, not raw query-bearing logs. Test success AND origin refusal, timeout,
+reset, malformed request and application failures before real OAuth approval.
+
+CONFIRMED source (`oidc.ts`, `routes.ts`, `credentials.ts`, `store.ts`): keep
+PKCE S256, exact state/nonce, one-use database login transaction, server-side
+exchange, issuer/sub mapping, no email linking, session expiry/revocation, RLS
+and privileged fail-closed controls. INFERRED: changing only a reviewed exact
+origin need not weaken these. Auth0 documents local app impersonation risk;
+trusted local host/processes remain an assumption, not something PKCE eliminates.
+See [Auth0 app impersonation guidance](https://auth0.com/docs/secure/security-guidance/measures-against-app-impersonation).
+
+CONFIRMED cookie contract: `__Host-` login/session cookies retain Secure,
+HttpOnly, SameSite=Lax, host-only/no Domain, Path=/; deletion retains matching
+name/host/path with Max-Age=0. Multiple Set-Cookie must not be folded. INFERRED:
+top-level GET Code callback works with Lax; form_post is not substituted.
+Cookies are not isolated by port, whereas Origin includes the port. Localhost
+and 127.0.0.1 are different cookie hosts. Browser localhost Secure exceptions
+mean cookie flags alone cannot prove HTTP rejection. Avoid concurrent unrelated
+localhost apps and use an isolated profile. Actual storage, prefix enforcement,
+deletion, JS inaccessibility and two-cookie handling remain NEEDS TESTING.
+See [browser Set-Cookie reference](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie)
+and [RFC6265](https://www.rfc-editor.org/info/rfc6265/).
+
+CONFIRMED source: API Host equals configured origin authority, foreign forwarded
+host is rejected, Origin (or Referer origin fallback) and session CSRF checks
+remain required for mutations. INFERRED: one exact localhost HTTPS web/API
+origin is compatible once ingress authority is solved. NEEDS TESTING: wrong
+port/scheme/host, missing headers, CSRF replay and synthetic cross-site requests.
+
+INFERRED multi-instance feasibility: two existing API processes can share the
+same database-backed login/session state behind one browser origin. CONFIRMED:
+current gateway takes one API host:port, not an explicit two-instance load
+balancer. No ready-made two-instance local routing mechanism was established.
+Future bounded verification must choose reviewed test-only deterministic routing
+or a controlled A-to-B upstream switch without changing browser origin, cookies,
+database or security checks; no public instance endpoint or sticky-session-only
+proof. Demonstrate login/callback across instances, session reuse/revocation and
+one-use races. This is not a new production load-balancer architecture, and none
+of these runtime checks ran here.
+
+### Public candidates: primary-source findings
+
+CONFIRMED [Tailscale Funnel documentation](https://tailscale.com/docs/features/tailscale-funnel):
+public TLS-only ingress, limited ports 443/8443/10000, tailnet DNS hostname,
+TLS terminates on the local device; Funnel relay does not decrypt payloads.
+Thus do not claim relay plaintext callback visibility. Exact HTTP rejection
+and header/cookie behavior still need an inert test. CONFIRMED
+[pricing](https://tailscale.com/pricing): Personal Free is for non-commercial
+use; ProjectX eligibility is UNKNOWN, not established by a personal login.
+Business trial availability is not sustainable $0 approval. Account/policy/HTTPS
+configuration required; actual card/plan entitlement NEEDS ACCOUNT CHECK.
+[Logging documentation](https://tailscale.com/docs/features/logging) describes
+local and centrally collected diagnostics; callback fields in local failure
+or uploaded diagnostics are UNKNOWN. Disabling telemetry is not proof of
+request-log safety. Conditional candidate only, not preferred.
+
+CONFIRMED [ngrok Free limits](https://ngrok.com/docs/pricing-limits/free-plan-limits):
+assigned development domain and quotas; free browser interstitial can alter the
+flow. [Pricing](https://ngrok.com/pricing) advertises $0 plus finite usage credit;
+actual continuing entitlement must be reconciled with the limits before use.
+HTTP card requirement was not established; do not use card-verified TCP as a
+workaround. CONFIRMED [HTTPS termination](https://ngrok.com/docs/gateway/domains/tls-termination)
+is at ngrok for HTTP endpoints, so it can see callback queries. The
+[agent inspection interface](https://ngrok.com/docs/gateway/agent/web-inspection-interface)
+captures requests including query/body/headers and permits replay. That default
+is incompatible with real callback confidentiality. Free raw TLS passthrough
+is not assumed. [HTTP endpoint documentation](https://ngrok.com/docs/gateway/endpoints/http)
+also describes added forwarding headers. HTTPS URLs alone do not establish
+absence of an HTTP endpoint; explicit rejection/redirect policy would need proof.
+Request-inspection disabling would not prove cloud/error-log non-retention.
+Not recommended under current evidence.
+
+CONFIRMED [Cloudflare Tunnel documentation](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/)
+supports managed named tunnels/hostnames, but account, suitable domain/DNS and
+actual free entitlement must be checked; a new domain is not assumed free.
+[Always Use HTTPS](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/always-use-https/)
+offers an edge redirect control absent from the tested Quick Tunnel, subject to
+exact-host/method proof. Access policy is not query redaction. CONFIRMED
+[connector logging controls](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/monitor-tunnels/logs/)
+include local/remote diagnostics; no documented destination-query redaction
+guarantee resolving CHK-075 was established. Edge TLS also exposes plaintext
+to the provider. Named configuration alone does not fix a known connector error
+path; no suppress-logs workaround. Not recommended without new specific evidence.
+
+Other candidates: CONFIRMED [Codespaces billing](https://docs.github.com/en/billing/concepts/product-billing/github-codespaces)
+has account-dependent included quotas, not an unconditional $0 environment.
+[Forwarded ports](https://docs.github.com/en/codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace)
+add private-port login or public exposure and a different hosting/logging boundary.
+INFERRED no advantage here over local TLS; entitlement and confidentiality
+UNKNOWN. No obscure reverse-SSH service recommended merely for price.
+
+### Comparison (documentation facts versus untested deployment)
+
+CONFIRMED (C) means cited documentation/source or historical CHK-075, not live
+candidate proof. INFERRED (I), UNKNOWN (U), NEEDS TESTING (T) are explicit below.
+
+| Requirement | Local HTTPS | Tailscale Funnel | ngrok Free | Cloudflare named/free | Quick Tunnel history |
+| --- | --- | --- | --- | --- | --- |
+| Incremental recurring cost | I $0 on existing machine | U ProjectX Free eligibility | C advertised $0; U durable quota entitlement | U $0 if eligible account/domain already available | C $0 canary |
+| Card | C no transport purchase | U actual account | U HTTP eligibility; no paid workaround | U actual account/domain | C none used |
+| Account | C no transport account; Auth0 later | C required | C required | C required + DNS | C none for transport |
+| Stable hostname | I fixed exact local authority | C device/tailnet name dependent | C assigned dev domain | C owned configured hostname | C ephemeral |
+| Public exposure | I none with loopback-only binding | C public | C public endpoint | C public edge; Access optional | C public |
+| Public HTTP | I no public listener; local HTTP must fail pre-app | C TLS-only feature; T exact response | T explicit enforcement required | C redirect control; T deployed behavior | C FAILED: HTTP forwarded |
+| Third-party callback query | I no transport intermediary; Auth0 expected | C relay cannot decrypt; U diagnostics | C cloud TLS sees query | C edge TLS sees query | C edge TLS; local query leak |
+| Operator request logs | T local-only allowlist review | U request fields; C diagnostics | C inspection includes query | C connector/remote logs; U retention | C sampled info/error logs |
+| Failure/error leakage | T fake-sentinel proof required | U local/uploaded fields | U full error retention, known inspection | U no documented query-safe correction | C FAILED fake code/state |
+| HTTPS enforcement | T trusted local cert + no plaintext app ingress | C TLS-only ingress; T integration | T HTTPS endpoint alone insufficient | T exact redirect/reject boundary | C not HTTPS-only |
+| Host/authority | C API accepts; gateway gap; T solution | T exact Host and forwarded headers | C forwarding added; T preservation | T canonical/forwarded handling | C CHK-075 normal preserved, duplicate normalized |
+| Cookies | I compatible; T browser/port isolation cautions | T headers/browser | T interstitial and cookies | T complete path | C raw headers only; T browser |
+| CSRF | I one exact origin; T browser | T one origin integration | T one origin integration | T one origin integration | T not ProjectX-tested |
+| Auth0 exact callback | C HTTPS localhost example; T tenant | I exact HTTPS hostname | I exact assigned hostname | I exact configured hostname | I possible registration, NOT approved |
+| Free-tier stability | I no service quota; local maintenance | U commercial eligibility/beta | U quotas/credit/interstitial | U account/domain/plan | C no availability guarantee |
+| ProjectX changes | C API config fits; gateway authority unresolved | U none established | U none established | U none established | C no safe fix approved |
+| Owner decision | Required local trust + D006 specialization | Required eligibility/public trust decision | Required; confidentiality unresolved | Required; confidentiality unresolved | No real-use approval |
+| Major risk | Local CA/key/logs + gateway integration | Eligibility + diagnostic visibility + public attack surface | Callback inspection/cloud visibility | Known connector error path not resolved | Confirmed two failed gates |
+
+### Owner decision required — proposed CORE-AUTH-D008 (NOT APPROVED)
+
+QUESTION: May a $0, synthetic-only, local trusted HTTPS environment specialize
+the development authority/logout root, subject first to LOCAL-004 fake transport
+proof and later separately authorized gateway/account/environment integration?
+WHY IT MATTERS: D006's Render-host wording does not authorize a localhost logout
+root, and a local trust-store change affects this machine's HTTPS trust. D007
+does not authorize arbitrary architecture substitutions. No D004–D007 record
+is edited or revoked; D005 remains the future approved paid Render path, deferred
+under D007. This is a deployment specialization requiring explicit owner approval,
+not a new auth protocol or an approved production replacement.
+
+- OPTION A: exact `https://localhost:8443` (proposed port only) with callback
+  `/api/v1/staff-auth/callback` and logout `/`, per-user local certificate trust,
+  fake-only LOCAL-004 first. Pros: official localhost precedent, no public tunnel,
+  smallest third-party boundary. Cons: local root/key risk, browser proof and
+  explicit gateway authority compatibility follow-up needed.
+- OPTION B: exact `https://127.0.0.1` on 443 with IP SAN and root logout.
+  Pros: current gateway host syntax may fit without non-default authority.
+  Cons: Auth0 HTTPS IP acceptance and port/bind compatibility unproven; cannot
+  infer readiness or authorize privileged changes.
+- OPTION C: Tailscale Funnel only if sustainable $0 ProjectX eligibility and
+  diagnostic confidentiality can be established. Pros: public trusted certificate
+  and encrypted relay. Cons: accounts/software/public exposure, unresolved plan
+  and local/platform-log risks; no permission to start a trial.
+- OPTION D: defer real-provider verification and retain current blocked gates.
+  Pros: no new trust, cost or exposure. Cons: delays required staff foundation
+  and reservation work; does not implicitly authorize paid Render.
+
+RECOMMENDED TECHNICAL DEFAULT: A for a separately authorized **fake-only** test,
+with mkcert current-user trust + a reviewed mature TLS terminator (prefer reviewing
+stunnel's byte-forwarding configuration first; Caddy remains an alternative).
+Actual component/version, exact available port, certificate lifecycle and bounded
+commands must be reviewed before execution. If elevation/restart/machine-wide
+trust is required, STOP for approval. No option approved by this research.
+Record the eventual owner choice in the decision registry in a separately
+authorized decision task; D008 is only an unresolved proposal here.
+
+### Next bounded task: CORE-AUTH-02-ENV-LOCAL-004
+
+**Disposable localhost HTTPS transport verification** — PLANNED, execution
+BLOCKED pending explicit owner trust/tooling/URI authorization. Part2 required
+foundation for safe staff verification before SETTINGS-CORE-01 and reservation
+book/check-in/seating. Scope: disposable fake app and synthetic markers only,
+outside Git. No Auth0, ProjectX, database, account, public exposure or runtime
+repository edits in its initial experiment. Passing it is necessary but not
+sufficient to authorize actual ProjectX/Auth0 setup or declare LOCAL-001 READY.
+
+Proposed acceptance and regression checks (not executed):
+
+1. Review exact binaries/checksums/configuration and certificate/key storage;
+   snapshot only relevant trust/listener state. No paid dependency or service.
+2. Trusted browser TLS without warnings; correct localhost SAN; wrong-host and
+   untrusted certificates fail; no insecure flags. Explicit IPv4/IPv6 loopback
+   only, no LAN/public listener, no firewall/router/DNS change.
+3. Fake callback code/state received intact; exact Host/port retained; reject
+   malformed, duplicate/conflicting authority and spoofed forwarded trust.
+   Prove behavior at each parsing boundary, not just successful TLS.
+4. Plain HTTP GET/HEAD/POST/PUT/PATCH/DELETE, including fake bodies, must not be
+   processed as trusted HTTPS. Verify no bypass to the origin's app routes.
+5. Fake __Host-/Secure/HttpOnly/Lax/Path=/ cookies: distinct Set-Cookie fields,
+   actual browser storage, no JS read, deletion, host distinction and port-sharing
+   implications. Preserve Origin/Referer/CSRF-shaped headers and no-store on
+   302/401/403/404/500; these are transport checks, not real CSRF verification.
+6. Inspect safe normal and refused/timed-out/reset-origin, malformed-TLS/HTTP
+   and application-error diagnostics for unique fake query/cookie/auth sentinels.
+   Include terminator, fake app, browser, relevant Windows event/crash and any
+   telemetry surface. Unexpected query persistence FAILS; do not merely hide logs.
+7. Teardown exact test processes/listeners/certificates/trust entries/temp files;
+   verify trust reversal and no startup/service changes. Keep redacted evidence.
+8. Run pnpm map:check and git diff --check for evidence documentation; preserve
+   CHK-075, all previous checks/26 VERIFIED tasks and reference classifications.
+
+After a successful inert test, separately resolve gateway exact-authority and
+two-instance verification arrangements, D006 specialization and Auth0 Free
+account checks before authorizing any actual environment setup. Only a fully
+ready environment permits resuming the existing real-provider matrix. Keep
+RLS/restricted PostgreSQL16, issuer/sub, PKCE/state/nonce/one-use and privileged
+fail-closed requirements intact. Do not start Settings, reservations or Export.
+
+LOCAL-003 validation is documentation-only: pnpm map:check, git diff --check,
+JSON/IDs/DAG and exact historical/VERIFIED/decision/reference/scope comparisons.
+No runtime suite or provider behavior is claimed from this review. All findings
+above concern ProjectX/transport design, never SevenRooms evidence or parity.
