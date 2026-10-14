@@ -5,6 +5,50 @@ CORE-AUTH-D004. Base 84ed2938d7d1fa6155e744a50ef3d6aebe6f978c.
 Parent task IMPLEMENTED; controlled Auth0/production assurance remains NEEDS TESTING.
 No SevenRooms evidence or parity claims.
 
+## Current owner policy — CHK-077 / CORE-AUTH-D008
+
+2026-10-13. CONFIRMED OWNER APPROVED / PROJECTX DEPLOYMENT DECISION, Option A:
+**Localhost HTTPS verification authority and trust policy**. See decisions.json
+CORE-AUTH-D008 and ADR-0017 CHK-077 for the complete bounded policy. This resolves
+the historical CHK-076 proposed/unapproved policy question, not its runtime gaps.
+
+Exact origin `https://localhost:8443`; callback
+`https://localhost:8443/api/v1/staff-auth/callback`; post-logout candidate
+`https://localhost:8443/`. D008 specializes D006/D007 for zero-cost DEVELOPMENT
+verification only. D004-D007 unchanged; D005 future paid Render deferred. No
+production/staging, alternate host/IP/port/wildcard/HTTP approval; no federated
+logout, Auth0 SSO termination or new signed-out page.
+
+Current-user-only reversible temporary certificate trust where supported;
+localhost-only SAN. mkcert preferred certificate candidate; stunnel FIRST
+terminator candidate to review, not installation/version/configuration approval.
+Review supported versions and official integrity evidence, bounded commands,
+logs/failures, Host preservation, loopback binds and cleanup first. STOP if
+current-user trust is impossible or stunnel cannot meet the boundaries; no
+silent Caddy switch. No machine-wide trust, permanent CA/service/startup,
+elevation/restart without separate approval, warning acceptance or TLS bypass.
+Keys local/temporary outside Git; inventory trust and reverse only test changes.
+
+LOCAL-004 PLANNED, not executed: only after D008 publication with green CI and
+SEPARATE explicit execution authorization. Initial fake app/markers/cookies/
+headers only; TLS and fake backend loopback only; no ProjectX/Auth0/PostgreSQL,
+real OAuth/credentials/data, public/LAN listener, firewall/router change or tunnel.
+Prove HTTP reject/safe edge-only redirect before app/body processing, exact and
+hostile/malformed authority/forwarding, Origin/Referer transport, actual browser
+cookie storage/HttpOnly/deletion/two Set-Cookie/port-sharing, and normal/failure/
+browser/Windows/crash sentinel safety plus complete trust/listener/process cleanup.
+Raw headers alone are insufficient; persistent query leakage fails, not hidden
+by log suppression. All runtime claims remain NEEDS TESTING.
+
+Gateway localhost:8443 incompatibility remains; deterministic multi-instance
+routing, actual Free-account checks and restricted PostgreSQL16 setup require
+separate review/authorization before real-provider testing. A fake-only pass
+does not authorize real setup. LOCAL-GATE-001/002 BLOCKED; LOCAL-GATE-003 BLOCKED /
+NEEDS ACCOUNT CHECK; LOCAL-001 BLOCKED; CORE-AUTH-02 IMPLEMENTED; provider NEEDS
+TESTING; ENVIRONMENT READY NO. SETTINGS-CORE-01 PLANNED awaiting VERIFIED auth.
+Quick Tunnel NOT APPROVED; CHK-075/076 unchanged below. No system/provider/runtime
+changes in this decision task. Part3 and all SevenRooms classifications unchanged.
+
 ## Current transport design review — CHK-076 / CORE-AUTH-02-ENV-LOCAL-003
 
 2026-10-11. DOCUMENTED only, from clean local/fetched remote

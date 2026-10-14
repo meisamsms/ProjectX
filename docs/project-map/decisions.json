@@ -1784,6 +1784,142 @@
       "authorizationBoundary": "Documentation/design only. No cloudflared installation, tunnel, tenant/identity/configuration creation, infrastructure, code, purchase or push",
       "newReferenceEvidence": false,
       "parityClaim": false
+    },
+    {
+      "id": "CORE-AUTH-D008",
+      "title": "Localhost HTTPS verification authority and trust policy",
+      "status": "APPROVED",
+      "category": "OWNER APPROVED",
+      "classification": "PROJECTX DEPLOYMENT DECISION",
+      "ownerDecision": {
+        "optionId": "A",
+        "approvedBy": "Product owner",
+        "approvedAt": "2026-10-13",
+        "basis": "Explicit D008 documentation-only prompt approves Option A and exact authority/trust/tooling constraints; no LOCAL-004 execution authorization"
+      },
+      "specializesDecisionIds": [
+        "CORE-AUTH-D006",
+        "CORE-AUTH-D007"
+      ],
+      "preservesDecisionIds": [
+        "CORE-AUTH-D004",
+        "CORE-AUTH-D005",
+        "CORE-AUTH-D006",
+        "CORE-AUTH-D007"
+      ],
+      "scope": "DEVELOPMENT / VERIFICATION specialization only; not production, staging, general CA policy or public exposure approval",
+      "currentStageBudget": "$0",
+      "approvedAuthority": {
+        "origin": "https://localhost:8443",
+        "authority": "localhost:8443",
+        "scheme": "HTTPS",
+        "hostname": "localhost",
+        "port": 8443,
+        "callbackUri": "https://localhost:8443/api/v1/staff-auth/callback",
+        "postLogoutUri": "https://localhost:8443/",
+        "postLogoutPath": "/",
+        "prohibited": [
+          "127.0.0.1 as canonical hostname",
+          "Other hostname or port",
+          "Wildcard callback/logout",
+          "Localhost HTTP as application ingress"
+        ]
+      },
+      "trustPolicy": {
+        "scope": "CURRENT USER ONLY where supported",
+        "reversible": true,
+        "certificateTool": "mkcert — preferred certificate-generation/local-trust candidate for fake-only LOCAL-004",
+        "tlsTerminator": "stunnel — FIRST candidate to review, not version/configuration/installation approval",
+        "certificateSan": [
+          "localhost"
+        ],
+        "privateKey": "Local and temporary, restricted storage outside Git; no unnecessary SANs, IP/LAN/machine/public names or wildcards",
+        "requirements": [
+          "Review current supported exact tool versions before download; verify official source/checksum/signature evidence where available",
+          "Review bounded commands, logging/failure diagnostics, loopback binding, Host preservation and cleanup before separately authorized execution",
+          "Trusted real-browser certificate without warnings; no bypass, insecure flags or disabled verification",
+          "If current-user-only trust is impossible, STOP for owner decision",
+          "If stunnel cannot satisfy boundaries without weakening ProjectX, STOP; no silent Caddy/other switch; different terminator requires documented justification and owner approval if materially different"
+        ],
+        "prohibited": [
+          "Machine-wide or organization-wide trust",
+          "Permanent system CA installation",
+          "Permanent service registration/startup persistence",
+          "Elevation without separate approval",
+          "OS restart without separate approval",
+          "Certificate-warning acceptance or --ignore-certificate-errors"
+        ]
+      },
+      "listenerPolicy": "Only required loopback interfaces for TLS ingress and disposable backend; no 0.0.0.0, LAN/public listeners, router/port-forwarding/firewall openings, public DNS or tunnel. Loopback IP binding is not approval for an IP-literal canonical URL or certificate SAN.",
+      "plaintextPolicy": "Reject HTTP before fake application processing or demonstrate a safe edge-only redirect before application/auth/body processing; body-bearing HTTP must never reach fake app as trusted HTTPS",
+      "trustLifecycle": [
+        "Inspect relevant current-user trust state",
+        "Add only minimum approved temporary development trust during separately authorized LOCAL-004",
+        "Create only required localhost SAN fake-test certificate",
+        "Perform fake-only tests",
+        "Stop all test processes",
+        "Remove test certificate",
+        "Remove locally added test root/trust entry as appropriate without touching pre-existing trust",
+        "Remove private keys and temporary configuration",
+        "Verify trust/listener/process cleanup",
+        "Retain sanitized documentation evidence only; no certificate/key material in Git"
+      ],
+      "initialLocal004": {
+        "scope": "Disposable fake app, fake callback markers/cookies/headers/authorization values, loopback-only trusted HTTPS",
+        "excluded": [
+          "ProjectX",
+          "Auth0",
+          "PostgreSQL",
+          "Real OAuth/code/state/nonce/session/credentials",
+          "Customer/reference/employee data"
+        ],
+        "requiredEvidence": [
+          "Normal/failure/error terminator and fake-app logs, practical browser history, relevant Windows event/diagnostic and crash paths searched for fake sentinels; unacceptable persistent code/state leakage FAILS, not hidden by suppression",
+          "Real browser Secure/HttpOnly/SameSite=Lax/host-only/Path=/ storage, JS exclusion, deletion, two distinct Set-Cookie fields, hostname and port-sharing implications; raw curl alone insufficient",
+          "Normal localhost:8443, wrong/missing where permitted/port-modified/malformed/duplicate-conflicting authority and spoofed X-Forwarded-Host/X-Forwarded-Proto/Forwarded/X-Forwarded-For measured",
+          "Same-origin/hostile/missing Origin and Referer transport cases; no CORS workaround; actual ProjectX CSRF testing later"
+        ]
+      },
+      "d006Specialization": "Only zero-cost localhost DEVELOPMENT verification may use AUTH0_POST_LOGOUT_URI candidate https://localhost:8443/. D006 historical Render root decision unchanged. No federated logout/SSO termination, new signed-out page, staging or production localhost approval.",
+      "remainingPrerequisites": [
+        "D008 separate exact-SHA publication and green CI",
+        "Separate explicit LOCAL-004 execution authorization and bounded tool/command review",
+        "Successful inert transport proof",
+        "Bounded exact gateway localhost:8443 compatibility review/design/testing; current gateway rejects it",
+        "Deterministic multi-instance verification routing",
+        "Actual Auth0 Free account capability checks",
+        "Separately authorized PostgreSQL16 restricted-runtime environment",
+        "Separate actual ProjectX/Auth0 setup and real-provider verification authorization"
+      ],
+      "quickTunnel": "NOT APPROVED for real callbacks; CHK-075 unchanged: public HTTP reached origin and fake callback values appeared in connector failure logs",
+      "preservedState": {
+        "coreAuth02": "IMPLEMENTED",
+        "local001": "BLOCKED",
+        "local004": "PLANNED / eligible for separate execution authorization only after publication and green CI",
+        "gate001": "BLOCKED",
+        "gate002": "BLOCKED",
+        "gate003": "BLOCKED / NEEDS ACCOUNT CHECK",
+        "providerVerification": "NEEDS TESTING",
+        "environmentReady": false,
+        "settingsCore01": "PLANNED awaiting VERIFIED authentication"
+      },
+      "priorityPart": 2,
+      "coreWorkflowAdvanced": "Trusted staff authentication before reservation-required Venue settings and subsequent staff reservation book/check-in/seating; Part3 deferred",
+      "affectedRoadmapTasks": [
+        "CORE-AUTH-02-ENV-LOCAL-004",
+        "CORE-AUTH-02-ENV-LOCAL-001",
+        "CORE-AUTH-02",
+        "SETTINGS-CORE-01"
+      ],
+      "architectureFile": "docs/architecture/ADR-0017-zero-cost-provider-verification.md",
+      "verificationFile": "docs/security/staff-session-verification.md",
+      "evidenceId": "CHK-077",
+      "executionAuthorized": false,
+      "productionDeploymentApproval": false,
+      "stagingDeploymentApproval": false,
+      "newReferenceEvidence": false,
+      "parityClaim": false,
+      "notes": "Policy recorded only. No installation, root CA/certificate/trust change, listener, provisioning, purchase or runtime changes. D005 future approved paid Render remains deferred under D007. CHK-076 proposal/options remain historical; this explicit owner selection resolves its policy question, not runtime safety gates."
     }
   ],
   "unresolvedQuestions": [
@@ -2070,7 +2206,8 @@
     "CORE-AUTH-D004",
     "CORE-AUTH-D005",
     "CORE-AUTH-D006",
-    "CORE-AUTH-D007"
+    "CORE-AUTH-D007",
+    "CORE-AUTH-D008"
   ],
   "projectDocumentGap": "decisions.json was absent before ARCH-001; created in the previous checkpoint. Owner approvals and corresponding ADRs are now recorded.",
   "evidenceLabels": [

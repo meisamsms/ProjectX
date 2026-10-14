@@ -1965,20 +1965,20 @@
       "priorityDecisionId": "PRIORITY-D001",
       "ownerPolicyDecisionId": "CORE-AUTH-D007",
       "currentStageBudget": "$0",
-      "scope": "Proposed disposable loopback-only trusted TLS and fake local app, fake callback/cookies/headers and failure diagnostics; explicit owner trust/tooling/authority approval required before any execution.",
+      "scope": "D008-approved policy for future disposable fake-only localhost:8443 HTTPS experiment; not executed. mkcert preferred certificate candidate; stunnel first terminator candidate for bounded review.",
       "outOfScope": "Auth0 or cloud accounts, real OAuth, ProjectX/DB setup, public exposure, gateway/runtime/test changes, machine-wide trust/elevation/restart without separate permission, paid resources, Settings/reservations/Export, push.",
       "coreWorkflowAdvanced": "Safe transport prerequisite for staff provider verification before SETTINGS-CORE-01 and reservation book/check-in/seating.",
       "whyRequiredNow": "CHK-076 identifies plausible local-only alternative after confirmed CHK-075 public-HTTP and callback-log failures. Documentation cannot prove local TLS trust, logging or browser behavior.",
-      "implementationPrerequisites": "CORE-AUTH-01/PEOPLE-CORE-01 VERIFIED; LOCAL-003 DOCUMENTED in CHK-076 is design evidence, not a runtime gate. Explicit owner decision and bounded command/component review remain required. No dependency on parent CORE-AUTH-02 VERIFIED.",
+      "implementationPrerequisites": "CORE-AUTH-01/PEOPLE-CORE-01 VERIFIED; LOCAL-003 DOCUMENTED/CHK-076 retained. D008 Option A APPROVED in CHK-077; D008 publication/green CI, separate explicit LOCAL-004 authorization and exact version/artifact/command review still required.",
       "acceptanceCriteria": [
-        "Owner approves exact local authority, tool/version, trust stores and reversible certificate lifecycle before execution; $0 and no accounts",
+        "D008 exact https://localhost:8443 origin/callback/root logout and localhost-only SAN; current-user-only reversible trust, mkcert preferred and stunnel first candidate; version/artifact/command review before separately authorized execution; $0/no accounts",
         "Fake app only initially; trusted browser TLS without warnings or bypass; exact SAN and loopback-only IPv4/IPv6; no public/LAN listener",
         "HTTP and fake write bodies never processed as equivalent HTTPS; no alternate plaintext browser ingress",
         "Exact Host/port, spoofed forwarding and malformed/conflicting authority behavior measured; fake callback intact",
         "Actual fake-cookie storage, Secure/HttpOnly/Lax/host-only/Path, separate Set-Cookie and deletion; Origin/Referer preservation and no-store checks",
         "Normal/failure logs, browser and relevant Windows diagnostics reviewed with fake sentinels; no callback leakage hidden by log suppression",
         "Exact processes/listeners/trust/temp artifacts removed and absence/reversal verified; sanitized evidence only",
-        "Passing inert transport alone does not approve ProjectX/Auth0 setup: gateway authority, multi-instance arrangement, D006 specialization and LOCAL-GATE-003 remain separate prerequisites"
+        "Passing fake transport alone does not approve ProjectX/Auth0 setup: exact gateway authority, multi-instance routing, actual Free account, restricted PostgreSQL16 and real-provider authorization remain separate prerequisites"
       ],
       "verificationCommands": [
         "Future bounded transport/browser/log/cleanup commands must be reviewed and separately authorized before execution",
@@ -1993,8 +1993,12 @@
       "specificationFile": "docs/architecture/ADR-0017-zero-cost-provider-verification.md",
       "evidenceId": "CHK-076",
       "environmentReady": false,
-      "executionGate": "BLOCKED pending explicit owner trust/tooling/URI decision and separate LOCAL-004 execution authorization; not started.",
-      "ownerDecisionRequired": true
+      "executionGate": "PLANNED / policy approved; eligible for separate execution authorization only after D008 publication with green CI. No execution authorized now; no specific tool version/configuration/installation, trust change or setup approved.",
+      "ownerDecisionRequired": false,
+      "deploymentDecisionId": "CORE-AUTH-D008",
+      "policyEvidenceId": "CHK-077",
+      "executionAuthorized": false,
+      "policyConstraints": "Exact localhost:8443; no alternate host/port/IP or wildcard. Current-user-only reversible trust; no machine-wide trust, permanent CA/service/startup, TLS bypass or elevation/restart without separate approval. TLS/backend loopback only. STOP if current-user trust or stunnel safety cannot be satisfied; no silent terminator switch."
     },
     {
       "id": "CORE-AUTH-02-ENV-LOCAL-002",
@@ -2083,7 +2087,7 @@
       "priorityDecisionId": "PRIORITY-D001",
       "ownerPolicyDecisionId": "CORE-AUTH-D007",
       "currentStageBudget": "$0",
-      "scope": "Specify and, only after owner selection, safety gates and separate authorization, create an isolated $0 local HTTPS/API/PostgreSQL16 restricted-runtime environment with Auth0 Free development OIDC for one synthetic identity. Quick Tunnel is not approved; local HTTPS is only a candidate under CHK-076.",
+      "scope": "Specify and, only after safety gates and separate authorization, create an isolated $0 local HTTPS/API/PostgreSQL16 restricted-runtime environment with Auth0 Free development OIDC for one synthetic identity. D008 approves exact localhost:8443 policy only; runtime compatibility unverified. Quick Tunnel not approved.",
       "outOfScope": "Paid infrastructure/card/upgrades; Render provisioning; public API/DB; application/gateway implementation; production/staging; Settings/reservations/Export; new auth code",
       "coreWorkflowAdvanced": "Safe real-provider staff sessions required before SETTINGS-CORE-01 and reservation book/check-in/seating; prevents unverified staff identity/transport and tenant access from reaching core workflows",
       "whyRequiredNow": "Existing local gateway and CORE-AUTH-02 implementation cannot establish real-provider safety without a controlled environment; owner forbids paid current-stage provisioning",
@@ -2102,14 +2106,14 @@
           "SETTINGS-CORE-01",
           "RESERVATIONS-CORE-01"
         ],
-        "requiredPredecessor": "Owner local trust/authority/logout specialization decision, then separately authorized LOCAL-004 inert transport proof and gateway compatibility/account checks; CHK-076 is design evidence only",
-        "ownerDecisionRequired": true
+        "requiredPredecessor": "D008 APPROVED policy publication/green CI, then separately authorized LOCAL-004 inert proof, bounded gateway authority/multi-instance compatibility and actual Auth0 Free/restricted-runtime checks; no environment setup authorized",
+        "ownerDecisionRequired": false
       },
       "acceptanceCriteria": [
         "$0/no-card/no-paid-trial feature eligibility confirmed before any setup; otherwise STOP",
         "Resolve LOCAL-GATE-001/002 before READY/execution; satisfy every ADR-0017 compatibility gate before live callback",
         "Only approved canonical HTTPS ingress usable by browser; no public tunnel selected; API/PG16 private, runtime non-owner/no SUPERUSER/no BYPASSRLS/elevated role, RLS and migration/runtime separation verified",
-        "Exact owner-approved HTTPS origin/Host/callback/logout root; Secure cookies/multiple Set-Cookie/CSRF/forwarding/cache/log safety and origin-change handling demonstrated; localhost specialization not yet approved",
+        "Exact D008-approved https://localhost:8443 origin/Host/callback/root logout; Secure cookies/multiple Set-Cookie/CSRF/forwarding/cache/log safety and origin-change handling demonstrated; policy approved, runtime proof still required",
         "One synthetic exact issuer/subject binding with scoped membership/VenueAccess, no email linking; secure secret handling outside Git",
         "Environment readiness YES only on complete environment proof; then existing full CORE-AUTH-02 real-provider matrix, not new authentication code. Positive assurance or existing fail-closed alternative needs its own evidence"
       ],
@@ -2127,13 +2131,14 @@
       "specificationFile": "docs/architecture/ADR-0017-zero-cost-provider-verification.md",
       "evidenceId": "CHK-075",
       "environmentReady": false,
-      "executionGate": "BLOCKED: CHK-075 failures preserved; CHK-076 local HTTPS recommendation is not setup approval. LOCAL-004, owner specialization, gateway authority compatibility and actual Auth0 Free checks required. No ProjectX/Auth0 setup authorized.",
+      "executionGate": "BLOCKED: D008 resolves policy selection only. CHK-075 failures/CHK-076 gaps retained. Publication/green CI and separate LOCAL-004 authorization/proof, gateway compatibility and actual account/runtime checks required; environment NO.",
       "alternativeReview": {
         "evidenceId": "CHK-076",
         "classification": "INFERRED viable candidate / NEEDS TESTING",
         "preferred": "Local-only trusted HTTPS — PREFERRED / NEEDS INERT TEST",
         "historicalDependency": "LOCAL-002/CHK-075 retained as failed Quick Tunnel evidence, removed from mandatory-success dependencies; no requirement to rehabilitate the rejected transport. LOCAL-003 DOCUMENTED review leads to proposed LOCAL-004; no runtime gate passed.",
-        "ownerDecision": "Proposed CORE-AUTH-D008 — OWNER DECISION REQUIRED / NOT APPROVED",
+        "ownerDecision": "CORE-AUTH-D008 — APPROVED Option A; CHK-077. Exact localhost:8443/current-user trust/mkcert preferred/stunnel first candidate; no execution authorization.",
+        "policyEvidenceId": "CHK-077",
         "gatewayGap": "API configuration accepts HTTPS localhost; existing gateway canonical validator rejects localhost/non-default port authority. Separate bounded review/authorization required.",
         "gates": "LOCAL-GATE-001 BLOCKED; LOCAL-GATE-002 BLOCKED; LOCAL-GATE-003 BLOCKED / NEEDS ACCOUNT CHECK"
       },

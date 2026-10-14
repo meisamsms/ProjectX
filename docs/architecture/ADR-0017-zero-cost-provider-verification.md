@@ -997,3 +997,131 @@ LOCAL-003 validation is documentation-only: pnpm map:check, git diff --check,
 JSON/IDs/DAG and exact historical/VERIFIED/decision/reference/scope comparisons.
 No runtime suite or provider behavior is claimed from this review. All findings
 above concern ProjectX/transport design, never SevenRooms evidence or parity.
+
+## CHK-077 — CORE-AUTH-D008 owner approval (2026-10-13)
+
+CONFIRMED OWNER APPROVED / PROJECTX DEPLOYMENT DECISION:
+**CORE-AUTH-D008 — Localhost HTTPS verification authority and trust policy**.
+The owner explicitly selected **Option A** from CHK-076, with the bounded policy
+below. This dated approval resolves the earlier proposed/unapproved policy state;
+CHK-075/076 and all prior evidence remain unchanged as historical records.
+Decision registry: `docs/project-map/decisions.json`, CORE-AUTH-D008.
+
+This is DEVELOPMENT / VERIFICATION only, not production/staging approval,
+production architecture, general certificate policy or permission for exposure.
+D004-D007 are unchanged. D005 remains future approved paid Render development,
+deferred under D007's current $0 budget. D006 remains historical authority for the
+Render root logout; D008 specializes D006/D007 only for this local verification
+path. No Auth0 federated logout, SSO termination or signed-out page is approved.
+
+### Exact approved authority
+
+| Setting | Approved value |
+| --- | --- |
+| Canonical origin | `https://localhost:8443` |
+| Host/authority | `localhost:8443` |
+| Callback URI | `https://localhost:8443/api/v1/staff-auth/callback` |
+| Post-logout URI candidate | `https://localhost:8443/` |
+| Post-logout path | `/` |
+| Certificate SAN | DNS name `localhost` only |
+
+No alternate hostname, IP-literal canonical URL, port, wildcard or localhost HTTP
+application ingress is authorized. Do not add unnecessary SANs: 127.0.0.1, LAN or
+machine hostname, wildcards and public domains require separate approval. Binding
+a socket to a loopback IP does not authorize using that IP as the browser origin
+or certificate name. Host/authority behavior remains NEEDS TESTING. The existing
+gateway rejects bare localhost and non-default port authority: approval is NOT
+gateway compatibility evidence or permission to change that validator.
+
+### Trust and tooling policy, not execution permission
+
+- CURRENT USER ONLY, where supported; local, temporary and reversible trust.
+  If current-user-only trust is impossible, STOP for owner decision. No
+  machine-wide/organization-wide trust or permanent system CA installation.
+- **mkcert** is the preferred certificate-generation/local-trust candidate for
+  the future fake-only experiment. Exact current version must be reviewed before
+  download, with official source/checksum/signature evidence verified where
+  available. No tool, root CA or certificate is installed/created here.
+- **stunnel** is the FIRST TLS-terminator candidate to review because a narrow
+  TLS byte-forwarder avoids an application-platform replacement. This approves
+  neither a version nor installation/configuration/service registration/startup
+  persistence. Review supported version, official artifact integrity, normal and
+  failure logging, loopback bind, Host preservation, no public/LAN plaintext
+  listener and cleanup before any separately authorized execution.
+- If stunnel cannot satisfy the boundaries without weakening ProjectX, STOP.
+  No silent Caddy/other switch; another terminator needs explicit documented
+  justification and owner approval if materially different.
+- Browser trust must be genuine and warning-free, with SAN matching; no Common
+  Name-only shortcut, warning acceptance, disabled certificate validation,
+  `--ignore-certificate-errors` or other insecure flags. No elevation or OS
+  restart without separate approval. No permanent service or startup changes.
+- Private keys stay local, temporary, restricted and outside Git. Inventory
+  relevant current-user trust first; add only the minimum approved temporary
+  trust during separately authorized LOCAL-004; create only the required test
+  certificate; run fake tests; stop all processes; remove test certificate and
+  locally added root/trust entry as appropriate, preserving pre-existing trust;
+  remove keys/temp configuration; verify trust/listener/process cleanup; retain
+  sanitized documentation only. Never commit certificate/private-key material.
+
+### Future LOCAL-004 acceptance boundaries
+
+LOCAL-004 remains **PLANNED**, eligible for separate explicit execution
+authorization only AFTER D008 documentation is published with green CI. It is
+not IMPLEMENTED, VERIFIED or DONE. Review exact bounded commands before execution.
+This decision-recording task runs no experiment.
+
+Initial test: fake disposable app, callback markers, cookies, headers and
+authorization values only. No ProjectX, Auth0, PostgreSQL, real OAuth code/state/
+nonce/session/credentials or customer/reference/employee data. Both TLS ingress
+and fake backend bind only required loopback interfaces. No 0.0.0.0, LAN/public
+exposure, router/port-forwarding/firewall change, public DNS or public tunnel.
+
+HTTPS-only application/auth traffic: HTTP must be rejected before fake app
+processing, or redirected safely at the edge before application/auth/body
+processing. Body-bearing HTTP must not arrive at the app as trusted HTTPS.
+Hardcoded forwarded https is not proof. CHK-075 is the unchanged negative
+precedent, not a risk acceptance.
+
+Required fake-only proof remains NEEDS TESTING:
+
+1. Sentinel leakage in terminator normal/failure/error logs, fake-app logs,
+   practical browser history, relevant Windows diagnostics/events and crash
+   paths. Unacceptable persistent fake code/state leakage FAILS; suppression
+   must not hide it. No real callback permitted.
+2. Real-browser Secure/HttpOnly/SameSite=Lax/host-only/Path=/ behavior: two
+   distinct Set-Cookie fields, storage, JavaScript exclusion, deletion, hostname
+   handling and cookies' port-sharing implications. Raw curl headers alone fail
+   to establish browser behavior.
+3. Normal localhost:8443, wrong Host, missing Host where protocol permits,
+   modified port, malformed and safely testable duplicate/conflicting authority;
+   spoofed X-Forwarded-Host, X-Forwarded-Proto, Forwarded and X-Forwarded-For.
+   Measure behavior; do not relax ProjectX authority trust.
+4. Same-origin, hostile and absent Origin and Referer. This is transport proof,
+   not actual ProjectX CSRF enforcement. No CORS workaround.
+
+### Remaining gates and priority
+
+Passing LOCAL-004 is necessary but insufficient for real environment setup.
+Remaining prerequisites include exact gateway localhost:8443 compatibility,
+deterministic multi-instance routing, actual Auth0 Free capabilities, separately
+authorized local PostgreSQL16 restricted-runtime setup and real-provider
+verification authorization. No Auth0 tenant/application/user, ProjectX setup,
+database or real login is authorized by D008.
+
+CORE-AUTH-02 IMPLEMENTED; LOCAL-001 BLOCKED; LOCAL-GATE-001/002 BLOCKED;
+LOCAL-GATE-003 BLOCKED / NEEDS ACCOUNT CHECK; provider NEEDS TESTING; ENVIRONMENT
+READY NO; SETTINGS-CORE-01 PLANNED awaiting VERIFIED authentication. Quick Tunnel
+remains NOT APPROVED for real callbacks: public HTTP reached origin and fake
+callback values appeared in connector error logs. No rerun or suppression fix.
+
+Part2 REQUIRED FOUNDATION: trusted staff authentication precedes reservation-
+required Venue settings and subsequent staff reservation workflows. Core gate
+UNMET; Part3/Export remain deferred. No reference classifications or U-001/002/003
+changed and no SevenRooms parity claims made.
+
+Next execution task remains LOCAL-004, but the immediate administrative
+prerequisite is separate exact-SHA publication approval for this decision commit
+and green CI, followed by separate LOCAL-004 execution authorization. No push
+in this task. Validate map/diff, JSON/IDs/DAG, all 76 prior checks, 26 VERIFIED
+tasks, D004-D007, reference history and six-document-only scope; no runtime
+verification claimed from recording owner policy.

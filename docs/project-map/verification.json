@@ -2924,6 +2924,88 @@
       "noSecrets": true,
       "noProvisioning": true,
       "noPush": true
+    },
+    {
+      "id": "CHK-077",
+      "taskId": "CORE-AUTH-D008",
+      "date": "2026-10-13",
+      "status": "DOCUMENTED",
+      "classification": "CONFIRMED owner policy; transport/browser/account/environment behavior remains NEEDS TESTING",
+      "startingLocalSha": "a5deb1211b57302363eee5e657c297f499f17d33",
+      "branch": "people-03-accounts-read",
+      "authorization": "Record explicit owner Option A policy in six relevant docs and one local child commit; no installation/trust/certificate/listener/provider/runtime/test changes or push",
+      "decisionId": "CORE-AUTH-D008",
+      "decisionStatus": "APPROVED",
+      "ownerSelection": "A",
+      "category": "OWNER APPROVED",
+      "decisionClassification": "PROJECTX DEPLOYMENT DECISION",
+      "result": "D008 APPROVED for zero-cost localhost DEVELOPMENT verification only. Policy selection resolved, no experiment/setup approved or performed.",
+      "approvedPolicy": {
+        "origin": "https://localhost:8443",
+        "callback": "https://localhost:8443/api/v1/staff-auth/callback",
+        "postLogout": "https://localhost:8443/",
+        "trust": "Current-user-only reversible temporary trust; STOP if impossible; localhost-only SAN",
+        "certificateTool": "mkcert preferred candidate; current version/integrity and bounded commands require review before separate execution",
+        "tlsTerminator": "stunnel FIRST candidate to review; not version/configuration/installation approval; STOP if unsafe, no silent switch",
+        "prohibited": "Other canonical hostname/IP/port/wildcards/HTTP, machine-wide/organization-wide/permanent trust, TLS bypass, permanent service/startup, elevation/restart without separate approval, public/LAN exposure, Auth0/ProjectX/PostgreSQL setup, real OAuth/data, spend"
+      },
+      "evidenceFiles": [
+        "docs/project-map/decisions.json",
+        "docs/architecture/ADR-0017-zero-cost-provider-verification.md",
+        "docs/security/staff-session-verification.md"
+      ],
+      "priorPublicationEvidence": {
+        "commit": "a5deb1211b57302363eee5e657c297f499f17d33",
+        "run": 38192015438,
+        "job": 114626603571,
+        "pnpmVerify": "PASS",
+        "pnpmVerifyDb": "PASS",
+        "postgresql": "16.15",
+        "databaseTests": "210/210 across 21 files",
+        "limitation": "Prior exact-SHA publication result, not CI for this new decision commit and not real-provider proof"
+      },
+      "requiredFutureEvidence": [
+        "Loopback-only TLS/backend; no HTTP app/body processing; genuine browser trust and exact SAN",
+        "Real browser Secure/HttpOnly/Lax/host-only/Path cookies, two Set-Cookie/storage/deletion/JS exclusion/port sharing",
+        "Exact and wrong/missing/port-modified/malformed/duplicate Host and spoofed forwarding, Origin/Referer transport",
+        "Fake sentinel normal/failure/browser/Windows/crash log safety; leakage fails, no suppression workaround",
+        "Reversible test-only trust/certificate/key/config/process/listener cleanup"
+      ],
+      "remainingPrerequisites": [
+        "Publish D008 exact local SHA with separate approval and green CI",
+        "Separate explicit LOCAL-004 execution authorization and bounded tooling review",
+        "Successful inert test then gateway exact localhost:8443 compatibility, multi-instance routing, actual Auth0 Free and restricted PostgreSQL16 checks",
+        "Separate actual environment and real-provider verification authorization"
+      ],
+      "preservedState": {
+        "previousChecks": 76,
+        "verifiedTasks": 26,
+        "decisions": "All prior decision objects including D004-D007 unchanged; D008 added, D006 historical Render root retained",
+        "local004": "PLANNED / eligible for separate authorization after publication/green CI; not executed",
+        "local004ExecutionAuthorized": false,
+        "coreAuth02": "IMPLEMENTED",
+        "local001": "BLOCKED",
+        "gate001": "BLOCKED",
+        "gate002": "BLOCKED",
+        "gate003": "BLOCKED / NEEDS ACCOUNT CHECK",
+        "providerVerification": "NEEDS TESTING",
+        "environmentReady": false,
+        "settingsCore01": "PLANNED awaiting VERIFIED authentication",
+        "quickTunnel": "NOT APPROVED; CHK-075 public HTTP/error-query failures and CHK-076 review unchanged",
+        "priority": "Part2 REQUIRED FOUNDATION; core gate UNMET; PEOPLE-09/09B/10 Part3 deferred; IMPL-MOD-14 IN_PROGRESS",
+        "reference": "All SevenRooms classifications and U-001/U-002/U-003 unchanged; no parity claim"
+      },
+      "nextExactTask": "CORE-AUTH-02-ENV-LOCAL-004 — Disposable localhost HTTPS transport verification",
+      "nextExecutionGate": "D008 exact-SHA publication approval and green CI, then separate explicit LOCAL-004 authorization; no automatic execution",
+      "validation": "PASS: pnpm map:check (144 screens/16 modules/59 tasks); git diff --check; valid JSON/unique IDs/acyclic task DAG; all 76 prior CHK including075/076, all30 prior decision objects including D004-D007, 26 VERIFIED/57 unrelated tasks and prior ADR/security text preserved; other top-level/reference/dependency data unchanged; six authorized docs only, no untracked files, secrets/certificate material/binaries/runtime changes. No runtime tests performed.",
+      "noRuntimeChanges": true,
+      "noRepositoryTestChanges": true,
+      "noSecrets": true,
+      "noCertificateMaterial": true,
+      "noBinaries": true,
+      "noProvisioning": true,
+      "noSystemChanges": true,
+      "noPush": true
     }
   ],
   "unresolvedQuestions": [
