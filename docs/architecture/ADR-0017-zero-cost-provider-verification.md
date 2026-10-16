@@ -1125,3 +1125,118 @@ and green CI, followed by separate LOCAL-004 execution authorization. No push
 in this task. Validate map/diff, JSON/IDs/DAG, all 76 prior checks, 26 VERIFIED
 tasks, D004-D007, reference history and six-document-only scope; no runtime
 verification claimed from recording owner policy.
+
+## CHK-078 — LOCAL-004 package preflight stopped (2026-10-15)
+
+CONFIRMED: the owner separately authorized the disposable fake-only experiment
+after publication of `8d98e296f29401bc37eaa0e2fa82f3a758669424`. Local HEAD,
+fetched remote and clean worktree matched. Starting-commit CI38499363640 /
+job115642382623 passed both gates, DB210/210 in21 files on PostgreSQL16.15.
+This is prior publication evidence, not localhost transport or provider proof.
+
+**LOCAL-004 = BLOCKED — LOCAL-004-PACKAGE-001.** The authorized prompt explicitly
+requires STOP if the available Windows package requires elevation or permanent
+installation. No installer was executed and no UAC was triggered. No mkcert,
+certificate, CA, trust, app, listener, browser experiment or alternate terminator
+was started. D008 remains APPROVED; its authority/trust constraints are unchanged.
+
+### Official artifact findings
+
+- CONFIRMED: [mkcert latest-release API](https://api.github.com/repos/FiloSottile/mkcert/releases/latest)
+  returned [v1.4.4](https://github.com/FiloSottile/mkcert/releases/tag/v1.4.4),
+  published 2022-04-26. This establishes the latest upstream release, not a
+  separately documented support commitment. The
+  [version-pinned Windows source](https://raw.githubusercontent.com/FiloSottile/mkcert/v1.4.4/truststore_windows.go)
+  uses CertOpenSystemStoreW ROOT. No `mkcert -install`, binary download or
+  execution occurred; mkcert local SHA256 is NOT AVAILABLE. An explicit
+  CurrentUser-only import/removal would need bounded review before execution.
+- CONFIRMED: [stunnel downloads](https://www.stunnel.org/downloads.html) and
+  [release notes](https://www.stunnel.org/NEWS.html) identify stable5.82,
+  dated2026-09-17;5.83 is unreleased/beta. The listed stable Windows artifact is
+  [stunnel-5.82-win64-installer.exe](https://www.stunnel.org/downloads/stunnel-5.82-win64-installer.exe).
+  No Windows portable archive is listed on that inspected page.
+- CONFIRMED: downloaded installer SHA256
+  `722c1ad626919af2b0034666b4d19cc4795e925c32f60e8f3c59af4fb3ad2dfc`
+  exactly matches the [official checksum](https://www.stunnel.org/downloads/stunnel-5.82-win64-installer.exe.sha256).
+  PowerShell Get-AuthenticodeSignature returned Valid / Signature verified,
+  signer Open Source Developer Michał Trojnara. Upstream detached PGP signature
+  exists but was not independently verified; do not claim otherwise.
+- CONFIRMED: static inspection of that signed installer found
+  `requestedExecutionLevel="highestAvailable"`. The official5.82 source archive's
+  tools/stunnel.nsi corroborates Highest execution level and persistent
+  install/uninstall registry metadata, uninstaller and shortcuts. These are
+  installer findings, not service execution or observed UAC behavior.
+- INFERRED: highestAvailable can prompt an administrator for elevation; it does
+  not prove every account must elevate. The installation/persistence model is
+  outside this portable-only task regardless. The explicit stop condition was
+  applied before execution, not tested by launching the installer.
+- UNKNOWN: safe non-executing extraction and portable operation of its payload.
+  No payload extraction/build/installer workaround was attempted after the
+  stop condition. This does NOT establish stunnel runtime unsuitability or that
+  portable operation is impossible. No Caddy/other switch is approved.
+
+### Cleanup and evidence limitations
+
+CONFIRMED: installer, checksum and source archive were downloaded only under
+`C:\Users\barak\AppData\Local\Temp\projectx-local004-20261015-307bcb7`.
+The resolved exact directory and parent were checked before removal. All three
+files and the directory were removed; absence confirmed. An earlier empty
+sandbox-temp directory was not present at the same absolute parent on the next
+read; nothing was downloaded or executed there. No temporary material entered Git.
+
+CONFIRMED: no test CA/leaf/private key or thumbprint was ever created; neither
+CurrentUser nor LocalMachine trust was modified. Postchecks found zero
+LOCAL004-labelled roots, zero8443 listeners, zero stunnel processes/services and
+zero LOCAL004/stunnel-named scheduled tasks. No backend or port was allocated,
+and no startup action occurred. These bounded checks are NOT a full trust-store
+diff, unrelated-system audit or demonstrated certificate-trust reversal. No
+certificate cleanup or post-removal browser test was applicable. No software was
+installed, no system elevation/restart/purchase/public/LAN exposure occurred.
+
+NEEDS TESTING: every runtime acceptance criterion remains unexecuted: trusted and
+untrusted browser TLS; IP-literal rejection; HTTPS/plaintext methods/body isolation;
+normal/wrong/missing/port-modified/malformed/duplicate Host; forwarding headers;
+callback/query and Authorization/Cookie normal/failure logs; Origin/Referer;
+multiple Set-Cookie and browser Secure/HttpOnly/Lax/host-only/deletion/port-sharing;
+no-store/status; browser callback history and Windows diagnostic sentinel checks.
+No sentinel was sent. Do not interpret NOT RUN as PASS or a security failure.
+
+### Owner decision and exact resume boundary
+
+QUESTION: Which bounded acquisition review may resolve LOCAL-004-PACKAGE-001
+without launching the installer or relaxing the no-elevation/no-persistence policy?
+WHY IT MATTERS: portable execution was required, but the reviewed official Windows
+artifact is an installer; safe payload acquisition/execution has not been established.
+
+- OPTION A — Separately authorize non-executing extraction feasibility and
+  integrity/dependency review of the exact signed official package, using a
+  reviewed already-available extraction method only. Pros: retains stunnel and
+  avoids installer execution. Cons: extraction tooling and portable dependency/
+  config behavior remain UNKNOWN; review alone does not authorize payload execution.
+- OPTION B — Obtain an official upstream portable distribution/confirmation.
+  Pros: clearer supported portable packaging. Cons: none listed at preflight;
+  availability and timing UNKNOWN. No outbound contact authorized here.
+- OPTION C — Separately approve review of a different terminator, such as Caddy.
+  Pros: alternative packaging may fit. Cons: changed tool/trust/logging surface
+  requires a new bounded review; no automatic switch or installation.
+- OPTION D — Defer LOCAL-004. Pros: no additional system risk. Cons: staff
+  real-provider verification and dependent reservation work remain blocked.
+
+RECOMMENDED TECHNICAL DEFAULT: A, review only; no elevation, installer execution,
+installation, certificate/trust change, service/startup or alternative tool.
+EXACT CHANGE REQUESTED: separate owner authorization for this non-executing
+portable acquisition review, not permission to run the installer. RESUME POINT:
+LOCAL-004 step4 package gate; after a permitted acquisition path is reviewed,
+revalidate repository/versions and remaining steps under bounded execution approval.
+
+NEXT EXACT TASK: Owner decision — resolve LOCAL-004-PACKAGE-001 portable stunnel
+acquisition boundary before resuming CORE-AUTH-02-ENV-LOCAL-004. LOCAL-005 is not
+created/started because fake transport has not passed.
+
+LOCAL-GATE-001/002 remain BLOCKED with CHK-075 failures preserved;003 BLOCKED /
+NEEDS ACCOUNT CHECK; LOCAL-001 BLOCKED; CORE-AUTH-02 IMPLEMENTED; provider NEEDS
+TESTING; ENVIRONMENT READY NO. Core readiness remains UNMET; required Part2
+authentication precedes reservation Venue settings/book/check-in/seating. Part3
+Export remains deferred. All77 prior checks,26 VERIFIED tasks,D004-D008 and all
+SevenRooms classifications/U-001/U-002/U-003 are preserved. No parity claim.
+Only five authorized documentation files change; local child commit only, no push.

@@ -1956,7 +1956,7 @@
       "id": "CORE-AUTH-02-ENV-LOCAL-004",
       "name": "Disposable localhost HTTPS transport verification",
       "phaseId": "PHASE-04",
-      "status": "PLANNED",
+      "status": "BLOCKED",
       "dependencies": [
         "CORE-AUTH-01",
         "PEOPLE-CORE-01"
@@ -1965,11 +1965,11 @@
       "priorityDecisionId": "PRIORITY-D001",
       "ownerPolicyDecisionId": "CORE-AUTH-D007",
       "currentStageBudget": "$0",
-      "scope": "D008-approved policy for future disposable fake-only localhost:8443 HTTPS experiment; not executed. mkcert preferred certificate candidate; stunnel first terminator candidate for bounded review.",
+      "scope": "Explicitly authorized fake-only localhost:8443 experiment stopped at stunnel Windows package preflight (CHK-078); no tool execution, CA/trust change, listener or transport/browser test. Only official artifact inspection, cleanup and documentation performed.",
       "outOfScope": "Auth0 or cloud accounts, real OAuth, ProjectX/DB setup, public exposure, gateway/runtime/test changes, machine-wide trust/elevation/restart without separate permission, paid resources, Settings/reservations/Export, push.",
       "coreWorkflowAdvanced": "Safe transport prerequisite for staff provider verification before SETTINGS-CORE-01 and reservation book/check-in/seating.",
       "whyRequiredNow": "CHK-076 identifies plausible local-only alternative after confirmed CHK-075 public-HTTP and callback-log failures. Documentation cannot prove local TLS trust, logging or browser behavior.",
-      "implementationPrerequisites": "CORE-AUTH-01/PEOPLE-CORE-01 VERIFIED; LOCAL-003 DOCUMENTED/CHK-076 retained. D008 Option A APPROVED in CHK-077; D008 publication/green CI, separate explicit LOCAL-004 authorization and exact version/artifact/command review still required.",
+      "implementationPrerequisites": "CORE-AUTH-01/PEOPLE-CORE-01 VERIFIED; D008 APPROVED and published at 8d98e296f29401bc37eaa0e2fa82f3a758669424 with green CI38499363640/job115642382623. Owner separately authorized LOCAL-004, but its step4 STOP rule applies: official stunnel5.82 Windows installer requests highestAvailable and installs persistent registry/uninstaller/shortcut state. Reviewed portable acquisition and separate resume authorization remain required; transport viability untested.",
       "acceptanceCriteria": [
         "D008 exact https://localhost:8443 origin/callback/root logout and localhost-only SAN; current-user-only reversible trust, mkcert preferred and stunnel first candidate; version/artifact/command review before separately authorized execution; $0/no accounts",
         "Fake app only initially; trusted browser TLS without warnings or bypass; exact SAN and loopback-only IPv4/IPv6; no public/LAN listener",
@@ -1991,13 +1991,15 @@
         "No runtime changes or actual environment readiness claim from an inert transport result"
       ],
       "specificationFile": "docs/architecture/ADR-0017-zero-cost-provider-verification.md",
-      "evidenceId": "CHK-076",
+      "evidenceId": "CHK-078",
       "environmentReady": false,
-      "executionGate": "PLANNED / policy approved; eligible for separate execution authorization only after D008 publication with green CI. No execution authorized now; no specific tool version/configuration/installation, trust change or setup approved.",
-      "ownerDecisionRequired": false,
+      "executionGate": "BLOCKED at package preflight under explicit LOCAL-004 stop condition; no installer execution or automatic extraction/build/alternate-terminator workaround. Separate owner approval of a bounded portable-artifact acquisition review before resuming the fake-only matrix. No UAC was triggered; stunnel runtime unsuitability is NOT established.",
+      "ownerDecisionRequired": true,
       "deploymentDecisionId": "CORE-AUTH-D008",
       "policyEvidenceId": "CHK-077",
-      "executionAuthorized": false,
+      "executionAuthorized": true,
+      "executionAuthorizationScope": "Owner LOCAL-004 prompt authorized this attempt only; authorization does not override its package/elevation/permanent-install STOP rules. Attempt stopped and artifacts removed; no further execution pending owner direction.",
+      "blockerId": "LOCAL-004-PACKAGE-001",
       "policyConstraints": "Exact localhost:8443; no alternate host/port/IP or wildcard. Current-user-only reversible trust; no machine-wide trust, permanent CA/service/startup, TLS bypass or elevation/restart without separate approval. TLS/backend loopback only. STOP if current-user trust or stunnel safety cannot be satisfied; no silent terminator switch."
     },
     {
@@ -2131,7 +2133,7 @@
       "specificationFile": "docs/architecture/ADR-0017-zero-cost-provider-verification.md",
       "evidenceId": "CHK-075",
       "environmentReady": false,
-      "executionGate": "BLOCKED: D008 resolves policy selection only. CHK-075 failures/CHK-076 gaps retained. Publication/green CI and separate LOCAL-004 authorization/proof, gateway compatibility and actual account/runtime checks required; environment NO.",
+      "executionGate": "BLOCKED: D008 published with green CI and LOCAL-004 explicitly authorized, but CHK-078 stopped before execution at LOCAL-004-PACKAGE-001. Successful fake transport proof, gateway compatibility and actual account/runtime checks remain required; environment NO. CHK-075/076 historical evidence unchanged.",
       "alternativeReview": {
         "evidenceId": "CHK-076",
         "classification": "INFERRED viable candidate / NEEDS TESTING",
@@ -3005,7 +3007,7 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "CORE-AUTH-02-ENV-LOCAL-004 — Disposable localhost HTTPS transport verification",
+  "nextExactTask": "Owner decision — resolve LOCAL-004-PACKAGE-001 portable stunnel acquisition boundary before resuming CORE-AUTH-02-ENV-LOCAL-004",
   "deliveryPriority": {
     "decisionId": "PRIORITY-D001",
     "primaryTarget": "PART 1 — CORE ONLINE RESERVATION SYSTEM",

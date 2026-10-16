@@ -5,7 +5,44 @@ CORE-AUTH-D004. Base 84ed2938d7d1fa6155e744a50ef3d6aebe6f978c.
 Parent task IMPLEMENTED; controlled Auth0/production assurance remains NEEDS TESTING.
 No SevenRooms evidence or parity claims.
 
-## Current owner policy — CHK-077 / CORE-AUTH-D008
+## Current LOCAL-004 attempt — CHK-078 / package preflight blocker
+
+2026-10-15. CONFIRMED: explicit owner execution authorization followed D008
+publication/green CI at8d98e296f29401bc37eaa0e2fa82f3a758669424. Attempt stopped
+before tool execution at **LOCAL-004-PACKAGE-001**, per the prompt's package gate.
+LOCAL-004 is BLOCKED, not VERIFIED. See ADR-0017 CHK-078 for exact sources,
+artifact integrity, cleanup, four owner options and resume boundary.
+
+Official stable stunnel5.82 (2026-09-17) Windows installer SHA256
+`722c1ad626919af2b0034666b4d19cc4795e925c32f60e8f3c59af4fb3ad2dfc` matched
+the upstream checksum; Authenticode Valid (Michał Trojnara). Static manifest
+requests highestAvailable; installer source includes persistent registration/
+uninstaller/shortcuts. No installer execution, UAC or elevation occurred. This
+does not imply elevation is mandatory for every account or stunnel cannot run
+portably; safe non-executing payload extraction/portable behavior is UNKNOWN.
+mkcert latest upstreamv1.4.4 (2022-04-26) and Windows source reviewed; binary not
+downloaded/executed and no mkcert -install. No fallback terminator used.
+
+CONFIRMED cleanup: only installer/checksum/source archive downloaded outside Git;
+all removed with dedicated directory. No CA/leaf/key/thumbprint generated, trust
+mutated, fake app/port allocated, tool process/service/startup created or browser
+test run. Postcheck zero8443 listeners/stunnel processes/services/task-labelled
+roots/scheduled tasks. No trust-reversal proof claimed because nothing was trusted.
+All TLS/HTTP/authority/header/callback/log/cookie/history/Windows diagnostic runtime
+criteria remain NEEDS TESTING; no security PASS inferred from unexecuted tests.
+
+NEXT EXACT TASK: Owner decision — resolve LOCAL-004-PACKAGE-001 portable stunnel
+acquisition boundary before resuming CORE-AUTH-02-ENV-LOCAL-004. Recommended:
+separately authorized non-executing portable acquisition review of signed official
+package, not installer launch or payload execution. No LOCAL-005 yet.
+
+D004-D008 remain unchanged/approved. Historical CHK-075/076/077 remain unchanged.
+LOCAL-001 BLOCKED; CORE-AUTH-02 IMPLEMENTED; LOCAL-GATE-001/002 BLOCKED;003 BLOCKED /
+NEEDS ACCOUNT CHECK; provider NEEDS TESTING; ENVIRONMENT READY NO. ProjectX/Auth0/
+PostgreSQL, real OAuth/secrets, public/LAN exposure and paid resources not used.
+Settings awaits VERIFIED auth; Part3 deferred; no SevenRooms evidence or parity.
+
+## Historical owner policy checkpoint — CHK-077 / CORE-AUTH-D008
 
 2026-10-13. CONFIRMED OWNER APPROVED / PROJECTX DEPLOYMENT DECISION, Option A:
 **Localhost HTTPS verification authority and trust policy**. See decisions.json
