@@ -1965,7 +1965,7 @@
       "priorityDecisionId": "PRIORITY-D001",
       "ownerPolicyDecisionId": "CORE-AUTH-D007",
       "currentStageBudget": "$0",
-      "scope": "Explicitly authorized fake-only localhost:8443 experiment stopped at stunnel Windows package preflight (CHK-078); no tool execution, CA/trust change, listener or transport/browser test. Only official artifact inspection, cleanup and documentation performed.",
+      "scope": "Fake-only localhost:8443 attempt stopped at package preflight (CHK-078). Owner-approved Option A research-only follow-up CHK-079 is DOCUMENTED: A2 potentially portable, evidence insufficient. No extraction, installer/runtime execution, configuration, trust or listener created; transport remains BLOCKED.",
       "outOfScope": "Auth0 or cloud accounts, real OAuth, ProjectX/DB setup, public exposure, gateway/runtime/test changes, machine-wide trust/elevation/restart without separate permission, paid resources, Settings/reservations/Export, push.",
       "coreWorkflowAdvanced": "Safe transport prerequisite for staff provider verification before SETTINGS-CORE-01 and reservation book/check-in/seating.",
       "whyRequiredNow": "CHK-076 identifies plausible local-only alternative after confirmed CHK-075 public-HTTP and callback-log failures. Documentation cannot prove local TLS trust, logging or browser behavior.",
@@ -1991,15 +1991,23 @@
         "No runtime changes or actual environment readiness claim from an inert transport result"
       ],
       "specificationFile": "docs/architecture/ADR-0017-zero-cost-provider-verification.md",
-      "evidenceId": "CHK-078",
+      "evidenceId": "CHK-079",
       "environmentReady": false,
-      "executionGate": "BLOCKED at package preflight under explicit LOCAL-004 stop condition; no installer execution or automatic extraction/build/alternate-terminator workaround. Separate owner approval of a bounded portable-artifact acquisition review before resuming the fake-only matrix. No UAC was triggered; stunnel runtime unsuitability is NOT established.",
+      "executionGate": "BLOCKED: CHK-079 Option A static review result A2. NSIS extraction support and console design do not establish complete portable runtime. Exact released DLL/import/manifest inventory and OpenSSL config/generated-file requirements unresolved. Separate owner authorization and reviewed method required before any acquisition/extraction; payload execution, trust/listeners and LOCAL-004 resume are not authorized. No runtime incompatibility proved.",
       "ownerDecisionRequired": true,
       "deploymentDecisionId": "CORE-AUTH-D008",
       "policyEvidenceId": "CHK-077",
-      "executionAuthorized": true,
-      "executionAuthorizationScope": "Owner LOCAL-004 prompt authorized this attempt only; authorization does not override its package/elevation/permanent-install STOP rules. Attempt stopped and artifacts removed; no further execution pending owner direction.",
+      "executionAuthorized": false,
+      "executionAuthorizationScope": "Historical CHK-078 attempt authorization preserved in its immutable record. Current Option A authorization covers official-source research and five documentation files only, with one local commit and no push. No acquisition/extraction/installer/payload/configuration/trust/listener execution permitted.",
       "blockerId": "LOCAL-004-PACKAGE-001",
+      "packageReview": {
+        "status": "DOCUMENTED",
+        "evidenceId": "CHK-079",
+        "result": "A2 — Potentially portable, but evidence insufficient",
+        "sourceCommit": "b611485e29e96e71404967fbaba1ecff15ff0c4c",
+        "nextEvidence": "Exact official released payload/import/manifest inventory and effective OpenSSL/provider configuration, including skipped installer initialization",
+        "nextAction": "Separate owner decision on bounded static payload inventory; no extraction or execution approved by this review"
+      },
       "policyConstraints": "Exact localhost:8443; no alternate host/port/IP or wildcard. Current-user-only reversible trust; no machine-wide trust, permanent CA/service/startup, TLS bypass or elevation/restart without separate approval. TLS/backend loopback only. STOP if current-user trust or stunnel safety cannot be satisfied; no silent terminator switch."
     },
     {
@@ -2133,7 +2141,7 @@
       "specificationFile": "docs/architecture/ADR-0017-zero-cost-provider-verification.md",
       "evidenceId": "CHK-075",
       "environmentReady": false,
-      "executionGate": "BLOCKED: D008 published with green CI and LOCAL-004 explicitly authorized, but CHK-078 stopped before execution at LOCAL-004-PACKAGE-001. Successful fake transport proof, gateway compatibility and actual account/runtime checks remain required; environment NO. CHK-075/076 historical evidence unchanged.",
+      "executionGate": "BLOCKED: CHK-078 package stop preserved; CHK-079 research-only review selected A2 and does not authorize acquisition/extraction or runtime resume. Successful fake transport proof, gateway compatibility and actual account/runtime checks remain required; environment NO. CHK-075/076 historical evidence unchanged.",
       "alternativeReview": {
         "evidenceId": "CHK-076",
         "classification": "INFERRED viable candidate / NEEDS TESTING",
@@ -3007,7 +3015,7 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "Owner decision — resolve LOCAL-004-PACKAGE-001 portable stunnel acquisition boundary before resuming CORE-AUTH-02-ENV-LOCAL-004",
+  "nextExactTask": "Owner decision — authorize bounded static stunnel payload inventory to resolve LOCAL-004-PACKAGE-001 A2 evidence gaps",
   "deliveryPriority": {
     "decisionId": "PRIORITY-D001",
     "primaryTarget": "PART 1 — CORE ONLINE RESERVATION SYSTEM",

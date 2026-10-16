@@ -3099,6 +3099,80 @@
       "noTrustChanges": true,
       "noElevationOrRestart": true,
       "noPush": true
+    },
+    {
+      "id": "CHK-079",
+      "taskId": "CORE-AUTH-02-ENV-LOCAL-004",
+      "subtaskId": "LOCAL-004-PACKAGE-001",
+      "date": "2026-10-16",
+      "status": "DOCUMENTED",
+      "classification": "CONFIRMED official source findings; portable completeness UNKNOWN; non-elevated operation and security NEEDS TESTING",
+      "startingLocalSha": "963b550ba295ad137207542de5822501bfabba10",
+      "branch": "people-03-accounts-read",
+      "authorization": "Owner Option A research only, official public source/documentation text and existing evidence; five documentation files, one local commit, no push, $0 infrastructure.",
+      "decisionResult": "A2 — Potentially portable, but evidence insufficient",
+      "result": "NSIS payload design and console path separate from service installation supported. Format support does not prove complete released dependencies, effective OpenSSL configuration or extracted integrity. LOCAL-004/package blocker remain BLOCKED; no unavoidable D008 runtime incompatibility established.",
+      "artifactIdentity": {
+        "version": "5.82",
+        "releaseDate": "2026-09-17",
+        "sourceTag": "stunnel-5.82",
+        "sourceCommit": "b611485e29e96e71404967fbaba1ecff15ff0c4c",
+        "historicalSha256": "722c1ad626919af2b0034666b4d19cc4795e925c32f60e8f3c59af4fb3ad2dfc",
+        "historicalSignature": "CHK-078: Authenticode Valid / Michał Trojnara; not revalidated here; PGP verification unperformed",
+        "limitation": "No executable acquired or inspected; source is not reproducible-build or exact payload verification"
+      },
+      "packaging": {
+        "format": "CONFIRMED source NSIS solid LZMA; 7-Zip documents NSIS unpacking support; extraction NOT PERFORMED",
+        "executables": "Source declares bin/stunnel.exe and console bin/tstunnel.exe; complete independently usable released runtime UNKNOWN",
+        "dlls": "Corresponding win64 OpenSSL3 libssl/libcrypto, libssp-0, conditional mimalloc/engines/providers; exact imports and VC runtime requirements UNKNOWN",
+        "configuration": "Windows crypto startup derives root/bin/config paths and loads openssl.cnf; extraction skips installer config transformations, conditional FIPS initialization and PEM generation",
+        "persistentActions": "Installer metadata/uninstaller/shortcuts/firewall and conditional service controls differ from console startup; runtime/library-wide machine-state independence not proved",
+        "standardUser": "Conceptual console/file-based operation INFERRED; exact manifests, load paths, profile/log/random-seed writes and socket/firewall policy NEEDS TESTING",
+        "integrity": "Signed container does not prove each payload has its own signature; future static inventory must bind hashes/layout/imports/config to authenticated input",
+        "license": "Official GPL-2.0-or-later with OpenSSL/LGPL exception supports local use; preserve bundled notices; no redistribution clearance"
+      },
+      "securityAssessment": {
+        "d008": "Exact https://localhost:8443, callback /api/v1/staff-auth/callback and root logout unchanged; localhost-only SAN, CurrentUser reversible trust, explicit loopback TLS/fake backend; no machine trust/service/elevation/permanent install/public or LAN ingress",
+        "protocol": "TLS-to-TCP candidate INFERRED; no trusted plaintext/HTTP authority/spoofed-forwarding assurance. Existing ProjectX gateway localhost/non-default-port mismatch unresolved",
+        "logging": "Normal/refusal/timeout/TLS/debug/console/file/Windows diagnostic confidentiality NEEDS TESTING; LocalAppData fallback and ordinary diagnostics matter; no PASS by log suppression",
+        "trust": "Browser current-user trust lifecycle distinct from stunnel certificate loading; NOT TESTED"
+      },
+      "missingEvidence": [
+        "Exact released file/import/manifest inventory, transitive dependency closure and optional build features",
+        "Effective OpenSSL/provider configuration and required generated files or installer transformations",
+        "Extraction compatibility/layout/integrity using separately reviewed tooling"
+      ],
+      "nextExactTask": "Owner decision — authorize bounded static stunnel payload inventory to resolve LOCAL-004-PACKAGE-001 A2 evidence gaps",
+      "nextBoundary": "Upstream published manifest/build clarification is safest if available; no outbound contact authorized. Otherwise separate owner approval for authenticated acquisition and non-executing isolated extraction/static inventory with reviewed tooling. No installer/plugins/payload execution, config, trust/listeners/ProjectX/Auth0/PostgreSQL or LOCAL-004 resume.",
+      "preservedState": {
+        "previousChecks": 78,
+        "verifiedTasks": 26,
+        "decisions": "D004-D008 unchanged",
+        "local004": "BLOCKED",
+        "packageBlocker": "BLOCKED",
+        "coreAuth02": "IMPLEMENTED",
+        "local001": "BLOCKED",
+        "gate001": "BLOCKED",
+        "gate002": "BLOCKED",
+        "gate003": "BLOCKED / NEEDS ACCOUNT CHECK",
+        "providerVerification": "NEEDS TESTING",
+        "environmentReady": false,
+        "reference": "SevenRooms classifications/U-001/U-002/U-003 unchanged; no parity",
+        "priority": "Part2 required foundation; core readiness UNMET; Part3 deferred"
+      },
+      "evidenceFiles": [
+        "docs/architecture/ADR-0017-zero-cost-provider-verification.md",
+        "docs/security/staff-session-verification.md"
+      ],
+      "validation": "PASS: pnpm map:check (144 screens/16 modules/59 tasks); git diff --check; JSON/unique IDs/acyclic task DAG; all78 prior checks/26 VERIFIED/57 unrelated tasks and all task statuses/dependencies preserved; decisions/app-map/dependencies/reference state unchanged; append-only ADR history; five authorized docs only; no untracked files or added secret-shaped patterns. No application/database/browser/transport tests run.",
+      "noExecutableDownloads": true,
+      "noExtraction": true,
+      "noInstallerOrPayloadExecution": true,
+      "noRuntimeOrTestChanges": true,
+      "noSecretsOrCertificates": true,
+      "noTrustOrSystemChanges": true,
+      "noProvisioning": true,
+      "noPush": true
     }
   ],
   "unresolvedQuestions": [

@@ -1240,3 +1240,191 @@ authentication precedes reservation Venue settings/book/check-in/seating. Part3
 Export remains deferred. All77 prior checks,26 VERIFIED tasks,D004-D008 and all
 SevenRooms classifications/U-001/U-002/U-003 are preserved. No parity claim.
 Only five authorized documentation files change; local child commit only, no push.
+
+## CHK-079 — LOCAL-004-PACKAGE-001 Option A static feasibility review (2026-10-16)
+
+Owner approved research only, at clean branch `people-03-accounts-read`, starting
+SHA `963b550ba295ad137207542de5822501bfabba10`. **Result A2 — potentially portable,
+but evidence insufficient.** Review DOCUMENTED; package blocker and LOCAL-004
+remain BLOCKED. No download of executables, extraction, installer/runtime/inspection
+utility execution, configuration creation, certificates/trust, listeners, services,
+registry changes, system elevation, provisioning, purchase or push occurred.
+
+### Official evidence and identity
+
+Firecrawl research retrieved official source/documentation text only. stunnel's
+[release index](https://www.stunnel.org/downloads.html) lists 5.82, 2026-09-17,
+as a Windows installer, not a portable archive. The
+[official tag API](https://api.github.com/repos/mtrojnar/stunnel/tags?per_page=10)
+resolves `stunnel-5.82` to `b611485e29e96e71404967fbaba1ecff15ff0c4c`;
+all source links below are pinned there. Source-to-released-binary reproducibility
+was NOT established.
+
+- S1: [NSIS packaging](https://raw.githubusercontent.com/mtrojnar/stunnel/b611485e29e96e71404967fbaba1ecff15ff0c4c/tools/stunnel.nsi).
+- S2: [MinGW build](https://raw.githubusercontent.com/mtrojnar/stunnel/b611485e29e96e71404967fbaba1ecff15ff0c4c/src/mingw.mk),
+  [console entry](https://raw.githubusercontent.com/mtrojnar/stunnel/b611485e29e96e71404967fbaba1ecff15ff0c4c/src/ui_win_cli.c),
+  [GUI/service entry](https://raw.githubusercontent.com/mtrojnar/stunnel/b611485e29e96e71404967fbaba1ecff15ff0c4c/src/ui_win_gui.c).
+- S3: [Windows crypto startup/path handling](https://raw.githubusercontent.com/mtrojnar/stunnel/b611485e29e96e71404967fbaba1ecff15ff0c4c/src/ssl.c),
+  [core startup](https://raw.githubusercontent.com/mtrojnar/stunnel/b611485e29e96e71404967fbaba1ecff15ff0c4c/src/stunnel.c),
+  [options](https://raw.githubusercontent.com/mtrojnar/stunnel/b611485e29e96e71404967fbaba1ecff15ff0c4c/src/options.c).
+- S4: [versioned manual](https://raw.githubusercontent.com/mtrojnar/stunnel/b611485e29e96e71404967fbaba1ecff15ff0c4c/doc/stunnel.md),
+  [Windows example](https://www.stunnel.org/config_windows.html).
+- S5: [log sinks](https://raw.githubusercontent.com/mtrojnar/stunnel/b611485e29e96e71404967fbaba1ecff15ff0c4c/src/log.c),
+  [connection/TLS handling](https://raw.githubusercontent.com/mtrojnar/stunnel/b611485e29e96e71404967fbaba1ecff15ff0c4c/src/client.c).
+- S6: [7-Zip official format support](https://www.7-zip.org/).
+- S7: [stunnel license/exception](https://raw.githubusercontent.com/mtrojnar/stunnel/b611485e29e96e71404967fbaba1ecff15ff0c4c/COPYING.md),
+  [GPL conditions](https://raw.githubusercontent.com/mtrojnar/stunnel/b611485e29e96e71404967fbaba1ecff15ff0c4c/COPYRIGHT.md).
+
+Historical identity remains CHK-078: SHA256
+`722c1ad626919af2b0034666b4d19cc4795e925c32f60e8f3c59af4fb3ad2dfc`,
+official checksum match, Authenticode Valid / Michał Trojnara. This review did
+NOT reacquire or revalidate that binary or its signing chain; PGP verification
+remains unperformed. Historical `highestAvailable` and installer persistence
+findings stand. They do not prove every standard-user launch elevates.
+
+### Packaging findings (source facts are not payload verification)
+
+| Question | Finding / classification | Evidence | Remaining question |
+|---|---|---|---|
+| Framework | CONFIRMED NSIS, solid LZMA | S1 | Exact reader compatibility |
+| Standalone executable | CONFIRMED source includes bin/stunnel.exe and console bin/tstunnel.exe | S1/S2 | Exact binary inventory/imports |
+| Supporting DLLs | CONFIRMED source declares OpenSSL/stack-protector and conditional modules | S1/S2 | Released build flags and transitive dependencies |
+| Templates/certificates | CONFIRMED config/stunnel.conf, ca-certs.pem, openssl.cnf; PEM generation step | S1 | Generated versus archived files |
+| Independently usable files | INFERRED candidate console runtime | S2/S3 | Complete relocatable dependency closure UNKNOWN |
+| Initialization dependency | CONFIRMED installer edits OpenSSL config; conditional FIPS initialization | S1/S3 | Required skipped transformations for exact build |
+| Registry | CONFIRMED install/uninstall metadata writes | S1 | Runtime/library-wide independence not proved |
+| Services | CONFIRMED separate service controls; console path exists | S1/S2 | Standard-user execution NEEDS TESTING |
+| Shortcuts/uninstaller | INFERRED installation conveniences, not console-entry prerequisites | S1/S2 | Exact payload behavior untested |
+| Machine state | No mandatory service demonstrated; installer also adds firewall rules | S1/S2 | Host policy and runtime dependencies UNKNOWN |
+
+### Dependency and non-elevated-operation assessment
+
+The source names `libssl-3-x64.dll`, `libcrypto-3-x64.dll`, `libssp-0.dll` for
+the corresponding build, with conditional mimalloc DLLs and engine/provider
+modules. Exact released DLL versions/import closure are UNKNOWN. MinGW links
+Windows system libraries; the installer VC redistributable block is commented
+out, which does NOT establish that every bundled DLL is VC-runtime independent.
+No dependency scanner was run and no dependency installation is approved.
+
+CONFIRMED (S3): Windows startup derives the root from its executable, strips a
+trailing `bin`, changes working directory to that root then attempts `config`,
+sets process-local OpenSSL engine/module/config paths, and loads
+`config/openssl.cnf` before normal service configuration. Preserve this layout;
+an arbitrary working directory or copying just the executable is insufficient
+evidence. An explicit absolute configuration path and absolute certificate/key
+paths would avoid additional relative-path ambiguity, not bypass crypto startup.
+
+CONFIRMED (S2/S4): `tstunnel.exe` has a console entry; Windows does not use the
+manual's Unix-only `foreground` switch. Service installation uses a distinct
+GUI command path. INFERRED: a complete user-owned tree with file-based keys could
+operate without an uninstaller, startup entry, protected-system directory or
+LocalMachine store mutation. Standard-user/no-UAC/no-registry-write behavior,
+runtime PE manifests, third-party libraries and Windows policy remain UNKNOWN /
+NEEDS TESTING. No whole-program absence claim is made.
+
+User/temp-directory side effects need later measurement: S3 has conditional
+RANDFILE/HOME random-seed file read/write paths; S5 may fall back to LocalAppData
+if a requested log cannot open. Internal socket initialization can fail under
+firewall policy (S3). No firewall exceptions may be added to make the test pass.
+Use of an owner-controlled disposable tree is only a future design constraint,
+not proof all files stay there. No standard-user socket test was performed.
+
+### Extraction, integrity and license boundary
+
+S6 explicitly lists NSIS as unpacking-only support, corroborated by S1's format.
+INFERRED: a reviewed archive reader could read the package as data without running
+its installer entry point. Exact solid-archive compatibility, logical output
+paths and completeness remain UNKNOWN. No reader was installed or invoked.
+Extraction would skip script initialization, including generated material; a
+directory of extracted files is not automatically a usable runtime.
+
+A future separately authorized static experiment could authenticate the exact
+official installer, list its data with a reviewed reader, extract into one
+validated user-only directory, reject traversal/unexpected links, reconstruct
+source-declared layout, and inventory hashes/imports/manifests/configuration.
+Do not invoke installer/plugins, stunnel, openssl or any payload. Installer
+Authenticode does not imply each extracted DLL/executable has its own signature;
+check available payload signatures and retain a hash manifest tied to the
+verified input. No independent upstream per-file hash set was established here.
+No such experiment is authorized by this review.
+
+S7 states GPL-2.0-or-later with the stated OpenSSL/LGPL linking exception; the
+GPL text does not restrict running the program. Local private verification is
+consistent with that text. Retain notices and assess bundled-library terms;
+this is not clearance for redistribution/repackaging or a license warranty.
+
+### D008 compatibility and logging
+
+Approved origin remains `https://localhost:8443`, callback
+`https://localhost:8443/api/v1/staff-auth/callback`, logout
+`https://localhost:8443/`. S4 supports explicit accept/connect addresses and
+file-based PEM/P12 certificates. Omitting the accept host binds all IPv4
+addresses: unacceptable. Any future candidate must explicitly restrict both
+IPv4/IPv6 ingress and fake backend to loopback, use localhost-only SAN and
+CurrentUser-only reversible trust, no service/elevation/permanent installation,
+no public/LAN ingress or third-party callback intermediary. stunnel certificate
+loading is distinct from browser trust. Trust/reversal NEEDS TESTING.
+
+INFERRED plain TLS-to-TCP pass-through may preserve callback bytes and reject
+plaintext at the TLS endpoint; it does not supply HTTP authorization, validate
+Host, strip spoofed headers or make direct plaintext backend access trusted HTTPS.
+All HTTP/body isolation cases remain NEEDS TESTING. The existing ProjectX gateway
+localhost/non-default-port authority mismatch from CHK-076 remains unresolved;
+this fake-only candidate does not approve exposing ProjectX or integrating Auth0.
+
+| Log surface | Static finding and limitation | Required future verification |
+|---|---|---|
+| Normal connections | S5 logs service/address/connection state; not proof every path excludes HTTP data | Fake callback/header sentinels |
+| Refusal / backend timeout | S4/S5 expose network error and timeout paths; reviewed evidence does not establish complete emitted content | Refused/stalled fake backend at ordinary logging level |
+| TLS failure | S5 logs SSL_accept/socket/TLS errors; diagnostics may include peer-controlled material | Malformed/plaintext/failing TLS sentinel cases |
+| Debug | S4 documents more verbose level7; unsuitable as confidentiality evidence | Keep ordinary level; no debug/support upload without review |
+| Console / file | S2 console writes stdout; S5 output file plus LocalAppData fallback | Inspect actual console capture and every file destination, not only chosen file |
+| Windows Event Log / service | S5 Unix syslog branches exclude Win32; not proof Windows diagnostics never record data. Service execution excluded | Review relevant Windows diagnostics; no service created to test it |
+
+Avoiding a configured persistent output file may reduce one sink, but stdout
+capture, crash/OS diagnostics and libraries remain relevant. No confidentiality
+PASS from default levels or disabling logs; full fake-sentinel tests are required.
+
+### Packaging risk and disposition
+
+| Risk | Evidence | Classification | Future verification |
+|---|---|---|---|
+| Installer privilege/persistence | CHK-078 manifest, S1 actions | CONFIRMED installer conflict; not universal UAC | Preserve stop; never launch installer |
+| Incomplete portable runtime | Conditional DLLs/config preparation, S1-S3 | UNKNOWN | Exact payload/import/config inventory |
+| Registry/service dependency | Console path separate, S2 | INFERRED avoidable; full closure UNKNOWN | Static dependencies then separately approved standard-user observation |
+| Unsafe paths / DLL loading | Executable-relative paths, S3 | CONFIRMED design; exact safety NEEDS TESTING | Isolated ACL/layout and load-path review |
+| Unexpected file writes | Log fallback and entropy paths, S3/S5 | CONFIRMED possible paths | Bounded file/profile change checks |
+| LAN listener / sample misuse | S4 wildcard default and external sample targets | CONFIRMED design risk | Explicit binding audit; never run sample |
+| Logging confidentiality | Error/console/OS surfaces above | NEEDS TESTING | Fake-sentinel normal/failure matrix |
+| Current-user trust compatibility | D008, no execution | NEEDS TESTING | Separate LOCAL-004 trust/reversal proof |
+| Extracted integrity | Historical signed container only | UNKNOWN per-file assurance | Verify input, signatures where present and extraction manifest |
+
+**A2**, not A1: extractable format and a credible console design are supported,
+but exact released dependencies, effective OpenSSL configuration/generated-file
+requirements and extracted integrity have not been established. Not A3: no
+unavoidable D008 runtime incompatibility proved. Not A4: substantive official
+source evidence supports conditional feasibility. Non-elevated operation and
+verified-safe operation remain separate, unproven conclusions.
+
+Smallest missing evidence: exact release file/import/manifest inventory and
+effective OpenSSL/provider configuration, including skipped initialization.
+Safest first source is an upstream published per-file manifest/build configuration
+or maintainer clarification (no outbound contact authorized). If unavailable,
+obtain separate owner authorization for the static acquisition/extraction-only
+experiment above, with an explicitly reviewed already-available reader. New
+tool installation and all payload execution need separate authority.
+
+NEXT EXACT TASK: Owner decision — authorize bounded static stunnel payload inventory
+to resolve LOCAL-004-PACKAGE-001 A2 evidence gaps. Options: A authorize exact-package
+static inventory (direct evidence; extraction/tool risk); B obtain upstream text
+manifest/clarification (no binary handling; availability unknown); C separately
+review another terminator (alternative; new review surface); D defer (no change;
+foundation remains blocked). Recommended A only after reader/method review; this
+records a proposal, not permission. No automatic fallback, LOCAL-004 or LOCAL-005.
+
+All78 prior checks,26 VERIFIED tasks,D004-D008 and SevenRooms U-001/U-002/U-003/
+classifications preserved. CORE-AUTH-02 IMPLEMENTED, provider NEEDS TESTING,
+LOCAL-GATE-001/002 BLOCKED,003 BLOCKED / NEEDS ACCOUNT CHECK, ENVIRONMENT READY NO.
+Part2 prerequisite only; core readiness UNMET; Part3 deferred. Documentation
+validation only; no application/database/browser/transport tests. One local
+five-document commit; publication requires separate exact-SHA approval.

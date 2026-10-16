@@ -5,7 +5,44 @@ CORE-AUTH-D004. Base 84ed2938d7d1fa6155e744a50ef3d6aebe6f978c.
 Parent task IMPLEMENTED; controlled Auth0/production assurance remains NEEDS TESTING.
 No SevenRooms evidence or parity claims.
 
-## Current LOCAL-004 attempt — CHK-078 / package preflight blocker
+## Current package feasibility review — CHK-079 / Option A
+
+2026-10-16. Research-only review DOCUMENTED; **A2 — potentially portable, but
+evidence insufficient**. Clean start 963b550ba295ad137207542de5822501bfabba10.
+Official 5.82 source pinned to b611485e29e96e71404967fbaba1ecff15ff0c4c confirms
+NSIS payload declarations, console tstunnel.exe and separate service controls.
+7-Zip documents NSIS unpacking support; this is not exact-package extraction proof.
+Startup resolves OpenSSL configuration/providers relative to the executable tree;
+installer configuration edits and generated material are skipped by extraction.
+Exact released DLL/import/manifest closure and effective configuration remain UNKNOWN.
+See ADR-0017 CHK-079 for source links, ten packaging findings, dependencies,
+logging/risk tables and the bounded next-action proposal.
+
+Historical CHK-078 checksum/signature evidence below is preserved, not revalidated.
+No executable downloads, extraction, installer/stunnel/inspection-utility execution,
+configuration, certificates/trust, listener, service/registry/firewall/system changes,
+provisioning, purchase or push in CHK-079. Only documentation validation performed.
+No real-provider or logging-confidentiality PASS; normal/refusal/timeout/TLS/error/
+console/file/Windows diagnostic fake-sentinel checks remain NEEDS TESTING.
+
+D008 exact origin https://localhost:8443, callback /api/v1/staff-auth/callback and
+root logout remain unchanged. Current-user reversible trust, localhost-only SAN,
+explicit loopback TLS/backend, no trusted plaintext/public/LAN ingress, no service,
+elevation or permanent installation remain mandatory. Existing ProjectX gateway
+authority mismatch is unresolved; this review does not authorize its correction.
+
+LOCAL-004 / LOCAL-004-PACKAGE-001 / LOCAL-001 remain BLOCKED; CORE-AUTH-02 IMPLEMENTED;
+LOCAL-GATE-001/002 BLOCKED;003 BLOCKED / NEEDS ACCOUNT CHECK; provider NEEDS TESTING;
+ENVIRONMENT READY NO. All78 prior checks/26 VERIFIED tasks/D004-D008/reference
+classifications preserved. Part3 deferred; no SevenRooms evidence or parity claims.
+
+NEXT EXACT TASK: Owner decision — authorize bounded static stunnel payload inventory
+to resolve LOCAL-004-PACKAGE-001 A2 evidence gaps. Requires separately reviewed
+method/reader and explicit acquisition/extraction approval; no payload execution,
+trust, listener or LOCAL-004 resume. Upstream text manifest is the safest evidence
+route if available; no outbound contact authorized. Publication separately approved.
+
+## Historical LOCAL-004 attempt — CHK-078 / package preflight blocker
 
 2026-10-15. CONFIRMED: explicit owner execution authorization followed D008
 publication/green CI at8d98e296f29401bc37eaa0e2fa82f3a758669424. Attempt stopped
