@@ -36,6 +36,62 @@
   ],
   "tasks": [
     {
+      "id": "RESERVATION-DOMAIN-001",
+      "name": "Internal reservation-domain vertical slice",
+      "phaseId": "PHASE-04",
+      "status": "VERIFIED",
+      "dependencies": [
+        "DB-HARNESS-001",
+        "PEOPLE-CORE-01"
+      ],
+      "priorityPart": 1,
+      "priorityDecisionId": "PRIORITY-D001",
+      "scope": "Owner-authorized internal PostgreSQL domain search/create/staff read/list/cancel with synthetic fixtures, table capacity, date-specific shifts, timezone/DST, RLS and concurrent/idempotent allocation. No HTTP routes or production synthetic identity.",
+      "outOfScope": "Public/widget/browser, modification/check-in/seating, external confirmations, settings/floorplan editors, provider/deployment work, Export and push.",
+      "coreWorkflowAdvanced": "Persisted availability to reservation to authorized staff read to cancellation and restored availability",
+      "whyRequiredNow": "Explicit owner request permits isolated local domain development on VERIFIED database/tenant foundations without promoting existing production-authentication gates.",
+      "acceptanceCriteria": [
+        "PostgreSQL16 complete synthetic demonstration passes",
+        "Concurrent overlapping allocations cannot both commit; scoped retries do not duplicate",
+        "Tenant/venue/RLS/revocation/rollback and timezone/DST tests pass",
+        "pnpm verify and pnpm verify:db pass; historical evidence preserved"
+      ],
+      "verificationCommands": [
+        "pnpm exec vitest run apps/api/tests/reservations/domain.test.ts --no-file-parallelism",
+        "pnpm verify",
+        "pnpm verify:db",
+        "pnpm map:check",
+        "git diff --check"
+      ],
+      "regressionChecks": [
+        "All26 prior VERIFIED tasks/all80 prior checks and reference evidence unchanged",
+        "Existing core/auth/widget/settings task dependencies unchanged",
+        "No routes, production identity bypass, real secrets or deployed infrastructure changes; disposable local database only"
+      ],
+      "implementationGate": "PROCEED: explicit attached RESERVATION-DOMAIN-001 package, resumed 2026-10-22. Only internal service/persistence/tests/demo/docs; production/public gates unchanged.",
+      "specificationFile": "docs/architecture/ADR-0018-reservation-domain-slice.md",
+      "remainingWork": "None within this bounded package. Internal flow and all required gates verified locally; no HTTP/widget/lifecycle expansion or live-provider claim. Publication requires separate approval.",
+      "verificationEvidence": "CHK-081: PostgreSQL16.15 focused26/26 and full database236/236; pnpm verify PASS including289 general/browser tests and both builds; entity contract/docs updated. Prior failed attempts retained.",
+      "integrationDependencies": [
+        {
+          "id": "RESERVATION-DOMAIN-001-REGRESSION-001",
+          "classification": "CONFIRMED",
+          "dependency": "Five exact migration-ledger expectation lists in existing People database regressions",
+          "reason": "Full database gate: 8 failures across 5 files, all exact ledger equality missing only the new reservation migration; 228/236 passed. Required feature-gate compatibility, no People behavior changes.",
+          "affectedModules": [
+            "apps/api/tests/people/booked-by.test.ts",
+            "apps/api/tests/people/server-names.test.ts",
+            "apps/api/tests/people/roster-fields-migrations.test.ts",
+            "apps/api/tests/people/direct-grants-migrations.test.ts",
+            "apps/api/tests/people/rls-migrations.test.ts"
+          ],
+          "requiredPredecessorTask": "RESERVATION-DOMAIN-001 migration registration",
+          "ownedCorrection": "Append exact new migration path to five expected ledger lists; preserve exact checksum, data preservation, RLS and least-privilege assertions.",
+          "status": "VERIFIED"
+        }
+      ]
+    },
+    {
       "id": "DISC-001",
       "name": "Map main navigation and core workflows",
       "status": "VERIFIED",
@@ -2941,6 +2997,37 @@
       "implementationGate": "PLANNING ONLY; approved bounded contract and separate implementation prompt required. Split backend/frontend where needed before code; never implement a whole module in one task.",
       "readinessStatus": "UNMET",
       "verificationEvidence": "No integrated reservation core runtime evidence in existing verification checks."
+    },
+    {
+      "id": "RESERVATION-DOMAIN-002",
+      "name": "Specify atomic internal reservation modification",
+      "phaseId": "PHASE-04",
+      "status": "PLANNED",
+      "dependencies": [
+        "RESERVATION-DOMAIN-001",
+        "PEOPLE-CORE-01"
+      ],
+      "priorityPart": 1,
+      "priorityDecisionId": "PRIORITY-D001",
+      "scope": "Documentation-only follow-on: specify changing an existing internal reservation time/table/party safely on the verified domain foundation, before a separate bounded implementation package.",
+      "outOfScope": "No code in this task; no HTTP/widget/public access, staff provider work, check-in/seating, external delivery or changes to existing production task gates.",
+      "coreWorkflowAdvanced": "Required modification semantics for existing reservations, including atomic capacity transfer and safe failure.",
+      "acceptanceCriteria": [
+        "Document allowed BOOKED modification inputs, current reservation.update/read permission and expected-version/idempotency semantics",
+        "Specify transactional capacity transfer, conflict rollback preserving original booking, tenant/Venue boundaries and timezone/DST behavior",
+        "Define focused concurrency/rollback/authorization tests and a separate implementation scope; retain CORE-AUTH-02/settings/widget gates"
+      ],
+      "verificationCommands": [
+        "pnpm map:check",
+        "git diff --check",
+        "Validate task DAG, stable IDs and preservation of previous verified evidence"
+      ],
+      "regressionChecks": [
+        "No application/migration changes",
+        "RESERVATION-DOMAIN-001 behavior and prior production gates unchanged"
+      ],
+      "implementationGate": "PROCEED for specification only once DOMAIN-001 is VERIFIED. A subsequent explicit implementation prompt is required; this task does not authorize modification code.",
+      "remainingWork": "Proposed next bounded P1 planning task only; not implemented by DOMAIN-001."
     }
   ],
   "unresolvedQuestions": [
@@ -2980,6 +3067,8 @@
     "POLICY-001",
     "PRIORITY-001",
     "PEOPLE-CORE-01",
+    "RESERVATION-DOMAIN-001",
+    "RESERVATION-DOMAIN-002",
     "CORE-AUTH-01",
     "CORE-AUTH-02-ENV-LOCAL-002",
     "CORE-AUTH-02-ENV-LOCAL-003",
@@ -3015,7 +3104,7 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "Owner decision — authorize bounded static stunnel payload inventory to resolve LOCAL-004-PACKAGE-001 A2 evidence gaps",
+  "nextExactTask": "RESERVATION-DOMAIN-002 — specify atomic internal reservation modification (documentation only), depending on VERIFIED RESERVATION-DOMAIN-001 and PEOPLE-CORE-01. No modification code or production-route work authorized by this package.",
   "deliveryPriority": {
     "decisionId": "PRIORITY-D001",
     "primaryTarget": "PART 1 — CORE ONLINE RESERVATION SYSTEM",
@@ -3357,13 +3446,25 @@
         "priorityPart": 2,
         "classification": "PART 2 REQUIRED",
         "reason": "Safe real-provider staff sessions required before SETTINGS-CORE-01 and reservation book/check-in/seating; prevents unverified staff identity/transport and tenant access from reaching core workflows"
+      },
+      {
+        "taskId": "RESERVATION-DOMAIN-001",
+        "priorityPart": 1,
+        "classification": "PART 1",
+        "reason": "Existing bounded internal reservation slice on VERIFIED DB-HARNESS-001/PEOPLE-CORE-01; verify before extending. No bypass of production staff/public gates."
+      },
+      {
+        "taskId": "RESERVATION-DOMAIN-002",
+        "priorityPart": 1,
+        "classification": "PART 1",
+        "reason": "Next documentation-only contract for required modification, bounded to internal domain after DOMAIN-001 verification; no production authentication bypass or premature implementation."
       }
     ],
     "coreReadinessGate": {
       "taskId": "CORE-READY-01",
       "status": "UNMET",
       "criteriaSource": "AGENTS.md CORE READINESS GATE items 1–10",
-      "evidence": "Existing foundation/People checks do not verify integrated reservation core."
+      "evidence": "CHK-081 verifies internal reservation search/create/read/list/cancel on PostgreSQL16.15. Guest/public/widget integration, remaining lifecycle, confirmation delivery and live authentication remain unverified; integrated gate UNMET."
     },
     "unresolvedPrerequisites": [
       {
@@ -3396,7 +3497,7 @@
         "id": "CORE-GAP-004",
         "classification": "NEEDS SPECIFICATION / TESTING — PROJECTX",
         "ownerTask": "RESERVATIONS-CORE-01",
-        "gap": "Atomic allocation/concurrency/retries/allowed lifecycle and necessary non-export audit require scoped contracts/tests; D010 approves export only."
+        "gap": "RESERVATION-DOMAIN-001 internal allocation/concurrency/retries/cancellation/audit verified by CHK-081; full modification/check-in/seating, HTTP/public access and integrated guest-to-staff verification remain separate. PEOPLE-D010 stays export-only/deferred."
       }
     ],
     "optionalPeopleIntegrations": "Reuse PEOPLE-07A/08A only if a reviewed core staff workflow requires them; never infer employee identity or require name-management editors.",

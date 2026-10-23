@@ -1,23 +1,26 @@
-CURRENT PHASE: PHASE-04 Core domain implementation — IN_PROGRESS.
-CURRENT TASK: LOCAL-004-PACKAGE-001 — Option A read-only stunnel portable-extraction feasibility review.
-STATUS: Review DOCUMENTED / A2 — potentially portable, but evidence insufficient; LOCAL-004 and package blocker BLOCKED (CHK-079).
-COMPLETED: Clean starting HEAD 963b550ba295ad137207542de5822501bfabba10 on people-03-accounts-read. Official stunnel5.82 source pinned to b611485e29e96e71404967fbaba1ecff15ff0c4c, manual/license and 7-Zip format support reviewed. NSIS and console design supported; complete released portable runtime not established. Historical CHK-078 artifact/signature/cleanup findings preserved, not re-executed.
-FILES CREATED: None.
-FILES MODIFIED: docs/architecture/ADR-0017-zero-cost-provider-verification.md; docs/project-map/roadmap.json; docs/project-map/verification.json; docs/project-map/handoff.md; docs/security/staff-session-verification.md.
-TESTS EXECUTED: pnpm map:check; git diff --check; JSON/unique IDs/DAG/preservation/scope/added-secret-pattern checks. No application/database/browser/transport tests or downloaded executable/inspection/extraction utilities run.
-TEST RESULTS: PASS map (144 screens/16 modules/59 tasks), diff, JSON/IDs/DAG, all78 prior checks/26 VERIFIED/57 unrelated tasks, all task statuses/dependencies, decisions/app-map/dependencies/reference preservation, append-only ADR history, five-doc scope and added-secret-pattern checks; no untracked files. Static evidence only; no runtime/security PASS.
-UNRESOLVED ISSUES: Exact release DLL/import/manifest closure, effective OpenSSL/provider configuration and skipped generated material; payload integrity. Non-elevated execution, filesystem/logging/trust/TLS/HTTP/body/authority/cookie/sentinel behavior NEEDS TESTING. Gateway localhost:8443 authority, multi-instance routing, actual Auth0 Free account and restricted PostgreSQL16 remain separate prerequisites.
-ACTION REQUIRED: Separate owner decision on smallest missing static payload evidence; ADR-0017 CHK-079 records A/B/C/D options. A2 is not acquisition/extraction/runtime authorization.
-RECOMMENDED TECHNICAL DEFAULT: Review an already-available reader/method, then separately authorize authenticated exact-package acquisition/static inventory if upstream text cannot supply gaps. No installer/plugins/payload execution, configuration, trust or listener.
-APPROVAL BOUNDARY: Research/documentation only, $0 infrastructure. No executable download/extraction/install/run, new utilities, config/trust/listeners/services/registry/firewall/system changes, provisioning, purchase, ProjectX/Auth0/PostgreSQL, real callbacks/secrets, public/LAN exposure or push. No terminator switch.
-PRIORITY PART: 2 — REQUIRED FOUNDATION.
-CORE WORKFLOW ADVANCED: Evidence prerequisite for trusted staff provider verification before reservation Venue settings/book/check-in/seating; no runtime capability advanced.
-CORE READINESS GATE: UNMET — CORE-READY-01.
-REQUIRED FOUNDATION DEPENDENCIES: CORE-AUTH-01/PEOPLE-CORE-01 VERIFIED; CORE-AUTH-02 IMPLEMENTED; LOCAL-001/LOCAL-004 BLOCKED; LOCAL-GATE-001/002 BLOCKED;003 BLOCKED / NEEDS ACCOUNT CHECK; provider NEEDS TESTING; ENVIRONMENT READY NO.
-DEFERRED SECONDARY TASKS AND REASONS: D005 paid Render deferred under D007 $0; PEOPLE-09 READY / PART3 DEFERRED; PEOPLE-09B/10 PLANNED / DEFERRED; SETTINGS-CORE-01 PLANNED awaiting VERIFIED auth; IMPL-MOD-14 IN_PROGRESS.
-TASK-SELECTION GATE: LOCAL-004-PACKAGE-001 / Part2 / PROCEED for static review only; execution BLOCKED. Owned five docs; no code/test/runtime/system changes. Acceptance: source-backed packaging/dependency/logging/risk analysis, one A1-A4 result and bounded next evidence. Verification: documentation tooling only. Regression: all78 prior checks/26 VERIFIED tasks/D004-D008/reference state unchanged.
-SEVENROOMS TRACK: Classifications/U-001/U-002/U-003 unchanged; no new evidence/parity. Quick Tunnel NOT APPROVED; CHK-075–078 intact.
-NEXT EXACT TASK: Owner decision — authorize bounded static stunnel payload inventory to resolve LOCAL-004-PACKAGE-001 A2 evidence gaps.
-NEXT EXACT CORE TASK OR REQUIRED PREDECESSOR: Resolve package evidence before separately authorized fake transport/trust verification; no LOCAL-004 resume, LOCAL-005, provider or application task started.
-FILES NEXT AGENT MUST READ: AGENTS.md; docs/project-map/{roadmap,decisions,verification,dependencies}.json; ADR-0017 CHK-077/078/079; docs/security/staff-session-verification.md; docs/security/staff-access-integration.md.
-PUBLICATION: One local documentation-only child of 963b550ba295ad137207542de5822501bfabba10 after validation. No push; separate exact-SHA approval required.
+CURRENT PHASE: PHASE-04 — Core domain implementation, IN_PROGRESS.
+CURRENT TASK: RESERVATION-DOMAIN-001 — internal reservation-domain slice.
+STATUS: VERIFIED — CHK-081, 2026-10-23. Whole reservation product remains incomplete.
+COMPLETED: Search/select/create/occupied/staff get+list/cancel/restored-capacity demo on PostgreSQL16.15; safe table allocation, current tenant/Venue permissions/RLS, idempotency, audit rollback and timezone/DST. Six-table migration/service/tests and entity contract documented. Five one-line ledger-inventory updates preserve exact old checksum/privilege assertions.
+FILES CREATED: apps/api/src/reservations/service.ts; apps/api/migrations/zz-reservation-domain/20261017001000_reservation_domain.sql; apps/api/tests/reservations/domain.test.ts; docs/architecture/ADR-0018-reservation-domain-slice.md; docs/data/reservation-domain.md; prior readiness-2026-10-20.md retained.
+FILES MODIFIED: tooling/db-test.mjs; apps/api/tests/people/{booked-by,server-names,direct-grants-migrations,rls-migrations,roster-fields-migrations}.test.ts; docs/data/entity-registry.json; roadmap/verification/handoff; README.
+TESTS EXECUTED: pnpm db:check; focused domain suite; pnpm verify:db; pnpm verify; isolated Booked By web suite; pnpm map:check; git diff --check; JSON/DAG/history preservation validation.
+TEST RESULTS: db smoke2/2; focused26/26; final full database236/236 across22 files; full general gate PASS with4 unit+56 auth+19 API+178 web+32 browser tests, types/lint/format/contracts and API/web builds. Initial8 ledger failures corrected; one web refresh failure did not reproduce in unchanged58/58 isolated or complete rerun. All attempts retained in CHK-081; no current failing gate.
+UNRESOLVED ISSUES: Non-reproduced web test cause not proven. Production/public guest access, HTTP/UI reservation integration, modification/check-in/seating, actual confirmations and live-provider verification remain excluded. Remote CI not run. Disposable test container removed after verifying its exact identity/task label; cached image retained.
+PRIORITY PART: 1.
+CORE WORKFLOW ADVANCED: Persisted internal search → create → occupied → authorized staff read/list → cancel → available.
+CORE READINESS GATE: unmet — CHK-081 does not verify all ten guest-to-staff integration criteria.
+REQUIRED FOUNDATION DEPENDENCIES: DB-HARNESS-001 and PEOPLE-CORE-01 VERIFIED; CORE-AUTH-02 remains IMPLEMENTED/unverified for live exposure. Original production/settings/widget gates unchanged.
+DEFERRED SECONDARY TASKS AND REASONS: PEOPLE-09/09B/10 and export-only PEOPLE-D010 implementation remain deferred under PRIORITY-D001. No stunnel/Cloudflare/Render/Auth0 work; budget $0.
+TASK ID: RESERVATION-DOMAIN-001.
+DEPENDENCIES AND THEIR VERIFIED STATUS: DB-HARNESS-001 VERIFIED; PEOPLE-CORE-01 VERIFIED; domain acceptance now VERIFIED.
+WHY THIS TASK IS REQUIRED NOW: Owner-authorized first functional internal reservation slice.
+OWNED SCOPE AND EXCLUDED SCOPE: Internal service/migration/tests/demo/docs; required exact-ledger regression compatibility only. Exclude public/browser routes, auth bypass, new lifecycle features, external confirmation, unrelated runtime edits and push.
+ACCEPTANCE CRITERIA: All bounded ADR-0018/roadmap criteria PASS; no whole-product claim.
+VERIFICATION COMMANDS: On disposable PG16 _test database with NODE_ENV=test/TEST_DATABASE=1: pnpm db:check; pnpm exec vitest run apps/api/tests/reservations/domain.test.ts --no-file-parallelism --reporter=verbose; pnpm verify:db; pnpm verify; pnpm map:check; git diff --check. Demo-only command adds -t DEMONSTRATION. See docs/data/reservation-domain.md.
+REGRESSION CHECKS: Preserve all80 prior checks,26 prior VERIFIED tasks, accepted decisions/reference classifications and historical migrations. RESERVATION-DOMAIN-001-REGRESSION-001 documents five necessary inventory corrections; no original assertions weakened.
+DECISION: Current package VERIFIED; next task PROCEED for documentation only, not new code.
+NEXT EXACT TASK: RESERVATION-DOMAIN-002 — specify atomic internal reservation modification, documentation only; depends on now-VERIFIED DOMAIN-001 and PEOPLE-CORE-01. Define version/idempotency, permission, capacity-transfer/rollback and timezone tests before separate implementation authorization.
+NEXT EXACT CORE TASK OR REQUIRED PREDECESSOR: DOMAIN-002 specification; do not resume infrastructure or expose the internal slice. Existing production tasks keep their gates.
+FILES NEXT AGENT MUST READ: AGENTS.md; docs/project-map/{roadmap,app-map,dependencies,decisions,verification}.json; ADR-0018; docs/data/reservation-domain.md; docs/data/entity-registry.json; domain service/migration/tests; tooling/db-test.mjs.
+PUBLICATION: One logical local feature commit containing CHK-081; parent cba69055c70f750f4c18760e86deeda889d829c1 on people-03-accounts-read. Starting worktree contained known task/readiness changes, preserved. No push; publication requires separate approval. Exact resulting commit SHA is in the completion response/Git log.

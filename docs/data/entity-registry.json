@@ -117,7 +117,17 @@
       "referenceConfidence": "INFERRED_FROM_VISIBLE_UI",
       "persistenceStatus": "BOUNDARY_DEFINED",
       "relationshipBoundary": "Organization identity; venue operational child separated",
-      "evidence": "INFERRED"
+      "evidence": "INFERRED",
+      "reservationDomainSlice": {
+        "taskId": "RESERVATION-DOMAIN-001",
+        "classification": "CONFIRMED PROJECTX IMPLEMENTATION",
+        "verification": "CHK-081 VERIFIED: PostgreSQL16.15 focused26/26 and full database236/236",
+        "migration": "apps/api/migrations/zz-reservation-domain/20261017001000_reservation_domain.sql",
+        "tables": [
+          "reservation_clients"
+        ],
+        "boundary": "Organization-owned minimal identity only; required name/email snapshot stays in reservations under Venue RLS. No deduplication or directory."
+      }
     },
     {
       "id": "ENT-007",
@@ -491,7 +501,17 @@
       "referenceConfidence": "INFERRED_FROM_VISIBLE_UI",
       "persistenceStatus": "BOUNDARY_DEFINED",
       "relationshipBoundary": "Venue reservation and organization invariant",
-      "evidence": "INFERRED"
+      "evidence": "INFERRED",
+      "reservationDomainSlice": {
+        "taskId": "RESERVATION-DOMAIN-001",
+        "classification": "CONFIRMED PROJECTX IMPLEMENTATION",
+        "verification": "CHK-081 VERIFIED: PostgreSQL16.15 focused26/26 and full database236/236",
+        "migration": "apps/api/migrations/zz-reservation-domain/20261017001000_reservation_domain.sql",
+        "tables": [
+          "reservations"
+        ],
+        "boundary": "Internal BOOKED/CANCELLED slice, tenant/Venue/client/table/shift composite ownership, UTC interval and Venue-local date; no public API."
+      }
     },
     {
       "id": "ENT-029",
@@ -610,7 +630,17 @@
       "referenceConfidence": "INFERRED_FROM_VISIBLE_UI",
       "persistenceStatus": "BOUNDARY_DEFINED",
       "relationshipBoundary": "Venue service shift",
-      "evidence": "INFERRED"
+      "evidence": "INFERRED",
+      "reservationDomainSlice": {
+        "taskId": "RESERVATION-DOMAIN-001",
+        "classification": "CONFIRMED PROJECTX IMPLEMENTATION",
+        "verification": "CHK-081 VERIFIED: PostgreSQL16.15 focused26/26 and full database236/236",
+        "migration": "apps/api/migrations/zz-reservation-domain/20261017001000_reservation_domain.sql",
+        "tables": [
+          "reservation_shifts"
+        ],
+        "boundary": "Date-specific non-overnight shift, local minutes, elapsed duration, step and party eligibility; fixture/admin configured."
+      }
     },
     {
       "id": "ENT-036",
@@ -661,7 +691,17 @@
       "referenceConfidence": "INFERRED_FROM_VISIBLE_UI",
       "persistenceStatus": "BOUNDARY_DEFINED",
       "relationshipBoundary": "Venue table",
-      "evidence": "INFERRED"
+      "evidence": "INFERRED",
+      "reservationDomainSlice": {
+        "taskId": "RESERVATION-DOMAIN-001",
+        "classification": "CONFIRMED PROJECTX IMPLEMENTATION",
+        "verification": "CHK-081 VERIFIED: PostgreSQL16.15 focused26/26 and full database236/236",
+        "migration": "apps/api/migrations/zz-reservation-domain/20261017001000_reservation_domain.sql",
+        "tables": [
+          "reservation_tables"
+        ],
+        "boundary": "Venue-owned capacity and active state; no editor or table combination."
+      }
     },
     {
       "id": "ENT-039",
@@ -763,7 +803,17 @@
       "referenceConfidence": "INFERRED_FROM_VISIBLE_UI",
       "persistenceStatus": "BOUNDARY_DEFINED",
       "relationshipBoundary": "Belongs to exactly one organization",
-      "evidence": "INFERRED"
+      "evidence": "INFERRED",
+      "reservationDomainSlice": {
+        "taskId": "RESERVATION-DOMAIN-001",
+        "classification": "CONFIRMED PROJECTX IMPLEMENTATION",
+        "verification": "CHK-081 VERIFIED: PostgreSQL16.15 focused26/26 and full database236/236",
+        "migration": "apps/api/migrations/zz-reservation-domain/20261017001000_reservation_domain.sql",
+        "tables": [
+          "reservation_venue_settings"
+        ],
+        "boundary": "Extension of existing Venue using composite ownership; IANA timezone only, fixture/admin configured."
+      }
     },
     {
       "id": "ENT-045",
@@ -916,7 +966,17 @@
       "referenceConfidence": "NOT_REFERENCE_ENTITY",
       "persistenceStatus": "FOUNDATION_DEFINED",
       "relationshipBoundary": "ProjectX-only conceptual record; physical tables deferred",
-      "evidence": "INFERRED"
+      "evidence": "INFERRED",
+      "reservationDomainSlice": {
+        "taskId": "RESERVATION-DOMAIN-001",
+        "classification": "CONFIRMED PROJECTX IMPLEMENTATION",
+        "verification": "CHK-081 VERIFIED: PostgreSQL16.15 focused26/26 and full database236/236",
+        "migration": "apps/api/migrations/zz-reservation-domain/20261017001000_reservation_domain.sql",
+        "tables": [
+          "reservation_changes"
+        ],
+        "boundary": "Append-only CREATED/CANCELLED transaction audit metadata; no guest PII, no generic/export or denial audit."
+      }
     },
     {
       "id": "PX-ENT-008",
@@ -950,7 +1010,17 @@
       "referenceConfidence": "NOT_REFERENCE_ENTITY",
       "persistenceStatus": "FOUNDATION_DEFINED",
       "relationshipBoundary": "ProjectX-only conceptual record; physical tables deferred",
-      "evidence": "INFERRED"
+      "evidence": "INFERRED",
+      "reservationDomainSlice": {
+        "taskId": "RESERVATION-DOMAIN-001",
+        "classification": "CONFIRMED PROJECTX IMPLEMENTATION",
+        "verification": "CHK-081 VERIFIED: PostgreSQL16.15 focused26/26 and full database236/236",
+        "migration": "apps/api/migrations/zz-reservation-domain/20261017001000_reservation_domain.sql",
+        "tables": [
+          "reservations"
+        ],
+        "boundary": "Unique organization/venue/actor/key plus normalized request fingerprint on reservation row; lifetime retention and replay including cancelled records."
+      }
     }
   ]
 }

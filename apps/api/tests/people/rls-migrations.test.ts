@@ -20,6 +20,7 @@ const files = [
   "people-zz-booked-by/20261002000700_people_booked_by.sql",
   "people-zzz-server-names/20261003000800_people_server_names.sql",
   "staff-auth/20261005000900_staff_sessions.sql",
+  "zz-reservation-domain/20261017001000_reservation_domain.sql",
 ];
 const content = (name: string) =>
   readFile(new URL(`../../migrations/${name}`, import.meta.url));

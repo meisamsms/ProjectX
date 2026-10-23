@@ -690,6 +690,7 @@ describe("PEOPLE-07A forward migration", () => {
           migration,
           "people-zzz-server-names/20261003000800_people_server_names.sql",
           "staff-auth/20261005000900_staff_sessions.sql",
+          "zz-reservation-domain/20261017001000_reservation_domain.sql",
         ].map(async (name) => ({
           name,
           checksum: checksum(await content(name)),

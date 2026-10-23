@@ -1462,18 +1462,66 @@
         }
       ],
       "gatewayChecks": [
-        { "id": "GW-01", "status": "NEEDS TESTING", "result": "NOT EXECUTED — shared nginx startup/syntax failure" },
-        { "id": "GW-02", "status": "NEEDS TESTING", "result": "NOT EXECUTED — shared nginx startup/syntax failure" },
-        { "id": "GW-03", "status": "NEEDS TESTING", "result": "NOT EXECUTED — shared nginx startup/syntax failure" },
-        { "id": "GW-04", "status": "NEEDS TESTING", "result": "NOT EXECUTED — shared nginx startup/syntax failure" },
-        { "id": "GW-05", "status": "NEEDS TESTING", "result": "NOT EXECUTED — shared nginx startup/syntax failure" },
-        { "id": "GW-06", "status": "NEEDS TESTING", "result": "NOT EXECUTED — shared nginx startup/syntax failure" },
-        { "id": "GW-07", "status": "NEEDS TESTING", "result": "NOT EXECUTED — shared nginx startup/syntax failure" },
-        { "id": "GW-08", "status": "NEEDS TESTING", "result": "NOT EXECUTED — shared nginx startup/syntax failure" },
-        { "id": "GW-09", "status": "NEEDS TESTING", "result": "NOT EXECUTED — shared nginx startup/syntax failure" },
-        { "id": "GW-10", "status": "NEEDS TESTING", "result": "NOT EXECUTED — shared nginx startup/syntax failure" },
-        { "id": "GW-11", "status": "NEEDS TESTING", "result": "NOT EXECUTED — shared nginx startup/syntax failure" },
-        { "id": "GW-12", "status": "NEEDS TESTING", "result": "NOT EXECUTED — shared nginx startup/syntax failure" }
+        {
+          "id": "GW-01",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared nginx startup/syntax failure"
+        },
+        {
+          "id": "GW-02",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared nginx startup/syntax failure"
+        },
+        {
+          "id": "GW-03",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared nginx startup/syntax failure"
+        },
+        {
+          "id": "GW-04",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared nginx startup/syntax failure"
+        },
+        {
+          "id": "GW-05",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared nginx startup/syntax failure"
+        },
+        {
+          "id": "GW-06",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared nginx startup/syntax failure"
+        },
+        {
+          "id": "GW-07",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared nginx startup/syntax failure"
+        },
+        {
+          "id": "GW-08",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared nginx startup/syntax failure"
+        },
+        {
+          "id": "GW-09",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared nginx startup/syntax failure"
+        },
+        {
+          "id": "GW-10",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared nginx startup/syntax failure"
+        },
+        {
+          "id": "GW-11",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared nginx startup/syntax failure"
+        },
+        {
+          "id": "GW-12",
+          "status": "NEEDS TESTING",
+          "result": "NOT EXECUTED — shared nginx startup/syntax failure"
+        }
       ],
       "preservedState": {
         "deploy002": "IMPLEMENTED / VERIFICATION INCOMPLETE",
@@ -3173,6 +3221,242 @@
       "noTrustOrSystemChanges": true,
       "noProvisioning": true,
       "noPush": true
+    },
+    {
+      "id": "CHK-080",
+      "taskId": "RESERVATION-DOMAIN-001",
+      "subtaskId": "READINESS-REVIEW-20261020",
+      "date": "2026-10-20",
+      "status": "DOCUMENTED",
+      "classification": "CONFIRMED repository and non-database regression findings; reservation persistence and live integration NEEDS TESTING",
+      "startingLocalSha": "cba6905",
+      "branch": "people-03-accounts-read",
+      "authorization": "Owner requested project connectivity/readiness check. Documentation and verification only; no application code changes or new implementation authorization.",
+      "result": "General pnpm verify PASS after approved outside-sandbox rerun. Database gate BLOCKED by absent test DATABASE_URL. Existing domain slice remains IN_PROGRESS and integrated core gate UNMET. Roadmap execution order, next task, README and handoff reconciled.",
+      "environment": {
+        "os": "Windows / PowerShell",
+        "node": "24.19.0",
+        "pnpm": "11.25.0",
+        "database": "No DATABASE_URL or TEST_DATABASE supplied; no database migrations/assertions executed",
+        "docker": "CLI installed; Linux-engine named pipe absent at inspection",
+        "browser": "Existing Playwright Chromium successfully executed 32 tests; no new browser installed",
+        "workingTree": "Pre-existing modified roadmap/db-test runner and untracked reservation migration/service/tests/ADR-0018 preserved"
+      },
+      "commands": [
+        {
+          "command": "pnpm verify",
+          "context": "initial sandbox",
+          "outcome": "FAIL at test:auth",
+          "detail": "Environment/format/lint/typecheck and 4 unit tests passed. Authentication import ENOENT in sandbox temporary ssr cache; 35 auth assertions passed but one suite failed to load. Later steps not reached."
+        },
+        {
+          "command": "pnpm format:check; pnpm lint; pnpm typecheck",
+          "context": "independent sandbox checks",
+          "outcome": "PASS",
+          "detail": "Read-only checks; no formatter fixes applied."
+        },
+        {
+          "command": "pnpm verify",
+          "context": "approved outside-sandbox rerun",
+          "outcome": "PASS",
+          "detail": "Environment, format, lint, typecheck, unit 4/4, authentication 56/56, OpenAPI validity/generated freshness, map 144 screens/16 modules/60 tasks, API integration 19/19, web 178/178, browser 32/32 including axe, API and web builds."
+        },
+        {
+          "command": "pnpm verify:db",
+          "context": "current local shell",
+          "outcome": "BLOCKED",
+          "exitCode": 1,
+          "detail": "DATABASE_URL is required for real PostgreSQL database tests. Migration runner stopped at safety guard; no database tests executed."
+        },
+        {
+          "command": "docker ps --format [names/images/ports]",
+          "context": "read-only local availability check",
+          "outcome": "UNAVAILABLE",
+          "detail": "DockerDesktopLinuxEngine named pipe missing; not treated as an application defect."
+        }
+      ],
+      "warnings": [
+        "Node DEP0190 shell child-process deprecation warning; command completed successfully.",
+        "Vite/react-router use-client directive warnings and NO_COLOR/FORCE_COLOR warning; build/browser checks completed successfully."
+      ],
+      "connections": {
+        "reservationDomain": "Internal service uses existing trusted identity/permission transaction boundary; focused suite registered in database runner. Runtime database behavior not verified in this review.",
+        "httpAndUi": "Reservation service has no HTTP registration/OpenAPI path or booking UI. Existing shell renders placeholders outside People pages; this matches ADR-0018 exclusions.",
+        "liveStaff": "OIDC/session/restricted-pool wiring exists. Real provider, trusted localhost transport/gateway and deployed database evidence remain required under CHK-079.",
+        "browserEvidence": "Shell/People synthetic API browser tests, not integrated live API/database/guest-to-staff proof."
+      },
+      "unresolvedQuestions": [
+        {
+          "id": "READINESS-20261020-01",
+          "classification": "NEEDS TESTING",
+          "ownerTask": "RESERVATION-DOMAIN-001",
+          "question": "Can the existing slice pass focused and full database checks against disposable PostgreSQL16?",
+          "affectedModules": [
+            "MOD-02",
+            "MOD-04",
+            "MOD-11",
+            "MOD-13"
+          ],
+          "requiredPredecessor": "Existing DB-HARNESS-001 test environment configured; DB-HARNESS-001 and PEOPLE-CORE-01 remain historically VERIFIED."
+        },
+        {
+          "id": "READINESS-20261020-02",
+          "classification": "CONFIRMED",
+          "ownerTask": "RESERVATION-DOMAIN-001",
+          "question": "Reconcile ADR-0018 physical entity documentation with the six existing reservation tables before closing this slice."
+        },
+        {
+          "id": "READINESS-20261020-03",
+          "classification": "NEEDS TESTING",
+          "ownerTask": "CORE-AUTH-02",
+          "question": "Resolve existing LOCAL-004-PACKAGE-001/transport/provider prerequisites without bypassing their authorization boundaries."
+        },
+        {
+          "id": "READINESS-20261020-04",
+          "classification": "UNKNOWN",
+          "ownerTask": "RESERVATION-DOMAIN-001",
+          "question": "Current exact working-content CI/publication evidence is unavailable; this review neither commits nor pushes."
+        }
+      ],
+      "coreReadinessGate": "UNMET; all ten integrated owner criteria remain required. Mocked/synthetic tests and an unverified internal slice are insufficient.",
+      "priority": "PRIORITY-D001 retained. PEOPLE-D010 export-only decision unchanged and not a reservation prerequisite. PEOPLE-09/09B/10 and remaining Part3 work stay deferred.",
+      "nextExactTask": "RESERVATION-DOMAIN-001 — complete existing internal slice verification on isolated PostgreSQL16 and physical entity documentation before downstream integration.",
+      "evidenceFiles": [
+        "docs/project-map/readiness-2026-10-20.md",
+        "docs/project-map/roadmap.json",
+        "docs/project-map/handoff.md",
+        "docs/architecture/ADR-0018-reservation-domain-slice.md"
+      ],
+      "noApplicationCodeChanges": true,
+      "noProvisioning": true,
+      "noTrustChanges": true,
+      "noCommitOrPush": true
+    },
+    {
+      "id": "CHK-081",
+      "taskId": "RESERVATION-DOMAIN-001",
+      "date": "2026-10-23",
+      "status": "VERIFIED",
+      "classification": "CONFIRMED local internal domain implementation and verification; production/public integration remains NEEDS TESTING",
+      "startingLocalSha": "cba69055c70f750f4c18760e86deeda889d829c1",
+      "branch": "people-03-accounts-read",
+      "authorization": "Attached owner RESERVATION-DOMAIN-001 implementation package, continue on 2026-10-22, resumed after review-limit interruption on 2026-10-23. One agent, local-only implementation/tests/docs/commit; no push.",
+      "startingWorktree": "Not clean: existing domain migration/service/tests/ADR/runner and prior readiness docs. Preserved and completed in the same feature package; branch and exact required starting SHA match.",
+      "environment": {
+        "os": "Windows host; Docker Linux PostgreSQL",
+        "node": "24.19.0",
+        "pnpm": "11.25.0",
+        "postgresql": "16.15 (Debian 16.15-1.pgdg13+2)",
+        "image": "postgres:16",
+        "imageDigest": "sha256:9e2cf6287f25c3151f4c9421ccce2b17f3e60061c111a29165e0d2cdd9ff0a97",
+        "database": "projectx_reservation_test",
+        "listener": "127.0.0.1:55432",
+        "storage": "Disposable tmpfs; --rm container",
+        "data": "Synthetic only; owner fixture connection plus restricted non-owner runtime login; no real guest/provider data"
+      },
+      "commands": [
+        {
+          "command": "pnpm db:check",
+          "date": "2026-10-22",
+          "result": "PASS 2/2: real PostgreSQL16 and pool reuse"
+        },
+        {
+          "command": "NODE_ENV=test pnpm exec vitest run apps/api/tests/reservations/domain.test.ts --no-file-parallelism",
+          "date": "2026-10-22",
+          "result": "PASS 26/26 initial; PASS 26/26 with --reporter=verbose after stronger migration comparison/demo slot selection"
+        },
+        {
+          "command": "pnpm verify:db",
+          "date": "2026-10-22",
+          "result": "FAIL 8/236 across5 files; all failures exact whole-ledger expectations omitted newly added reservation migration; 228 passed",
+          "resolution": "Append exact new migration path to five expectation lists; checksums/privilege/RLS/data-preservation assertions retained, no historical migration or People runtime changes"
+        },
+        {
+          "command": "pnpm verify",
+          "date": "2026-10-22",
+          "result": "FAIL at web:177/178; existing Booked By stale409 explicit-refresh assertion expected second save call. Earlier env/format/lint/types/unit4/auth56/contracts/map/integration19 passed; browser/build not reached",
+          "resolution": "Unchanged affected web file isolated rerun58/58; final full rerun required. Scheduling-sensitive failure INFERRED, not a diagnosed/fixed runtime defect."
+        },
+        {
+          "command": "pnpm exec vitest run apps/web/tests/people/booked-by.test.tsx --no-file-parallelism",
+          "date": "2026-10-22",
+          "result": "PASS58/58 unchanged"
+        },
+        {
+          "command": "pnpm verify:db",
+          "date": "2026-10-23",
+          "result": "PASS236/236 across22 files; ordered migration pass followed by all database regression suites",
+          "durationSeconds": 91.91
+        },
+        {
+          "command": "pnpm verify",
+          "date": "2026-10-23",
+          "result": "PASS: Node requirement, format, lint, typecheck, unit4/4, auth56/56, contract freshness, map, API19/19, web178/178, browser32/32 including axe, API/web builds",
+          "limitation": "Synthetic People browser tests; no guest-to-staff HTTP/browser reservation flow"
+        },
+        {
+          "command": "pnpm map:check; git diff --check; JSON/DAG/history preservation checks",
+          "date": "2026-10-23",
+          "result": "Final documentation validation recorded before local commit; no runtime rerun needed for docs-only closure"
+        }
+      ],
+      "interruption": "2026-10-22 automatic approval review could not complete due usage limit; corrected full gate command did not execute then. Same authorized verification resumed successfully2026-10-23; no bypass.",
+      "demonstration": {
+        "result": "PASS with actual database operations in focused suite and full database gate",
+        "scenario": "Test Restaurant; future Venue-local January15; America/Chicago; party2; capacity2; returned slot selected",
+        "steps": [
+          "Availability returned",
+          "Reservation/client/CREATED metadata persisted atomically",
+          "Occupied table interval no longer offered",
+          "Authorized staff-domain get/list returned reservation",
+          "Cancellation persisted with CANCELLED metadata",
+          "Original availability restored"
+        ],
+        "entrypoint": "pnpm exec vitest run apps/api/tests/reservations/domain.test.ts --no-file-parallelism --reporter=verbose -t DEMONSTRATION",
+        "scope": "Internal domain only; not browser widget or external confirmation"
+      },
+      "securityAndCorrectness": {
+        "concurrency": "PASS: competing domain commands exactly one winner; separate raw runtime connections exclusion23P01; adjacent intervals allowed; cancellation/retries preserve consistent allocation",
+        "idempotency": "PASS: sequential/concurrent same-key replay; changed payload conflict; cancelled replay; Venue-scoped key independence",
+        "tenantRls": "PASS: Organization/Venue swaps, missing/forged context, unbranded identities, disabled/revoked access, read-only denial, non-owner/NOBYPASSRLS, restricted config/audit writes, transaction-local pool cleanup",
+        "timezones": "PASS: Chicago spring gap/fall repeated UTC instants; nonexistent/ambiguous shift boundaries; Kolkata date rollover; invalid zone/date/window",
+        "atomicity": "PASS: create/cancel audit failure rollbacks, no partial client/reservation/key, safe retry",
+        "migration": "PASS: clean/upgrade reapplication compares columns/constraints/RLS policies; six RLS tables; full historical migration regression retained"
+      },
+      "integrationDependency": "RESERVATION-DOMAIN-001-REGRESSION-001: five one-line exact-ledger inventory corrections required by new migration",
+      "evidenceFiles": [
+        "docs/architecture/ADR-0018-reservation-domain-slice.md",
+        "docs/data/reservation-domain.md",
+        "docs/data/entity-registry.json",
+        "apps/api/tests/reservations/domain.test.ts"
+      ],
+      "limitations": [
+        "CORE-READY-01 remains UNMET",
+        "No HTTP/public/widget/production synthetic auth bypass",
+        "Modification/check-in/seating/external confirmation and live Auth0 not implemented or verified by this package",
+        "No remote CI/publication claimed; local commit only"
+      ],
+      "noPush": true,
+      "result": "Bounded reservation-domain package VERIFIED. Actual PG16 demonstration, focused26/26, database236/236 and full pnpm verify PASS. Initial failures and review interruption retained. No whole-product/core-readiness claim.",
+      "cleanup": {
+        "result": "PASS",
+        "container": "projectx-reservation-domain-test",
+        "identityVerified": "fcce78196593b430cf0bc5c3b513d2158d8844003b3e95b30347befc0ab2abc0 with matching task label",
+        "action": "docker stop after DB gates; --rm removed container; filtered docker ps -a returned none; tmpfs synthetic data discarded",
+        "image": "Cached official image retained; no system-wide Docker shutdown"
+      },
+      "nextExactTask": "RESERVATION-DOMAIN-002 — specify atomic internal reservation modification (documentation only), depending on VERIFIED RESERVATION-DOMAIN-001 and PEOPLE-CORE-01. No modification code or production-route work authorized by this package.",
+      "preservedState": "All80 earlier checks and26 prior VERIFIED task objects unchanged; previous decisions/app-map/dependencies and historical SQL unchanged. New task DOMAIN-002 is planning only; original production/auth/settings/widget dependency gates unchanged.",
+      "warnings": [
+        "Non-blocking Node DEP0190 shell deprecation, terminal-color and React Router use-client bundling warnings",
+        "Book By web refresh test had one non-reproduced failure before unchanged isolated58/58 and complete final178/178 web/32/32 browser passes; cause not proven"
+      ],
+      "publication": {
+        "localCommit": "Single feature commit containing CHK-081, parent cba69055c70f750f4c18760e86deeda889d829c1; exact resulting SHA reported in final response",
+        "push": false,
+        "approvalRequired": true,
+        "remoteCi": "Not run; local gates only"
+      }
     }
   ],
   "unresolvedQuestions": [
