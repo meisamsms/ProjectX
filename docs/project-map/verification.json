@@ -3878,6 +3878,58 @@
       "coreReadinessGate": "UNMET",
       "noPush": true,
       "result": "VERIFIED authenticated Staff Reservation HTTP API; all required focused, contract, database and application verification gates PASS. One local commit only."
+    },
+    {
+      "id": "CHK-086",
+      "taskId": "RESERVATION-DOMAIN-005",
+      "status": "VERIFIED",
+      "classification": "CONFIRMED local Staff Reservation Book browser UI (SCR-002/003/139) implementation and verification; public widget and live provider integration remain NEEDS TESTING",
+      "startingLocalSha": "6e84977237db56a5cc7f8831838d1666aaec08e7",
+      "branch": "people-03-accounts-read",
+      "authorization": "Owner explicitly authorized nonproduction P1 implementation and verification of RESERVATION-DOMAIN-005 (Staff Reservation Book UI covering SCR-002, SCR-003 and SCR-139) reusing VERIFIED RESERVATION-DOMAIN-001..004, staffFetch and existing contracts; no push.",
+      "commands": [
+        {
+          "command": "pnpm exec vitest run apps/web/tests/reservations/book.test.tsx apps/web/tests/shell.test.tsx --reporter=verbose",
+          "result": "PASS — 2 files, 17/17 tests (15/15 in book.test.tsx covering loading/empty states, initial 400/401/403/404/409/500 alerts, availability search, SCR-003 create with UUID idempotencyKey, draft preservation and retry key reuse on 409, SCR-139 modify/conflict/discard/check-in/seat/cancel, validation helpers, and all 8 client functions; 2/2 in shell.test.tsx)"
+        },
+        {
+          "command": "pnpm exec playwright test tests/e2e/reservations-book.spec.ts",
+          "result": "PASS — 9/9 browser E2E tests including @axe-core/playwright zero accessibility violations across SCR-002/003/139 search/create/modify/check-in/seat/cancel, 409 VERSION_CONFLICT draft preservation and explicit discard, initial 401/403/500 failure handling, and create 400/403/409/500 draft retention"
+        },
+        {
+          "command": "pnpm verify",
+          "result": "PASS — install:check, format:check, lint, typecheck, test:unit (4/4), test:auth (56/56), contract:check, map:check, test:integration (19/19), test:web (178/178), test:e2e (41/41), build"
+        },
+        {
+          "command": "pnpm map:check && git diff --check",
+          "result": "PASS — 0 errors, 0 whitespace issues"
+        }
+      ],
+      "securityAndCorrectness": {
+        "sessionAndScope": "PASS: all requests use staffFetch against /api/v1/staff/reservations/* with server-derived Organization/Venue authority; URL venue slug is never trusted as authorization",
+        "idempotencyAndRevisions": "PASS: create, modify, check-in and seat requests generate UUID idempotency keys, preserve keys across identical retries of an unchanged draft, and pass expectedRevision on modify/check-in/seat",
+        "draftPreservationAndConflicts": "PASS: 400/401/403/404/409/500 failures preserve unsaved SCR-003 and SCR-139 drafts, block stale-revision saves until refreshed, and prompt explicit Keep editing vs Discard changes and refresh confirmation",
+        "errorRedactionAndAccessibility": "PASS: raw server error text and PRIVATE tokens are never rendered; alerts and status banners receive programmatic focus; all Playwright E2E flows pass axe-core with 0 violations"
+      },
+      "preservedState": "All 85 earlier checks (CHK-001..CHK-085) and all 30 previously VERIFIED task objects unchanged; backend reservation routes/service and historical migrations untouched.",
+      "evidenceFiles": [
+        "docs/architecture/ADR-0022-staff-reservation-book-ui.md",
+        "docs/data/reservation-domain.md",
+        "apps/web/src/reservations/client.ts",
+        "apps/web/src/reservations/page.tsx",
+        "apps/web/src/shell.tsx",
+        "apps/web/tests/reservations/book.test.tsx",
+        "tests/e2e/reservations-book.spec.ts"
+      ],
+      "limitations": [
+        "CORE-READY-01 remains UNMET",
+        "No public guest widget routes/UI or confirmation delivery",
+        "Auth0/HTTPS/provider and production access gates unchanged",
+        "No push or current-commit GitHub CI"
+      ],
+      "coreReadinessGate": "UNMET",
+      "noPush": true,
+      "result": "VERIFIED Staff Reservation Book browser UI (SCR-002/003/139); all focused Vitest, Playwright E2E + axe accessibility, and full application verification gates PASS. One local commit only."
     }
   ],
   "unresolvedQuestions": [

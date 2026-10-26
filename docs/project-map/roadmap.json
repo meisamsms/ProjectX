@@ -3194,6 +3194,50 @@
       "specificationFile": "docs/architecture/ADR-0021-staff-reservation-http-api.md",
       "whyRequiredNow": "Exposes the verified internal reservation domain (DOMAIN-001/002/003) over authenticated staff HTTP endpoints with CORE-AUTH-02 session, CSRF, context-version and Venue RBAC/RLS protections.",
       "verificationEvidence": "CHK-085: PostgreSQL 16.15 focused HTTP suite 8/8 (including full lifecycle DEMONSTRATION), full database verification 280/280 across 23 files; contract check PASS; general verify PASS with 289 application/browser tests and API/web builds. Prior evidence preserved."
+    },
+    {
+      "id": "RESERVATION-DOMAIN-005",
+      "name": "Staff Reservation Book Browser UI (SCR-002/003/139)",
+      "phaseId": "PHASE-04",
+      "status": "VERIFIED",
+      "dependencies": [
+        "RESERVATION-DOMAIN-004",
+        "FOUND-TASK-004"
+      ],
+      "priorityPart": 1,
+      "priorityDecisionId": "PRIORITY-D001",
+      "screenIds": [
+        "SCR-002",
+        "SCR-003",
+        "SCR-139"
+      ],
+      "scope": "Owner-authorized nonproduction P1 implementation of the Staff Reservation Book browser UI (SCR-002 Reservations day, SCR-003 Add Reservation slideout, SCR-139 Reservation detail panel) integrated with the verified authenticated Staff Reservation HTTP API (/api/v1/staff/reservations) via staffFetch.",
+      "outOfScope": "No public guest widget UI/routes, no payment processing, no reporting/export, no database migrations or backend modifications, no live provider setup, and no push.",
+      "coreWorkflowAdvanced": "Browser-based staff reservation book for availability search, reservation listing/viewing, slot-based reservation creation, modification, check-in, seating and cancellation.",
+      "acceptanceCriteria": [
+        "SCR-002 loads Venue-local date reservations and availability slots and filters by date, party size and optional time window",
+        "SCR-003 creates reservations from selected available slots with client-side validation and draft-bound UUID idempotency keys",
+        "SCR-139 views reservation detail and executes modification, check-in, seating and cancellation with expectedRevision and UUID idempotency keys",
+        "Preserves unsaved drafts on 400/401/403/404/409/500 failures, blocks stale-revision saves until refreshed, and requires explicit confirmation before discarding dirty drafts",
+        "Never trusts URL venue slug as authorization; passes focused Vitest, Playwright E2E + axe accessibility, and full pnpm verify gates"
+      ],
+      "verificationCommands": [
+        "pnpm exec vitest run apps/web/tests/reservations/book.test.tsx apps/web/tests/shell.test.tsx --reporter=verbose",
+        "pnpm exec playwright test tests/e2e/reservations-book.spec.ts",
+        "pnpm verify",
+        "pnpm map:check",
+        "git diff --check"
+      ],
+      "regressionChecks": [
+        "Preserve all 85 prior checks (CHK-001..CHK-085) and all 30 previously VERIFIED task objects",
+        "Preserve existing shell, People UI, staff-auth and reservation backend behavior unchanged",
+        "Zero axe-core accessibility violations across all new E2E flows"
+      ],
+      "implementationGate": "VERIFIED under explicit owner authorization for nonproduction P1 implementation. Original production/auth-provider/public gates remain unchanged; no push.",
+      "remainingWork": "None in this bounded staff reservation browser UI package. One local logical commit; remote publication requires separate approval.",
+      "specificationFile": "docs/architecture/ADR-0022-staff-reservation-book-ui.md",
+      "whyRequiredNow": "Delivers a usable browser-based staff reservation book (SCR-002/003/139) on top of the verified authenticated Staff Reservation HTTP API (RESERVATION-DOMAIN-004).",
+      "verificationEvidence": "CHK-086: Focused Vitest suite 15/15 in apps/web/tests/reservations/book.test.tsx + 2/2 in apps/web/tests/shell.test.tsx; Playwright E2E + axe suite 9/9 in tests/e2e/reservations-book.spec.ts; full pnpm verify PASS (unit 4/4, auth 56/56, integration 19/19, web 178/178, E2E 41/41, API/web builds). Prior evidence preserved."
     }
   ],
   "unresolvedQuestions": [
@@ -3237,6 +3281,7 @@
     "RESERVATION-DOMAIN-002",
     "RESERVATION-DOMAIN-003",
     "RESERVATION-DOMAIN-004",
+    "RESERVATION-DOMAIN-005",
     "CORE-AUTH-01",
     "CORE-AUTH-02-ENV-LOCAL-002",
     "CORE-AUTH-02-ENV-LOCAL-003",
@@ -3638,13 +3683,19 @@
         "priorityPart": 1,
         "classification": "PART 1",
         "reason": "Owner-authorized authenticated Staff Reservation HTTP API (/api/v1/staff/reservations) verified on PostgreSQL 16.15 (CHK-085); original production/auth/public gates remain."
+      },
+      {
+        "taskId": "RESERVATION-DOMAIN-005",
+        "priorityPart": 1,
+        "classification": "PART 1",
+        "reason": "Owner-authorized Staff Reservation Book browser UI (SCR-002/003/139) verified with Vitest, Playwright E2E and axe accessibility (CHK-086); original production/auth/public gates remain."
       }
     ],
     "coreReadinessGate": {
       "taskId": "CORE-READY-01",
       "status": "UNMET",
       "criteriaSource": "AGENTS.md CORE READINESS GATE items 1–10",
-      "evidence": "CHK-081/082/084/085 verify internal and authenticated staff HTTP search/create/read/list/modify/check-in/seat/cancel with allocation, revisions, retries, CSRF/context-version, audit, RLS and timezone/DST on PostgreSQL16.15. Public/widget/browser guest-to-staff flow, confirmation delivery and live authentication remain unverified; integrated gate UNMET."
+      "evidence": "CHK-081/082/084/085/086 verify internal, authenticated staff HTTP and staff browser UI (SCR-002/003/139) search/create/read/list/modify/check-in/seat/cancel with allocation, revisions, retries, CSRF/context-version, audit, RLS, timezone/DST and axe accessibility. Public/widget/browser guest-to-staff flow, confirmation delivery and live authentication remain unverified; integrated gate UNMET."
     },
     "unresolvedPrerequisites": [
       {

@@ -1,6 +1,6 @@
-# Internal reservation domain & Staff HTTP API — RESERVATION-DOMAIN-001 / 002 / 003 / 004
+# Internal reservation domain, Staff HTTP API & Staff Reservation Book UI — RESERVATION-DOMAIN-001 / 002 / 003 / 004 / 005
 
-ProjectX implementation contract under ADR-0018, ADR-0019, ADR-0020 and ADR-0021, not reference-application behavior. The domain service is in `apps/api/src/reservations/service.ts` and the authenticated staff HTTP routes are in `apps/api/src/reservations/route.ts` under `/api/v1/staff/reservations`; no public guest widget route or browser authentication bypass is exposed.
+ProjectX implementation contract under ADR-0018, ADR-0019, ADR-0020, ADR-0021 and ADR-0022, not reference-application behavior. The domain service is in `apps/api/src/reservations/service.ts`, the authenticated staff HTTP routes are in `apps/api/src/reservations/route.ts` under `/api/v1/staff/reservations`, and the staff browser reservation book (`SCR-002`/`SCR-003`/`SCR-139`) is in `apps/web/src/reservations/page.tsx` and `apps/web/src/reservations/client.ts`; no public guest widget route or browser authentication bypass is exposed.
 
 ## Operations and boundaries
 
@@ -124,6 +124,15 @@ reservation creation (`201`), get (`200`), list (`200`), modification (`200`),
 check-in (`200`), seating (`200`), and cancellation (`200`) over `/api/v1/staff/reservations`
 with full CSRF, Origin/Host, and context-version headers.
 
-Run the whole focused suite without `-t DEMONSTRATION`, then `pnpm verify:db` and `pnpm verify`. Database suites must not reset the same schema concurrently. CI already invokes the full database runner, which includes both focused suites. CHK-081, CHK-082, CHK-084 and CHK-085 record actual results and environment identity.
+Run the whole focused suite without `-t DEMONSTRATION`, then `pnpm verify:db` and `pnpm verify`. Database suites must not reset the same schema concurrently. CI already invokes the full database runner, which includes both focused suites. CHK-081, CHK-082, CHK-084, CHK-085 and CHK-086 record actual results and environment identity.
 
-Public guest booking, confirmation delivery, browser reservation UI and live staff-provider verification remain outside this package. CORE-READY-01 remains unmet.
+## Staff Reservation Book UI (DOMAIN-005)
+
+`apps/web/src/shell.tsx` wires `SCR-002` (`/manager/oceansatarthurs/reservations/day/:date`) to `<ReservationsBookPage />` (`apps/web/src/reservations/page.tsx`) using `apps/web/src/reservations/client.ts` (`ADR-0022`):
+
+- **SCR-002**: Loads reservations (`listStaffReservations`) and availability (`searchStaffReservationAvailability`) for the Venue-local date, with filtering by date, party size, and optional time window (`fromMinute`, `toMinute`).
+- **SCR-003**: Creates a reservation from a selected available slot (`createStaffReservation`) with local guest name/email validation and draft-bound UUID `idempotencyKey`.
+- **SCR-139**: Displays reservation detail and supports modifying date/party size/time/table/shift (`modifyStaffReservation`), check-in (`checkInStaffReservation`), seating (`seatStaffReservation`), and cancellation (`cancelStaffReservation`).
+- **Security and error handling**: Uses `staffFetch` with server-derived Organization/Venue scope (never trusting the URL venue slug), redacts internal server error details, preserves unsaved create/modify drafts on `400`/`401`/`403`/`404`/`409`/`500`, and requires explicit confirmation before discarding dirty drafts on refresh.
+
+Public guest booking, confirmation delivery and live staff-provider verification remain outside this package. CORE-READY-01 remains unmet.

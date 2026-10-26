@@ -16,6 +16,7 @@ import { AccountsPage } from "./people/accounts/page";
 import { AddUserPage } from "./people/add-user/page";
 import { BookedByPage } from "./people/booked-by/page";
 import { ServerPage } from "./people/server-names/page";
+import { ReservationsBookPage } from "./reservations/page";
 
 type ErrorState = { failed: boolean };
 export class ShellErrorBoundary extends Component<
@@ -115,12 +116,16 @@ export function Shell({
           id="main"
           tabIndex={-1}
           className={
-            ["SCR-025", "SCR-083", "SCR-084"].includes(current?.screenId ?? "")
+            ["SCR-002", "SCR-025", "SCR-083", "SCR-084"].includes(
+              current?.screenId ?? "",
+            )
               ? "accounts-main"
               : undefined
           }
         >
-          {current?.screenId === "SCR-025" ? (
+          {current?.screenId === "SCR-002" ? (
+            <ReservationsBookPage />
+          ) : current?.screenId === "SCR-025" ? (
             <AccountsPage />
           ) : current?.screenId === "SCR-026" ? (
             <AddUserPage />
