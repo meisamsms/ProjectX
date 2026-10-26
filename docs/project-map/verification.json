@@ -3930,6 +3930,44 @@
       "coreReadinessGate": "UNMET",
       "noPush": true,
       "result": "VERIFIED Staff Reservation Book browser UI (SCR-002/003/139); all focused Vitest, Playwright E2E + axe accessibility, and full application verification gates PASS. One local commit only."
+    },
+    {
+      "id": "CHK-087",
+      "taskId": "RESERVATION-DOMAIN-006",
+      "status": "VERIFIED",
+      "classification": "CONFIRMED Public Guest Booking Boundary Contract (ADR-0023) and bounded two-package decomposition (RESERVATION-DOMAIN-007 backend, RESERVATION-DOMAIN-008 SCR-072 widget UI); documentation-only",
+      "startingLocalSha": "e182477a147b476b4c7fd1784369889598d71c68",
+      "branch": "people-03-accounts-read",
+      "authorization": "Owner explicitly authorized the bounded prerequisite specification (RESERVATION-DOMAIN-006 / ADR-0023) for the public reservation widget and decomposition into two bounded implementation packages without bypassing WIDGET-CORE-01 gates.",
+      "commands": [
+        {
+          "command": "pnpm map:check && git diff --check",
+          "result": "PASS — 144 screens, 16 modules, 67 roadmap tasks; 0 whitespace or formatting issues"
+        }
+      ],
+      "contractVerification": {
+        "venueLookupAndSettings": "PASS: reservation_venue_settings extended additively in contract with public_slug and public_booking_enabled; unknown/disabled slugs fail closed with 404 without tenant enumeration",
+        "availabilityRedaction": "PASS: reservation_public_availability returns only (starts_at, ends_at, timezone) and Venue display metadata, excluding organizationId, venueId, tableId, shiftId and guest records",
+        "guestWriteBoundaryAndRls": "PASS: no fabricated staff users; reservations.booking_source ('STAFF'|'PUBLIC_WIDGET') and reservation_changes.actor_kind ('STAFF'|'GUEST') allow nullable staff FKs only for guest creates via narrow SECURITY DEFINER reservation_public_create while preserving staff-only table grants and RLS",
+        "capacityAndIdempotency": "PASS: server-side best-fit table/shift selection under FOR SHARE + GiST reservation_no_overlap prevents double-booking; partial unique index reservations_public_idempotency_idx enforces Venue-scoped guest idempotency",
+        "abuseAndConfirmation": "PASS: per-IP/slug rate limiting (429), strict input validation, no public lookup/modify/cancel by ID, and explicit confirmationDelivery: NONE"
+      },
+      "preservedState": "All 86 earlier checks (CHK-001..CHK-086) and all 31 previously VERIFIED task objects unchanged; no runtime, migration or test files modified.",
+      "evidenceFiles": [
+        "docs/architecture/ADR-0023-public-guest-booking-boundary.md",
+        "docs/data/reservation-domain.md",
+        "docs/project-map/roadmap.json",
+        "docs/project-map/verification.json",
+        "docs/project-map/handoff.md"
+      ],
+      "limitations": [
+        "Documentation-only contract package; no runtime code or migration applied yet",
+        "CORE-READY-01 remains UNMET",
+        "RESERVATION-DOMAIN-007 and RESERVATION-DOMAIN-008 require explicit owner implementation authorization"
+      ],
+      "coreReadinessGate": "UNMET",
+      "noPush": true,
+      "result": "VERIFIED Public Guest Booking Boundary Contract (ADR-0023) and registered bounded implementation packages RESERVATION-DOMAIN-007 and RESERVATION-DOMAIN-008."
     }
   ],
   "unresolvedQuestions": [

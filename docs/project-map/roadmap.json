@@ -3238,6 +3238,119 @@
       "specificationFile": "docs/architecture/ADR-0022-staff-reservation-book-ui.md",
       "whyRequiredNow": "Delivers a usable browser-based staff reservation book (SCR-002/003/139) on top of the verified authenticated Staff Reservation HTTP API (RESERVATION-DOMAIN-004).",
       "verificationEvidence": "CHK-086: Focused Vitest suite 15/15 in apps/web/tests/reservations/book.test.tsx + 2/2 in apps/web/tests/shell.test.tsx; Playwright E2E + axe suite 9/9 in tests/e2e/reservations-book.spec.ts; full pnpm verify PASS (unit 4/4, auth 56/56, integration 19/19, web 178/178, E2E 41/41, API/web builds). Prior evidence preserved."
+    },
+    {
+      "id": "RESERVATION-DOMAIN-006",
+      "name": "Public Guest Booking Boundary Contract (ADR-0023)",
+      "phaseId": "PHASE-04",
+      "status": "VERIFIED",
+      "dependencies": [
+        "RESERVATION-DOMAIN-004",
+        "RESERVATION-DOMAIN-005"
+      ],
+      "priorityPart": 1,
+      "priorityDecisionId": "PRIORITY-D001",
+      "scope": "Owner-authorized bounded specification (ADR-0023) defining the public Venue slug lookup, purpose-limited availability projection, narrow SECURITY DEFINER guest reservation creation without fabricated staff identities, Venue-scoped guest idempotency, rate-limit/abuse controls, honest non-delivery confirmation response, and decomposition into RESERVATION-DOMAIN-007 (backend) and RESERVATION-DOMAIN-008 (SCR-072 widget UI).",
+      "outOfScope": "No runtime code, database migrations, OpenAPI edits, or public widget UI implementation in this specification package.",
+      "coreWorkflowAdvanced": "Establishes the reviewed public-access and PostgreSQL security contract required to implement public guest availability search and reservation creation with immediate staff visibility.",
+      "acceptanceCriteria": [
+        "Defines public Venue lookup by slug without tenant enumeration using reservation_venue_settings (public_slug, public_booking_enabled)",
+        "Defines public availability response excluding internal tableId, shiftId, organizationId, venueId and guest PII",
+        "Defines guest reservation creation without fabricated staff identities, preserving staff-only direct table RLS and audit integrity",
+        "Defines server-side table/shift allocation, GiST overlap protection, Venue-scoped guest idempotency, rate limiting, and confirmationDelivery: NONE",
+        "Decomposes implementation into exactly two bounded tasks: RESERVATION-DOMAIN-007 (public backend) and RESERVATION-DOMAIN-008 (SCR-072 public widget)"
+      ],
+      "verificationCommands": [
+        "pnpm map:check",
+        "git diff --check"
+      ],
+      "regressionChecks": [
+        "Preserve all 86 prior checks (CHK-001..CHK-086) and all 31 previously VERIFIED task objects",
+        "Consistent with existing RLS, FK, audit, permission and idempotency rules in DOMAIN-001..005"
+      ],
+      "implementationGate": "VERIFIED documentation-only contract decision under explicit owner authorization. Unblocks RESERVATION-DOMAIN-007 upon owner authorization.",
+      "remainingWork": "None in this specification task. Implementation proceeds in RESERVATION-DOMAIN-007 and RESERVATION-DOMAIN-008 upon owner authorization.",
+      "specificationFile": "docs/architecture/ADR-0023-public-guest-booking-boundary.md",
+      "whyRequiredNow": "Resolves the public guest booking security and PostgreSQL RLS/FK boundary prerequisite before implementing public reservation APIs and the SCR-072 widget.",
+      "verificationEvidence": "CHK-087: ADR-0023 and reservation-domain.md contract consistency verified against DOMAIN-001..005 migrations/service; pnpm map:check and git diff --check PASS."
+    },
+    {
+      "id": "RESERVATION-DOMAIN-007",
+      "name": "Public Guest Booking Backend & PostgreSQL Security Slice",
+      "phaseId": "PHASE-04",
+      "status": "PLANNED",
+      "dependencies": [
+        "RESERVATION-DOMAIN-006",
+        "RESERVATION-DOMAIN-004",
+        "DB-HARNESS-001"
+      ],
+      "priorityPart": 1,
+      "priorityDecisionId": "PRIORITY-D001",
+      "scope": "Package A under ADR-0023: additive migration 20261027001300_public_guest_booking.sql (public_slug, public_booking_enabled, booking_source, guest actor_kind, narrow SECURITY DEFINER functions reservation_public_availability and reservation_public_create), public Fastify routes (/api/v1/public/venues/:venueSlug/availability and /reservations) with rate limiting and strict validation, OpenAPI + generated types, and real PostgreSQL 16 security/concurrency/idempotency tests.",
+      "outOfScope": "No browser UI changes (deferred to RESERVATION-DOMAIN-008), no public read/modify/cancel by ID, no email/SMS delivery claim, no live provider setup, and no push.",
+      "coreWorkflowAdvanced": "Public guest availability search and atomic, idempotent guest reservation creation with server-side capacity revalidation and immediate staff book visibility.",
+      "acceptanceCriteria": [
+        "Only Venues with public_booking_enabled = true and matching public_slug resolve; unknown/disabled slugs return 404 without tenant enumeration",
+        "GET /api/v1/public/venues/:venueSlug/availability returns only bookable time windows and Venue metadata without tableId, shiftId or guest PII",
+        "POST /api/v1/public/venues/:venueSlug/reservations creates BOOKED reservations without staff user fabrication, enforces GiST capacity protection and Venue-scoped guest idempotency, and is immediately visible to authorized staff",
+        "Direct table grants and RLS remain staff-only; rate limiting returns 429; confirmation response sets confirmationDelivery: NONE",
+        "Focused PostgreSQL 16 integration/security suite, pnpm verify:db and pnpm verify pass"
+      ],
+      "verificationCommands": [
+        "pnpm contract:check",
+        "pnpm db:check",
+        "pnpm exec vitest run apps/api/tests/reservations/public-http.test.ts --no-file-parallelism --reporter=verbose",
+        "pnpm verify:db",
+        "pnpm verify",
+        "pnpm map:check",
+        "git diff --check"
+      ],
+      "regressionChecks": [
+        "Preserve all prior checks and VERIFIED task objects",
+        "Preserve all 62 internal domain tests and 8 staff HTTP tests",
+        "Update exact migration-ledger inventory lists for the new additive migration"
+      ],
+      "implementationGate": "READY FOR OWNER IMPLEMENTATION AUTHORIZATION under ADR-0023.",
+      "specificationFile": "docs/architecture/ADR-0023-public-guest-booking-boundary.md"
+    },
+    {
+      "id": "RESERVATION-DOMAIN-008",
+      "name": "Public Online Reservation Widget Browser UI (SCR-072)",
+      "phaseId": "PHASE-04",
+      "status": "PLANNED",
+      "dependencies": [
+        "RESERVATION-DOMAIN-007",
+        "RESERVATION-DOMAIN-005",
+        "FOUND-TASK-004"
+      ],
+      "priorityPart": 1,
+      "priorityDecisionId": "PRIORITY-D001",
+      "screenIds": [
+        "SCR-072"
+      ],
+      "scope": "Package B under ADR-0023: browser implementation of SCR-072 (Reservation Widget) with Venue/date/party-size selection, available time slot display, guest contact form, idempotent booking submission, honest on-screen confirmation status (confirmationDelivery: NONE), accessible error/conflict/rate-limit handling, and focused Vitest + Playwright E2E/axe verification.",
+      "outOfScope": "No staff endpoint exposure, no guest modify/cancel by ID, no payment/waitlist/subscription features, no email/SMS delivery claim, and no push.",
+      "coreWorkflowAdvanced": "End-to-end browser-based public guest reservation booking workflow integrated with the public booking API and staff reservation book.",
+      "acceptanceCriteria": [
+        "SCR-072 allows selecting Venue slug, local date, party size and optional time window to load public availability slots",
+        "Selecting a time slot and submitting valid guest name and email creates a reservation with a draft-bound UUID idempotencyKey and displays booking confirmation with explicit confirmationDelivery: NONE notice",
+        "Handles unavailable slots, invalid inputs, 400/404/409/429/500 errors and retries accessibly while preserving unsaved guest input",
+        "Passes focused Vitest, Playwright E2E + axe accessibility (0 violations), and full pnpm verify"
+      ],
+      "verificationCommands": [
+        "pnpm exec vitest run apps/web/tests/reservations/widget.test.tsx apps/web/tests/shell.test.tsx --reporter=verbose",
+        "pnpm exec playwright test tests/e2e/reservations-widget.spec.ts",
+        "pnpm verify",
+        "pnpm map:check",
+        "git diff --check"
+      ],
+      "regressionChecks": [
+        "Preserve all prior checks and VERIFIED task objects",
+        "Preserve SCR-002/003/139 staff book and People UI behavior",
+        "Zero axe-core accessibility violations across all widget states"
+      ],
+      "implementationGate": "Requires RESERVATION-DOMAIN-007 VERIFIED and explicit owner authorization.",
+      "specificationFile": "docs/architecture/ADR-0023-public-guest-booking-boundary.md"
     }
   ],
   "unresolvedQuestions": [
@@ -3282,6 +3395,9 @@
     "RESERVATION-DOMAIN-003",
     "RESERVATION-DOMAIN-004",
     "RESERVATION-DOMAIN-005",
+    "RESERVATION-DOMAIN-006",
+    "RESERVATION-DOMAIN-007",
+    "RESERVATION-DOMAIN-008",
     "CORE-AUTH-01",
     "CORE-AUTH-02-ENV-LOCAL-002",
     "CORE-AUTH-02-ENV-LOCAL-003",
@@ -3689,6 +3805,24 @@
         "priorityPart": 1,
         "classification": "PART 1",
         "reason": "Owner-authorized Staff Reservation Book browser UI (SCR-002/003/139) verified with Vitest, Playwright E2E and axe accessibility (CHK-086); original production/auth/public gates remain."
+      },
+      {
+        "taskId": "RESERVATION-DOMAIN-006",
+        "priorityPart": 1,
+        "classification": "PART 1",
+        "reason": "Owner-authorized Public Guest Booking Boundary Contract (ADR-0023, CHK-087) resolving the public Venue lookup, availability redaction, guest write RLS/FK boundary and two-package delivery plan."
+      },
+      {
+        "taskId": "RESERVATION-DOMAIN-007",
+        "priorityPart": 1,
+        "classification": "PART 1",
+        "reason": "Bounded Package A under ADR-0023: public guest availability and booking backend with narrow PostgreSQL SECURITY DEFINER authority and real PG16 security tests."
+      },
+      {
+        "taskId": "RESERVATION-DOMAIN-008",
+        "priorityPart": 1,
+        "classification": "PART 1",
+        "reason": "Bounded Package B under ADR-0023: public online reservation widget UI (SCR-072) integrated with the public guest booking API."
       }
     ],
     "coreReadinessGate": {

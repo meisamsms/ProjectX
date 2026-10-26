@@ -1,6 +1,6 @@
-# Internal reservation domain, Staff HTTP API & Staff Reservation Book UI — RESERVATION-DOMAIN-001 / 002 / 003 / 004 / 005
+# Internal reservation domain, Staff HTTP API, Staff Book UI & Public Guest Boundary — RESERVATION-DOMAIN-001..006
 
-ProjectX implementation contract under ADR-0018, ADR-0019, ADR-0020, ADR-0021 and ADR-0022, not reference-application behavior. The domain service is in `apps/api/src/reservations/service.ts`, the authenticated staff HTTP routes are in `apps/api/src/reservations/route.ts` under `/api/v1/staff/reservations`, and the staff browser reservation book (`SCR-002`/`SCR-003`/`SCR-139`) is in `apps/web/src/reservations/page.tsx` and `apps/web/src/reservations/client.ts`; no public guest widget route or browser authentication bypass is exposed.
+ProjectX implementation and boundary contracts under ADR-0018, ADR-0019, ADR-0020, ADR-0021, ADR-0022 and ADR-0023, not reference-application behavior. The domain service is in `apps/api/src/reservations/service.ts`, the authenticated staff HTTP routes are in `apps/api/src/reservations/route.ts` under `/api/v1/staff/reservations`, and the staff browser reservation book (`SCR-002`/`SCR-003`/`SCR-139`) is in `apps/web/src/reservations/page.tsx` and `apps/web/src/reservations/client.ts`. Public guest booking is specified in `docs/architecture/ADR-0023-public-guest-booking-boundary.md` and decomposed into `RESERVATION-DOMAIN-007` (public backend) and `RESERVATION-DOMAIN-008` (`SCR-072` public widget UI).
 
 ## Operations and boundaries
 
@@ -135,4 +135,13 @@ Run the whole focused suite without `-t DEMONSTRATION`, then `pnpm verify:db` an
 - **SCR-139**: Displays reservation detail and supports modifying date/party size/time/table/shift (`modifyStaffReservation`), check-in (`checkInStaffReservation`), seating (`seatStaffReservation`), and cancellation (`cancelStaffReservation`).
 - **Security and error handling**: Uses `staffFetch` with server-derived Organization/Venue scope (never trusting the URL venue slug), redacts internal server error details, preserves unsaved create/modify drafts on `400`/`401`/`403`/`404`/`409`/`500`, and requires explicit confirmation before discarding dirty drafts on refresh.
 
-Public guest booking, confirmation delivery and live staff-provider verification remain outside this package. CORE-READY-01 remains unmet.
+## Public Guest Booking Boundary Contract (DOMAIN-006)
+
+`docs/architecture/ADR-0023-public-guest-booking-boundary.md` defines the security and database boundary for public guest booking (`CHK-087`):
+
+- **Public Venue lookup**: `reservation_venue_settings` adds `public_slug` (unique, nullable) and `public_booking_enabled` (default `false`). Only enabled Venues resolve by `:venueSlug`; unknown or disabled slugs return `404 NOT_FOUND` without tenant enumeration.
+- **Public availability projection**: `GET /api/v1/public/venues/{venueSlug}/availability` calls narrow `SECURITY DEFINER` function `reservation_public_availability`, returning only `{ venue: { slug, name, timezone }, items: [{ startsAt, endsAt, timezone }] }` and excluding `organizationId`, `venueId`, `tableId`, `shiftId`, and guest data.
+- **Guest booking without staff identity fabrication**: `reservations` adds `booking_source IN ('STAFF', 'PUBLIC_WIDGET')` with nullable `created_by_user_id` for `PUBLIC_WIDGET`, `reservation_changes` adds `actor_kind IN ('STAFF', 'GUEST')` with nullable `actor_user_id` for `GUEST`, and direct table grants/RLS remain staff-only. Narrow `SECURITY DEFINER` function `reservation_public_create` deterministically selects the best-fit available table/shift under `FOR SHARE` + GiST exclusion `reservation_no_overlap`, enforces Venue-scoped guest idempotency (`reservations_public_idempotency_idx`), and returns `{ ..., status: "BOOKED", confirmationDelivery: "NONE" }`.
+- **Two implementation packages**: `RESERVATION-DOMAIN-007` (public backend + PostgreSQL 16 security tests) and `RESERVATION-DOMAIN-008` (`SCR-072` public widget UI + E2E/axe verification).
+
+Public guest booking implementation, confirmation delivery and live staff-provider verification remain outside this contract-only package. CORE-READY-01 remains unmet.
