@@ -46,6 +46,11 @@ export interface ModifyReservation {
   shiftId: string;
   partySize: number;
 }
+export interface LifecycleTransition {
+  reservationId: string;
+  expectedRevision: number;
+  idempotencyKey: string;
+}
 export interface Reservation extends ReservationSlot {
   id: string;
   clientId: string;
@@ -55,7 +60,7 @@ export interface Reservation extends ReservationSlot {
   partySize: number;
   guestName: string;
   guestEmail: string;
-  status: "BOOKED" | "CANCELLED";
+  status: "BOOKED" | "CHECKED_IN" | "SEATED" | "CANCELLED";
   revision: number;
   createdAt: string;
   updatedAt: string;
@@ -228,7 +233,7 @@ export async function searchAvailability(
       `SELECT ${slotColumns} FROM reservation_slots($1,$2) x
       WHERE extract(hour FROM x.starts_at AT TIME ZONE x.timezone)*60+extract(minute FROM x.starts_at AT TIME ZONE x.timezone)>=$3
       AND extract(hour FROM x.starts_at AT TIME ZONE x.timezone)*60+extract(minute FROM x.starts_at AT TIME ZONE x.timezone)<$4
-      AND NOT EXISTS(SELECT 1 FROM reservations r WHERE r.table_id=x.table_id AND r.status='BOOKED'
+      AND NOT EXISTS(SELECT 1 FROM reservations r WHERE r.table_id=x.table_id AND r.status IN ('BOOKED','CHECKED_IN','SEATED')
         AND tstzrange(r.starts_at,r.ends_at,'[)') && tstzrange(x.starts_at,x.ends_at,'[)'))
       ORDER BY x.starts_at,x.table_id,x.shift_id`,
       [date, size, from, to],
@@ -349,6 +354,61 @@ export async function modifyReservation(
     return dto(record);
   });
 }
+async function transitionReservation(
+  pool: Pool,
+  scope: ReservationScope,
+  input: LifecycleTransition,
+  permission: "reservation.checkin" | "reservation.seat",
+  nextStatus: "CHECKED_IN" | "SEATED",
+): Promise<Reservation> {
+  if (
+    !Number.isInteger(input.expectedRevision) ||
+    input.expectedRevision < 1 ||
+    input.expectedRevision >= 2147483647
+  )
+    return invalid();
+  const parameters = [
+    id(input.reservationId),
+    input.expectedRevision,
+    id(input.idempotencyKey),
+    nextStatus,
+  ];
+  return authorized(pool, scope, permission, async (client) => {
+    const result = await client.query<ReservationRow>(
+      `SELECT ${reservationColumns} FROM reservation_transition($1,$2,$3,$4)`,
+      parameters,
+    );
+    const record = result.rows[0];
+    if (!record) throw new ReservationError("INTERNAL");
+    return dto(record);
+  });
+}
+export async function checkInReservation(
+  pool: Pool,
+  scope: ReservationScope,
+  input: LifecycleTransition,
+): Promise<Reservation> {
+  return transitionReservation(
+    pool,
+    scope,
+    input,
+    "reservation.checkin",
+    "CHECKED_IN",
+  );
+}
+export async function seatReservation(
+  pool: Pool,
+  scope: ReservationScope,
+  input: LifecycleTransition,
+): Promise<Reservation> {
+  return transitionReservation(
+    pool,
+    scope,
+    input,
+    "reservation.seat",
+    "SEATED",
+  );
+}
 export async function getReservation(
   pool: Pool,
   scope: ReservationScope,
@@ -395,12 +455,14 @@ export async function cancelReservation(
     let record = result.rows[0];
     if (!record) {
       const existing = await client.query<ReservationRow>(
-        `SELECT ${reservationColumns} FROM reservations WHERE id=$1 AND organization_id=$2 AND venue_id=$3`,
+        `SELECT ${reservationColumns} FROM reservations WHERE id=$1 AND organization_id=$2 AND venue_id=$3 FOR UPDATE`,
         [reservationId, scope.organizationId, scope.venueId],
       );
       record = existing.rows[0];
+      if (!record) throw new ReservationError("NOT_FOUND");
+      if (record.status !== "CANCELLED")
+        throw new ReservationError("INVALID_STATE");
     }
-    if (!record) throw new ReservationError("NOT_FOUND");
     return dto(record);
   });
 }

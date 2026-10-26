@@ -84,7 +84,7 @@ describe("People grants on real PostgreSQL", () => {
     const { rows } = await pool.query(
       "SELECT id,scope,risk,description FROM projectx_test.permissions ORDER BY id",
     );
-    expect(rows).toHaveLength(22);
+    expect(rows).toHaveLength(24);
     expect(
       rows.sort((a: { id: string }, b: { id: string }) =>
         a.id.localeCompare(b.id),
@@ -417,6 +417,6 @@ describe("People grants on real PostgreSQL", () => {
       expect(
         (await client.query("SELECT count(*)::int n FROM permissions")).rows[0]
           .n,
-      ).toBe(22);
+      ).toBe(24);
     }));
 });

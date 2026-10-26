@@ -1,19 +1,21 @@
-# Internal reservation domain — RESERVATION-DOMAIN-001 / 002
+# Internal reservation domain — RESERVATION-DOMAIN-001 / 002 / 003
 
-ProjectX implementation contract under ADR-0018 and ADR-0019, not reference-application behavior. The service is internal TypeScript in `apps/api/src/reservations/service.ts`; it exposes no HTTP route or browser authentication bypass.
+ProjectX implementation contract under ADR-0018, ADR-0019 and ADR-0020, not reference-application behavior. The service is internal TypeScript in `apps/api/src/reservations/service.ts`; it exposes no HTTP route or browser authentication bypass.
 
 ## Operations and boundaries
 
-All operations require a branded trusted identity, explicit Organization/Venue scope, an active membership/VenueAccess and current permissions. Use the existing restricted runtime pool. Tests bind synthetic identities in the test fixture only. Read permission is required for every operation; creation additionally requires `reservation.create`, cancellation `reservation.cancel`.
+All operations require a branded trusted identity, explicit Organization/Venue scope, an active membership/VenueAccess and current permissions. Use the existing restricted runtime pool. Tests bind synthetic identities in the test fixture only. Read permission is required for every operation; creation additionally requires `reservation.create`, modification `reservation.update`, check-in `reservation.checkin`, seating `reservation.seat`, and cancellation `reservation.cancel`.
 
 | Operation | Input and outcome |
 | --- | --- |
-| searchAvailability | Venue scope plus local date, party size, optional local minute window `[fromMinute,toMinute)`. Returns eligible table/shift/UTC start/end/timezone slots, ordered by start/table/shift. This is a snapshot; creation revalidates it. |
+| searchAvailability | Venue scope plus local date, party size, optional local minute window `[fromMinute,toMinute)`. Returns eligible table/shift/UTC start/end/timezone slots, ordered by start/table/shift. Excludes overlapping `BOOKED`, `CHECKED_IN` and `SEATED` allocations. This is a snapshot; creation revalidates it. |
 | createReservation | Selected table/shift/start, local date, party size, guest name, required email, UUID idempotency key. Atomically creates minimal client identity, reservation and CREATED metadata. |
 | getReservation | Scoped ID lookup; inaccessible records return NOT_FOUND after scope authorization. |
 | listReservations | Explicit Venue-local date; ordered by UTC start/ID, default limit 100, maximum 500. No cross-venue guest directory. |
-| cancelReservation | BOOKED → CANCELLED, with transactional audit and capacity release. Repeated cancellation returns the same cancelled record. |
-| modifyReservation | Scoped reservation ID, expectedRevision, modification idempotency key and complete target date/start/table/shift/party allocation. Requires current read + update permissions. Atomic revisioned allocation change; returns original command result on retry. |
+| cancelReservation | BOOKED → CANCELLED, with transactional audit and capacity release. Repeated cancellation of CANCELLED returns the same cancelled record; attempting to cancel CHECKED_IN or SEATED returns INVALID_STATE. |
+| modifyReservation | Scoped reservation ID, expectedRevision, modification idempotency key and complete target date/start/table/shift/party allocation. Requires current read + update permissions. Only BOOKED reservations can be modified. Atomic revisioned allocation change; returns original command result on retry. |
+| checkInReservation | Scoped reservation ID, expectedRevision and UUID idempotency key. Requires current `reservation.read` + `reservation.checkin`. Atomically transitions BOOKED → CHECKED_IN, increments `revision`, retains table/shift/time/party capacity, and records immutable command/audit metadata in `reservation_modifications`. |
+| seatReservation | Scoped reservation ID, expectedRevision and UUID idempotency key. Requires current `reservation.read` + `reservation.seat`. Atomically transitions CHECKED_IN → SEATED, increments `revision`, retains table/shift/time/party capacity, and records immutable command/audit metadata in `reservation_modifications`. |
 
 Party size is an integer 1–50; table and shift limits may be smaller. Dates and UTC timestamps are validated, with service date range 2000–2099. Name/email are trimmed and reject controls; lengths are bounded at 120/254 Unicode characters. Required email uses a minimal syntax check, not delivery verification. Configuration is migration-owner/fixture managed and runtime read-only. Date-specific, non-overnight shifts use local opening/closing minutes, elapsed duration 15–480 minutes and slot step 5–120 minutes. Table combination, pacing, recurring schedules, full settings editors and graphical floorplans are excluded.
 
@@ -67,6 +69,14 @@ audit stays immutable and cancellation requires its own permission.
 
 UTC instants are canonical. Local dates and IANA timezone are retained. Slots follow elapsed UTC time between resolved local shift boundaries. Nonexistent spring times are absent; repeated autumn times are separate UTC slots. Nonexistent shift boundaries produce no availability; ambiguous boundaries use PostgreSQL's standard-time interpretation. These are explicit ProjectX rules, not inferred reference behavior.
 
+## Check-in and seating contract (DOMAIN-003)
+
+`checkInReservation` (`BOOKED -> CHECKED_IN`) and `seatReservation` (`CHECKED_IN -> SEATED`) are internal staff lifecycle transitions defined under ADR-0020. No skipped check-in (`BOOKED -> SEATED`), reversal (`SEATED -> CHECKED_IN`, `CHECKED_IN -> BOOKED`), reactivation (`CANCELLED -> *`), checkout, no-show or completion is supported. Both transitions require `reservation.read` plus their respective explicit Venue-scoped permission (`reservation.checkin` or `reservation.seat`), neither of which is implied by `reservation.update` or `reservation.cancel`. Neither permission is auto-granted to existing roles or users.
+
+`reservation_transition` is a narrow `SECURITY DEFINER` function with a fixed trusted search path (`projectx_test, pg_catalog, pg_temp`) and PUBLIC execution revoked. It validates scope and current permissions, acquires the shared `'reservation.modify/'||org||'/'||venue||'/'||actor||'/'||command_key` advisory lock, locks the reservation row (`FOR UPDATE`), and rechecks permissions after waiting. It reuses `reservation_modifications` for idempotent command replay and PII-free before/after status and revision audit metadata. Same key and payload replay the original transition snapshot even if the reservation later advanced to `SEATED`; reusing a key with a different reservation, expected revision or operation (`CHECK_IN`, `SEAT`, `MODIFY`) returns `IDEMPOTENCY_CONFLICT`.
+
+All three active states (`BOOKED`, `CHECKED_IN`, `SEATED`) retain table/shift/time/party capacity in both `searchAvailability` and the `reservation_no_overlap` GiST exclusion constraint. Attempting to modify or cancel a `CHECKED_IN` or `SEATED` reservation returns `INVALID_STATE` and leaves persisted state, revision and capacity unchanged.
+
 ## Executable synthetic demonstration
 
 Use a disposable PostgreSQL 16 database ending in `_test`. Fixtures reset its `projectx_test` schema and create/drop a test runtime login, so never use a shared or production database. Set `DATABASE_URL` to that isolated database and, in PowerShell:
@@ -83,8 +93,16 @@ The test uses Test Restaurant, a valid future Venue-local date, two guests and a
 The DOMAIN-002 demonstration in the same file creates, modifies, verifies the old
 slot is released and the new slot occupied, retrieves the updated reservation,
 rejects a failed modification without changing it, then cancels and restores
-capacity. The same `-t DEMONSTRATION` command runs both synthetic demonstrations.
+capacity.
 
-Run the whole focused suite without `-t DEMONSTRATION`, then `pnpm verify:db` and `pnpm verify`. Database suites must not reset the same schema concurrently. CI already invokes the full database runner, which includes this focused suite. CHK-081 and CHK-082 record actual results and environment identity.
+The DOMAIN-003 demonstration in the same file creates a reservation, checks it in
+(`CHECKED_IN`, revision 2), verifies capacity remains occupied, seats it (`SEATED`,
+revision 3), verifies staff `getReservation`/`listReservations` return the seated
+record while capacity remains protected, and verifies invalid post-seating transitions
+(`checkInReservation`, `modifyReservation`, `cancelReservation`) fail with
+`INVALID_STATE` while preserving persisted state. The `-t DEMONSTRATION` command
+runs all three synthetic demonstrations.
 
-This is an internal domain demonstration. Public booking, check-in/seating, confirmation delivery, browser integration and live staff-provider verification remain outside this package. CORE-READY-01 remains unmet.
+Run the whole focused suite without `-t DEMONSTRATION`, then `pnpm verify:db` and `pnpm verify`. Database suites must not reset the same schema concurrently. CI already invokes the full database runner, which includes this focused suite. CHK-081, CHK-082 and CHK-084 record actual results and environment identity.
+
+This is an internal domain demonstration. Public booking, confirmation delivery, browser integration and live staff-provider verification remain outside this package. CORE-READY-01 remains unmet.

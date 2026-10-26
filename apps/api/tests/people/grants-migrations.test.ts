@@ -68,7 +68,7 @@ async function snapshot() {
   expect(
     (await pool.query("SELECT count(*)::int n FROM projectx_test.permissions"))
       .rows[0].n,
-  ).toBe(22);
+  ).toBe(24);
   await expect(
     withTransaction(pool, async (client) => {
       await seedCorePeople(client);

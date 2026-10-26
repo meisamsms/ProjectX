@@ -23,7 +23,7 @@ function expand(value: unknown): unknown {
 
 export const permissionArraySchema = {
   type: "array",
-  maxItems: 22,
+  maxItems: 24,
   uniqueItems: true,
   items: specification.components.schemas.PeoplePermissionId,
 } as const;

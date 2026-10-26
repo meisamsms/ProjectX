@@ -339,7 +339,7 @@ export interface components {
             nextCursor: string | null;
         };
         /** @enum {string} */
-        PeoplePermissionId: "session.read.self" | "user.read.self" | "user.read" | "user.manage" | "organization.manage" | "venue.read" | "venue.manage" | "reservation.read" | "reservation.create" | "reservation.update" | "reservation.cancel" | "client.read" | "client.create" | "client.update" | "client.history.read.organization" | "floorplan.read" | "floorplan.manage" | "availability.read" | "availability.manage" | "import.manage" | "client.export" | "audit.read";
+        PeoplePermissionId: "session.read.self" | "user.read.self" | "user.read" | "user.manage" | "organization.manage" | "venue.read" | "venue.manage" | "reservation.read" | "reservation.create" | "reservation.update" | "reservation.cancel" | "reservation.checkin" | "reservation.seat" | "client.read" | "client.create" | "client.update" | "client.history.read.organization" | "floorplan.read" | "floorplan.manage" | "availability.read" | "availability.manage" | "import.manage" | "client.export" | "audit.read";
         PeopleRoleOption: {
             /** Format: uuid */
             id: string;

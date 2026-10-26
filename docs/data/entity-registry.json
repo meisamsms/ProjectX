@@ -433,7 +433,17 @@
       "referenceConfidence": "INFERRED_FROM_VISIBLE_UI",
       "persistenceStatus": "BOUNDARY_DEFINED",
       "relationshipBoundary": "Stable capability vocabulary; grants separately scoped",
-      "evidence": "INFERRED"
+      "evidence": "INFERRED",
+      "reservationLifecycleSlice": {
+        "taskId": "RESERVATION-DOMAIN-003",
+        "classification": "CONFIRMED PROJECTX IMPLEMENTATION",
+        "verification": "CHK-084 VERIFIED: PostgreSQL16.15 focused 62/62 and full database 272/272; general verify PASS",
+        "migration": "apps/api/migrations/zz-reservation-domain/20261026001200_reservation_lifecycle.sql",
+        "tables": [
+          "permissions"
+        ],
+        "boundary": "Adds VENUE/SENSITIVE reservation.checkin and reservation.seat to the 24-entry permission catalog; no automatic role/user grants."
+      }
     },
     {
       "id": "ENT-025",
@@ -521,6 +531,16 @@
           "reservations"
         ],
         "boundary": "Revisioned internal BOOKED allocation changes preserve guest/client/tenant identity. Cancellation advances revision; no public API."
+      },
+      "reservationLifecycleSlice": {
+        "taskId": "RESERVATION-DOMAIN-003",
+        "classification": "CONFIRMED PROJECTX IMPLEMENTATION",
+        "verification": "CHK-084 VERIFIED: PostgreSQL16.15 focused 62/62 and full database 272/272; general verify PASS",
+        "migration": "apps/api/migrations/zz-reservation-domain/20261026001200_reservation_lifecycle.sql",
+        "tables": [
+          "reservations"
+        ],
+        "boundary": "Internal BOOKED -> CHECKED_IN -> SEATED transitions retain table/shift/time/party capacity across search and GiST exclusion; no public API."
       }
     },
     {
@@ -996,6 +1016,16 @@
           "reservation_modifications"
         ],
         "boundary": "Immutable actor/key/request/before-after allocation result metadata; scoped command replay and narrow modification audit, no duplicated guest PII or export dependency."
+      },
+      "reservationLifecycleSlice": {
+        "taskId": "RESERVATION-DOMAIN-003",
+        "classification": "CONFIRMED PROJECTX IMPLEMENTATION",
+        "verification": "CHK-084 VERIFIED: PostgreSQL16.15 focused 62/62 and full database 272/272; general verify PASS",
+        "migration": "apps/api/migrations/zz-reservation-domain/20261026001200_reservation_lifecycle.sql",
+        "tables": [
+          "reservation_modifications"
+        ],
+        "boundary": "Reuses reservation_modifications for immutable command replay and PII-free before/after status and revision transition metadata."
       }
     },
     {

@@ -126,6 +126,26 @@
       "evidence": "INFERRED"
     },
     {
+      "id": "reservation.checkin",
+      "description": "Check in authorized venue reservation",
+      "scope": "VENUE",
+      "risk": "SENSITIVE",
+      "modules": [
+        "MOD-02"
+      ],
+      "evidence": "INFERRED"
+    },
+    {
+      "id": "reservation.seat",
+      "description": "Seat checked-in authorized venue reservation",
+      "scope": "VENUE",
+      "risk": "SENSITIVE",
+      "modules": [
+        "MOD-02"
+      ],
+      "evidence": "INFERRED"
+    },
+    {
       "id": "client.read",
       "description": "Read minimum client identity and own-venue service details",
       "scope": "VENUE",

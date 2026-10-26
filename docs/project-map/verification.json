@@ -3621,6 +3621,172 @@
         "Non-blocking existing Node DEP0190, terminal color and React Router use-client bundling notices",
         "Git LF/CRLF conversion notices; diff whitespace validation succeeds"
       ]
+    },
+    {
+      "id": "CHK-083",
+      "taskId": "RESERVATION-DOMAIN-003",
+      "date": "2026-10-26",
+      "status": "BLOCKED",
+      "classification": "CONFIRMED source/preflight; runtime implementation NEEDS TESTING",
+      "startingLocalSha": "9a4c9db200a58d47848e3a6dc0a019a89d68851c",
+      "branch": "people-03-accounts-read",
+      "preflight": {
+        "clean": true,
+        "soleParent": "3f714406acfc74af9e982f321724848424996f40",
+        "dependencies": "DOMAIN-001/002 and PEOPLE-CORE-01 VERIFIED"
+      },
+      "authorization": "Attached owner DOMAIN-003 implementation package, one primary agent, one local commit, no push.",
+      "findings": [
+        "Capability catalog lacks check-in/seating definitions; two narrow permissions required",
+        "Two historical domain tests rebuild schema but clear only older domain migration ledger entries; new additive migration would be skipped on replay",
+        "Literal unchanged-tests requirement conflicts with necessary replay compatibility; precise exception in ADR-0020"
+      ],
+      "commands": [
+        {
+          "command": "pnpm map:check",
+          "result": "PASS144 screens/16 modules/62 roadmap tasks"
+        },
+        {
+          "command": "Historical object comparison",
+          "result": "PASS all82 previous checks and all other prior task objects unchanged, including28 VERIFIED tasks"
+        },
+        {
+          "command": "git diff --check",
+          "result": "PASS; only Git LF/CRLF notices"
+        }
+      ],
+      "noApplicationCodeChanges": true,
+      "noCommitOrPush": true,
+      "coreReadinessGate": "UNMET",
+      "result": "Documentation/preflight only; owner clarification required for narrow historical test scaffolding edits."
+    },
+    {
+      "id": "CHK-084",
+      "taskId": "RESERVATION-DOMAIN-003",
+      "date": "2026-10-26",
+      "status": "VERIFIED",
+      "classification": "CONFIRMED local internal check-in/seating lifecycle implementation and verification; production/public integration remains NEEDS TESTING",
+      "startingLocalSha": "9a4c9db200a58d47848e3a6dc0a019a89d68851c",
+      "branch": "people-03-accounts-read",
+      "authorization": "Owner authorized RESERVATION-DOMAIN-003 bounded implementation and verification, explicitly approving REGRESSION-001 (schema-replay and five migration-ledger inventory tests) and REGRESSION-002 Option B (aligning the 24-entry permission catalog across database migration, permission-registry.json, OpenAPI PeoplePermissionId, generated types, add-user schema, and the two affected permission-count assertions). One primary agent plus independent QA review; one local commit; no push.",
+      "preflight": {
+        "result": "PASS",
+        "head": "9a4c9db200a58d47848e3a6dc0a019a89d68851c",
+        "soleParent": "3f714406acfc74af9e982f321724848424996f40",
+        "startingWorktree": "In-progress CHK-083 preflight documentation preserved and completed in the same bounded task",
+        "docker": "Cached official postgres:16 image confirmed; disposable container launched on 127.0.0.1:55432"
+      },
+      "environment": {
+        "os": "Windows PowerShell host; Docker Linux PostgreSQL16",
+        "database": "projectx_reservation_test",
+        "listener": "127.0.0.1:55432",
+        "container": "projectx-reservation-lifecycle-test",
+        "containerId": "32cfdb8138cf0b1c7ad226a7eba4286c3b86e9af43a6adb4fe34f608f747200d",
+        "image": "postgres:16",
+        "storage": "Disposable tmpfs, --rm",
+        "data": "Synthetic only; restricted non-owner runtime test login; no provider/customer data",
+        "node": "24.22.1",
+        "pnpm": "11.25.0",
+        "postgresql": "16.15 (Debian 16.15-1.pgdg13+2)",
+        "browser": "Local compatible Chrome binary via PROJECTX_CHROMIUM_PATH supported by unchanged playwright.config.ts"
+      },
+      "commands": [
+        {
+          "command": "pnpm contract:generate; pnpm contract:check",
+          "result": "PASS: OpenAPI validity and generated-type freshness PASS with 24 PeoplePermissionId values"
+        },
+        {
+          "command": "pnpm db:check",
+          "result": "PASS 2/2: real PostgreSQL 16.15 and pool reuse"
+        },
+        {
+          "command": "pnpm exec vitest run apps/api/tests/reservations/domain.test.ts --no-file-parallelism --reporter=verbose (initial run)",
+          "result": "60 PASS / 2 FAIL across 62 tests: (1) upgrade test moved modified booking to 18:30 which overlapped 19:00 toCancel fixture; (2) raw SQL status-bypass loop did not ROLLBACK between iterations, returning 25P02 on second iteration instead of 23514",
+          "resolution": "Test-only fixes in newly added DOMAIN-003 tests: use non-overlapping 18:00/19:00 slots in upgrade fixture and ROLLBACK between raw loop iterations"
+        },
+        {
+          "command": "pnpm exec vitest run apps/api/tests/reservations/domain.test.ts --no-file-parallelism --reporter=verbose",
+          "result": "PASS 62/62: 26 DOMAIN-001 + 24 DOMAIN-002 + 12 DOMAIN-003",
+          "durationSeconds": 19.47
+        },
+        {
+          "command": "pnpm verify:db",
+          "result": "PASS 272/272 across 22 files; ordered migration runner and full historical database regressions including grants (23/23) and grants-migrations (8/8)",
+          "durationSeconds": 69.69
+        },
+        {
+          "command": "pnpm exec vitest run apps/api/tests/reservations/domain.test.ts --no-file-parallelism --reporter=verbose -t DEMONSTRATION",
+          "result": "PASS 3/3 demonstration tests (DOMAIN-001, DOMAIN-002, DOMAIN-003); 59 skipped",
+          "durationSeconds": 2.17
+        },
+        {
+          "command": "pnpm verify (without PROJECTX_CHROMIUM_PATH)",
+          "result": "FAIL at test:e2e: install/format/lint/typecheck/unit(4/4)/auth(56/56)/contract/map/integration(19/19)/web(178/178) PASS; Playwright headless-shell-1243 absent in default cache",
+          "resolution": "Supply local Chrome executable via existing PROJECTX_CHROMIUM_PATH in playwright.config.ts"
+        },
+        {
+          "command": "pnpm verify (first run with PROJECTX_CHROMIUM_PATH)",
+          "result": "FAIL at test:web (177/178): transient focus timing in unchanged apps/web/tests/people/add-user.test.tsx line 308 under parallel load",
+          "resolution": "Isolated rerun of apps/web/tests/people/add-user.test.tsx PASS 40/40; full pnpm verify rerun executed"
+        },
+        {
+          "command": "pnpm verify (complete single-run gate with PROJECTX_CHROMIUM_PATH)",
+          "result": "PASS: install:check, format:check, lint, typecheck, unit 4/4, auth 56/56, contract:check, map:check, integration 19/19, web 178/178, E2E 32/32 including axe, API and web builds"
+        },
+        {
+          "command": "Final pnpm format:check; pnpm map:check; pnpm contract:check; git diff --check; historical object and ledger preservation check",
+          "result": "PASS: 144 screens, 16 modules, 62 roadmap tasks; all 83 prior checks and all 28 prior VERIFIED task objects preserved unchanged; no whitespace errors"
+        }
+      ],
+      "securityAndCorrectness": {
+        "stateMachine": "PASS: only BOOKED -> CHECKED_IN -> SEATED allowed; BOOKED -> SEATED, SEATED -> CHECKED_IN, CHECKED_IN -> BOOKED, CANCELLED -> CHECKED_IN/SEATED, and modifying/cancelling CHECKED_IN or SEATED all fail with INVALID_STATE",
+        "capacity": "PASS: BOOKED, CHECKED_IN and SEATED all hold capacity in searchAvailability, createReservation, modifyReservation and raw PostgreSQL GiST exclusion (23P01)",
+        "permissions": "PASS: checkInReservation requires reservation.read + reservation.checkin; seatReservation requires reservation.read + reservation.seat; update/cancel/create permissions never imply check-in or seating; neither permission auto-granted to existing roles or users",
+        "tenantRls": "PASS: cross-organization/Venue known IDs return NOT_FOUND; missing/forged context, disabled user, revoked VenueAccess and unbranded identity rejected; direct runtime UPDATE to CHECKED_IN/SEATED rejected by trigger without protected command evidence; direct reservation_modifications writes/reads denied (42501)",
+        "idempotency": "PASS: same command key and payload replays original CHECKED_IN or SEATED snapshot even after subsequent transition to SEATED; reusing a key across CHECK_IN/SEAT/MODIFY or different reservation/revision returns IDEMPOTENCY_CONFLICT; replay still requires current permission",
+        "concurrency": "PASS: competing check-ins or seatings allow exactly one winner and one VERSION_CONFLICT; both lock orders tested for check-in vs cancel, check-in vs modify, and seat vs modify/cancel; permission revocation while blocked on row lock denies waiting caller with ACCESS_DENIED after lock release",
+        "atomicityAndAudit": "PASS: PII-free before/after status and revision recorded in reservation_modifications; forced audit failure rolls back status, revision and command key together; owner and runtime UPDATE/DELETE on audit rows rejected",
+        "migration": "PASS: persisted DOMAIN-002 data upgrade preserves bookings, modifications, audit, checksums and least privileges; clean vs upgrade schema/constraints/RLS/functions identical"
+      },
+      "demonstration": {
+        "result": "PASS in focused suite, DEMONSTRATION entrypoint and full database gate",
+        "entrypoint": "pnpm exec vitest run apps/api/tests/reservations/domain.test.ts --no-file-parallelism --reporter=verbose -t DEMONSTRATION",
+        "steps": [
+          "Search availability and create BOOKED reservation (revision 1)",
+          "Check in reservation -> CHECKED_IN (revision 2); capacity remains occupied",
+          "Seat reservation -> SEATED (revision 3); staff get/list return SEATED record and capacity remains occupied",
+          "Invalid transitions from SEATED (check-in, modify, cancel) fail with INVALID_STATE and leave SEATED record unchanged"
+        ],
+        "scope": "Synthetic internal domain only; no HTTP/UI or external confirmation"
+      },
+      "cleanup": {
+        "result": "PASS",
+        "identityVerified": "32cfdb8138cf0b1c7ad226a7eba4286c3b86e9af43a6adb4fe34f608f747200d",
+        "taskLabel": "RESERVATION-DOMAIN-003",
+        "action": "Stopped exact inspected container ID; --rm removed container and tmpfs synthetic data; filtered docker ps -a empty."
+      },
+      "preservedState": "All 83 earlier checks (CHK-001..CHK-083) and all 28 previously VERIFIED task objects unchanged; every other prior task object unchanged. Historical SQL, auth/runtime/routes, decisions/app-map/dependencies and reference evidence unchanged.",
+      "evidenceFiles": [
+        "docs/architecture/ADR-0020-internal-check-in-seating.md",
+        "docs/data/reservation-domain.md",
+        "docs/data/entity-registry.json",
+        "docs/security/permission-registry.json",
+        "packages/contracts/openapi.json",
+        "packages/contracts/generated/api.ts",
+        "apps/api/src/people/add-user/schema.ts",
+        "apps/api/src/reservations/service.ts",
+        "apps/api/migrations/zz-reservation-domain/20261026001200_reservation_lifecycle.sql",
+        "apps/api/tests/reservations/domain.test.ts"
+      ],
+      "limitations": [
+        "CORE-READY-01 remains UNMET",
+        "No public endpoints, browser reservation UI, guest access or synthetic production authentication",
+        "Auth0/HTTPS/provider and production access gates unchanged",
+        "No push or current-commit GitHub CI"
+      ],
+      "coreReadinessGate": "UNMET",
+      "noPush": true,
+      "result": "VERIFIED bounded internal reservation check-in and seating lifecycle; all required local database and application gates PASS. One local commit only."
     }
   ],
   "unresolvedQuestions": [

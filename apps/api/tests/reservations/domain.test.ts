@@ -11,14 +11,17 @@ import { newPeopleId } from "../../src/people/persistence/id.js";
 import {
   type CreateReservation,
   cancelReservation,
+  checkInReservation,
   createReservation,
   getReservation,
+  type LifecycleTransition,
   listReservations,
   modifyReservation,
   type ModifyReservation,
   type Reservation,
   type ReservationScope,
   searchAvailability,
+  seatReservation,
 } from "../../src/reservations/service.js";
 import { migrateTestDatabase } from "../database/migrate.js";
 import {
@@ -747,6 +750,7 @@ describe("RESERVATION-DOMAIN-001 real PostgreSQL16", () => {
         [
           migration,
           "zz-reservation-domain/20261024001100_reservation_modification.sql",
+          "zz-reservation-domain/20261026001200_reservation_lifecycle.sql",
         ],
       ],
     );
@@ -865,7 +869,7 @@ describe("RESERVATION-DOMAIN-002 atomic modification PostgreSQL16", () => {
       await owner.query("SET LOCAL search_path TO projectx_test, public");
       await owner.query(originalSql);
       await owner.query(
-        "DELETE FROM schema_migrations WHERE name='zz-reservation-domain/20261024001100_reservation_modification.sql'",
+        "DELETE FROM schema_migrations WHERE name IN ('zz-reservation-domain/20261024001100_reservation_modification.sql','zz-reservation-domain/20261026001200_reservation_lifecycle.sql')",
       );
       await owner.query("COMMIT");
     } finally {
@@ -939,7 +943,7 @@ describe("RESERVATION-DOMAIN-002 atomic modification PostgreSQL16", () => {
     expect(
       (
         await adminPool.query(
-          "SELECT name,checksum FROM projectx_test.schema_migrations WHERE name<>'zz-reservation-domain/20261024001100_reservation_modification.sql' ORDER BY name",
+          "SELECT name,checksum FROM projectx_test.schema_migrations WHERE name NOT IN ('zz-reservation-domain/20261024001100_reservation_modification.sql','zz-reservation-domain/20261026001200_reservation_lifecycle.sql') ORDER BY name",
         )
       ).rows,
     ).toEqual(ledger);
@@ -1587,5 +1591,794 @@ describe("RESERVATION-DOMAIN-002 atomic modification PostgreSQL16", () => {
       ),
     ).rejects.toMatchObject({ code: "CAPACITY_CONFLICT" });
     expect(await getReservation(runtime, scope(), created.id)).toEqual(second);
+  });
+});
+
+const transition = (
+  booking: Reservation,
+  overrides: Partial<LifecycleTransition> = {},
+): LifecycleTransition => ({
+  reservationId: booking.id,
+  expectedRevision: booking.revision,
+  idempotencyKey: crypto.randomUUID(),
+  ...overrides,
+});
+const transitionSql =
+  "SELECT * FROM projectx_test.reservation_transition($1,$2,$3,$4)";
+const transitionArgs = (input: LifecycleTransition, status: string) => [
+  input.reservationId,
+  input.expectedRevision,
+  input.idempotencyKey,
+  status,
+];
+
+describe("RESERVATION-DOMAIN-003 check-in and seating PostgreSQL16", () => {
+  beforeEach(async () => {
+    for (const [actor, org, venue, access] of [
+      [f.identities.orgA.user, f.orgA, f.a1, f.orgAdminAccess],
+      [f.identities.a2Only.user, f.orgA, f.a2, f.identities.a2Only.access[0]],
+      [f.identities.orgB.user, f.orgB, f.b1, f.identities.orgB.access[0]],
+    ])
+      for (const permission of [
+        "reservation.update",
+        "reservation.checkin",
+        "reservation.seat",
+      ])
+        await adminPool.query(
+          "INSERT INTO projectx_test.venue_permission_grants(id,organization_id,venue_id,venue_access_id,permission_id,granted_by_user_id) VALUES($1,$2,$3,$4,$5,$6)",
+          [newPeopleId(), org, venue, access, permission, actor],
+        );
+  });
+
+  it("DEMONSTRATION: create → check in → seat → staff retrieve/list → capacity stays protected and invalid/conflicting transitions leave persisted state unchanged", async () => {
+    const before = await searchAvailability(runtime, scope(), query());
+    expect(before.some((s) => s.startsAt === start)).toBe(true);
+    const created = await createReservation(runtime, scope(), command());
+    expect(created).toMatchObject({ status: "BOOKED", revision: 1 });
+
+    const checkedIn = await checkInReservation(
+      runtime,
+      scope(),
+      transition(created),
+    );
+    expect(checkedIn).toMatchObject({
+      ...created,
+      status: "CHECKED_IN",
+      revision: 2,
+      updatedAt: expect.any(String),
+    });
+    expect(
+      (await searchAvailability(runtime, scope(), query())).some(
+        (s) => s.startsAt === start,
+      ),
+    ).toBe(false);
+    await expect(
+      createReservation(runtime, scope(), command()),
+    ).rejects.toMatchObject({ code: "CAPACITY_CONFLICT" });
+
+    const seated = await seatReservation(
+      runtime,
+      scope(),
+      transition(checkedIn),
+    );
+    expect(seated).toMatchObject({
+      ...created,
+      status: "SEATED",
+      revision: 3,
+      updatedAt: expect.any(String),
+    });
+    expect(await getReservation(runtime, scope(), created.id)).toEqual(seated);
+    expect(await listReservations(runtime, scope(), date)).toEqual([seated]);
+    expect(
+      (await searchAvailability(runtime, scope(), query())).some(
+        (s) => s.startsAt === start,
+      ),
+    ).toBe(false);
+    await expect(
+      createReservation(runtime, scope(), command()),
+    ).rejects.toMatchObject({ code: "CAPACITY_CONFLICT" });
+
+    const modsBefore = await modificationRows();
+    await expect(
+      checkInReservation(runtime, scope(), transition(seated)),
+    ).rejects.toMatchObject({ code: "INVALID_STATE" });
+    await expect(
+      seatReservation(runtime, scope(), transition(seated)),
+    ).rejects.toMatchObject({ code: "INVALID_STATE" });
+    await expect(
+      modifyReservation(runtime, scope(), modification(seated)),
+    ).rejects.toMatchObject({ code: "INVALID_STATE" });
+    await expect(
+      cancelReservation(runtime, scope(), seated.id),
+    ).rejects.toMatchObject({ code: "INVALID_STATE" });
+    expect(await getReservation(runtime, scope(), created.id)).toEqual(seated);
+    expect(await modificationRows()).toEqual(modsBefore);
+    console.log(
+      "Synthetic domain lifecycle demo PASS: create/check-in/seat/staff-read/capacity-protected/invalid-rejected; no HTTP or UI.",
+    );
+  });
+
+  it("upgrade from persisted DOMAIN-002 retains bookings, modifications, audit, checksums and least privileges", async () => {
+    const schema = async () => {
+      const tables = await adminPool.query(
+        "SELECT relname,relrowsecurity,relacl::text FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='projectx_test' AND relkind='r' AND (relname='reservations' OR relname LIKE 'reservation_%') ORDER BY relname",
+      );
+      const functions = await adminPool.query(
+        "SELECT proname,prosecdef,proconfig,proacl::text,pg_get_functiondef(p.oid) definition FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='projectx_test' AND proname LIKE 'reservation_%' ORDER BY proname",
+      );
+      return { tables: tables.rows, functions: functions.rows };
+    };
+    const clean = await schema();
+    await adminPool.query(
+      "DROP TABLE projectx_test.reservation_modifications,projectx_test.reservation_changes,projectx_test.reservations,projectx_test.reservation_clients,projectx_test.reservation_tables,projectx_test.reservation_shifts,projectx_test.reservation_venue_settings CASCADE",
+    );
+    await adminPool.query(
+      "DROP FUNCTION projectx_test.reservation_slots(date,integer),projectx_test.reservation_allowed(text),projectx_test.reservation_zone_validate(),projectx_test.reservation_validate(),projectx_test.reservation_record_change(),projectx_test.reservation_change_immutable()",
+    );
+    const domain001Sql = await readFile(
+      new URL(
+        "../../migrations/zz-reservation-domain/20261017001000_reservation_domain.sql",
+        import.meta.url,
+      ),
+      "utf8",
+    );
+    const domain002Sql = await readFile(
+      new URL(
+        "../../migrations/zz-reservation-domain/20261024001100_reservation_modification.sql",
+        import.meta.url,
+      ),
+      "utf8",
+    );
+    const owner = await adminPool.connect();
+    try {
+      await owner.query("BEGIN");
+      await owner.query("SET LOCAL search_path TO projectx_test, public");
+      await owner.query(domain001Sql);
+      await owner.query(domain002Sql);
+      await owner.query(
+        "DELETE FROM schema_migrations WHERE name='zz-reservation-domain/20261026001200_reservation_lifecycle.sql'",
+      );
+      await owner.query("COMMIT");
+    } finally {
+      await owner.query("ROLLBACK");
+      owner.release();
+    }
+    const configured = await configure();
+    tableId = configured.table;
+    shiftId = configured.shift;
+    const booked = await createReservation(runtime, scope(), command());
+    const modified = await modifyReservation(
+      runtime,
+      scope(),
+      modification(booked, { startsAt: `${date}T19:00:00.000Z` }),
+    );
+    const toCancel = await createReservation(
+      runtime,
+      scope(),
+      command({ startsAt: start }),
+    );
+    await cancelReservation(runtime, scope(), toCancel.id);
+
+    const beforeBookings = (
+      await adminPool.query(
+        "SELECT * FROM projectx_test.reservations ORDER BY id",
+      )
+    ).rows;
+    const beforeMods = await modificationRows();
+    const beforeChanges = (
+      await adminPool.query(
+        "SELECT * FROM projectx_test.reservation_changes ORDER BY reservation_id,action",
+      )
+    ).rows;
+    const beforeLedger = (
+      await adminPool.query(
+        "SELECT name,checksum FROM projectx_test.schema_migrations ORDER BY name",
+      )
+    ).rows;
+
+    await migrateTestDatabase();
+    await migrateTestDatabase();
+
+    expect(
+      (
+        await adminPool.query(
+          "SELECT * FROM projectx_test.reservations ORDER BY id",
+        )
+      ).rows,
+    ).toEqual(beforeBookings);
+    expect(await modificationRows()).toEqual(beforeMods);
+    expect(
+      (
+        await adminPool.query(
+          "SELECT * FROM projectx_test.reservation_changes ORDER BY reservation_id,action",
+        )
+      ).rows,
+    ).toEqual(beforeChanges);
+    expect(
+      (
+        await adminPool.query(
+          "SELECT name,checksum FROM projectx_test.schema_migrations WHERE name<>'zz-reservation-domain/20261026001200_reservation_lifecycle.sql' ORDER BY name",
+        )
+      ).rows,
+    ).toEqual(beforeLedger);
+    expect(await schema()).toEqual(clean);
+
+    const checkedIn = await checkInReservation(
+      runtime,
+      scope(),
+      transition(modified),
+    );
+    expect(checkedIn).toMatchObject({ status: "CHECKED_IN", revision: 3 });
+    const seated = await seatReservation(
+      runtime,
+      scope(),
+      transition(checkedIn),
+    );
+    expect(seated).toMatchObject({ status: "SEATED", revision: 4 });
+  });
+
+  it("enforces strict state machine: no skipped check-in, no reversal, no reactivation of cancelled, and no modify/cancel after check-in or seating", async () => {
+    const created = await createReservation(runtime, scope(), command());
+    await expect(
+      seatReservation(runtime, scope(), transition(created)),
+    ).rejects.toMatchObject({ code: "INVALID_STATE" });
+    expect(await getReservation(runtime, scope(), created.id)).toEqual(created);
+
+    const checkedIn = await checkInReservation(
+      runtime,
+      scope(),
+      transition(created),
+    );
+    await expect(
+      checkInReservation(runtime, scope(), transition(checkedIn)),
+    ).rejects.toMatchObject({ code: "INVALID_STATE" });
+    await expect(
+      modifyReservation(runtime, scope(), modification(checkedIn)),
+    ).rejects.toMatchObject({ code: "INVALID_STATE" });
+    await expect(
+      cancelReservation(runtime, scope(), checkedIn.id),
+    ).rejects.toMatchObject({ code: "INVALID_STATE" });
+    expect(await getReservation(runtime, scope(), created.id)).toEqual(
+      checkedIn,
+    );
+
+    const seated = await seatReservation(
+      runtime,
+      scope(),
+      transition(checkedIn),
+    );
+    for (const op of [
+      () => checkInReservation(runtime, scope(), transition(seated)),
+      () => seatReservation(runtime, scope(), transition(seated)),
+      () => modifyReservation(runtime, scope(), modification(seated)),
+      () => cancelReservation(runtime, scope(), seated.id),
+    ])
+      await expect(op()).rejects.toMatchObject({ code: "INVALID_STATE" });
+    expect(await getReservation(runtime, scope(), created.id)).toEqual(seated);
+
+    const other = await createReservation(
+      runtime,
+      scope(),
+      command({ startsAt: `${date}T19:00:00.000Z` }),
+    );
+    const cancelled = await cancelReservation(runtime, scope(), other.id);
+    expect(await cancelReservation(runtime, scope(), other.id)).toEqual(
+      cancelled,
+    );
+    await expect(
+      checkInReservation(runtime, scope(), transition(cancelled)),
+    ).rejects.toMatchObject({ code: "INVALID_STATE" });
+    await expect(
+      seatReservation(runtime, scope(), transition(cancelled)),
+    ).rejects.toMatchObject({ code: "INVALID_STATE" });
+    expect(await getReservation(runtime, scope(), other.id)).toEqual(cancelled);
+  });
+
+  it("preserves active capacity across BOOKED, CHECKED_IN and SEATED for search, create, modify and raw GiST exclusion", async () => {
+    const active = await createReservation(runtime, scope(), command());
+    const other = await createReservation(
+      runtime,
+      scope(),
+      command({ startsAt: `${date}T19:00:00.000Z` }),
+    );
+    const checkedIn = await checkInReservation(
+      runtime,
+      scope(),
+      transition(active),
+    );
+    for (const state of [
+      checkedIn,
+      await seatReservation(runtime, scope(), transition(checkedIn)),
+    ]) {
+      expect(["CHECKED_IN", "SEATED"]).toContain(state.status);
+      expect(
+        (await searchAvailability(runtime, scope(), query())).some(
+          (s) => s.startsAt === start,
+        ),
+      ).toBe(false);
+      await expect(
+        createReservation(
+          runtime,
+          scope(),
+          command({ startsAt: `${date}T18:15:00.000Z` }),
+        ),
+      ).rejects.toMatchObject({ code: "CAPACITY_CONFLICT" });
+      await expect(
+        modifyReservation(
+          runtime,
+          scope(),
+          modification(other, { startsAt: start }),
+        ),
+      ).rejects.toMatchObject({ code: "CAPACITY_CONFLICT" });
+      const client = await runtime.connect();
+      try {
+        await raw(client);
+        await expect(rawInsert(client)).rejects.toMatchObject({
+          code: "23P01",
+        });
+      } finally {
+        await client.query("ROLLBACK");
+        client.release();
+      }
+    }
+  });
+
+  it("enforces independent check-in and seat permissions, requires reservation.read, and does not auto-grant to existing roles or update/cancel holders", async () => {
+    expect(
+      (
+        await adminPool.query(
+          "SELECT count(*)::int n FROM projectx_test.role_permissions WHERE permission_id IN ('reservation.checkin','reservation.seat')",
+        )
+      ).rows[0].n,
+    ).toBe(0);
+    const created = await createReservation(runtime, scope(), command());
+    await revokePermission("reservation.checkin");
+    await expect(
+      checkInReservation(runtime, scope(), transition(created)),
+    ).rejects.toMatchObject({ code: "ACCESS_DENIED" });
+
+    await adminPool.query(
+      "INSERT INTO projectx_test.venue_permission_grants(id,organization_id,venue_id,venue_access_id,permission_id,granted_by_user_id) VALUES($1,$2,$3,$4,'reservation.checkin',$5)",
+      [newPeopleId(), f.orgA, f.a1, f.orgAdminAccess, f.identities.orgA.user],
+    );
+    await revokePermission("reservation.update");
+    await revokePermission("reservation.cancel");
+    await expect(
+      modifyReservation(runtime, scope(), modification(created)),
+    ).rejects.toMatchObject({ code: "ACCESS_DENIED" });
+    await expect(
+      cancelReservation(runtime, scope(), created.id),
+    ).rejects.toMatchObject({ code: "ACCESS_DENIED" });
+
+    const checkedIn = await checkInReservation(
+      runtime,
+      scope(),
+      transition(created),
+    );
+    await revokePermission("reservation.seat");
+    await expect(
+      seatReservation(runtime, scope(), transition(checkedIn)),
+    ).rejects.toMatchObject({ code: "ACCESS_DENIED" });
+
+    await adminPool.query(
+      "INSERT INTO projectx_test.venue_permission_grants(id,organization_id,venue_id,venue_access_id,permission_id,granted_by_user_id) VALUES($1,$2,$3,$4,'reservation.seat',$5)",
+      [newPeopleId(), f.orgA, f.a1, f.orgAdminAccess, f.identities.orgA.user],
+    );
+    await revokePermission("reservation.read");
+    await expect(
+      seatReservation(runtime, scope(), transition(checkedIn)),
+    ).rejects.toMatchObject({ code: "ACCESS_DENIED" });
+
+    await adminPool.query(
+      "INSERT INTO projectx_test.venue_permission_grants(id,organization_id,venue_id,venue_access_id,permission_id,granted_by_user_id) VALUES($1,$2,$3,$4,'reservation.read',$5)",
+      [newPeopleId(), f.orgA, f.a1, f.orgAdminAccess, f.identities.orgA.user],
+    );
+    expect(
+      (await seatReservation(runtime, scope(), transition(checkedIn))).status,
+    ).toBe("SEATED");
+  });
+
+  it("enforces tenant/venue RLS isolation, disabled/revoked/unbranded identity denial, and blocks raw SQL status/revision bypass", async () => {
+    const created = await createReservation(runtime, scope(), command());
+    const input = transition(created);
+    for (const s of [
+      scope("orgA", f.orgB, f.b1),
+      scope("orgA", f.orgA, f.a2),
+    ]) {
+      await expect(checkInReservation(runtime, s, input)).rejects.toMatchObject(
+        { code: "ACCESS_DENIED" },
+      );
+      await expect(seatReservation(runtime, s, input)).rejects.toMatchObject({
+        code: "ACCESS_DENIED",
+      });
+    }
+    for (const s of [
+      scope("a2Only", f.orgA, f.a2),
+      scope("orgB", f.orgB, f.b1),
+    ]) {
+      await expect(checkInReservation(runtime, s, input)).rejects.toMatchObject(
+        { code: "NOT_FOUND" },
+      );
+      await expect(seatReservation(runtime, s, input)).rejects.toMatchObject({
+        code: "NOT_FOUND",
+      });
+    }
+    await expect(
+      checkInReservation(
+        runtime,
+        {
+          ...scope(),
+          identity: { userId: f.identities.orgA.user },
+        } as ReservationScope,
+        input,
+      ),
+    ).rejects.toMatchObject({ code: "ACCESS_DENIED" });
+
+    const client = await runtime.connect();
+    try {
+      for (const status of ["CHECKED_IN", "SEATED"]) {
+        await raw(client);
+        await expect(
+          client.query(
+            "UPDATE projectx_test.reservations SET status=$1 WHERE id=$2",
+            [status, created.id],
+          ),
+        ).rejects.toMatchObject({ code: "23514" });
+        await client.query("ROLLBACK");
+      }
+    } finally {
+      await client.query("ROLLBACK");
+      client.release();
+    }
+
+    const owner = await adminPool.connect();
+    try {
+      await raw(owner);
+      await expect(
+        owner.query(
+          "UPDATE projectx_test.reservations SET status='CHECKED_IN',revision=revision+1 WHERE id=$1",
+          [created.id],
+        ),
+      ).rejects.toMatchObject({ code: "23514" });
+    } finally {
+      await owner.query("ROLLBACK");
+      owner.release();
+    }
+
+    await expect(
+      runtime.query(transitionSql, transitionArgs(input, "CHECKED_IN")),
+    ).rejects.toMatchObject({ code: "42501" });
+    const rawClient = await runtime.connect();
+    for (const [s, args, status, code] of [
+      [scope("orgA", f.orgB, f.b1), input, "CHECKED_IN", "42501"],
+      [scope("orgB", f.orgB, f.b1), input, "CHECKED_IN", "P1001"],
+      [scope(), input, "BOOKED", "23514"],
+      [scope(), input, "SEATED", "P1003"],
+      [scope(), { ...input, expectedRevision: 2 }, "CHECKED_IN", "P1004"],
+    ] as const) {
+      try {
+        await raw(rawClient, s);
+        await expect(
+          rawClient.query(transitionSql, transitionArgs(args, status)),
+        ).rejects.toMatchObject({ code });
+      } finally {
+        await rawClient.query("ROLLBACK");
+      }
+    }
+    rawClient.release();
+    expect(await getReservation(runtime, scope(), created.id)).toEqual(created);
+  });
+
+  it("replays same-key retries across sequential/concurrent calls and after later transitions, and rejects conflicting key reuse", async () => {
+    const created = await createReservation(runtime, scope(), command());
+    const other = await createReservation(
+      runtime,
+      scope(),
+      command({ startsAt: `${date}T19:00:00.000Z` }),
+    );
+    const checkInCmd = transition(created);
+    const [first, second] = await Promise.all([
+      checkInReservation(runtime, scope(), checkInCmd),
+      checkInReservation(runtime, scope(), checkInCmd),
+    ]);
+    expect(first).toEqual(second);
+    expect(first).toMatchObject({ status: "CHECKED_IN", revision: 2 });
+    expect(await checkInReservation(runtime, scope(), checkInCmd)).toEqual(
+      first,
+    );
+    expect(await modificationRows()).toHaveLength(1);
+
+    const seatCmd = transition(first);
+    const [seatedA, seatedB] = await Promise.all([
+      seatReservation(runtime, scope(), seatCmd),
+      seatReservation(runtime, scope(), seatCmd),
+    ]);
+    expect(seatedA).toEqual(seatedB);
+    expect(seatedA).toMatchObject({ status: "SEATED", revision: 3 });
+    expect(await checkInReservation(runtime, scope(), checkInCmd)).toEqual(
+      first,
+    );
+    expect(await seatReservation(runtime, scope(), seatCmd)).toEqual(seatedA);
+    expect(await getReservation(runtime, scope(), created.id)).toEqual(seatedA);
+    expect(await modificationRows()).toHaveLength(2);
+
+    await expect(
+      seatReservation(runtime, scope(), {
+        ...checkInCmd,
+        expectedRevision: 2,
+      }),
+    ).rejects.toMatchObject({ code: "IDEMPOTENCY_CONFLICT" });
+    await expect(
+      checkInReservation(runtime, scope(), {
+        ...checkInCmd,
+        expectedRevision: 2,
+      }),
+    ).rejects.toMatchObject({ code: "IDEMPOTENCY_CONFLICT" });
+    await expect(
+      checkInReservation(runtime, scope(), {
+        ...checkInCmd,
+        reservationId: other.id,
+      }),
+    ).rejects.toMatchObject({ code: "IDEMPOTENCY_CONFLICT" });
+    await expect(
+      modifyReservation(
+        runtime,
+        scope(),
+        modification(other, { idempotencyKey: checkInCmd.idempotencyKey }),
+      ),
+    ).rejects.toMatchObject({ code: "IDEMPOTENCY_CONFLICT" });
+  });
+
+  it("rejects stale revisions and invalid inputs without consuming keys or mutating state", async () => {
+    const created = await createReservation(runtime, scope(), command());
+    const modified = await modifyReservation(
+      runtime,
+      scope(),
+      modification(created, { startsAt: `${date}T18:30:00.000Z` }),
+    );
+    const key = crypto.randomUUID();
+    await expect(
+      checkInReservation(runtime, scope(), {
+        reservationId: created.id,
+        expectedRevision: 1,
+        idempotencyKey: key,
+      }),
+    ).rejects.toMatchObject({ code: "VERSION_CONFLICT" });
+    const checkedIn = await checkInReservation(runtime, scope(), {
+      reservationId: created.id,
+      expectedRevision: modified.revision,
+      idempotencyKey: key,
+    });
+    expect(checkedIn).toMatchObject({ status: "CHECKED_IN", revision: 3 });
+
+    const seatKey = crypto.randomUUID();
+    await expect(
+      seatReservation(runtime, scope(), {
+        reservationId: created.id,
+        expectedRevision: 2,
+        idempotencyKey: seatKey,
+      }),
+    ).rejects.toMatchObject({ code: "VERSION_CONFLICT" });
+    const seated = await seatReservation(runtime, scope(), {
+      reservationId: created.id,
+      expectedRevision: 3,
+      idempotencyKey: seatKey,
+    });
+    expect(seated).toMatchObject({ status: "SEATED", revision: 4 });
+
+    for (const bad of [
+      { reservationId: "not-a-uuid" },
+      { idempotencyKey: "not-a-uuid" },
+      { expectedRevision: 0 },
+      { expectedRevision: -1 },
+      { expectedRevision: 1.5 },
+      { expectedRevision: 2147483647 },
+    ]) {
+      await expect(
+        checkInReservation(runtime, scope(), transition(created, bad)),
+      ).rejects.toMatchObject({ code: "INVALID_INPUT" });
+      await expect(
+        seatReservation(runtime, scope(), transition(created, bad)),
+      ).rejects.toMatchObject({ code: "INVALID_INPUT" });
+    }
+  });
+
+  it("serializes competing check-in commands and competing seating commands with exactly one winner", async () => {
+    const created = await createReservation(runtime, scope(), command());
+    const checkIns = await Promise.allSettled([
+      checkInReservation(runtime, scope(), transition(created)),
+      checkInReservation(runtime, scope(), transition(created)),
+    ]);
+    expect(checkIns.filter((r) => r.status === "fulfilled")).toHaveLength(1);
+    expect(checkIns.find((r) => r.status === "rejected")).toMatchObject({
+      reason: { code: "INVALID_STATE" },
+    });
+    const checkedIn = await getReservation(runtime, scope(), created.id);
+    expect(checkedIn).toMatchObject({ status: "CHECKED_IN", revision: 2 });
+
+    const seatings = await Promise.allSettled([
+      seatReservation(runtime, scope(), transition(checkedIn)),
+      seatReservation(runtime, scope(), transition(checkedIn)),
+    ]);
+    expect(seatings.filter((r) => r.status === "fulfilled")).toHaveLength(1);
+    expect(seatings.find((r) => r.status === "rejected")).toMatchObject({
+      reason: { code: "INVALID_STATE" },
+    });
+    expect(await getReservation(runtime, scope(), created.id)).toMatchObject({
+      status: "SEATED",
+      revision: 3,
+    });
+  });
+
+  it("serializes both lock orders of check-in versus cancellation and seating versus modification or cancellation", async () => {
+    for (const first of ["checkIn", "cancel"] as const) {
+      const created = await createReservation(
+        runtime,
+        scope(),
+        command({
+          startsAt: first === "checkIn" ? start : `${date}T19:00:00.000Z`,
+        }),
+      );
+      const client = await runtime.connect();
+      let pending: Promise<Reservation> | undefined;
+      try {
+        await raw(client);
+        const blocker = (await client.query("SELECT pg_backend_pid() pid"))
+          .rows[0].pid;
+        if (first === "checkIn") {
+          await client.query(
+            transitionSql,
+            transitionArgs(transition(created), "CHECKED_IN"),
+          );
+          pending = cancelReservation(runtime, scope(), created.id);
+        } else {
+          await client.query(
+            "UPDATE projectx_test.reservations SET status='CANCELLED' WHERE id=$1",
+            [created.id],
+          );
+          pending = checkInReservation(runtime, scope(), transition(created));
+        }
+        await waitForBlockedConnection(blocker);
+        await client.query("COMMIT");
+        await expect(pending).rejects.toMatchObject({ code: "INVALID_STATE" });
+      } finally {
+        await client.query("ROLLBACK");
+        client.release();
+      }
+      expect((await getReservation(runtime, scope(), created.id)).status).toBe(
+        first === "checkIn" ? "CHECKED_IN" : "CANCELLED",
+      );
+    }
+
+    const otherTable = await anotherTable();
+    const booked = await createReservation(
+      runtime,
+      scope(),
+      command({ tableId: otherTable }),
+    );
+    const checkedIn = await checkInReservation(
+      runtime,
+      scope(),
+      transition(booked),
+    );
+    const client = await runtime.connect();
+    try {
+      await raw(client);
+      const blocker = (await client.query("SELECT pg_backend_pid() pid"))
+        .rows[0].pid;
+      await client.query(
+        transitionSql,
+        transitionArgs(transition(checkedIn), "SEATED"),
+      );
+      const waitingModify = modifyReservation(
+        runtime,
+        scope(),
+        modification(checkedIn, { tableId: otherTable }),
+      );
+      const waitingCancel = cancelReservation(runtime, scope(), checkedIn.id);
+      await waitForBlockedConnection(blocker);
+      await client.query("COMMIT");
+      await expect(waitingModify).rejects.toMatchObject({
+        code: "INVALID_STATE",
+      });
+      await expect(waitingCancel).rejects.toMatchObject({
+        code: "INVALID_STATE",
+      });
+    } finally {
+      await client.query("ROLLBACK");
+      client.release();
+    }
+    expect(await getReservation(runtime, scope(), checkedIn.id)).toMatchObject({
+      status: "SEATED",
+      revision: 3,
+    });
+  });
+
+  it("rechecks permission after advisory-key or row-lock wait so revoked check-in/seat access cannot complete or replay", async () => {
+    const created = await createReservation(runtime, scope(), command());
+    const input = transition(created);
+    const client = await runtime.connect();
+    try {
+      await raw(client);
+      const blocker = (await client.query("SELECT pg_backend_pid() pid"))
+        .rows[0].pid;
+      await client.query(
+        "SELECT id FROM projectx_test.reservations WHERE id=$1 FOR UPDATE",
+        [created.id],
+      );
+      const waiting = checkInReservation(runtime, scope(), input);
+      await waitForBlockedConnection(blocker);
+      await revokePermission("reservation.checkin");
+      await client.query("COMMIT");
+      await expect(waiting).rejects.toMatchObject({ code: "ACCESS_DENIED" });
+    } finally {
+      await client.query("ROLLBACK");
+      client.release();
+    }
+    expect(await getReservation(runtime, scope(), created.id)).toEqual(created);
+    expect(await modificationRows()).toHaveLength(0);
+  });
+
+  it("rolls back state, revision and command key on audit failure and records PII-free immutable lifecycle audit evidence", async () => {
+    const created = await createReservation(runtime, scope(), command());
+    const checkInCmd = transition(created);
+    await adminPool.query(
+      "CREATE FUNCTION projectx_test.reject_lifecycle_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'synthetic lifecycle audit failure'; END $$; CREATE TRIGGER reject_lifecycle_audit BEFORE INSERT ON projectx_test.reservation_modifications FOR EACH ROW EXECUTE FUNCTION projectx_test.reject_lifecycle_audit()",
+    );
+    await expect(
+      checkInReservation(runtime, scope(), checkInCmd),
+    ).rejects.toMatchObject({ code: "INTERNAL", message: "INTERNAL" });
+    expect(await getReservation(runtime, scope(), created.id)).toEqual(created);
+    expect(await modificationRows()).toHaveLength(0);
+    await adminPool.query(
+      "DROP TRIGGER reject_lifecycle_audit ON projectx_test.reservation_modifications; DROP FUNCTION projectx_test.reject_lifecycle_audit()",
+    );
+
+    const checkedIn = await checkInReservation(runtime, scope(), checkInCmd);
+    const seated = await seatReservation(
+      runtime,
+      scope(),
+      transition(checkedIn),
+    );
+    const audits = await modificationRows();
+    expect(audits).toHaveLength(2);
+    expect(audits[0]).toMatchObject({
+      organization_id: f.orgA,
+      venue_id: f.a1,
+      actor_user_id: f.identities.orgA.user,
+      reservation_id: created.id,
+      expected_revision: 1,
+      request: {
+        operation: "CHECKED_IN",
+        reservation_id: created.id,
+        expected_revision: 1,
+      },
+      before_allocation: { status: "BOOKED", revision: 1 },
+      after_allocation: { status: "CHECKED_IN", revision: 2 },
+    });
+    expect(audits[1]).toMatchObject({
+      organization_id: f.orgA,
+      venue_id: f.a1,
+      actor_user_id: f.identities.orgA.user,
+      reservation_id: created.id,
+      expected_revision: 2,
+      request: {
+        operation: "SEATED",
+        reservation_id: created.id,
+        expected_revision: 2,
+      },
+      before_allocation: { status: "CHECKED_IN", revision: 2 },
+      after_allocation: { status: "SEATED", revision: 3 },
+    });
+    expect(JSON.stringify(audits)).not.toContain(created.guestName);
+    expect(JSON.stringify(audits)).not.toContain(created.guestEmail);
+    expect(seated).toMatchObject({ status: "SEATED", revision: 3 });
+    for (const sql of [
+      "DELETE FROM projectx_test.reservation_modifications",
+      "UPDATE projectx_test.reservation_modifications SET request='{}'",
+    ])
+      await expect(adminPool.query(sql)).rejects.toMatchObject({
+        code: "23514",
+      });
   });
 });

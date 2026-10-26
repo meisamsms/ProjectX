@@ -1596,6 +1596,8 @@
           "reservation.create",
           "reservation.update",
           "reservation.cancel",
+          "reservation.checkin",
+          "reservation.seat",
           "client.read",
           "client.create",
           "client.update",
@@ -1725,7 +1727,7 @@
           },
           "permissionIds": {
             "type": "array",
-            "maxItems": 22,
+            "maxItems": 24,
             "uniqueItems": true,
             "description": "Optional additive direct VENUE grants, checked against current actor rights at this explicit venue.",
             "items": {
@@ -1811,7 +1813,7 @@
           },
           "organizationPermissionIds": {
             "type": "array",
-            "maxItems": 22,
+            "maxItems": 24,
             "uniqueItems": true,
             "description": "Optional additive direct ORGANIZATION/SELF grants owned by the new membership; no shared-role mutation.",
             "items": {
