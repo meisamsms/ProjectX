@@ -3457,6 +3457,170 @@
         "approvalRequired": true,
         "remoteCi": "Not run; local gates only"
       }
+    },
+    {
+      "id": "CHK-082",
+      "taskId": "RESERVATION-DOMAIN-002",
+      "status": "VERIFIED",
+      "classification": "CONFIRMED local internal modification implementation and verification; production/public integration remains NEEDS TESTING",
+      "startingLocalSha": "3f714406acfc74af9e982f321724848424996f40",
+      "branch": "people-03-accounts-read",
+      "authorization": "Attached owner DOMAIN-002 package expands prior documentation-only scope to implementation/tests/demo/docs and one local commit; no push.",
+      "preflight": {
+        "result": "PASS",
+        "head": "3f714406acfc74af9e982f321724848424996f40",
+        "soleParent": "cba69055c70f750f4c18760e86deeda889d829c1",
+        "startingWorktree": "clean",
+        "docker": "No running containers; cached official PostgreSQL16 image confirmed"
+      },
+      "commands": [
+        {
+          "command": "pnpm map:check",
+          "result": "PASS: 144 screens,16 modules,61 roadmap tasks"
+        },
+        {
+          "command": "Historical object comparison against starting commit",
+          "result": "PASS: all27 prior VERIFIED task objects and all81 historical checks unchanged"
+        },
+        {
+          "command": "git diff --check",
+          "result": "PASS; only Git line-ending notices"
+        },
+        {
+          "command": "pnpm db:check; focused reservation suite",
+          "context": "Initial sandbox",
+          "result": "FAIL: localhost55432 EACCES. Smoke2 failed before connecting; focused26 skipped due setup/cleanup connection failure; no domain behavior tested.",
+          "resolution": "Approved outside-sandbox execution connects only to authorized disposable container."
+        },
+        {
+          "command": "pnpm db:check",
+          "context": "Approved outside-sandbox",
+          "result": "PASS2/2 PostgreSQL and pool smoke"
+        },
+        {
+          "command": "Focused domain suite with new migration, before adding new cases",
+          "result": "PASS26/26 unchanged DOMAIN-001 behavior; additive schema replay adaptation included"
+        },
+        {
+          "command": "pnpm lint; pnpm typecheck",
+          "result": "PASS before and after expanded tests"
+        },
+        {
+          "command": "Focused reservation suite --reporter=verbose",
+          "result": "PASS47/47, including21 new modification tests"
+        },
+        {
+          "command": "Focused reservation suite --reporter=verbose",
+          "result": "PASS50/50 after adding persisted-data upgrade, deterministic lock-order and waiting-replay revocation coverage;26 DOMAIN-001 +24 DOMAIN-002",
+          "durationSeconds": 16.5
+        },
+        {
+          "command": "pnpm verify:db",
+          "context": "Approved outside-sandbox; isolated PostgreSQL16",
+          "result": "PASS260/260 across22 files; ordered migration runner and full historical database regressions",
+          "durationSeconds": 66.53
+        },
+        {
+          "command": "pnpm verify",
+          "context": "Approved outside-sandbox local gate",
+          "result": "PASS environment/format/lint/typecheck/contracts/map;4 unit+56 authentication+19 API+178 web+32 browser tests (289 total); API/web builds",
+          "limitation": "Browser suite covers existing synthetic shell/People paths, not public reservation integration"
+        },
+        {
+          "command": "Final pnpm map:check; git diff --check; history/ledger/JSON/DAG validation",
+          "result": "PASS:144 screens/16 modules/62 tasks; acyclic dependencies and verified predecessors; all81 old checks/all other task objects preserved;14-file allowlist; five exact additive ledger changes; no diff whitespace errors or private-key/token patterns. Documentation-only closure after successful runtime gates."
+        }
+      ],
+      "interruption": "Automatic approval review rejected proposed migration/ADR patch because schema/RLS/trigger/grant/SECURITY DEFINER boundary changes lacked recognized exact authorization. No rejected patch applied. Asked owner to approve precise ADR-0019 design; no workaround.",
+      "result": "VERIFIED bounded internal atomic modification; all required local gates PASS. Initial sandbox failure and exact security-boundary approval interruption retained. One local commit only.",
+      "coreReadinessGate": "UNMET",
+      "noPush": true,
+      "approvalResolution": "Owner explicitly approved exact proposed database boundary; proceeding within same bounded implementation package.",
+      "date": "2026-10-25",
+      "environment": {
+        "os": "Windows PowerShell host; Docker Linux PostgreSQL16",
+        "database": "projectx_reservation_test",
+        "listener": "127.0.0.1:55432",
+        "container": "projectx-reservation-modification-test",
+        "containerId": "8d9df262e5da6c9147a2d24eb722f21002041d7555ac035864e1d0ebbf6a2e6d",
+        "image": "postgres:16",
+        "imageDigest": "sha256:9e2cf6287f25c3151f4c9421ccce2b17f3e60061c111a29165e0d2cdd9ff0a97",
+        "storage": "Disposable tmpfs, --rm",
+        "data": "Synthetic only; restricted non-owner runtime test login; no provider/customer data",
+        "node": "24.22.1 (final general verification)",
+        "pnpm": "11.25.0",
+        "postgresql": "16.15 (Debian 16.15-1.pgdg13+2)"
+      },
+      "baselinePublication": {
+        "sha": "3f714406acfc74af9e982f321724848424996f40",
+        "ciRun": "https://github.com/meisamsms/ProjectX/actions/runs/40130167005",
+        "result": "Confirmed in preceding publication task: both gates PASS; DOMAIN-001 publication does not imply current DOMAIN-002 CI."
+      },
+      "securityAndCorrectness": {
+        "atomicity": "PASS valid time/table/party/date/shift changes preserve reservation/client/guest/tenant identity; exclusion/audit failure rolls back allocation,revision and command key",
+        "version": "PASS revision1 for new/upgraded rows; each modification and first cancellation increments; stale changes reject; retries do not increment",
+        "idempotency": "PASS concurrent/sequential same key returns original result; changed payload conflict; replay after later edit/cancel retains original revision/status; current permission rechecked after row-lock wait",
+        "concurrency": "PASS one winner per revision or capacity target; deterministic real blocked connections verify both modification/cancellation lock orders; no resurrection or overbooking",
+        "tenantRls": "PASS cross-organization/Venue known IDs, missing/forged context, disabled/revoked/unbranded identity, read-only/cancel-only denials; update without read denied and update-only cannot cancel; direct allocation/revision/audit/truncate/trigger-disable writes denied",
+        "audit": "PASS immutable scoped actor/request/before-after allocation without copied guest PII; failed audit rolls back; both owner and runtime mutation attempts tested",
+        "timezones": "PASS inherited Chicago gap/fold plus modification between distinct repeated UTC instants, spring-gap boundary rejection, Kolkata local-date rollover",
+        "migration": "PASS original DOMAIN-001 SQL replay with real persisted BOOKED/CANCELLED rows, clients and audit preserves data/checksums on upgrade; clean/upgrade function definitions/security configuration/grants agree; old column/constraint/RLS comparisons retained; seven RLS tables"
+      },
+      "demonstration": {
+        "result": "PASS in focused and full database gates",
+        "entrypoint": "pnpm exec vitest run apps/api/tests/reservations/domain.test.ts --no-file-parallelism --reporter=verbose -t DEMONSTRATION",
+        "steps": [
+          "Create",
+          "Modify",
+          "Original slot released",
+          "New slot occupied",
+          "Staff get/list updated record",
+          "Failed modification leaves existing record unchanged",
+          "Cancel",
+          "Availability restored"
+        ],
+        "scope": "Synthetic internal domain only; no HTTP/external confirmation"
+      },
+      "cleanup": {
+        "result": "PASS",
+        "identityVerified": "8d9df262e5da6c9147a2d24eb722f21002041d7555ac035864e1d0ebbf6a2e6d",
+        "taskLabel": "RESERVATION-DOMAIN-002",
+        "action": "Stopped exact inspected container ID; --rm removed container and tmpfs synthetic data; filtered docker ps -a empty. Cached image retained."
+      },
+      "preservedState": "All81 earlier checks and all27 previously VERIFIED task objects unchanged; every other prior task object unchanged. Historical SQL, auth/runtime/routes, decisions/app-map/dependencies and reference evidence unchanged. Five ledger tests append one path each; checksum/privilege assertions identical.",
+      "evidenceFiles": [
+        "docs/architecture/ADR-0019-atomic-reservation-modification.md",
+        "docs/data/reservation-domain.md",
+        "docs/data/entity-registry.json",
+        "apps/api/src/reservations/service.ts",
+        "apps/api/migrations/zz-reservation-domain/20261024001100_reservation_modification.sql",
+        "apps/api/tests/reservations/domain.test.ts"
+      ],
+      "limitations": [
+        "Whole browser reservation product/core readiness remains incomplete",
+        "No public endpoints, browser UI, guest access or synthetic production authentication",
+        "Auth0/HTTPS/provider and production access gates unchanged",
+        "DOMAIN-003 proposed only; no next implementation authorized",
+        "No push or current-commit GitHub CI"
+      ],
+      "nextExactTask": "RESERVATION-DOMAIN-003 — proposed bounded internal check-in/seating package after separate owner authorization. Dependencies DOMAIN-002 and PEOPLE-CORE-01 now VERIFIED; do not start automatically.",
+      "publication": {
+        "push": false,
+        "approvalRequired": true,
+        "localCommit": "One logical commit containing CHK-082, parent3f714406acfc74af9e982f321724848424996f40; resulting SHA recorded in final response and Git history",
+        "remoteCi": "Not run for DOMAIN-002; no publication authorized",
+        "commitAttempts": [
+          {
+            "command": "git commit -m feat: verify atomic internal reservation modification",
+            "result": "FAIL before creating commit: Author identity unknown; repository has no configured identity.",
+            "resolution": "Use command-local user.name=Codex and user.email=codex@openai.com matching the confirmed baseline author; no global/repository configuration change."
+          }
+        ]
+      },
+      "warnings": [
+        "Non-blocking existing Node DEP0190, terminal color and React Router use-client bundling notices",
+        "Git LF/CRLF conversion notices; diff whitespace validation succeeds"
+      ]
     }
   ],
   "unresolvedQuestions": [

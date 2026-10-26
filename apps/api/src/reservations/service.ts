@@ -36,6 +36,16 @@ export interface CreateReservation {
   guestEmail: string;
   idempotencyKey: string;
 }
+export interface ModifyReservation {
+  reservationId: string;
+  expectedRevision: number;
+  idempotencyKey: string;
+  date: string;
+  startsAt: string;
+  tableId: string;
+  shiftId: string;
+  partySize: number;
+}
 export interface Reservation extends ReservationSlot {
   id: string;
   clientId: string;
@@ -46,6 +56,7 @@ export interface Reservation extends ReservationSlot {
   guestName: string;
   guestEmail: string;
   status: "BOOKED" | "CANCELLED";
+  revision: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -55,6 +66,8 @@ type ErrorCode =
   | "NOT_FOUND"
   | "CAPACITY_CONFLICT"
   | "IDEMPOTENCY_CONFLICT"
+  | "VERSION_CONFLICT"
+  | "INVALID_STATE"
   | "INTERNAL";
 export class ReservationError extends Error {
   constructor(readonly code: ErrorCode) {
@@ -154,7 +167,12 @@ async function authorized<T>(
     if (error instanceof PeopleAccessDenied)
       throw new ReservationError("ACCESS_DENIED");
     const code = (error as { code?: string })?.code;
-    if (code === "23P01") throw new ReservationError("CAPACITY_CONFLICT");
+    if (code === "23P01" || code === "40P01" || code === "P1005")
+      throw new ReservationError("CAPACITY_CONFLICT");
+    if (code === "P1001") throw new ReservationError("NOT_FOUND");
+    if (code === "P1002") throw new ReservationError("IDEMPOTENCY_CONFLICT");
+    if (code === "P1003") throw new ReservationError("INVALID_STATE");
+    if (code === "P1004") throw new ReservationError("VERSION_CONFLICT");
     if (code === "42501") throw new ReservationError("ACCESS_DENIED");
     if (code === "23514" || code === "22P02")
       throw new ReservationError("INVALID_INPUT");
@@ -175,7 +193,7 @@ const slotDto = (row: SlotRow): ReservationSlot => ({
 const reservationColumns = `id,client_id AS "clientId",organization_id AS "organizationId",venue_id AS "venueId",
  table_id AS "tableId",shift_id AS "shiftId",starts_at AS "startsAt",ends_at AS "endsAt",timezone,
  to_char(local_date,'YYYY-MM-DD') AS date,party_size AS "partySize",guest_name AS "guestName",guest_email AS "guestEmail",
- status,created_at AS "createdAt",updated_at AS "updatedAt"`;
+ status,revision,created_at AS "createdAt",updated_at AS "updatedAt"`;
 type ReservationRow = Omit<
   Reservation,
   "startsAt" | "endsAt" | "createdAt" | "updatedAt"
@@ -295,6 +313,38 @@ export async function createReservation(
       ],
     );
     const record = created.rows[0];
+    if (!record) throw new ReservationError("INTERNAL");
+    return dto(record);
+  });
+}
+/** A retry returns the original command result/revision; use getReservation for current state. */
+export async function modifyReservation(
+  pool: Pool,
+  scope: ReservationScope,
+  input: ModifyReservation,
+): Promise<Reservation> {
+  if (
+    !Number.isInteger(input.expectedRevision) ||
+    input.expectedRevision < 1 ||
+    input.expectedRevision >= 2147483647
+  )
+    return invalid();
+  const parameters = [
+    id(input.reservationId),
+    input.expectedRevision,
+    id(input.idempotencyKey),
+    day(input.date),
+    instant(input.startsAt),
+    id(input.tableId),
+    id(input.shiftId),
+    party(input.partySize),
+  ];
+  return authorized(pool, scope, "reservation.update", async (client) => {
+    const result = await client.query<ReservationRow>(
+      `SELECT ${reservationColumns} FROM reservation_modify($1,$2,$3,$4,$5,$6,$7,$8)`,
+      parameters,
+    );
+    const record = result.rows[0];
     if (!record) throw new ReservationError("INTERNAL");
     return dto(record);
   });

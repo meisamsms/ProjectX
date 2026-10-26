@@ -14,6 +14,9 @@ import {
   createReservation,
   getReservation,
   listReservations,
+  modifyReservation,
+  type ModifyReservation,
+  type Reservation,
   type ReservationScope,
   searchAvailability,
 } from "../../src/reservations/service.js";
@@ -733,14 +736,19 @@ describe("RESERVATION-DOMAIN-001 real PostgreSQL16", () => {
       "utf8",
     );
     await adminPool.query(
-      "DROP TABLE projectx_test.reservation_changes,projectx_test.reservations,projectx_test.reservation_clients,projectx_test.reservation_tables,projectx_test.reservation_shifts,projectx_test.reservation_venue_settings CASCADE",
+      "DROP TABLE projectx_test.reservation_modifications,projectx_test.reservation_changes,projectx_test.reservations,projectx_test.reservation_clients,projectx_test.reservation_tables,projectx_test.reservation_shifts,projectx_test.reservation_venue_settings CASCADE",
     );
     await adminPool.query(
       "DROP FUNCTION projectx_test.reservation_slots(date,integer),projectx_test.reservation_allowed(text),projectx_test.reservation_zone_validate(),projectx_test.reservation_validate(),projectx_test.reservation_record_change(),projectx_test.reservation_change_immutable()",
     );
     await adminPool.query(
-      "DELETE FROM projectx_test.schema_migrations WHERE name=$1",
-      [migration],
+      "DELETE FROM projectx_test.schema_migrations WHERE name=ANY($1)",
+      [
+        [
+          migration,
+          "zz-reservation-domain/20261024001100_reservation_modification.sql",
+        ],
+      ],
     );
     await migrateTestDatabase();
     await migrateTestDatabase();
@@ -749,7 +757,835 @@ describe("RESERVATION-DOMAIN-001 real PostgreSQL16", () => {
     const tables = await adminPool.query(
       "SELECT relname,relrowsecurity FROM pg_class JOIN pg_namespace n ON n.oid=relnamespace WHERE n.nspname='projectx_test' AND relkind='r' AND (relname LIKE 'reservation_%' OR relname='reservations')",
     );
-    expect(tables.rows).toHaveLength(6);
+    expect(tables.rows).toHaveLength(7);
     expect(tables.rows.every((r) => r.relrowsecurity)).toBe(true);
+  });
+});
+
+const modification = (
+  booking: Reservation,
+  overrides: Partial<ModifyReservation> = {},
+): ModifyReservation => ({
+  reservationId: booking.id,
+  expectedRevision: booking.revision,
+  idempotencyKey: crypto.randomUUID(),
+  date: booking.date,
+  startsAt: `${date}T19:00:00.000Z`,
+  tableId: booking.tableId,
+  shiftId: booking.shiftId,
+  partySize: booking.partySize,
+  ...overrides,
+});
+async function modificationRows() {
+  return (
+    await adminPool.query(
+      "SELECT * FROM projectx_test.reservation_modifications ORDER BY expected_revision",
+    )
+  ).rows;
+}
+async function anotherTable(capacity = 4) {
+  const table = newPeopleId();
+  await adminPool.query(
+    "INSERT INTO projectx_test.reservation_tables VALUES($1,$2,$3,'Synthetic extra', $4,true)",
+    [table, f.orgA, f.a1, capacity],
+  );
+  return table;
+}
+async function revokePermission(permission: string) {
+  await adminPool.query(
+    "UPDATE projectx_test.venue_permission_grants SET revoked_at=now(),version=version+1 WHERE venue_access_id=$1 AND permission_id=$2",
+    [f.orgAdminAccess, permission],
+  );
+}
+const modifySql =
+  "SELECT * FROM projectx_test.reservation_modify($1,$2,$3,$4,$5,$6,$7,$8)";
+const modifyArgs = (input: ModifyReservation) => [
+  input.reservationId,
+  input.expectedRevision,
+  input.idempotencyKey,
+  input.date,
+  input.startsAt,
+  input.tableId,
+  input.shiftId,
+  input.partySize,
+];
+async function waitForBlockedConnection(blocker: number) {
+  const deadline = Date.now() + 5000;
+  while (Date.now() < deadline) {
+    const result = await adminPool.query(
+      "SELECT 1 FROM pg_stat_activity WHERE $1=ANY(pg_blocking_pids(pid))",
+      [blocker],
+    );
+    if (result.rowCount) return;
+    await new Promise((resolve) => setTimeout(resolve, 20));
+  }
+  throw Error("Expected a real blocked database connection");
+}
+
+describe("RESERVATION-DOMAIN-002 atomic modification PostgreSQL16", () => {
+  beforeEach(async () => {
+    for (const [actor, org, venue, access] of [
+      [f.identities.orgA.user, f.orgA, f.a1, f.orgAdminAccess],
+      [f.identities.a2Only.user, f.orgA, f.a2, f.identities.a2Only.access[0]],
+      [f.identities.orgB.user, f.orgB, f.b1, f.identities.orgB.access[0]],
+    ])
+      await adminPool.query(
+        "INSERT INTO projectx_test.venue_permission_grants(id,organization_id,venue_id,venue_access_id,permission_id,granted_by_user_id) VALUES($1,$2,$3,$4,'reservation.update',$5)",
+        [newPeopleId(), org, venue, access, actor],
+      );
+  });
+  it("upgrade from persisted DOMAIN-001 retains bookings, clients, audit, checksums and least privileges", async () => {
+    const schema = async () => {
+      const tables = await adminPool.query(
+        "SELECT relname,relrowsecurity,relacl::text FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='projectx_test' AND relkind='r' AND (relname='reservations' OR relname LIKE 'reservation_%') ORDER BY relname",
+      );
+      const functions = await adminPool.query(
+        "SELECT proname,prosecdef,proconfig,proacl::text,pg_get_functiondef(p.oid) definition FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='projectx_test' AND proname LIKE 'reservation_%' ORDER BY proname",
+      );
+      return { tables: tables.rows, functions: functions.rows };
+    };
+    const clean = await schema();
+    // Rebuild only the domain from its unmodified original migration, retaining the People fixture.
+    await adminPool.query(
+      "DROP TABLE projectx_test.reservation_modifications,projectx_test.reservation_changes,projectx_test.reservations,projectx_test.reservation_clients,projectx_test.reservation_tables,projectx_test.reservation_shifts,projectx_test.reservation_venue_settings CASCADE",
+    );
+    await adminPool.query(
+      "DROP FUNCTION projectx_test.reservation_slots(date,integer),projectx_test.reservation_allowed(text),projectx_test.reservation_zone_validate(),projectx_test.reservation_validate(),projectx_test.reservation_record_change(),projectx_test.reservation_change_immutable()",
+    );
+    const originalSql = await readFile(
+      new URL(
+        "../../migrations/zz-reservation-domain/20261017001000_reservation_domain.sql",
+        import.meta.url,
+      ),
+      "utf8",
+    );
+    const owner = await adminPool.connect();
+    try {
+      await owner.query("BEGIN");
+      await owner.query("SET LOCAL search_path TO projectx_test, public");
+      await owner.query(originalSql);
+      await owner.query(
+        "DELETE FROM schema_migrations WHERE name='zz-reservation-domain/20261024001100_reservation_modification.sql'",
+      );
+      await owner.query("COMMIT");
+    } finally {
+      await owner.query("ROLLBACK");
+      owner.release();
+    }
+    const configured = await configure();
+    tableId = configured.table;
+    shiftId = configured.shift;
+    const client = await runtime.connect();
+    try {
+      await raw(client);
+      await rawInsert(client);
+      await rawInsert(client, `${date}T19:00:00Z`, `${date}T20:00:00Z`);
+      await client.query(
+        "UPDATE projectx_test.reservations SET status='CANCELLED' WHERE starts_at=$1",
+        [`${date}T19:00:00Z`],
+      );
+      await client.query("COMMIT");
+    } finally {
+      await client.query("ROLLBACK");
+      client.release();
+    }
+    const before = (
+      await adminPool.query(
+        "SELECT * FROM projectx_test.reservations ORDER BY id",
+      )
+    ).rows;
+    const audit = (
+      await adminPool.query(
+        "SELECT * FROM projectx_test.reservation_changes ORDER BY reservation_id,action",
+      )
+    ).rows;
+    const clients = (
+      await adminPool.query(
+        "SELECT * FROM projectx_test.reservation_clients ORDER BY id",
+      )
+    ).rows;
+    const ledger = (
+      await adminPool.query(
+        "SELECT name,checksum FROM projectx_test.schema_migrations ORDER BY name",
+      )
+    ).rows;
+    await migrateTestDatabase();
+    await migrateTestDatabase();
+    const after = (
+      await adminPool.query(
+        "SELECT * FROM projectx_test.reservations ORDER BY id",
+      )
+    ).rows;
+    expect(
+      after.map(({ revision, ...r }) => {
+        expect(revision).toBe(1);
+        return r;
+      }),
+    ).toEqual(before);
+    expect(
+      (
+        await adminPool.query(
+          "SELECT * FROM projectx_test.reservation_changes ORDER BY reservation_id,action",
+        )
+      ).rows,
+    ).toEqual(audit);
+    expect(
+      (
+        await adminPool.query(
+          "SELECT * FROM projectx_test.reservation_clients ORDER BY id",
+        )
+      ).rows,
+    ).toEqual(clients);
+    expect(
+      (
+        await adminPool.query(
+          "SELECT name,checksum FROM projectx_test.schema_migrations WHERE name<>'zz-reservation-domain/20261024001100_reservation_modification.sql' ORDER BY name",
+        )
+      ).rows,
+    ).toEqual(ledger);
+    expect(await schema()).toEqual(clean);
+    const booked = after.find((r) => r.status === "BOOKED");
+    if (!booked) throw Error("Missing historical booking");
+    const record = await getReservation(runtime, scope(), booked.id);
+    expect(
+      (await modifyReservation(runtime, scope(), modification(record)))
+        .revision,
+    ).toBe(2);
+  });
+  it("both real row-lock orders of modification versus cancellation preserve terminal cancellation", async () => {
+    for (const first of ["modify", "cancel"]) {
+      const created = await createReservation(runtime, scope(), command());
+      const client = await runtime.connect();
+      let pending: Promise<PromiseSettledResult<Reservation>[]> | undefined;
+      try {
+        await raw(client);
+        const blocker = (await client.query("SELECT pg_backend_pid() pid"))
+          .rows[0].pid;
+        if (first === "modify")
+          await client.query(modifySql, modifyArgs(modification(created)));
+        else
+          await client.query(
+            "UPDATE projectx_test.reservations SET status='CANCELLED' WHERE id=$1",
+            [created.id],
+          );
+        pending = Promise.allSettled([
+          first === "modify"
+            ? cancelReservation(runtime, scope(), created.id)
+            : modifyReservation(runtime, scope(), modification(created)),
+        ]);
+        await waitForBlockedConnection(blocker);
+        await client.query("COMMIT");
+        const [result] = await pending;
+        if (first === "modify") expect(result?.status).toBe("fulfilled");
+        else
+          expect(result).toMatchObject({
+            status: "rejected",
+            reason: { code: "INVALID_STATE" },
+          });
+        expect(
+          await getReservation(runtime, scope(), created.id),
+        ).toMatchObject({
+          status: "CANCELLED",
+          revision: first === "modify" ? 3 : 2,
+        });
+      } finally {
+        await client.query("ROLLBACK");
+        client.release();
+        await pending;
+      }
+    }
+  });
+  it("revocation while replay waits for a row lock is rechecked after the wait", async () => {
+    const created = await createReservation(runtime, scope(), command());
+    const input = modification(created);
+    const updated = await modifyReservation(runtime, scope(), input);
+    const client = await runtime.connect();
+    let pending: Promise<PromiseSettledResult<Reservation>[]> | undefined;
+    try {
+      await raw(client);
+      const blocker = (await client.query("SELECT pg_backend_pid() pid"))
+        .rows[0].pid;
+      await client.query(
+        "SELECT id FROM projectx_test.reservations WHERE id=$1 FOR UPDATE",
+        [created.id],
+      );
+      pending = Promise.allSettled([
+        modifyReservation(runtime, scope(), input),
+      ]);
+      await waitForBlockedConnection(blocker);
+      await revokePermission("reservation.update");
+      await client.query("COMMIT");
+      expect((await pending)[0]).toMatchObject({
+        status: "rejected",
+        reason: { code: "ACCESS_DENIED" },
+      });
+      expect(await getReservation(runtime, scope(), created.id)).toEqual(
+        updated,
+      );
+    } finally {
+      await client.query("ROLLBACK");
+      client.release();
+      await pending;
+    }
+  });
+  it("DEMONSTRATION: create → modify → old free/new occupied → staff read → failed change preserved → cancel → restored", async () => {
+    const before = await searchAvailability(runtime, scope(), {
+      date,
+      partySize: 2,
+    });
+    const created = await createReservation(runtime, scope(), command());
+    const updated = await modifyReservation(
+      runtime,
+      scope(),
+      modification(created),
+    );
+    expect(updated).toMatchObject({
+      id: created.id,
+      clientId: created.clientId,
+      guestName: created.guestName,
+      guestEmail: created.guestEmail,
+      organizationId: f.orgA,
+      venueId: f.a1,
+      revision: 2,
+      startsAt: `${date}T19:00:00.000Z`,
+    });
+    const slots = await searchAvailability(runtime, scope(), {
+      date,
+      partySize: 2,
+    });
+    expect(slots.some((s) => s.startsAt === start)).toBe(true);
+    expect(slots.some((s) => s.startsAt === updated.startsAt)).toBe(false);
+    expect(await getReservation(runtime, scope(), created.id)).toEqual(updated);
+    expect(await listReservations(runtime, scope(), date)).toEqual([updated]);
+    await expect(
+      modifyReservation(
+        runtime,
+        scope(),
+        modification(updated, { startsAt: `${date}T22:00:00Z` }),
+      ),
+    ).rejects.toMatchObject({ code: "CAPACITY_CONFLICT" });
+    expect(await getReservation(runtime, scope(), created.id)).toEqual(updated);
+    const cancelled = await cancelReservation(runtime, scope(), created.id);
+    expect(cancelled).toMatchObject({ status: "CANCELLED", revision: 3 });
+    expect(await cancelReservation(runtime, scope(), created.id)).toEqual(
+      cancelled,
+    );
+    expect(
+      await searchAvailability(runtime, scope(), { date, partySize: 2 }),
+    ).toEqual(before);
+    console.log(
+      "Synthetic modification demo PASS: create/modify/old-free/new-occupied/staff-read/failed-change-preserved/cancel/restored.",
+    );
+  });
+  it("changes tables and preserves guest identity/contact and creation metadata", async () => {
+    const created = await createReservation(runtime, scope(), command());
+    const table = await anotherTable();
+    const updated = await modifyReservation(
+      runtime,
+      scope(),
+      modification(created, { tableId: table, startsAt: start }),
+    );
+    expect(updated).toMatchObject({
+      ...created,
+      tableId: table,
+      revision: 2,
+      updatedAt: updated.updatedAt,
+    });
+    expect(
+      (await searchAvailability(runtime, scope(), query())).some(
+        (s) => s.tableId === tableId && s.startsAt === start,
+      ),
+    ).toBe(true);
+  });
+  it("changes party size within capacity without treating its own allocation as a conflict", async () => {
+    const created = await createReservation(runtime, scope(), command());
+    const updated = await modifyReservation(
+      runtime,
+      scope(),
+      modification(created, { startsAt: start, partySize: 1 }),
+    );
+    expect(updated).toMatchObject({
+      partySize: 1,
+      revision: 2,
+      startsAt: start,
+    });
+    await expect(
+      modifyReservation(
+        runtime,
+        scope(),
+        modification(updated, { partySize: 3 }),
+      ),
+    ).rejects.toMatchObject({ code: "CAPACITY_CONFLICT" });
+    expect(await getReservation(runtime, scope(), created.id)).toEqual(updated);
+  });
+  it("changes date and shift, derives end time, and updates staff date lists", async () => {
+    const created = await createReservation(runtime, scope(), command());
+    const nextDate = `${year}-01-16`;
+    const other = await configure(f.orgA, f.a1, nextDate, 720, 840, 30);
+    const input = {
+      ...modification(created, {
+        date: nextDate,
+        shiftId: other.shift,
+        startsAt: `${nextDate}T18:00:00Z`,
+      }),
+      endsAt: `${nextDate}T23:00:00Z`,
+    };
+    const updated = await modifyReservation(runtime, scope(), input);
+    expect(updated).toMatchObject({
+      date: nextDate,
+      endsAt: `${nextDate}T18:30:00.000Z`,
+      revision: 2,
+    });
+    expect(await listReservations(runtime, scope(), date)).toEqual([]);
+    expect(await listReservations(runtime, scope(), nextDate)).toEqual([
+      updated,
+    ]);
+  });
+  it("invalid/unconfigured slots and inactive tables preserve reservation and command ledger", async () => {
+    const created = await createReservation(runtime, scope(), command());
+    for (const input of [
+      modification(created, { startsAt: `${date}T19:01:00Z` }),
+      modification(created, { shiftId: newPeopleId() }),
+      modification(created, { partySize: 3 }),
+    ])
+      await expect(
+        modifyReservation(runtime, scope(), input),
+      ).rejects.toMatchObject({ code: "CAPACITY_CONFLICT" });
+    const inactive = await anotherTable();
+    await adminPool.query(
+      "UPDATE projectx_test.reservation_tables SET active=false WHERE id=$1",
+      [inactive],
+    );
+    await expect(
+      modifyReservation(
+        runtime,
+        scope(),
+        modification(created, { tableId: inactive }),
+      ),
+    ).rejects.toMatchObject({ code: "CAPACITY_CONFLICT" });
+    expect(await getReservation(runtime, scope(), created.id)).toEqual(created);
+    expect(await modificationRows()).toHaveLength(0);
+  });
+  it("occupied target fails atomically, retains old capacity and leaves the key reusable", async () => {
+    const created = await createReservation(runtime, scope(), command());
+    const occupied = await createReservation(
+      runtime,
+      scope(),
+      command({ startsAt: `${date}T19:00:00Z` }),
+    );
+    const input = modification(created);
+    await expect(
+      modifyReservation(runtime, scope(), input),
+    ).rejects.toMatchObject({ code: "CAPACITY_CONFLICT" });
+    expect(await getReservation(runtime, scope(), created.id)).toEqual(created);
+    expect(await modificationRows()).toHaveLength(0);
+    expect(
+      (await searchAvailability(runtime, scope(), query())).some(
+        (s) => s.startsAt === start,
+      ),
+    ).toBe(false);
+    await cancelReservation(runtime, scope(), occupied.id);
+    expect((await modifyReservation(runtime, scope(), input)).revision).toBe(2);
+  });
+  it("rejects stale revision and invalid revisions without writing", async () => {
+    const created = await createReservation(runtime, scope(), command());
+    const updated = await modifyReservation(
+      runtime,
+      scope(),
+      modification(created),
+    );
+    await expect(
+      modifyReservation(runtime, scope(), modification(created)),
+    ).rejects.toMatchObject({ code: "VERSION_CONFLICT" });
+    for (const expectedRevision of [0, -1, 1.5, NaN, 2147483647])
+      await expect(
+        modifyReservation(
+          runtime,
+          scope(),
+          modification(updated, { expectedRevision }),
+        ),
+      ).rejects.toMatchObject({ code: "INVALID_INPUT" });
+    expect(await getReservation(runtime, scope(), created.id)).toEqual(updated);
+    expect(await modificationRows()).toHaveLength(1);
+  });
+  it("two concurrent modifications of one revision have exactly one winner", async () => {
+    const created = await createReservation(runtime, scope(), command());
+    const results = await Promise.allSettled([
+      modifyReservation(runtime, scope(), modification(created)),
+      modifyReservation(
+        runtime,
+        scope(),
+        modification(created, { startsAt: start, partySize: 1 }),
+      ),
+    ]);
+    expect(results.filter((r) => r.status === "fulfilled")).toHaveLength(1);
+    expect(results.find((r) => r.status === "rejected")).toMatchObject({
+      reason: { code: "VERSION_CONFLICT" },
+    });
+    expect((await getReservation(runtime, scope(), created.id)).revision).toBe(
+      2,
+    );
+    expect(await modificationRows()).toHaveLength(1);
+  });
+  it("two reservations competing for one table cannot both move; loser remains unchanged", async () => {
+    const secondTable = await anotherTable(),
+      target = await anotherTable();
+    const a = await createReservation(runtime, scope(), command());
+    const b = await createReservation(
+      runtime,
+      scope(),
+      command({ tableId: secondTable }),
+    );
+    const results = await Promise.allSettled(
+      [a, b].map((r) =>
+        modifyReservation(
+          runtime,
+          scope(),
+          modification(r, { tableId: target, startsAt: start }),
+        ),
+      ),
+    );
+    expect(results.filter((r) => r.status === "fulfilled")).toHaveLength(1);
+    expect(results.find((r) => r.status === "rejected")).toMatchObject({
+      reason: { code: "CAPACITY_CONFLICT" },
+    });
+    for (const [i, r] of [a, b].entries())
+      if (results[i]?.status === "rejected")
+        expect(await getReservation(runtime, scope(), r.id)).toEqual(r);
+    expect(await modificationRows()).toHaveLength(1);
+  });
+  it("same-key concurrency replays one exact result and rejects changed payload", async () => {
+    const createInput = command();
+    const created = await createReservation(runtime, scope(), createInput);
+    const input = modification(created, {
+      idempotencyKey: createInput.idempotencyKey,
+    });
+    const [a, b] = await Promise.all([
+      modifyReservation(runtime, scope(), input),
+      modifyReservation(runtime, scope(), input),
+    ]);
+    expect(a).toEqual(b);
+    expect(await modifyReservation(runtime, scope(), input)).toEqual(a);
+    for (const changed of [
+      { partySize: 1 },
+      { expectedRevision: 2 },
+      { reservationId: newPeopleId() },
+    ]) {
+      const expected =
+        "reservationId" in changed ? "NOT_FOUND" : "IDEMPOTENCY_CONFLICT";
+      await expect(
+        modifyReservation(runtime, scope(), { ...input, ...changed }),
+      ).rejects.toMatchObject({ code: expected });
+    }
+    expect(await modificationRows()).toHaveLength(1);
+  });
+  it("retry returns historical result after a later change and cancellation, never current state disguised as replay", async () => {
+    const created = await createReservation(runtime, scope(), command());
+    const input = modification(created);
+    const first = await modifyReservation(runtime, scope(), input);
+    const second = await modifyReservation(
+      runtime,
+      scope(),
+      modification(first, { startsAt: start, partySize: 1 }),
+    );
+    expect(second.revision).toBe(3);
+    expect(await modifyReservation(runtime, scope(), input)).toEqual(first);
+    await cancelReservation(runtime, scope(), created.id);
+    expect(await modifyReservation(runtime, scope(), input)).toEqual(first);
+    expect(await getReservation(runtime, scope(), created.id)).toMatchObject({
+      status: "CANCELLED",
+      revision: 4,
+    });
+    await expect(
+      modifyReservation(runtime, scope(), modification(second)),
+    ).rejects.toMatchObject({ code: "INVALID_STATE" });
+    expect(await modificationRows()).toHaveLength(2);
+  });
+  it("modification racing cancellation never resurrects a cancelled booking", async () => {
+    for (let i = 0; i < 3; i++) {
+      const created = await createReservation(runtime, scope(), command());
+      const [change, cancel] = await Promise.allSettled([
+        modifyReservation(runtime, scope(), modification(created)),
+        cancelReservation(runtime, scope(), created.id),
+      ]);
+      expect(cancel.status).toBe("fulfilled");
+      if (change.status === "rejected")
+        expect(change.reason).toMatchObject({ code: "INVALID_STATE" });
+      const final = await getReservation(runtime, scope(), created.id);
+      expect(final).toMatchObject({
+        status: "CANCELLED",
+        revision: change.status === "fulfilled" ? 3 : 2,
+      });
+      expect(
+        (
+          await searchAvailability(runtime, scope(), { date, partySize: 2 })
+        ).some((s) => s.startsAt === start),
+      ).toBe(true);
+    }
+  });
+  it("known IDs cannot cross organization/Venue boundaries and revoked access blocks replay", async () => {
+    const created = await createReservation(runtime, scope(), command());
+    const input = modification(created);
+    await modifyReservation(runtime, scope(), input);
+    for (const s of [
+      scope("a2Only", f.orgA, f.a2),
+      scope("orgB", f.orgB, f.b1),
+    ])
+      await expect(modifyReservation(runtime, s, input)).rejects.toMatchObject({
+        code: "NOT_FOUND",
+      });
+    await expect(
+      modifyReservation(runtime, scope("orgA", f.orgB, f.b1), input),
+    ).rejects.toMatchObject({ code: "ACCESS_DENIED" });
+    await adminPool.query(
+      "UPDATE projectx_test.venue_access SET revoked_at=now() WHERE id=$1",
+      [f.orgAdminAccess],
+    );
+    await expect(
+      modifyReservation(runtime, scope(), input),
+    ).rejects.toMatchObject({ code: "ACCESS_DENIED" });
+  });
+  it("read-only and cancellation-only staff cannot modify", async () => {
+    const created = await createReservation(runtime, scope(), command());
+    await revokePermission("reservation.update");
+    await expect(
+      modifyReservation(runtime, scope(), modification(created)),
+    ).rejects.toMatchObject({ code: "ACCESS_DENIED" });
+    await revokePermission("reservation.cancel");
+    await expect(
+      modifyReservation(runtime, scope(), modification(created)),
+    ).rejects.toMatchObject({ code: "ACCESS_DENIED" });
+    expect(await getReservation(runtime, scope(), created.id)).toEqual(created);
+  });
+  it("update permission requires read and never grants cancellation", async () => {
+    const created = await createReservation(runtime, scope(), command());
+    await revokePermission("reservation.cancel");
+    const updated = await modifyReservation(
+      runtime,
+      scope(),
+      modification(created),
+    );
+    await expect(
+      cancelReservation(runtime, scope(), created.id),
+    ).rejects.toMatchObject({ code: "ACCESS_DENIED" });
+    const client = await runtime.connect();
+    try {
+      await raw(client);
+      expect(
+        (
+          await client.query(
+            "UPDATE projectx_test.reservations SET status='CANCELLED' WHERE id=$1",
+            [created.id],
+          )
+        ).rowCount,
+      ).toBe(0);
+    } finally {
+      await client.query("ROLLBACK");
+      client.release();
+    }
+    await revokePermission("reservation.read");
+    await expect(
+      modifyReservation(runtime, scope(), modification(updated)),
+    ).rejects.toMatchObject({ code: "ACCESS_DENIED" });
+  });
+  it("unbranded identity and disabled user cannot modify or replay", async () => {
+    const created = await createReservation(runtime, scope(), command());
+    const input = modification(created);
+    await modifyReservation(runtime, scope(), input);
+    await expect(
+      modifyReservation(
+        runtime,
+        {
+          ...scope(),
+          identity: { userId: f.identities.orgA.user },
+        } as ReservationScope,
+        input,
+      ),
+    ).rejects.toMatchObject({ code: "ACCESS_DENIED" });
+    await adminPool.query(
+      "UPDATE projectx_test.users SET disabled_at=now() WHERE id=$1",
+      [f.identities.orgA.user],
+    );
+    await expect(
+      modifyReservation(runtime, scope(), input),
+    ).rejects.toMatchObject({ code: "ACCESS_DENIED" });
+  });
+  it("raw SQL cannot alter allocation/revision, spoof audit evidence or bypass trigger through status", async () => {
+    const created = await createReservation(runtime, scope(), command());
+    for (const sql of [
+      "UPDATE projectx_test.reservations SET party_size=1",
+      "UPDATE projectx_test.reservations SET revision=2",
+      "SELECT * FROM projectx_test.reservation_modifications",
+      "DELETE FROM projectx_test.reservation_modifications",
+      "TRUNCATE projectx_test.reservation_modifications",
+      "INSERT INTO projectx_test.reservation_modifications DEFAULT VALUES",
+      "UPDATE projectx_test.reservation_modifications SET request='{}'",
+      "ALTER TABLE projectx_test.reservations DISABLE TRIGGER ALL",
+    ]) {
+      await expect(runtime.query(sql)).rejects.toMatchObject({ code: "42501" });
+    }
+    const client = await runtime.connect();
+    try {
+      await raw(client);
+      await expect(
+        client.query(
+          "UPDATE projectx_test.reservations SET status='BOOKED' WHERE id=$1",
+          [created.id],
+        ),
+      ).rejects.toMatchObject({ code: "23514" });
+    } finally {
+      await client.query("ROLLBACK");
+      client.release();
+    }
+    // Even an owner-issued scoped update without protected command evidence fails the validation trigger.
+    const owner = await adminPool.connect();
+    try {
+      await raw(owner);
+      await expect(
+        owner.query(
+          "UPDATE projectx_test.reservations SET revision=revision+1,party_size=1 WHERE id=$1",
+          [created.id],
+        ),
+      ).rejects.toMatchObject({ code: "23514" });
+    } finally {
+      await owner.query("ROLLBACK");
+      owner.release();
+    }
+    expect(await getReservation(runtime, scope(), created.id)).toEqual(created);
+  });
+  it("direct modification function enforces scope/rights/version and current capacity without trusting service", async () => {
+    const created = await createReservation(runtime, scope(), command());
+    const input = modification(created);
+    await expect(
+      runtime.query(modifySql, modifyArgs(input)),
+    ).rejects.toMatchObject({ code: "42501" });
+    const client = await runtime.connect();
+    for (const [s, args, code] of [
+      [scope("orgA", f.orgB, f.b1), input, "42501"],
+      [scope("orgB", f.orgB, f.b1), input, "P1001"],
+      [scope(), { ...input, expectedRevision: 2 }, "P1004"],
+      [scope(), { ...input, partySize: 3 }, "P1005"],
+    ] as const) {
+      try {
+        await raw(client, s);
+        await expect(
+          client.query(modifySql, modifyArgs(args)),
+        ).rejects.toMatchObject({ code });
+      } finally {
+        await client.query("ROLLBACK");
+      }
+    }
+    client.release();
+    expect(await getReservation(runtime, scope(), created.id)).toEqual(created);
+  });
+  it("audit failure rolls back allocation/revision/key; successful retry records immutable narrow before/after evidence", async () => {
+    const created = await createReservation(runtime, scope(), command());
+    const input = modification(created);
+    await adminPool.query(
+      "CREATE FUNCTION projectx_test.reject_mod_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'synthetic audit failure'; END $$; CREATE TRIGGER reject_mod_audit BEFORE INSERT ON projectx_test.reservation_modifications FOR EACH ROW EXECUTE FUNCTION projectx_test.reject_mod_audit()",
+    );
+    await expect(
+      modifyReservation(runtime, scope(), input),
+    ).rejects.toMatchObject({ code: "INTERNAL", message: "INTERNAL" });
+    expect(await getReservation(runtime, scope(), created.id)).toEqual(created);
+    expect(await modificationRows()).toHaveLength(0);
+    await adminPool.query(
+      "DROP TRIGGER reject_mod_audit ON projectx_test.reservation_modifications",
+    );
+    const updated = await modifyReservation(runtime, scope(), input);
+    const [audit] = await modificationRows();
+    expect(audit).toMatchObject({
+      actor_user_id: f.identities.orgA.user,
+      reservation_id: created.id,
+      expected_revision: 1,
+      before_allocation: { revision: 1, table_id: created.tableId },
+      after_allocation: { revision: 2, table_id: updated.tableId },
+    });
+    expect(JSON.stringify(audit)).not.toContain(created.guestName);
+    expect(JSON.stringify(audit)).not.toContain(created.guestEmail);
+    for (const sql of [
+      "DELETE FROM projectx_test.reservation_modifications",
+      "UPDATE projectx_test.reservation_modifications SET request='{}'",
+    ])
+      await expect(adminPool.query(sql)).rejects.toMatchObject({
+        code: "23514",
+      });
+  });
+  it("modifies across venue-local midnight in Kolkata without losing the local date", async () => {
+    await adminPool.query(
+      "UPDATE projectx_test.reservation_venue_settings SET timezone='Asia/Kolkata'",
+    );
+    const created = await createReservation(
+      runtime,
+      scope(),
+      command({ startsAt: `${date}T06:30:00Z` }),
+    );
+    const next = `${year}-01-16`;
+    const config = await configure(
+      f.orgA,
+      f.a1,
+      next,
+      0,
+      120,
+      60,
+      15,
+      "Asia/Kolkata",
+    );
+    const updated = await modifyReservation(
+      runtime,
+      scope(),
+      modification(created, {
+        date: next,
+        shiftId: config.shift,
+        startsAt: `${date}T18:30:00Z`,
+      }),
+    );
+    expect(updated).toMatchObject({
+      date: next,
+      timezone: "Asia/Kolkata",
+      startsAt: `${date}T18:30:00.000Z`,
+      endsAt: `${date}T19:30:00.000Z`,
+    });
+  });
+  it("modifies into DST fold distinct instants and rejects a spring-gap boundary without losing original", async () => {
+    const nth = (month: number, n: number) =>
+      `${year}-${String(month).padStart(2, "0")}-${String(1 + ((7 - new Date(Date.UTC(year, month - 1, 1)).getUTCDay()) % 7) + 7 * (n - 1)).padStart(2, "0")}`;
+    const fall = nth(11, 1),
+      spring = nth(3, 2);
+    const created = await createReservation(runtime, scope(), command());
+    const config = await configure(f.orgA, f.a1, fall, 0, 240, 30, 30);
+    const first = await modifyReservation(
+      runtime,
+      scope(),
+      modification(created, {
+        date: fall,
+        shiftId: config.shift,
+        startsAt: `${fall}T06:00:00Z`,
+      }),
+    );
+    const second = await modifyReservation(
+      runtime,
+      scope(),
+      modification(first, {
+        date: fall,
+        shiftId: config.shift,
+        startsAt: `${fall}T07:00:00Z`,
+      }),
+    );
+    expect(first.startsAt).not.toBe(second.startsAt);
+    expect(second.endsAt).toBe(`${fall}T07:30:00.000Z`);
+    const gap = await configure(f.orgA, f.a1, spring, 150, 240, 30, 30);
+    await expect(
+      modifyReservation(
+        runtime,
+        scope(),
+        modification(second, {
+          date: spring,
+          shiftId: gap.shift,
+          startsAt: `${spring}T08:30:00Z`,
+        }),
+      ),
+    ).rejects.toMatchObject({ code: "CAPACITY_CONFLICT" });
+    expect(await getReservation(runtime, scope(), created.id)).toEqual(second);
   });
 });

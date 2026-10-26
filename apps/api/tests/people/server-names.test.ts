@@ -809,6 +809,7 @@ describe("PEOPLE-08A forward migration", () => {
           migration,
           "staff-auth/20261005000900_staff_sessions.sql",
           "zz-reservation-domain/20261017001000_reservation_domain.sql",
+          "zz-reservation-domain/20261024001100_reservation_modification.sql",
         ].map(async (name) => ({
           name,
           checksum: checksum(await content(name)),

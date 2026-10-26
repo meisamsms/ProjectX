@@ -511,6 +511,16 @@
           "reservations"
         ],
         "boundary": "Internal BOOKED/CANCELLED slice, tenant/Venue/client/table/shift composite ownership, UTC interval and Venue-local date; no public API."
+      },
+      "reservationModificationSlice": {
+        "taskId": "RESERVATION-DOMAIN-002",
+        "classification": "CONFIRMED PROJECTX IMPLEMENTATION",
+        "verification": "CHK-082 VERIFIED: PostgreSQL16.15 focused50/50 and full database260/260; general verify PASS",
+        "migration": "apps/api/migrations/zz-reservation-domain/20261024001100_reservation_modification.sql",
+        "tables": [
+          "reservations"
+        ],
+        "boundary": "Revisioned internal BOOKED allocation changes preserve guest/client/tenant identity. Cancellation advances revision; no public API."
       }
     },
     {
@@ -976,6 +986,16 @@
           "reservation_changes"
         ],
         "boundary": "Append-only CREATED/CANCELLED transaction audit metadata; no guest PII, no generic/export or denial audit."
+      },
+      "reservationModificationSlice": {
+        "taskId": "RESERVATION-DOMAIN-002",
+        "classification": "CONFIRMED PROJECTX IMPLEMENTATION",
+        "verification": "CHK-082 VERIFIED: PostgreSQL16.15 focused50/50 and full database260/260; general verify PASS",
+        "migration": "apps/api/migrations/zz-reservation-domain/20261024001100_reservation_modification.sql",
+        "tables": [
+          "reservation_modifications"
+        ],
+        "boundary": "Immutable actor/key/request/before-after allocation result metadata; scoped command replay and narrow modification audit, no duplicated guest PII or export dependency."
       }
     },
     {
@@ -1020,6 +1040,16 @@
           "reservations"
         ],
         "boundary": "Unique organization/venue/actor/key plus normalized request fingerprint on reservation row; lifetime retention and replay including cancelled records."
+      },
+      "reservationModificationSlice": {
+        "taskId": "RESERVATION-DOMAIN-002",
+        "classification": "CONFIRMED PROJECTX IMPLEMENTATION",
+        "verification": "CHK-082 VERIFIED: PostgreSQL16.15 focused50/50 and full database260/260; general verify PASS",
+        "migration": "apps/api/migrations/zz-reservation-domain/20261024001100_reservation_modification.sql",
+        "tables": [
+          "reservation_modifications"
+        ],
+        "boundary": "Immutable actor/key/request/before-after allocation result metadata; scoped command replay and narrow modification audit, no duplicated guest PII or export dependency."
       }
     }
   ]

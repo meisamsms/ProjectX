@@ -1,26 +1,26 @@
 CURRENT PHASE: PHASE-04 — Core domain implementation, IN_PROGRESS.
-CURRENT TASK: RESERVATION-DOMAIN-001 — internal reservation-domain slice.
-STATUS: VERIFIED — CHK-081, 2026-10-23. Whole reservation product remains incomplete.
-COMPLETED: Search/select/create/occupied/staff get+list/cancel/restored-capacity demo on PostgreSQL16.15; safe table allocation, current tenant/Venue permissions/RLS, idempotency, audit rollback and timezone/DST. Six-table migration/service/tests and entity contract documented. Five one-line ledger-inventory updates preserve exact old checksum/privilege assertions.
-FILES CREATED: apps/api/src/reservations/service.ts; apps/api/migrations/zz-reservation-domain/20261017001000_reservation_domain.sql; apps/api/tests/reservations/domain.test.ts; docs/architecture/ADR-0018-reservation-domain-slice.md; docs/data/reservation-domain.md; prior readiness-2026-10-20.md retained.
-FILES MODIFIED: tooling/db-test.mjs; apps/api/tests/people/{booked-by,server-names,direct-grants-migrations,rls-migrations,roster-fields-migrations}.test.ts; docs/data/entity-registry.json; roadmap/verification/handoff; README.
-TESTS EXECUTED: pnpm db:check; focused domain suite; pnpm verify:db; pnpm verify; isolated Booked By web suite; pnpm map:check; git diff --check; JSON/DAG/history preservation validation.
-TEST RESULTS: db smoke2/2; focused26/26; final full database236/236 across22 files; full general gate PASS with4 unit+56 auth+19 API+178 web+32 browser tests, types/lint/format/contracts and API/web builds. Initial8 ledger failures corrected; one web refresh failure did not reproduce in unchanged58/58 isolated or complete rerun. All attempts retained in CHK-081; no current failing gate.
-UNRESOLVED ISSUES: Non-reproduced web test cause not proven. Production/public guest access, HTTP/UI reservation integration, modification/check-in/seating, actual confirmations and live-provider verification remain excluded. Remote CI not run. Disposable test container removed after verifying its exact identity/task label; cached image retained.
+CURRENT TASK: RESERVATION-DOMAIN-002 — atomic internal reservation modification.
+STATUS: VERIFIED — CHK-082, 2026-10-25. Internal package only; whole browser reservation product incomplete.
+COMPLETED: modifyReservation changes BOOKED date/start/table/shift/party atomically; preserves IDs/contact/tenant; expected revision, separate durable modification keys, exact historical-result replay, immutable narrow before/after audit and exclusion protection. Both cancellation lock orders, access revocation while waiting, raw SQL denials, DST and rollback verified. Synthetic create/modify/read/failed-change/cancel demonstration PASS.
+FILES CREATED: apps/api/migrations/zz-reservation-domain/20261024001100_reservation_modification.sql; docs/architecture/ADR-0019-atomic-reservation-modification.md.
+FILES MODIFIED: reservation service and domain tests; five People ledger test inventories; docs/data/{reservation-domain.md,entity-registry.json}; roadmap/verification/handoff. Total14 files.
+TESTS EXECUTED: pnpm db:check; focused reservation suite; pnpm lint; pnpm typecheck; pnpm verify:db; pnpm verify; pnpm map:check; git diff --check; historical object/ledger checks.
+TEST RESULTS: Smoke2/2; focused50/50 (26 DOMAIN-001+24 DOMAIN-002); full database260/260 in22 files on PostgreSQL16.15; general gate4 unit+56 auth+19 API+178 web+32 browser PASS; API/web builds PASS. Final documentation validation before commit.
+UNRESOLVED ISSUES: None in bounded package. Initial sandbox localhost EACCES resolved through approved test execution; automatic security-boundary review rejection resolved by explicit owner approval. Both retained in CHK-082. Public/browser integration, lifecycle check-in/seating, confirmations and live-provider/HTTPS gates remain unverified. Disposable container removed by exact ID after tests; no customer data/services used.
 PRIORITY PART: 1.
-CORE WORKFLOW ADVANCED: Persisted internal search → create → occupied → authorized staff read/list → cancel → available.
-CORE READINESS GATE: unmet — CHK-081 does not verify all ten guest-to-staff integration criteria.
-REQUIRED FOUNDATION DEPENDENCIES: DB-HARNESS-001 and PEOPLE-CORE-01 VERIFIED; CORE-AUTH-02 remains IMPLEMENTED/unverified for live exposure. Original production/settings/widget gates unchanged.
-DEFERRED SECONDARY TASKS AND REASONS: PEOPLE-09/09B/10 and export-only PEOPLE-D010 implementation remain deferred under PRIORITY-D001. No stunnel/Cloudflare/Render/Auth0 work; budget $0.
-TASK ID: RESERVATION-DOMAIN-001.
-DEPENDENCIES AND THEIR VERIFIED STATUS: DB-HARNESS-001 VERIFIED; PEOPLE-CORE-01 VERIFIED; domain acceptance now VERIFIED.
-WHY THIS TASK IS REQUIRED NOW: Owner-authorized first functional internal reservation slice.
-OWNED SCOPE AND EXCLUDED SCOPE: Internal service/migration/tests/demo/docs; required exact-ledger regression compatibility only. Exclude public/browser routes, auth bypass, new lifecycle features, external confirmation, unrelated runtime edits and push.
-ACCEPTANCE CRITERIA: All bounded ADR-0018/roadmap criteria PASS; no whole-product claim.
-VERIFICATION COMMANDS: On disposable PG16 _test database with NODE_ENV=test/TEST_DATABASE=1: pnpm db:check; pnpm exec vitest run apps/api/tests/reservations/domain.test.ts --no-file-parallelism --reporter=verbose; pnpm verify:db; pnpm verify; pnpm map:check; git diff --check. Demo-only command adds -t DEMONSTRATION. See docs/data/reservation-domain.md.
-REGRESSION CHECKS: Preserve all80 prior checks,26 prior VERIFIED tasks, accepted decisions/reference classifications and historical migrations. RESERVATION-DOMAIN-001-REGRESSION-001 documents five necessary inventory corrections; no original assertions weakened.
-DECISION: Current package VERIFIED; next task PROCEED for documentation only, not new code.
-NEXT EXACT TASK: RESERVATION-DOMAIN-002 — specify atomic internal reservation modification, documentation only; depends on now-VERIFIED DOMAIN-001 and PEOPLE-CORE-01. Define version/idempotency, permission, capacity-transfer/rollback and timezone tests before separate implementation authorization.
-NEXT EXACT CORE TASK OR REQUIRED PREDECESSOR: DOMAIN-002 specification; do not resume infrastructure or expose the internal slice. Existing production tasks keep their gates.
-FILES NEXT AGENT MUST READ: AGENTS.md; docs/project-map/{roadmap,app-map,dependencies,decisions,verification}.json; ADR-0018; docs/data/reservation-domain.md; docs/data/entity-registry.json; domain service/migration/tests; tooling/db-test.mjs.
-PUBLICATION: One logical local feature commit containing CHK-081; parent cba69055c70f750f4c18760e86deeda889d829c1 on people-03-accounts-read. Starting worktree contained known task/readiness changes, preserved. No push; publication requires separate approval. Exact resulting commit SHA is in the completion response/Git log.
+CORE WORKFLOW ADVANCED: Create → modify allocation → original slot released/new occupied → authorized staff read → failed change preserves state → cancel → restored capacity.
+CORE READINESS GATE: unmet — CHK-081/082 verify internal slices, not all ten integrated criteria.
+REQUIRED FOUNDATION DEPENDENCIES: DOMAIN-001, PEOPLE-CORE-01 and DB-HARNESS-001 VERIFIED. Existing production-auth/settings/widget gates unchanged.
+DEFERRED SECONDARY TASKS AND REASONS: PEOPLE-09/09B/10 and export-only PEOPLE-D010 remain deferred under PRIORITY-D001. No infrastructure research/provisioning; budget$0.
+TASK ID: RESERVATION-DOMAIN-002.
+DEPENDENCIES AND THEIR VERIFIED STATUS: Mandatory DOMAIN-001 and PEOPLE-CORE-01 VERIFIED. Owner explicitly approved bounded implementation and exact ADR-0019 database boundary.
+WHY THIS TASK IS REQUIRED NOW: Owner expanded the existing documentation-only task to one complete implementation package; historical authorization retained in roadmap.
+OWNED SCOPE AND EXCLUDED SCOPE: Internal service/additive migration/tests/demo/docs/local commit only. No public routes, UI, widget, production synthetic authentication, provider changes, check-in/seating, delivery or push.
+ACCEPTANCE CRITERIA: All bounded ADR-0019/roadmap criteria PASS: version/idempotency, atomic transfer/rollback, concurrency/cancel, permission/RLS, timezone/DST and regression preservation.
+VERIFICATION COMMANDS: On disposable PostgreSQL16 _test database with NODE_ENV=test/TEST_DATABASE=1: pnpm db:check; pnpm exec vitest run apps/api/tests/reservations/domain.test.ts --no-file-parallelism --reporter=verbose; pnpm verify:db; pnpm verify; pnpm map:check; git diff --check. Add -t DEMONSTRATION for both synthetic demos.
+REGRESSION CHECKS: All81 prior checks,27 prior VERIFIED tasks and all other prior task objects unchanged. Historical SQL/auth/decisions/reference evidence unchanged. DOMAIN-002-REGRESSION-001: five one-line ledger appends and additive schema replay; checksum/privilege/shape assertions preserved; persisted old data upgrade tested.
+DECISION: DOMAIN-002 VERIFIED. Next task proposed only, no automatic implementation.
+NEXT EXACT TASK: RESERVATION-DOMAIN-003 — bounded internal check-in/seating transitions; separate owner authorization and explicit transition contract required.
+NEXT EXACT CORE TASK OR REQUIRED PREDECESSOR: DOMAIN-003 dependencies DOMAIN-002 and PEOPLE-CORE-01 now VERIFIED. Do not bypass original production integration gates or resume unrelated infrastructure.
+FILES NEXT AGENT MUST READ: AGENTS.md; roadmap/app-map/decisions/verification; ADR-0018/0019; docs/data/reservation-domain.md; entity registry; reservation service/migrations/tests and existing authorization helper.
+PUBLICATION: One logical local commit with parent3f714406acfc74af9e982f321724848424996f40 on people-03-accounts-read; exact result SHA in final response/Git history. No push; separate publication approval required. No current-commit remote CI claim. DOMAIN-001 publication CI is separately recorded in CHK-082 baselinePublication.
