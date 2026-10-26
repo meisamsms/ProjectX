@@ -1,6 +1,6 @@
-# Internal reservation domain — RESERVATION-DOMAIN-001 / 002 / 003
+# Internal reservation domain & Staff HTTP API — RESERVATION-DOMAIN-001 / 002 / 003 / 004
 
-ProjectX implementation contract under ADR-0018, ADR-0019 and ADR-0020, not reference-application behavior. The service is internal TypeScript in `apps/api/src/reservations/service.ts`; it exposes no HTTP route or browser authentication bypass.
+ProjectX implementation contract under ADR-0018, ADR-0019, ADR-0020 and ADR-0021, not reference-application behavior. The domain service is in `apps/api/src/reservations/service.ts` and the authenticated staff HTTP routes are in `apps/api/src/reservations/route.ts` under `/api/v1/staff/reservations`; no public guest widget route or browser authentication bypass is exposed.
 
 ## Operations and boundaries
 
@@ -77,6 +77,21 @@ UTC instants are canonical. Local dates and IANA timezone are retained. Slots fo
 
 All three active states (`BOOKED`, `CHECKED_IN`, `SEATED`) retain table/shift/time/party capacity in both `searchAvailability` and the `reservation_no_overlap` GiST exclusion constraint. Attempting to modify or cancel a `CHECKED_IN` or `SEATED` reservation returns `INVALID_STATE` and leaves persisted state, revision and capacity unchanged.
 
+## Authenticated Staff Reservation HTTP API (DOMAIN-004)
+
+`apps/api/src/reservations/route.ts` mounts the authenticated staff reservation HTTP endpoints under `/api/v1/staff/reservations` (`ADR-0021`):
+
+- `GET /api/v1/staff/reservations/availability` (`searchAvailability`, requires `reservation.read`)
+- `GET /api/v1/staff/reservations` (`listReservations`, requires `reservation.read`)
+- `POST /api/v1/staff/reservations` (`createReservation`, requires `reservation.read` + `reservation.create`)
+- `GET /api/v1/staff/reservations/:id` (`getReservation`, requires `reservation.read`)
+- `PATCH /api/v1/staff/reservations/:id` (`modifyReservation`, requires `reservation.read` + `reservation.update`)
+- `POST /api/v1/staff/reservations/:id/check-in` (`checkInReservation`, requires `reservation.read` + `reservation.checkin`)
+- `POST /api/v1/staff/reservations/:id/seat` (`seatReservation`, requires `reservation.read` + `reservation.seat`)
+- `POST /api/v1/staff/reservations/:id/cancel` (`cancelReservation`, requires `reservation.read` + `reservation.cancel`)
+
+Every endpoint is protected by `registerStaffAuth` (`apps/api/src/staff-auth/routes.ts`), enforcing `Cache-Control: no-store`, `Referrer-Policy: no-referrer`, canonical `Host` (rejecting `X-Forwarded-Host`), active `__Host-projectx-session` cookie, server-derived `organizationId` + `venueId` (`403` when `venueId` is null), and on `POST`/`PATCH` mutations validated same-origin `Origin`/`Referer`, session-bound `X-ProjectX-CSRF`, and `X-ProjectX-Context-Version` (`409` when stale). Domain errors map deterministically (`INVALID_INPUT` -> `400`, `ACCESS_DENIED` -> `403`, `NOT_FOUND` -> `404`, `CAPACITY_CONFLICT`/`IDEMPOTENCY_CONFLICT`/`VERSION_CONFLICT`/`INVALID_STATE` -> `409`, `INTERNAL` -> `500`) without exposing SQL, credentials, or guest PII.
+
 ## Executable synthetic demonstration
 
 Use a disposable PostgreSQL 16 database ending in `_test`. Fixtures reset its `projectx_test` schema and create/drop a test runtime login, so never use a shared or production database. Set `DATABASE_URL` to that isolated database and, in PowerShell:
@@ -103,6 +118,12 @@ record while capacity remains protected, and verifies invalid post-seating trans
 `INVALID_STATE` while preserving persisted state. The `-t DEMONSTRATION` command
 runs all three synthetic demonstrations.
 
-Run the whole focused suite without `-t DEMONSTRATION`, then `pnpm verify:db` and `pnpm verify`. Database suites must not reset the same schema concurrently. CI already invokes the full database runner, which includes this focused suite. CHK-081, CHK-082 and CHK-084 record actual results and environment identity.
+The DOMAIN-004 HTTP demonstration in `apps/api/tests/reservations/http.test.ts`
+issues a PostgreSQL-backed staff session and executes availability search,
+reservation creation (`201`), get (`200`), list (`200`), modification (`200`),
+check-in (`200`), seating (`200`), and cancellation (`200`) over `/api/v1/staff/reservations`
+with full CSRF, Origin/Host, and context-version headers.
 
-This is an internal domain demonstration. Public booking, confirmation delivery, browser integration and live staff-provider verification remain outside this package. CORE-READY-01 remains unmet.
+Run the whole focused suite without `-t DEMONSTRATION`, then `pnpm verify:db` and `pnpm verify`. Database suites must not reset the same schema concurrently. CI already invokes the full database runner, which includes both focused suites. CHK-081, CHK-082, CHK-084 and CHK-085 record actual results and environment identity.
+
+Public guest booking, confirmation delivery, browser reservation UI and live staff-provider verification remain outside this package. CORE-READY-01 remains unmet.

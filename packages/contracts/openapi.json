@@ -1204,6 +1204,812 @@
           }
         }
       }
+    },
+    "/api/v1/staff/reservations/availability": {
+      "get": {
+        "operationId": "searchStaffReservationAvailability",
+        "security": [
+          {
+            "StaffSessionCookie": []
+          }
+        ],
+        "x-projectx-staff-boundary": "Current server session/context; GET does not extend idle timeout.",
+        "summary": "Search Venue reservation slot availability",
+        "description": "PROJECTX IMPLEMENTATION DECISION. Server-bound identity, organization and venue; requires current reservation.read. Excludes overlapping BOOKED, CHECKED_IN and SEATED allocations.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "date",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^20\\d{2}-\\d{2}-\\d{2}$"
+            }
+          },
+          {
+            "in": "query",
+            "name": "partySize",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          },
+          {
+            "in": "query",
+            "name": "fromMinute",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1439
+            }
+          },
+          {
+            "in": "query",
+            "name": "toMinute",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1440
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Eligible slots for the current authorized Venue",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffReservationAvailabilityResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Missing Venue context or current reservation.read",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/staff/reservations": {
+      "get": {
+        "operationId": "listStaffReservations",
+        "security": [
+          {
+            "StaffSessionCookie": []
+          }
+        ],
+        "x-projectx-staff-boundary": "Current server session/context; GET does not extend idle timeout.",
+        "summary": "List Venue reservations for a local date",
+        "description": "PROJECTX IMPLEMENTATION DECISION. Server-bound identity, organization and venue; requires current reservation.read. Ordered by UTC start and ID.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "date",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^20\\d{2}-\\d{2}-\\d{2}$"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authorized Venue reservations for the requested local date",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffReservationListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Missing Venue context or current reservation.read",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createStaffReservation",
+        "security": [
+          {
+            "StaffSessionCookie": []
+          }
+        ],
+        "x-projectx-staff-boundary": "Require session-bound X-ProjectX-CSRF, canonical Origin/Host and X-ProjectX-Context-Version; stale version 409.",
+        "summary": "Create a Venue reservation",
+        "description": "PROJECTX IMPLEMENTATION DECISION. Server-bound identity, organization and venue; requires current reservation.read and reservation.create. Enforces UUID idempotency key and transactional capacity protection.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/StaffCsrf"
+          },
+          {
+            "$ref": "#/components/parameters/StaffContextVersion"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateStaffReservationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Reservation created or idempotent retry replayed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffReservation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Missing Venue context, CSRF/Origin or current reservation.read + reservation.create",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Stale session context, capacity conflict or idempotency conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/staff/reservations/{id}": {
+      "get": {
+        "operationId": "getStaffReservation",
+        "security": [
+          {
+            "StaffSessionCookie": []
+          }
+        ],
+        "x-projectx-staff-boundary": "Current server session/context; GET does not extend idle timeout.",
+        "summary": "Get one Venue reservation by ID",
+        "description": "PROJECTX IMPLEMENTATION DECISION. Server-bound identity, organization and venue; requires current reservation.read. Foreign and missing IDs both return 404 after scope authorization.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authorized Venue reservation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffReservation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid reservation ID or query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Missing Venue context or current reservation.read",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "modifyStaffReservation",
+        "security": [
+          {
+            "StaffSessionCookie": []
+          }
+        ],
+        "x-projectx-staff-boundary": "Require session-bound X-ProjectX-CSRF, canonical Origin/Host and X-ProjectX-Context-Version; stale version 409.",
+        "summary": "Modify a BOOKED Venue reservation allocation",
+        "description": "PROJECTX IMPLEMENTATION DECISION. Server-bound identity, organization and venue; requires current reservation.read and reservation.update. Atomic revision-checked allocation change with UUID idempotency key.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/StaffCsrf"
+          },
+          {
+            "$ref": "#/components/parameters/StaffContextVersion"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModifyStaffReservationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reservation modified or idempotent retry snapshot returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffReservation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Missing Venue context, CSRF/Origin or current reservation.read + reservation.update",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Stale session context, revision conflict, capacity conflict, idempotency conflict or invalid state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/staff/reservations/{id}/check-in": {
+      "post": {
+        "operationId": "checkInStaffReservation",
+        "security": [
+          {
+            "StaffSessionCookie": []
+          }
+        ],
+        "x-projectx-staff-boundary": "Require session-bound X-ProjectX-CSRF, canonical Origin/Host and X-ProjectX-Context-Version; stale version 409.",
+        "summary": "Check in a BOOKED Venue reservation",
+        "description": "PROJECTX IMPLEMENTATION DECISION. Server-bound identity, organization and venue; requires current reservation.read and reservation.checkin. Transitions BOOKED -> CHECKED_IN while retaining capacity.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/StaffCsrf"
+          },
+          {
+            "$ref": "#/components/parameters/StaffContextVersion"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransitionStaffReservationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reservation checked in or idempotent retry snapshot returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffReservation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Missing Venue context, CSRF/Origin or current reservation.read + reservation.checkin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Stale session context, revision conflict, idempotency conflict or invalid state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/staff/reservations/{id}/seat": {
+      "post": {
+        "operationId": "seatStaffReservation",
+        "security": [
+          {
+            "StaffSessionCookie": []
+          }
+        ],
+        "x-projectx-staff-boundary": "Require session-bound X-ProjectX-CSRF, canonical Origin/Host and X-ProjectX-Context-Version; stale version 409.",
+        "summary": "Seat a CHECKED_IN Venue reservation",
+        "description": "PROJECTX IMPLEMENTATION DECISION. Server-bound identity, organization and venue; requires current reservation.read and reservation.seat. Transitions CHECKED_IN -> SEATED while retaining capacity.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/StaffCsrf"
+          },
+          {
+            "$ref": "#/components/parameters/StaffContextVersion"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransitionStaffReservationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reservation seated or idempotent retry snapshot returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffReservation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Missing Venue context, CSRF/Origin or current reservation.read + reservation.seat",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Stale session context, revision conflict, idempotency conflict or invalid state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/staff/reservations/{id}/cancel": {
+      "post": {
+        "operationId": "cancelStaffReservation",
+        "security": [
+          {
+            "StaffSessionCookie": []
+          }
+        ],
+        "x-projectx-staff-boundary": "Require session-bound X-ProjectX-CSRF, canonical Origin/Host and X-ProjectX-Context-Version; stale version 409.",
+        "summary": "Cancel a BOOKED Venue reservation",
+        "description": "PROJECTX IMPLEMENTATION DECISION. Server-bound identity, organization and venue; requires current reservation.read and reservation.cancel. Transitions BOOKED -> CANCELLED and releases capacity; repeated cancellation of CANCELLED is idempotent, while CHECKED_IN or SEATED fails 409.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/StaffCsrf"
+          },
+          {
+            "$ref": "#/components/parameters/StaffContextVersion"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reservation cancelled",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffReservation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Missing Venue context, CSRF/Origin or current reservation.read + reservation.cancel",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Stale session context or invalid reservation state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1854,6 +2660,291 @@
           "status": {
             "type": "string",
             "const": "PENDING"
+          }
+        }
+      },
+      "ReservationStatus": {
+        "type": "string",
+        "enum": [
+          "BOOKED",
+          "CHECKED_IN",
+          "SEATED",
+          "CANCELLED"
+        ]
+      },
+      "StaffReservationSlot": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "tableId",
+          "shiftId",
+          "startsAt",
+          "endsAt",
+          "timezone"
+        ],
+        "properties": {
+          "tableId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "shiftId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "startsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "timezone": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          }
+        }
+      },
+      "StaffReservationAvailabilityResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "items"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StaffReservationSlot"
+            }
+          }
+        }
+      },
+      "StaffReservation": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "clientId",
+          "organizationId",
+          "venueId",
+          "tableId",
+          "shiftId",
+          "date",
+          "startsAt",
+          "endsAt",
+          "timezone",
+          "partySize",
+          "guestName",
+          "guestEmail",
+          "status",
+          "revision",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "venueId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tableId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "shiftId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "date": {
+            "type": "string",
+            "pattern": "^20\\d{2}-\\d{2}-\\d{2}$"
+          },
+          "startsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "timezone": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "partySize": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50
+          },
+          "guestName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240
+          },
+          "guestEmail": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 254
+          },
+          "status": {
+            "$ref": "#/components/schemas/ReservationStatus"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483647
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "StaffReservationListResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "items"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StaffReservation"
+            }
+          }
+        }
+      },
+      "CreateStaffReservationRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "date",
+          "partySize",
+          "tableId",
+          "shiftId",
+          "startsAt",
+          "guestName",
+          "guestEmail",
+          "idempotencyKey"
+        ],
+        "properties": {
+          "date": {
+            "type": "string",
+            "pattern": "^20\\d{2}-\\d{2}-\\d{2}$"
+          },
+          "partySize": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50
+          },
+          "tableId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "shiftId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "startsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "guestName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "guestEmail": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "idempotencyKey": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "ModifyStaffReservationRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "expectedRevision",
+          "idempotencyKey",
+          "date",
+          "startsAt",
+          "tableId",
+          "shiftId",
+          "partySize"
+        ],
+        "properties": {
+          "expectedRevision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483646
+          },
+          "idempotencyKey": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "date": {
+            "type": "string",
+            "pattern": "^20\\d{2}-\\d{2}-\\d{2}$"
+          },
+          "startsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "tableId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "shiftId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "partySize": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50
+          }
+        }
+      },
+      "TransitionStaffReservationRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "expectedRevision",
+          "idempotencyKey"
+        ],
+        "properties": {
+          "expectedRevision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483646
+          },
+          "idempotencyKey": {
+            "type": "string",
+            "format": "uuid"
           }
         }
       }

@@ -244,6 +244,134 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/staff/reservations/availability": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Search Venue reservation slot availability
+         * @description PROJECTX IMPLEMENTATION DECISION. Server-bound identity, organization and venue; requires current reservation.read. Excludes overlapping BOOKED, CHECKED_IN and SEATED allocations.
+         */
+        get: operations["searchStaffReservationAvailability"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/staff/reservations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Venue reservations for a local date
+         * @description PROJECTX IMPLEMENTATION DECISION. Server-bound identity, organization and venue; requires current reservation.read. Ordered by UTC start and ID.
+         */
+        get: operations["listStaffReservations"];
+        put?: never;
+        /**
+         * Create a Venue reservation
+         * @description PROJECTX IMPLEMENTATION DECISION. Server-bound identity, organization and venue; requires current reservation.read and reservation.create. Enforces UUID idempotency key and transactional capacity protection.
+         */
+        post: operations["createStaffReservation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/staff/reservations/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get one Venue reservation by ID
+         * @description PROJECTX IMPLEMENTATION DECISION. Server-bound identity, organization and venue; requires current reservation.read. Foreign and missing IDs both return 404 after scope authorization.
+         */
+        get: operations["getStaffReservation"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Modify a BOOKED Venue reservation allocation
+         * @description PROJECTX IMPLEMENTATION DECISION. Server-bound identity, organization and venue; requires current reservation.read and reservation.update. Atomic revision-checked allocation change with UUID idempotency key.
+         */
+        patch: operations["modifyStaffReservation"];
+        trace?: never;
+    };
+    "/api/v1/staff/reservations/{id}/check-in": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Check in a BOOKED Venue reservation
+         * @description PROJECTX IMPLEMENTATION DECISION. Server-bound identity, organization and venue; requires current reservation.read and reservation.checkin. Transitions BOOKED -> CHECKED_IN while retaining capacity.
+         */
+        post: operations["checkInStaffReservation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/staff/reservations/{id}/seat": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Seat a CHECKED_IN Venue reservation
+         * @description PROJECTX IMPLEMENTATION DECISION. Server-bound identity, organization and venue; requires current reservation.read and reservation.seat. Transitions CHECKED_IN -> SEATED while retaining capacity.
+         */
+        post: operations["seatStaffReservation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/staff/reservations/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Cancel a BOOKED Venue reservation
+         * @description PROJECTX IMPLEMENTATION DECISION. Server-bound identity, organization and venue; requires current reservation.read and reservation.cancel. Transitions BOOKED -> CANCELLED and releases capacity; repeated cancellation of CANCELLED is idempotent, while CHECKED_IN or SEATED fails 409.
+         */
+        post: operations["cancelStaffReservation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -397,6 +525,86 @@ export interface components {
             membershipId: string;
             /** @constant */
             status: "PENDING";
+        };
+        /** @enum {string} */
+        ReservationStatus: "BOOKED" | "CHECKED_IN" | "SEATED" | "CANCELLED";
+        StaffReservationSlot: {
+            /** Format: uuid */
+            tableId: string;
+            /** Format: uuid */
+            shiftId: string;
+            /** Format: date-time */
+            startsAt: string;
+            /** Format: date-time */
+            endsAt: string;
+            timezone: string;
+        };
+        StaffReservationAvailabilityResponse: {
+            items: components["schemas"]["StaffReservationSlot"][];
+        };
+        StaffReservation: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            clientId: string;
+            /** Format: uuid */
+            organizationId: string;
+            /** Format: uuid */
+            venueId: string;
+            /** Format: uuid */
+            tableId: string;
+            /** Format: uuid */
+            shiftId: string;
+            date: string;
+            /** Format: date-time */
+            startsAt: string;
+            /** Format: date-time */
+            endsAt: string;
+            timezone: string;
+            partySize: number;
+            guestName: string;
+            guestEmail: string;
+            status: components["schemas"]["ReservationStatus"];
+            revision: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        StaffReservationListResponse: {
+            items: components["schemas"]["StaffReservation"][];
+        };
+        CreateStaffReservationRequest: {
+            date: string;
+            partySize: number;
+            /** Format: uuid */
+            tableId: string;
+            /** Format: uuid */
+            shiftId: string;
+            /** Format: date-time */
+            startsAt: string;
+            guestName: string;
+            guestEmail: string;
+            /** Format: uuid */
+            idempotencyKey: string;
+        };
+        ModifyStaffReservationRequest: {
+            expectedRevision: number;
+            /** Format: uuid */
+            idempotencyKey: string;
+            date: string;
+            /** Format: date-time */
+            startsAt: string;
+            /** Format: uuid */
+            tableId: string;
+            /** Format: uuid */
+            shiftId: string;
+            partySize: number;
+        };
+        TransitionStaffReservationRequest: {
+            expectedRevision: number;
+            /** Format: uuid */
+            idempotencyKey: string;
         };
     };
     responses: never;
@@ -1309,6 +1517,603 @@ export interface operations {
                 };
             };
             /** @description Organization-scoped pending email conflict or conflicting idempotency-key reuse */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal failure */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    searchStaffReservationAvailability: {
+        parameters: {
+            query: {
+                date: string;
+                partySize: number;
+                fromMinute?: number;
+                toMinute?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Eligible slots for the current authorized Venue */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffReservationAvailabilityResponse"];
+                };
+            };
+            /** @description Invalid query */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Missing Venue context or current reservation.read */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal failure */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    listStaffReservations: {
+        parameters: {
+            query: {
+                date: string;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Authorized Venue reservations for the requested local date */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffReservationListResponse"];
+                };
+            };
+            /** @description Invalid query */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Missing Venue context or current reservation.read */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal failure */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    createStaffReservation: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Session-bound same-origin token; all staff mutations require validated Origin/Host as well. */
+                "X-ProjectX-CSRF": components["parameters"]["StaffCsrf"];
+                /** @description Per-tab context snapshot; stale version fails 409 without replay. Not authorization authority. */
+                "X-ProjectX-Context-Version": components["parameters"]["StaffContextVersion"];
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateStaffReservationRequest"];
+            };
+        };
+        responses: {
+            /** @description Reservation created or idempotent retry replayed */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffReservation"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Missing Venue context, CSRF/Origin or current reservation.read + reservation.create */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Stale session context, capacity conflict or idempotency conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal failure */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    getStaffReservation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Authorized Venue reservation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffReservation"];
+                };
+            };
+            /** @description Invalid reservation ID or query */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Missing Venue context or current reservation.read */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Resource not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal failure */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    modifyStaffReservation: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Session-bound same-origin token; all staff mutations require validated Origin/Host as well. */
+                "X-ProjectX-CSRF": components["parameters"]["StaffCsrf"];
+                /** @description Per-tab context snapshot; stale version fails 409 without replay. Not authorization authority. */
+                "X-ProjectX-Context-Version": components["parameters"]["StaffContextVersion"];
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ModifyStaffReservationRequest"];
+            };
+        };
+        responses: {
+            /** @description Reservation modified or idempotent retry snapshot returned */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffReservation"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Missing Venue context, CSRF/Origin or current reservation.read + reservation.update */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Resource not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Stale session context, revision conflict, capacity conflict, idempotency conflict or invalid state */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal failure */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    checkInStaffReservation: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Session-bound same-origin token; all staff mutations require validated Origin/Host as well. */
+                "X-ProjectX-CSRF": components["parameters"]["StaffCsrf"];
+                /** @description Per-tab context snapshot; stale version fails 409 without replay. Not authorization authority. */
+                "X-ProjectX-Context-Version": components["parameters"]["StaffContextVersion"];
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TransitionStaffReservationRequest"];
+            };
+        };
+        responses: {
+            /** @description Reservation checked in or idempotent retry snapshot returned */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffReservation"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Missing Venue context, CSRF/Origin or current reservation.read + reservation.checkin */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Resource not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Stale session context, revision conflict, idempotency conflict or invalid state */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal failure */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    seatStaffReservation: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Session-bound same-origin token; all staff mutations require validated Origin/Host as well. */
+                "X-ProjectX-CSRF": components["parameters"]["StaffCsrf"];
+                /** @description Per-tab context snapshot; stale version fails 409 without replay. Not authorization authority. */
+                "X-ProjectX-Context-Version": components["parameters"]["StaffContextVersion"];
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TransitionStaffReservationRequest"];
+            };
+        };
+        responses: {
+            /** @description Reservation seated or idempotent retry snapshot returned */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffReservation"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Missing Venue context, CSRF/Origin or current reservation.read + reservation.seat */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Resource not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Stale session context, revision conflict, idempotency conflict or invalid state */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal failure */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    cancelStaffReservation: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Session-bound same-origin token; all staff mutations require validated Origin/Host as well. */
+                "X-ProjectX-CSRF": components["parameters"]["StaffCsrf"];
+                /** @description Per-tab context snapshot; stale version fails 409 without replay. Not authorization authority. */
+                "X-ProjectX-Context-Version": components["parameters"]["StaffContextVersion"];
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Reservation cancelled */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffReservation"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Authentication required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Missing Venue context, CSRF/Origin or current reservation.read + reservation.cancel */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Resource not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Stale session context or invalid reservation state */
             409: {
                 headers: {
                     [name: string]: unknown;

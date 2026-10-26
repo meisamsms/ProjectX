@@ -3150,6 +3150,50 @@
         }
       ],
       "verificationEvidence": "CHK-084: PostgreSQL16.15 focused 62/62 (26 DOMAIN-001 + 24 DOMAIN-002 + 12 DOMAIN-003), DEMONSTRATION 3/3, full database 272/272 across 22 files; general verify PASS with 289 application/browser tests and API/web builds. Prior evidence preserved."
+    },
+    {
+      "id": "RESERVATION-DOMAIN-004",
+      "name": "Authenticated Staff Reservation HTTP API",
+      "phaseId": "PHASE-04",
+      "status": "VERIFIED",
+      "dependencies": [
+        "RESERVATION-DOMAIN-001",
+        "RESERVATION-DOMAIN-002",
+        "RESERVATION-DOMAIN-003",
+        "PEOPLE-CORE-01",
+        "DB-HARNESS-001"
+      ],
+      "priorityPart": 1,
+      "priorityDecisionId": "PRIORITY-D001",
+      "scope": "Owner-authorized nonproduction P1 implementation of authenticated staff HTTP endpoints (/api/v1/staff/reservations) for availability search, reservation create, get, list, modification, check-in, seating and cancellation, wired to CORE-AUTH-02 staff session/CSRF/context-version middleware and the verified internal reservation service.",
+      "outOfScope": "No new database migrations, no public guest widget routes, no provider configuration or production deployment, no browser reservation UI, and no push.",
+      "coreWorkflowAdvanced": "Authenticated staff HTTP availability search, reservation creation, retrieval, listing, modification, check-in, seating and cancellation under server-derived Organization/Venue scope.",
+      "acceptanceCriteria": [
+        "Every endpoint requires a valid authenticated staff session and server-derived Organization/Venue scope (403 when venueId is null)",
+        "Mutations enforce session-bound X-ProjectX-CSRF, canonical Origin/Host and X-ProjectX-Context-Version (409 when stale)",
+        "Operation-specific permissions (reservation.read, create, update, checkin, seat, cancel) and cross-Venue/Organization isolation enforced",
+        "Idempotency, revision checks, transactional capacity protection and RLS preserved; domain errors map cleanly without leaking SQL or PII",
+        "Focused PostgreSQL 16 HTTP integration tests, contract check, database verification and full application verification pass"
+      ],
+      "verificationCommands": [
+        "pnpm contract:check",
+        "pnpm db:check",
+        "pnpm exec vitest run apps/api/tests/reservations/http.test.ts --no-file-parallelism --reporter=verbose",
+        "pnpm verify:db",
+        "pnpm verify",
+        "pnpm map:check",
+        "git diff --check"
+      ],
+      "regressionChecks": [
+        "Preserve all 84 prior checks (CHK-001..CHK-084) and all 29 previously VERIFIED task objects",
+        "Preserve existing internal reservation service, historical migrations, and all 62 DOMAIN-001/002/003 tests unchanged",
+        "No public /api/v1/reservations route or authentication bypass"
+      ],
+      "implementationGate": "VERIFIED under explicit owner authorization for nonproduction P1 implementation. Original production/auth-provider/public gates remain unchanged; no push.",
+      "remainingWork": "None in this bounded staff HTTP API package. One local logical commit; remote publication requires separate approval.",
+      "specificationFile": "docs/architecture/ADR-0021-staff-reservation-http-api.md",
+      "whyRequiredNow": "Exposes the verified internal reservation domain (DOMAIN-001/002/003) over authenticated staff HTTP endpoints with CORE-AUTH-02 session, CSRF, context-version and Venue RBAC/RLS protections.",
+      "verificationEvidence": "CHK-085: PostgreSQL 16.15 focused HTTP suite 8/8 (including full lifecycle DEMONSTRATION), full database verification 280/280 across 23 files; contract check PASS; general verify PASS with 289 application/browser tests and API/web builds. Prior evidence preserved."
     }
   ],
   "unresolvedQuestions": [
@@ -3192,6 +3236,7 @@
     "RESERVATION-DOMAIN-001",
     "RESERVATION-DOMAIN-002",
     "RESERVATION-DOMAIN-003",
+    "RESERVATION-DOMAIN-004",
     "CORE-AUTH-01",
     "CORE-AUTH-02-ENV-LOCAL-002",
     "CORE-AUTH-02-ENV-LOCAL-003",
@@ -3587,13 +3632,19 @@
         "priorityPart": 1,
         "classification": "PART 1",
         "reason": "Owner-authorized internal BOOKED -> CHECKED_IN -> SEATED lifecycle slice verified on PostgreSQL 16.15 (CHK-084); original production/auth/public gates remain."
+      },
+      {
+        "taskId": "RESERVATION-DOMAIN-004",
+        "priorityPart": 1,
+        "classification": "PART 1",
+        "reason": "Owner-authorized authenticated Staff Reservation HTTP API (/api/v1/staff/reservations) verified on PostgreSQL 16.15 (CHK-085); original production/auth/public gates remain."
       }
     ],
     "coreReadinessGate": {
       "taskId": "CORE-READY-01",
       "status": "UNMET",
       "criteriaSource": "AGENTS.md CORE READINESS GATE items 1–10",
-      "evidence": "CHK-081/082/084 verify internal search/create/read/list/modify/check-in/seat/cancel with allocation, revisions, retries, audit, RLS and timezone/DST on PostgreSQL16.15. Public/widget/browser guest-to-staff flow, confirmation delivery and live authentication remain unverified; integrated gate UNMET."
+      "evidence": "CHK-081/082/084/085 verify internal and authenticated staff HTTP search/create/read/list/modify/check-in/seat/cancel with allocation, revisions, retries, CSRF/context-version, audit, RLS and timezone/DST on PostgreSQL16.15. Public/widget/browser guest-to-staff flow, confirmation delivery and live authentication remain unverified; integrated gate UNMET."
     },
     "unresolvedPrerequisites": [
       {
@@ -3626,7 +3677,7 @@
         "id": "CORE-GAP-004",
         "classification": "NEEDS SPECIFICATION / TESTING — PROJECTX",
         "ownerTask": "RESERVATIONS-CORE-01",
-        "gap": "DOMAIN-001, DOMAIN-002 and DOMAIN-003 internal allocation/concurrency/retry/cancel/atomic modification/check-in/seating/audit verified by CHK-081/082/084. HTTP/public access, staff UI and integrated guest-to-staff verification remain separate. PEOPLE-D010 stays export-only/deferred."
+        "gap": "DOMAIN-001, DOMAIN-002, DOMAIN-003 and DOMAIN-004 internal and authenticated staff HTTP allocation/concurrency/retry/cancel/atomic modification/check-in/seating/audit verified by CHK-081/082/084/085. Public guest access, staff browser UI and integrated guest-to-staff verification remain separate. PEOPLE-D010 stays export-only/deferred."
       }
     ],
     "optionalPeopleIntegrations": "Reuse PEOPLE-07A/08A only if a reviewed core staff workflow requires them; never infer employee identity or require name-management editors.",

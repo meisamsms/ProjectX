@@ -70,7 +70,15 @@ export function registerStaffAuth(
   }
   app.addHook("onRequest", async (req, reply) => {
     const path = (req.raw.url ?? "").split("?")[0] ?? "";
-    if (!path.startsWith("/api/v1/people/") && !path.startsWith(base)) return;
+    const isStaffReservations =
+      path === "/api/v1/staff/reservations" ||
+      path.startsWith("/api/v1/staff/reservations/");
+    if (
+      !path.startsWith("/api/v1/people/") &&
+      !isStaffReservations &&
+      !path.startsWith(base)
+    )
+      return;
     reply
       .header("Cache-Control", "no-store")
       .header("Referrer-Policy", "no-referrer");
@@ -114,10 +122,12 @@ export function registerStaffAuth(
           return fail(req, reply, 403);
       }
     }
-    if (path.startsWith("/api/v1/people/")) {
+    if (path.startsWith("/api/v1/people/") || isStaffReservations) {
       if (
         !session.organizationId ||
-        ((path.includes("booked-by-names") || path.includes("server-names")) &&
+        ((isStaffReservations ||
+          path.includes("booked-by-names") ||
+          path.includes("server-names")) &&
           !session.venueId)
       )
         return fail(req, reply, 403);

@@ -3787,6 +3787,97 @@
       "coreReadinessGate": "UNMET",
       "noPush": true,
       "result": "VERIFIED bounded internal reservation check-in and seating lifecycle; all required local database and application gates PASS. One local commit only."
+    },
+    {
+      "id": "CHK-085",
+      "taskId": "RESERVATION-DOMAIN-004",
+      "phaseId": "PHASE-04",
+      "type": "IMPLEMENTATION_VERIFICATION",
+      "status": "PASS",
+      "date": "2026-10-26",
+      "priorityPart": 1,
+      "coreWorkflowAdvanced": "Authenticated Staff Reservation HTTP API (/api/v1/staff/reservations) for availability search, create, get, list, modify, check-in, seat and cancel",
+      "startingState": {
+        "branch": "people-03-accounts-read",
+        "head": "228d99e689c2b25260fe8bf838f9a612433b4dd8",
+        "parent": "9a4c9db200a58d47848e3a6dc0a019a89d68851c",
+        "ownerAuthorizations": [
+          "Authorized nonproduction P1 implementation of RESERVATION-DOMAIN-004 reusing VERIFIED DOMAIN-001/002/003, PEOPLE-CORE-01, DB-HARNESS-001 and implemented local CORE-AUTH-02 middleware"
+        ]
+      },
+      "environment": {
+        "databaseImage": "postgres:16-alpine",
+        "serverVersion": "16.15",
+        "containerName": "projectx-reservation-http-test",
+        "containerId": "cd14d1f2f6af49d7fb05a1fa780d66d99a3931c1b7510839571d81a7d1855950",
+        "databaseName": "projectx_test",
+        "schemaName": "projectx_test",
+        "runtimeRole": "projectx_people_runtime",
+        "runtimeLogin": "projectx_people_test_login",
+        "binding": "127.0.0.1:55432:5432",
+        "storage": "tmpfs (/var/lib/postgresql/data, --rm)"
+      },
+      "commands": [
+        {
+          "command": "pnpm contract:generate && pnpm contract:check",
+          "result": "PASS — OpenAPI 3.1.0 validity and generated-type freshness PASS"
+        },
+        {
+          "command": "pnpm db:check",
+          "result": "PASS — 1 file, 2/2 tests on PostgreSQL 16.15"
+        },
+        {
+          "command": "pnpm exec vitest run apps/api/tests/reservations/http.test.ts --no-file-parallelism --reporter=verbose",
+          "result": "PASS — 1 file, 8/8 tests (end-to-end HTTP DEMONSTRATION, session/revocation/disabled/venue-context, CSRF/Origin/Host/stale context-version, granular permissions, cross-Venue/Organization isolation, idempotent retries and 409 conflicts, strict input validation and 500 redaction, OpenAPI security contract)"
+        },
+        {
+          "command": "pnpm verify:db",
+          "result": "PASS — 23/23 files, 280/280 tests on PostgreSQL 16.15 (including 62/62 in domain.test.ts and 8/8 in http.test.ts)"
+        },
+        {
+          "command": "pnpm verify",
+          "result": "PASS — map:check, lint, format:check, typecheck, contract:check, build, test:unit (4/4), staff-auth unit (56/56), test:integration (19/19), web tests (178/178), test:e2e (32/32), test:smoke"
+        },
+        {
+          "command": "pnpm map:check && git diff --check",
+          "result": "PASS — 0 errors, 0 whitespace issues"
+        }
+      ],
+      "securityAndCorrectness": {
+        "sessionAndScope": "PASS: every endpoint requires active __Host-projectx-session cookie and server-derived organizationId + venueId; missing/forged/revoked sessions fail 401; disabled users and organization-only sessions (venueId: null) fail 403",
+        "csrfAndContext": "PASS: POST/PATCH endpoints require validated Origin/Referer, session-bound X-ProjectX-CSRF (403 on mismatch), canonical Host without X-Forwarded-Host (403), and X-ProjectX-Context-Version matching session.contextVersion (409 on stale context)",
+        "permissions": "PASS: reservation.read required on all 8 endpoints; create, update, checkin, seat and cancel require their explicit Venue-scoped permissions; live revocation immediately denies subsequent requests",
+        "tenantIsolation": "PASS: foreign Venue (a2) and foreign Organization (orgB) sessions receive empty list on GET and 404 NOT_FOUND on GET/PATCH/POST by ID without leaking foreign reservation existence or guest PII",
+        "idempotencyAndConflicts": "PASS: idempotent create/modify/check-in/seat/cancel retries replay deterministic snapshots; capacity, idempotency, revision and state conflicts map to 409 with specific error codes",
+        "errorRedaction": "PASS: unexpected database failures return generic 500 INTERNAL_ERROR and redact SQL, table names, session credentials and guest PII from HTTP responses and logs"
+      },
+      "cleanup": {
+        "result": "PASS",
+        "identityVerified": "cd14d1f2f6af49d7fb05a1fa780d66d99a3931c1b7510839571d81a7d1855950",
+        "taskLabel": "RESERVATION-DOMAIN-004",
+        "action": "Stopped exact inspected container ID; --rm removed container and tmpfs synthetic data; filtered docker ps -a empty."
+      },
+      "preservedState": "All 84 earlier checks (CHK-001..CHK-084) and all 29 previously VERIFIED task objects unchanged; apps/api/src/reservations/service.ts and all historical SQL migrations untouched.",
+      "evidenceFiles": [
+        "docs/architecture/ADR-0021-staff-reservation-http-api.md",
+        "docs/data/reservation-domain.md",
+        "packages/contracts/openapi.json",
+        "packages/contracts/generated/api.ts",
+        "apps/api/src/reservations/route.ts",
+        "apps/api/src/staff-auth/routes.ts",
+        "apps/api/src/app.ts",
+        "apps/api/tests/reservations/http.test.ts",
+        "tooling/db-test.mjs"
+      ],
+      "limitations": [
+        "CORE-READY-01 remains UNMET",
+        "No public guest widget routes, browser reservation UI, or confirmation delivery",
+        "Auth0/HTTPS/provider and production access gates unchanged",
+        "No push or current-commit GitHub CI"
+      ],
+      "coreReadinessGate": "UNMET",
+      "noPush": true,
+      "result": "VERIFIED authenticated Staff Reservation HTTP API; all required focused, contract, database and application verification gates PASS. One local commit only."
     }
   ],
   "unresolvedQuestions": [

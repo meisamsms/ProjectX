@@ -29,6 +29,7 @@ const result = spawnSync(
     "apps/api/tests/people/server-names-contract.test.ts",
     "apps/api/tests/staff-auth/database.test.ts",
     "apps/api/tests/reservations/domain.test.ts",
+    "apps/api/tests/reservations/http.test.ts",
     "--no-file-parallelism",
   ],
   {
