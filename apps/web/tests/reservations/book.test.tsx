@@ -438,6 +438,106 @@ describe("RESERVATION-DOMAIN-005 Staff Reservation Book UI (SCR-002/003/139)", (
     ).toBeTruthy();
   });
 
+  it("retains a stale draft across search, blocks overwrite, and requires explicit reload before saving a new revision", async () => {
+    const fixture = await ready();
+    fireEvent.click(
+      screen.getByRole("button", { name: "View reservation 1 (Ada Lovelace)" }),
+    );
+    fireEvent.change(screen.getByLabelText("Modify party size"), {
+      target: { value: "4" },
+    });
+    const newer = { ...RESERVATION_1, ...SLOT_B, revision: 2 };
+    fixture.listReservations.mockResolvedValue({ items: [newer] });
+    fixture.getReservation.mockResolvedValue(newer);
+    fireEvent.click(
+      screen.getByRole("button", { name: "Search availability" }),
+    );
+    await screen.findByText("Reservation book refreshed.");
+    expect(
+      (screen.getByLabelText("Modify table ID") as HTMLInputElement).value,
+    ).toBe(SLOT_A.tableId);
+    expect(
+      (screen.getByLabelText("Modify party size") as HTMLInputElement).value,
+    ).toBe("4");
+    expect((await focusedAlert()).textContent).toContain("changed elsewhere");
+    const save = screen.getByRole("button", {
+      name: "Save reservation changes",
+    });
+    expect((save as HTMLButtonElement).disabled).toBe(true);
+    fireEvent.submit(screen.getByRole("form", { name: "Modify reservation" }));
+    expect(fixture.modifyReservation).not.toHaveBeenCalled();
+    // Selecting another slot must not remove the stale-draft guard.
+    fireEvent.change(screen.getByLabelText("Apply available slot (optional)"), {
+      target: { value: "1" },
+    });
+    expect((save as HTMLButtonElement).disabled).toBe(true);
+    fireEvent.click(
+      screen.getByRole("button", { name: "Refresh reservation detail" }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Keep editing" }));
+    expect(
+      (screen.getByLabelText("Modify table ID") as HTMLInputElement).value,
+    ).toBe(SLOT_B.tableId);
+    expect(fixture.getReservation).not.toHaveBeenCalled();
+    fireEvent.click(
+      screen.getByRole("button", { name: "Refresh reservation detail" }),
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: "Discard changes and refresh" }),
+    );
+    await screen.findByText("Reservation detail refreshed.");
+    expect(screen.queryByRole("alert")).toBeNull();
+    fireEvent.change(screen.getByLabelText("Modify party size"), {
+      target: { value: "3" },
+    });
+    fireEvent.click(save);
+    await screen.findByText("Reservation modified.");
+    expect(fixture.modifyReservation).toHaveBeenLastCalledWith(
+      RESERVATION_1.id,
+      expect.objectContaining({
+        expectedRevision: 2,
+        tableId: SLOT_B.tableId,
+        startsAt: SLOT_B.startsAt,
+        partySize: 3,
+      }),
+      expect.any(AbortSignal),
+    );
+  });
+
+  it("keeps an unchanged draft revision and retry key across search refreshes", async () => {
+    const fixture = await ready();
+    fireEvent.click(
+      screen.getByRole("button", { name: "View reservation 1 (Ada Lovelace)" }),
+    );
+    fireEvent.change(screen.getByLabelText("Modify party size"), {
+      target: { value: "4" },
+    });
+    fixture.modifyReservation.mockRejectedValueOnce(failure(500));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Save reservation changes" }),
+    );
+    await focusedAlert();
+    const first = fixture.modifyReservation.mock.calls[0]?.[1];
+    fireEvent.click(
+      screen.getByRole("button", { name: "Search availability" }),
+    );
+    await screen.findByText("Reservation book refreshed.");
+    expect(screen.queryByRole("alert")).toBeNull();
+    expect(
+      (screen.getByLabelText("Modify party size") as HTMLInputElement).value,
+    ).toBe("4");
+    fireEvent.click(
+      screen.getByRole("button", { name: "Save reservation changes" }),
+    );
+    await screen.findByText("Reservation modified.");
+    expect(fixture.modifyReservation.mock.calls[1]?.[1]).toEqual(first);
+    expect(first).toMatchObject({
+      expectedRevision: 1,
+      tableId: SLOT_A.tableId,
+      partySize: 4,
+    });
+  });
+
   it("cancels a BOOKED reservation and refreshes availability", async () => {
     const fixture = await ready();
     fireEvent.click(

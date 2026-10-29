@@ -274,6 +274,78 @@ test("SCR-139 409 VERSION_CONFLICT preserves draft, focuses alert, and requires 
   await expect(partyInput).toHaveValue("6");
 });
 
+test("search refresh preserves the draft revision and blocks stale allocation until explicit reload", async ({
+  page,
+}) => {
+  const newer = { ...baseReservation, ...slotB, revision: 2 };
+  let changedByOtherStaff = false;
+  const patches: {
+    expectedRevision: number;
+    tableId: string;
+    startsAt: string;
+    partySize: number;
+  }[] = [];
+  await page.route(apiPattern, async (route) => {
+    const request = route.request();
+    const url = new URL(request.url());
+    if (request.method() === "PATCH") {
+      const body = request.postDataJSON();
+      patches.push(body);
+      await route.fulfill({ json: { ...newer, ...body, revision: 3 } });
+    } else if (url.pathname.endsWith("/availability")) {
+      await route.fulfill({ json: { items: [slotA, slotB] } });
+    } else if (url.pathname.endsWith(baseReservation.id)) {
+      await route.fulfill({ json: newer });
+    } else {
+      await route.fulfill({
+        json: { items: [changedByOtherStaff ? newer : baseReservation] },
+      });
+    }
+  });
+  await page.goto(reservationsRoute);
+  await page
+    .getByRole("button", { name: "View reservation 1 (Ada Lovelace)" })
+    .click();
+  await page.getByLabel("Modify party size").fill("4");
+  changedByOtherStaff = true;
+  await page
+    .getByRole("button", { name: "Search availability", exact: true })
+    .click();
+  await expect(page.getByRole("alert")).toContainText("changed elsewhere");
+  await expect(page.getByRole("alert")).toBeFocused();
+  await expect(page.getByLabel("Modify table ID")).toHaveValue(slotA.tableId);
+  await expect(page.getByLabel("Modify party size")).toHaveValue("4");
+  await expect(
+    page.getByRole("button", { name: "Save reservation changes" }),
+  ).toBeDisabled();
+  expect(patches).toHaveLength(0);
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await page
+    .getByRole("button", { name: "Refresh reservation detail" })
+    .click();
+  await page.getByRole("button", { name: "Keep editing" }).click();
+  await expect(page.getByLabel("Modify party size")).toHaveValue("4");
+  await page
+    .getByRole("button", { name: "Refresh reservation detail" })
+    .click();
+  await page
+    .getByRole("button", { name: "Discard changes and refresh" })
+    .click();
+  await expect(page.getByLabel("Modify table ID")).toHaveValue(slotB.tableId);
+  await expect(page.getByRole("alert")).toHaveCount(0);
+  await page.getByLabel("Modify party size").fill("3");
+  await page.getByRole("button", { name: "Save reservation changes" }).click();
+  await expect(page.getByText("Reservation modified.")).toBeVisible();
+  expect(patches).toEqual([
+    expect.objectContaining({
+      expectedRevision: 2,
+      tableId: slotB.tableId,
+      startsAt: slotB.startsAt,
+      partySize: 3,
+    }),
+  ]);
+});
+
 for (const status of [401, 403, 500]) {
   test(`SCR-002 initial ${status} failure is safe, focused, and hides editors`, async ({
     page,

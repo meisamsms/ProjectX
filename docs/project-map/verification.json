@@ -3968,6 +3968,128 @@
       "coreReadinessGate": "UNMET",
       "noPush": true,
       "result": "VERIFIED Public Guest Booking Boundary Contract (ADR-0023) and registered bounded implementation packages RESERVATION-DOMAIN-007 and RESERVATION-DOMAIN-008."
+    },
+    {
+      "id": "CHK-090",
+      "taskId": "DOMAIN-005-REGRESSION-001",
+      "date": "2026-10-27",
+      "status": "VERIFIED",
+      "startingLocalSha": "c42557a02fe21d94b7e67fb3eb9cd54bb60fd8e2",
+      "remoteBase": "9a4c9db200a58d47848e3a6dc0a019a89d68851c",
+      "authorization": "Owner attachment authorizes bounded editor correction, tests, evidence reconciliation and one local commit; no push.",
+      "preflight": "PASS: exact HEAD, branch, clean worktree, four original single-parent commits, remote base confirmed.",
+      "commands": [
+        {
+          "command": "Focused regression before implementation",
+          "result": "Expected FAIL: stale draft regression could not find a conflict alert in the original component. Original overwrite reproduced in prior preflight."
+        },
+        {
+          "command": "Focused component + shell after fix (sandbox)",
+          "result": "17/17 reservation tests PASS; shell suite could not import a vanished sandbox temporary transform file (ENOENT). No application failure; rerun outside sandbox."
+        },
+        {
+          "command": "pnpm exec vitest run apps/web/tests/reservations/book.test.tsx apps/web/tests/shell.test.tsx --reporter=verbose (outside sandbox)",
+          "result": "PASS 19/19: 17 reservation component/client tests plus 2 shell tests."
+        },
+        {
+          "command": "pnpm exec playwright test tests/e2e/reservations-book.spec.ts (initial)",
+          "result": "9 PASS / 1 FAIL: new fixture advanced to revision 2 during duplicate initial requests under React.StrictMode, before editing started; no stale transition was exercised.",
+          "resolution": "New test fixture now explicitly switches to Staff B state after Staff A edits; no production-code change."
+        },
+        {
+          "command": "pnpm exec playwright test tests/e2e/reservations-book.spec.ts (corrected fixture)",
+          "result": "PASS 10/10 including stale search/reload regression and axe accessibility; completed 2026-10-27, recovered final output on resume."
+        },
+        {
+          "command": "pnpm verify:db",
+          "result": "PASS 280/280 across 23 files, including unchanged reservation domain and staff HTTP suites; PostgreSQL 16.15; completed 2026-10-27, recovered final output on resume."
+        },
+        {
+          "command": "PROJECTX_CHROMIUM_PATH=<installed Chrome> pnpm verify",
+          "result": "PASS single complete run 2026-10-29: install, format, lint, typecheck, unit 4/4, auth 56/56, contracts, map, integration 19/19, web 178/178, E2E 42/42, API and web builds. 299 tests in this gate; 17 focused reservation component tests executed separately (not part of existing test:web selector).",
+          "warnings": "Non-failing existing Node shell-option deprecation, NO_COLOR/FORCE_COLOR and React Router use-client bundler notices."
+        },
+        {
+          "command": "pnpm map:check; git diff --check; historical object/parent comparison",
+          "result": "PASS: 144 screens, 16 modules, 68 tasks; no whitespace errors; all 87 prior checks and all 67 prior tasks unchanged; four original commit/parent pairs intact."
+        }
+      ],
+      "coreReadinessGate": "UNMET",
+      "evidenceAddenda": [
+        {
+          "corrects": "CHK-084",
+          "classification": "Historical description correction; semantics unchanged",
+          "originalClaim": "Competing lifecycle commands yield one VERSION_CONFLICT loser",
+          "verifiedBehavior": "For distinct keys, a second check-in after BOOKED -> CHECKED_IN or seating after CHECKED_IN -> SEATED receives INVALID_STATE because the required source state no longer holds. When the source state is still valid but expectedRevision is stale, VERSION_CONFLICT applies. Exact same-key/payload replay is checked first and returns the original snapshot, subject to current authorization.",
+          "sources": [
+            "apps/api/migrations/zz-reservation-domain/20261026001200_reservation_lifecycle.sql: reservation_transition checks state before revision after replay",
+            "apps/api/tests/reservations/domain.test.ts: rejects stale revisions and invalid inputs without consuming keys or mutating state",
+            "apps/api/tests/reservations/domain.test.ts: serializes competing check-in commands and competing seating commands with exactly one winner"
+          ],
+          "coverageClarification": "CHK-084 concurrency prose also overstates its explicit lock-order coverage. The lifecycle test explicitly holds both check-in/cancel orders and the seating-first order against modify/cancel; its revocation test blocks check-in on a row lock. These are preserved as written, not newly claimed as every operation/lock combination. Existing DOMAIN-002 tests cover modify/cancel lock orders and modification replay revocation."
+        },
+        {
+          "corrects": "CHK-086",
+          "field": "startingLocalSha",
+          "recorded": "6e84977237db56a5cc7f8831838d1666aaec08e7",
+          "verified": "6e849779f24a4540cedbb7dc7f37367ba71acf27",
+          "evidence": "git show -s --format=%P e182477c328066ed39292b24cb97c524472948c4",
+          "explanation": "The recorded value is not the actual sole parent and cannot be resolved as a local Git object. This addendum corrects inaccurate provenance metadata; the cause of its original entry is unknown. Original CHK and commit history remain unchanged."
+        },
+        {
+          "corrects": "CHK-087",
+          "field": "startingLocalSha",
+          "recorded": "e182477a147b476b4c7fd1784369889598d71c68",
+          "verified": "e182477c328066ed39292b24cb97c524472948c4",
+          "evidence": "git show -s --format=%P c42557a02fe21d94b7e67fb3eb9cd54bb60fd8e2",
+          "explanation": "The recorded value is not the actual sole parent and cannot be resolved as a local Git object. This addendum corrects inaccurate provenance metadata; the cause of its original entry is unknown. Original CHK and commit history remain unchanged."
+        }
+      ],
+      "rootCause": "The modification payload read expectedRevision from the refreshed reservation list rather than the version that produced the retained draft.",
+      "correction": "ModifyDraft captures expectedRevision on open/reload. Search never resets its revision, allocation or retry key. Revision mismatch blocks submit and focuses a clear conflict alert; explicit discard/reload establishes a fresh version context. The payload uses the captured draft revision. Selecting a slot cannot clear a conflict block.",
+      "resumedDate": "2026-10-29",
+      "environment": {
+        "node": "24.22.1",
+        "postgresql": "16.15 (Debian 16.15-1.pgdg13+2)",
+        "imageDigest": "sha256:9e2cf6287f25c3151f4c9421ccce2b17f3e60061c111a29165e0d2cdd9ff0a97",
+        "database": "projectx_regression_test",
+        "containerId": "eeee40bb8f90c24bef880a89bc4fe3a9271697fab96f3a954154b4abd4e759d9",
+        "containerName": "projectx-draft-regression-test",
+        "listener": "127.0.0.1:55432",
+        "storage": "tmpfs; --rm; synthetic data only",
+        "browser": "Installed Chrome via existing PROJECTX_CHROMIUM_PATH"
+      },
+      "interruption": "Automatic approval review could not execute optional database wait-state diagnostic due to a usage limit on 2026-10-27. No bypass attempted. Existing authorized test sessions finished successfully. Resumed 2026-10-29; approval review and required remaining commands available.",
+      "cleanup": "PASS 2026-10-29: verified exact container ID, task label, localhost binding and tmpfs; stopped exact ID; --rm removed it; filtered container listing empty.",
+      "historicalPreservation": "All 87 earlier CHK objects and all 67 prior roadmap task objects preserved unchanged, including prior VERIFIED statuses. Corrections are explicit addenda here; no silent replacement of old results or provenance.",
+      "securityReview": "Bounded editor/version and combined-chain review: only draft revision ownership and conflict UX changed in production code. Backend authorization, trusted tenant/Venue scope, CSRF, RLS/runtime grants, SECURITY DEFINER procedures, allocation exclusion, audit and idempotency rules unchanged by this fix. Existing 280-test PostgreSQL gate passes. Public availability redaction and guest write restrictions remain ADR-0023 specifications only; no public runtime implementation/exposure introduced. No secrets or customer data introduced; synthetic fixtures only. No additional material regression identified in reviewed scope; not a production readiness claim.",
+      "skillsActuallyUsed": [],
+      "agentsExecuted": [
+        "Primary Codex agent only"
+      ],
+      "unavailableCapabilities": [],
+      "verifiedDate": "2026-10-29",
+      "newRegressionTests": [
+        "Actual component: old allocation/party draft preserved after newer search result; focused alert; disabled save and submit guard; slot selection cannot bypass; Keep editing preserves data; explicit reload adopts new allocation/revision; next actual payload uses revision 2 and refreshed table/time",
+        "Actual component: unchanged search preserves draft revision and idempotency key after failed modification; identical retry payload succeeds",
+        "Browser: concurrent revision after editing; search retains old fields and blocks PATCH; focused conflict alert and axe; explicit reload then successful PATCH uses revision 2/new allocation"
+      ],
+      "result": "VERIFIED bounded frontend concurrency correction and historical evidence addenda. No backend semantics changed. Original four commits remain intact; single authorized local child commit of c42557a02fe21d94b7e67fb3eb9cd54bb60fd8e2 follows successful gates.",
+      "publicationReadiness": {
+        "ready": true,
+        "scope": "Existing DOMAIN-003..006 chain plus this bounded regression fix; local verification only",
+        "remoteBase": "9a4c9db200a58d47848e3a6dc0a019a89d68851c",
+        "requires": "Explicit owner approval of final full SHA before normal fast-forward push; exact-SHA GitHub CI after publication",
+        "main": "Untouched; remote 25bb058357e1778735dc5247425e0143b7f1e90d",
+        "domain007Authorized": false,
+        "push": false
+      },
+      "limitations": [
+        "CORE-READY-01 remains UNMET; CORE-AUTH-02 live-provider/HTTPS gates unchanged",
+        "Browser/component suites use synthetic API fixtures; database/HTTP suite runs real disposable PostgreSQL16; no claim of live deployed integrated guest flow",
+        "DOMAIN-006 is public guest boundary specification only; no DOMAIN-007 implementation or guest exposure",
+        "New commit remote CI not run before publication"
+      ]
     }
   ],
   "unresolvedQuestions": [

@@ -3351,6 +3351,44 @@
       ],
       "implementationGate": "Requires RESERVATION-DOMAIN-007 VERIFIED and explicit owner authorization.",
       "specificationFile": "docs/architecture/ADR-0023-public-guest-booking-boundary.md"
+    },
+    {
+      "id": "DOMAIN-005-REGRESSION-001",
+      "name": "Prevent stale reservation draft overwrite after search refresh",
+      "phaseId": "PHASE-04",
+      "status": "VERIFIED",
+      "priorityPart": 1,
+      "priorityDecisionId": "PRIORITY-D001",
+      "dependencies": [
+        "RESERVATION-DOMAIN-005",
+        "RESERVATION-DOMAIN-006"
+      ],
+      "coreWorkflowAdvanced": "Safe concurrent staff reservation modification",
+      "scope": "Bind the existing editor draft to its opening revision; preserve draft and block stale saves until explicit reload; focused component/browser regression tests; append evidence corrections and update handoff.",
+      "outOfScope": "No backend, migration, authentication, public booking, infrastructure, history rewrite or push.",
+      "whyRequiredNow": "Owner-authorized correction of the publication-blocking stale allocation overwrite confirmed in batch preflight.",
+      "acceptanceCriteria": [
+        "Old drafts never adopt a new revision through search refresh",
+        "Stale drafts remain visible and require deliberate reload/review before fresh edit",
+        "Actual save payloads retain their original expectedRevision; unchanged and normal modify/cancel/list workflows pass",
+        "Historical records preserved with explicit CHK-084/086/087 corrections"
+      ],
+      "verificationCommands": [
+        "pnpm exec vitest run apps/web/tests/reservations/book.test.tsx apps/web/tests/shell.test.tsx --reporter=verbose",
+        "pnpm exec playwright test tests/e2e/reservations-book.spec.ts",
+        "pnpm verify",
+        "pnpm verify:db",
+        "pnpm map:check",
+        "git diff --check"
+      ],
+      "regressionChecks": [
+        "Existing 87 checks and all prior task objects unchanged",
+        "No backend/security-boundary changes",
+        "Four original commits retain original parents; one local fix commit only"
+      ],
+      "implementationGate": "VERIFIED under owner-authorized bounded regression fix. No backend or public access changes.",
+      "verificationEvidence": "CHK-090: 19/19 focused component/shell, 10/10 focused browser, pnpm verify PASS (299 tests plus API/web builds), verify:db PASS 280/280 PostgreSQL16.15; explicit CHK-084/086/087 corrections preserve originals.",
+      "remainingWork": "No implementation work in this bounded fix. Publication requires separate exact-SHA approval and subsequent GitHub CI."
     }
   ],
   "unresolvedQuestions": [
@@ -3433,7 +3471,7 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "Await separate owner authorization for the next dependency-ready Part 1/Part 2 core task (e.g., SETTINGS-CORE-01 / RESERVATIONS-CORE-01 contract decomposition or CORE-AUTH-02 local transport resolution). Do not start automatically.",
+  "nextExactTask": "Owner review of exact five-commit DOMAIN-003..006 plus DOMAIN-005-REGRESSION-001 chain; normal publication only after explicit final-SHA approval, then exact-SHA CI. DOMAIN-007 remains unauthorized.",
   "deliveryPriority": {
     "decisionId": "PRIORITY-D001",
     "primaryTarget": "PART 1 — CORE ONLINE RESERVATION SYSTEM",

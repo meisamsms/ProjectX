@@ -188,6 +188,7 @@ interface CreateDraft {
 
 interface ModifyDraft {
   reservationId: string;
+  expectedRevision: number;
   date: string;
   partySize: string;
   startsAt: string;
@@ -204,6 +205,7 @@ function nextUuid(): string {
 function createModifyDraft(reservation: StaffReservation): ModifyDraft {
   return {
     reservationId: reservation.id,
+    expectedRevision: reservation.revision,
     date: reservation.date,
     partySize: String(reservation.partySize),
     startsAt: reservation.startsAt,
@@ -222,6 +224,7 @@ function isModifyDraftDirty(
     return false;
   }
   return (
+    draft.expectedRevision !== reservation.revision ||
     draft.date.trim() !== reservation.date ||
     draft.partySize.trim() !== String(reservation.partySize) ||
     draft.startsAt.trim() !== reservation.startsAt ||
@@ -310,6 +313,12 @@ export function ReservationsBookPage({
 
   const selectedReservation =
     reservations.find((item) => item.id === selectedId) ?? null;
+  const modifyStale = Boolean(
+    modifyDraft &&
+      selectedReservation &&
+      modifyDraft.reservationId === selectedReservation.id &&
+      modifyDraft.expectedRevision !== selectedReservation.revision,
+  );
 
   const dirty =
     createDraft !== null ||
@@ -354,12 +363,12 @@ export function ReservationsBookPage({
   }, [listReservations, resolvedInitialDate, searchAvailability]);
 
   useEffect(() => {
-    if (error) alertRef.current?.focus();
-  }, [error]);
+    if (error || modifyStale) alertRef.current?.focus();
+  }, [error, modifyStale]);
 
   useEffect(() => {
-    if (success) successRef.current?.focus();
-  }, [success]);
+    if (success && !modifyStale) successRef.current?.focus();
+  }, [success, modifyStale]);
 
   const createPanelOpen = createDraft !== null;
   useEffect(() => {
@@ -438,16 +447,8 @@ export function ReservationsBookPage({
           setModifyDraft(
             refreshedSelected ? createModifyDraft(refreshedSelected) : null,
           );
-        } else if (
-          selectedId &&
-          !isModifyDraftDirty(modifyDraft, selectedReservation)
-        ) {
-          const refreshedSelected =
-            listResult.items.find((item) => item.id === selectedId) ?? null;
-          setModifyDraft(
-            refreshedSelected ? createModifyDraft(refreshedSelected) : null,
-          );
         }
+        // Search updates the list, never the open draft's version or retry key.
         setTransitionKeys({ checkIn: nextUuid(), seat: nextUuid() });
         setSuccess({ message: "Reservation book refreshed." });
       },
@@ -496,14 +497,16 @@ export function ReservationsBookPage({
       </p>
       {dirty && <p>Unsaved reservation changes</p>}
       {busy && <p role="status">{busy}</p>}
-      {error && (
+      {(error || modifyStale) && (
         <div
           role="alert"
           id="reservations-book-error"
           tabIndex={-1}
           ref={alertRef}
         >
-          {error.message}
+          {modifyStale
+            ? "This reservation changed elsewhere. Your draft is retained. Refresh reservation detail and review the latest values before saving."
+            : error?.message}
         </div>
       )}
       {success && (
@@ -1058,6 +1061,7 @@ export function ReservationsBookPage({
                     event.preventDefault();
                     if (
                       !modifyDirty ||
+                      modifyStale ||
                       modifyValidationError !== null ||
                       modifyDraft.blocked
                     ) {
@@ -1071,7 +1075,7 @@ export function ReservationsBookPage({
                         const updated = await modifyReservation(
                           target.id,
                           {
-                            expectedRevision: target.revision,
+                            expectedRevision: draftSnapshot.expectedRevision,
                             idempotencyKey: draftSnapshot.idempotencyKey,
                             date: draftSnapshot.date.trim(),
                             partySize: Number(draftSnapshot.partySize),
@@ -1138,7 +1142,6 @@ export function ReservationsBookPage({
                                     tableId: chosen.tableId,
                                     shiftId: chosen.shiftId,
                                     idempotencyKey: nextUuid(),
-                                    blocked: false,
                                   }
                                 : null,
                             );
@@ -1254,7 +1257,7 @@ export function ReservationsBookPage({
                     <p id="modify-reservation-state">
                       {modifyValidationError ??
                         (modifyDirty ? "Unsaved changes" : "Saved")}
-                      {modifyDraft.blocked
+                      {modifyDraft.blocked || modifyStale
                         ? " — Refresh required before saving."
                         : ""}
                     </p>
@@ -1262,6 +1265,7 @@ export function ReservationsBookPage({
                       type="submit"
                       disabled={
                         !modifyDirty ||
+                        modifyStale ||
                         modifyValidationError !== null ||
                         modifyDraft.blocked
                       }

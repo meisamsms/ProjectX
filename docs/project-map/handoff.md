@@ -1,27 +1,29 @@
-CURRENT PHASE: PHASE-04 — Core domain implementation, IN_PROGRESS.
-CURRENT TASK: RESERVATION-DOMAIN-006 — Public Guest Booking Boundary Contract (ADR-0023).
-STATUS: VERIFIED under CHK-087.
-COMPLETED: Verified starting HEAD e182477 on branch people-03-accounts-read. Authored ADR-0023-public-guest-booking-boundary.md defining the public Venue slug lookup, purpose-limited availability projection, narrow SECURITY DEFINER guest reservation creation without fabricated staff identities, Venue-scoped guest idempotency, rate-limit/abuse protections, honest non-delivery confirmation response (confirmationDelivery: NONE), and registered the two bounded implementation packages RESERVATION-DOMAIN-007 (Package A: Public backend) and RESERVATION-DOMAIN-008 (Package B: Public widget SCR-072).
-FILES CREATED: docs/architecture/ADR-0023-public-guest-booking-boundary.md (ACCEPTED).
-FILES MODIFIED: docs/data/reservation-domain.md, docs/project-map/roadmap.json, docs/project-map/verification.json, docs/project-map/handoff.md.
-TESTS EXECUTED: pnpm map:check; git diff --check (documentation-only contract package).
-TEST RESULTS: All documentation and project-map validation checks PASS; recorded in CHK-087.
-UNRESOLVED ISSUES: CORE-READY-01 remains UNMET. Public guest booking backend (RESERVATION-DOMAIN-007) and public reservation widget UI (RESERVATION-DOMAIN-008) await explicit owner implementation authorization.
+CURRENT PHASE: PHASE-04 — IN_PROGRESS.
+CURRENT TASK: DOMAIN-005-REGRESSION-001.
+STATUS: VERIFIED under CHK-090; local commit only, no push.
+COMPLETED: Draft captures original revision; search retains draft/version/key; newer record blocks submit with focused warning and explicit reload/review. Actual payload regression tests added. CHK-084 state-vs-version and CHK-086/087 parent-SHA discrepancies reconciled by addenda, preserving originals.
+FILES CREATED: None.
+FILES MODIFIED: apps/web/src/reservations/page.tsx; apps/web/tests/reservations/book.test.tsx; tests/e2e/reservations-book.spec.ts; docs/project-map/roadmap.json; docs/project-map/verification.json; docs/project-map/handoff.md.
+TESTS EXECUTED: Focused Vitest; focused Playwright; pnpm verify; pnpm verify:db; pnpm map:check; git diff --check; historical object/parent comparison.
+TEST RESULTS: Focused 19/19 (17 reservation + 2 shell); browser 10/10 with axe; verify PASS 299 (4 unit + 56 auth + 19 integration + 178 web + 42 E2E), API/web builds PASS; database 280/280 across 23 files on disposable PostgreSQL16.15. The 17 reservation component tests run separately from existing test:web selector. Initial regression failure, sandbox ENOENT and StrictMode fixture correction retained in CHK-090.
+UNRESOLVED ISSUES: No remaining material regression identified in reviewed scope. Publication approval and exact-SHA CI pending; public/live integrated core readiness remains unmet.
+TASK ID: DOMAIN-005-REGRESSION-001.
 PRIORITY PART: 1.
-CORE WORKFLOW ADVANCED: Public guest booking security, PostgreSQL RLS/FK/audit boundary, and API/UI contract decomposition (ADR-0023).
-CORE READINESS GATE: unmet; DOMAIN-001..005 are verified runtime slices and DOMAIN-006 is the verified public boundary contract; public runtime slices (DOMAIN-007/008) and live-provider gates remain.
-REQUIRED FOUNDATION DEPENDENCIES: RESERVATION-DOMAIN-001..005, PEOPLE-CORE-01, DB-HARNESS-001 and FOUND-TASK-004 VERIFIED.
-DEFERRED SECONDARY TASKS AND REASONS: P3 export/reporting remains deferred under PRIORITY-D001; full SETTINGS-CORE-01 and LANGUAGE-CORE-01 editors remain separate; budget $0.
-TASK ID: RESERVATION-DOMAIN-006.
-DEPENDENCIES AND THEIR VERIFIED STATUS: RESERVATION-DOMAIN-004 (VERIFIED), RESERVATION-DOMAIN-005 (VERIFIED).
-WHY THIS TASK IS REQUIRED NOW: Owner-authorized minimum prerequisite specification resolving the public guest booking security and database boundary before implementing public booking endpoints and the SCR-072 widget.
-OWNED SCOPE AND EXCLUDED SCOPE: ADR-0023, reservation-domain.md update, roadmap registration of RESERVATION-DOMAIN-006/007/008, verification check CHK-087, and handoff update. No production code, migrations, or widget UI changes in this package.
-ACCEPTANCE CRITERIA: All 9 public booking boundary topics specified consistently with existing RLS, FK, audit, permission and idempotency rules; two bounded implementation packages (RESERVATION-DOMAIN-007 and RESERVATION-DOMAIN-008) registered with exact dependencies and gates; pnpm map:check and git diff --check pass.
-VERIFICATION COMMANDS: pnpm map:check; git diff --check.
-REGRESSION CHECKS: All 86 prior checks (CHK-001..CHK-086) and all 31 previously VERIFIED task objects preserved unchanged.
-DECISION: VERIFIED; bounded specification complete. Stop and await owner authorization for RESERVATION-DOMAIN-007.
-NEXT EXACT TASK: RESERVATION-DOMAIN-007 — Public Guest Booking Backend & PostgreSQL Security Slice (Package A under ADR-0023), upon explicit owner authorization.
-NEXT EXACT CORE TASK OR REQUIRED PREDECESSOR: RESERVATION-DOMAIN-007 (followed by RESERVATION-DOMAIN-008 for SCR-072 widget UI).
-FILES NEXT AGENT MUST READ: AGENTS.md; ADR-0018/0019/0020/0021/0022/0023; docs/data/reservation-domain.md; apps/api/migrations/zz-reservation-domain/20261017001000_reservation_domain.sql; apps/api/migrations/zz-reservation-domain/20261026001200_reservation_lifecycle.sql; apps/api/src/reservations/service.ts; docs/project-map/roadmap.json; docs/project-map/verification.json; docs/project-map/handoff.md.
-CAPABILITIES: architecture/restaurant contract specification; api-contracts, database-isolation and restaurant-workflows skills applied.
-PUBLICATION: One local logical commit created on branch people-03-accounts-read above e182477; NOT pushed. Remote publication requires separate explicit owner approval.
+CORE WORKFLOW ADVANCED: Safe concurrent staff reservation modification.
+DEPENDENCIES AND THEIR VERIFIED STATUS: DOMAIN-001..006 remain recorded VERIFIED within their bounded scopes; specific DOMAIN-005 correction verified by CHK-090.
+WHY THIS TASK IS REQUIRED NOW: Owner-authorized correction of publication-blocking stale draft overwrite.
+OWNED SCOPE AND EXCLUDED SCOPE: Editor, focused tests, evidence/roadmap/handoff only; no backend, migrations, public access or infrastructure.
+ACCEPTANCE CRITERIA: Original version context retained; stale submit blocked; explicit reload required; unchanged retry payload and normal modification/cancel/list preserved — PASS.
+VERIFICATION COMMANDS: Focused component/browser commands and full gates recorded in CHK-090.
+REGRESSION CHECKS: All 87 old check objects and 67 prior task objects unchanged; original four commits and parents intact; security boundaries unchanged.
+DECISION: VERIFIED; prepare exact local final SHA for owner publication approval.
+CORE READINESS GATE: unmet; no production readiness claim.
+REQUIRED FOUNDATION DEPENDENCIES: Existing trusted staff context, permissions, RLS/runtime, transaction/version/idempotency and audit boundaries preserved.
+DEFERRED SECONDARY TASKS AND REASONS: P3 remains deferred under PRIORITY-D001 until core readiness gate passes.
+NEXT EXACT TASK: Owner approval of exact final local SHA for five-commit chain publication; then exact-SHA GitHub CI. No push authorized here.
+NEXT EXACT CORE TASK OR REQUIRED PREDECESSOR: DOMAIN-007 requires separate explicit implementation authorization.
+FILES NEXT AGENT MUST READ: AGENTS.md; this handoff; CHK-090 addenda (CHK-084/086/087); roadmap.json; ADR-0020/0022/0023; editor and focused tests.
+GIT BASE: c42557a02fe21d94b7e67fb3eb9cd54bb60fd8e2. Remote base remains 9a4c9db200a58d47848e3a6dc0a019a89d68851c. Original DOMAIN-003..006 chain unchanged.
+LOCAL COMMIT: fix(reservations): prevent stale draft overwrite after refresh — single child of DOMAIN-006 after verification; resolve exact SHA from Git.
+CLEANUP: Exact task container eeee40bb8f90c24bef880a89bc4fe3a9271697fab96f3a954154b4abd4e759d9 stopped and removed; tmpfs synthetic data discarded; no shared/production database used.
+SKILLS / AGENTS: No specialized skills applied; one primary Codex agent, no delegation. No required capability currently unavailable; earlier approval-review usage-limit interruption resolved on resume.
