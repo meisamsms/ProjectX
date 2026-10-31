@@ -24,6 +24,7 @@ const files = [
   "zz-reservation-domain/20261017001000_reservation_domain.sql",
   "zz-reservation-domain/20261024001100_reservation_modification.sql",
   "zz-reservation-domain/20261026001200_reservation_lifecycle.sql",
+  "zz-reservation-domain/20261027001300_public_guest_booking.sql",
 ];
 const content = (name: string) =>
   readFile(new URL(`../../migrations/${name}`, import.meta.url), "utf8");

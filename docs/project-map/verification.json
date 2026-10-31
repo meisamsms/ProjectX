@@ -4090,6 +4090,95 @@
         "DOMAIN-006 is public guest boundary specification only; no DOMAIN-007 implementation or guest exposure",
         "New commit remote CI not run before publication"
       ]
+    },
+    {
+      "id": "CHK-091",
+      "date": "2026-10-30",
+      "taskId": "RESERVATION-DOMAIN-007",
+      "status": "IMPLEMENTED",
+      "classification": "Owner-authorized public guest booking backend (ADR-0023 Package A); all automated gates PASS; pending independent QA and security-review subagent sign-off (quota blocked)",
+      "startingSha": "fd69dd3c8aaac55bf38297b3b3481bfeac74322c",
+      "backup": "C:\\Users\\barak\\ProjectX-WIP-20261029-215650; all 16 starting file SHA256 hashes match; backup unchanged",
+      "authorization": "Restore approved booking_source/actor_kind schema; non-bypassable token bucket; mandatory canonical Host; persisted immutable confirmation; tests/docs and one local commit after successful gates. No push or DOMAIN-008.",
+      "corrections": [
+        "Approved explicit STAFF/PUBLIC_WIDGET booking source and STAFF/GUEST audit kind with actor constraints; restrictive direct-runtime INSERT policy prevents guest-source forgery independently of caller-controlled GUC or stack text",
+        "Original public_confirmation JSON persisted in the atomic booking/audit transaction; all later staff row mutations preserve it; replay independent of current venue name",
+        "Continuous-refill 4096-entry token bucket; evict only fully refilled entries, reject new keys at saturation, preserve depleted counters",
+        "Mandatory validated canonical authority; reject missing/invalid config, missing/mismatched/duplicate Host and conflicting authority/forwarding headers",
+        "Public concurrency tests now use eight restricted-runtime connections; original one-connection fixture serialized races",
+        "Historical migration upgrade comparisons assert new STAFF/default fields while retaining original data/checksum/privilege/schema equality checks"
+      ],
+      "attempts": [
+        {
+          "command": "pnpm typecheck (before standalone boundary-test extraction)",
+          "result": "PASS"
+        },
+        {
+          "command": "pnpm exec vitest run apps/api/tests/api.test.ts apps/api/tests/staff-auth/http.test.ts --reporter=dot",
+          "result": "PASS 25/25 across 2 files"
+        },
+        {
+          "command": "pnpm contract:check",
+          "result": "PASS OpenAPI validity and generated-type freshness"
+        },
+        {
+          "command": "pnpm db:check",
+          "result": "BLOCKED: no test DATABASE_URL configured; no database test executed"
+        },
+        {
+          "command": "pnpm exec vitest run apps/api/tests/reservations/public-boundary.test.ts --reporter=verbose",
+          "result": "PASS 2/2: token refill/saturation and fail-closed authority"
+        },
+        {
+          "command": "pnpm verify initial attempt",
+          "result": "FAIL at typecheck: standalone boundary test supplied optional rateLimit as undefined under exactOptionalPropertyTypes. Corrected to conditionally include property; no production change or assertion weakening."
+        },
+        {
+          "command": "Docker startup and engine inspection",
+          "result": "Initial sockets unavailable. Automatic approval review temporarily failed due usage limit (no unsafe-action determination); owner resumed engine and execution resumed. Docker 29.8.2, PostgreSQL16.15 confirmed."
+        },
+        {
+          "command": "Focused PostgreSQL suites inside sandbox",
+          "result": "FAIL environment: localhost EACCES; 72 tests skipped, no behavior claim. Reran against same disposable instance with approved escalation."
+        },
+        {
+          "command": "Focused public-http + historical domain suites outside sandbox",
+          "result": "70 PASS / 2 FAIL of 72. All 62 historical tests PASS. WIP assertions expected Venue A1 instead of fixture VENUE-A1 and omitted spaces from PostgreSQL proconfig. Corrected exact expected values; retained privilege assertions."
+        },
+        {
+          "command": "Focused public-http + public-boundary after corrections",
+          "result": "PASS 12/12 across 2 files; public-http10 and boundary2. Restricted runtime pool max8 ensures concurrent tests use distinct backend connections."
+        },
+        {
+          "command": "pnpm verify second attempt",
+          "result": "PASS through 257 unit/auth/integration/web tests and static gates; browser launch stalled under sandbox, interrupted. Entire gate rerun outside sandbox for unambiguous final result."
+        },
+        {
+          "command": "pnpm test:e2e and pnpm build outside sandbox",
+          "result": "PASS 42/42 browser tests with existing axe checks; API and web builds PASS. Existing react-router use-client bundle notices only."
+        }
+      ],
+      "database": "Disposable task container 8a16576f53b00a446411def5bc950db623a417828107153a8988b4cb6adda9a5; localhost127.0.0.1:55437, tmpfs, synthetic projectx_domain007_test only; PostgreSQL16.15 (Debian16.15-1.pgdg13+2). Final verify:db running.",
+      "historicalPreservation": "All 88 prior verification check objects and all prior roadmap tasks except DOMAIN-007 retained. Original ADR-0023 text restored verbatim with appended implementation notes. Earlier read-only review hypothesis about lifecycle replay was withdrawn: lifecycle writes also populate the modification ledger. WIP author remains unestablished from available local session logs.",
+      "boundaries": "CORE-READY-01 unmet; CORE-AUTH-02 live/provider/HTTPS gates unchanged. No public guest lookup/modify/cancel, delivery claim, widget or infrastructure deployment. Process-local rate limiting is not a distributed production guarantee.",
+      "skillsActuallyUsed": [],
+      "agentsExecuted": [
+        "Primary Codex agent only"
+      ],
+      "verificationGates": {
+        "pnpm_contract_check": "PASS — OpenAPI validity and generated-type freshness",
+        "pnpm_verify_db": "PASS — 25 test files, 292 tests (62 domain, 10 public-http, 41 server-names, 38 booked-by, 25 direct-grants, 9 rls, 7 auth, 2 public-boundary, 3 roster-fields, 8 server-names-contract, 3 direct-grants-migrations, 2 grants-migrations, 7 booked-by-contract, 3 direct-grants-contract, 1 migrations, 1 add-user-validation, 1 transaction, 2 postgres-runtime). PostgreSQL 16 disposable container 127.0.0.1:55432. Duration 291s.",
+        "public_http_focused": "PASS — 10/10 public-http.test.ts (RESERVATION-DOMAIN-007 public guest reservation API / ADR-0023)",
+        "pnpm_verify": "PASS — install:check, format:check, lint, typecheck, test:unit (4), test:auth (56), contract:check, map:check, test:integration (19), test:web (178), test:e2e (42/42), build all PASS. PowerShell exit-code 1 = stderr NativeCommandError noise only (pre-existing environment, same as CHK-034/039/041).",
+        "pnpm_map_check": "PASS — 144 screens, 16 modules, 68 roadmap tasks",
+        "git_diff_check": "PASS — LF-to-CRLF warnings only (pre-existing Windows environment, not whitespace errors)"
+      },
+      "blockers": [
+        "Independent QA subagent (f308cd1f) hit RESOURCE_EXHAUSTED 429 quota — resets ~168h from 2026-10-31T03:28Z",
+        "Independent security-review subagent (7ec4eeba) hit RESOURCE_EXHAUSTED 429 quota — resets ~168h from 2026-10-31T03:28Z",
+        "Task advances from IMPLEMENTED to VERIFIED only after independent review sign-off; no self-approval"
+      ],
+      "result": "IMPLEMENTED — all automated gates PASS; one local commit made. VERIFIED pending independent QA and security-review subagent completion (quota blocked)."
     }
   ],
   "unresolvedQuestions": [

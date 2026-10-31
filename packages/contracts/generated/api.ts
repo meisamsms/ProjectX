@@ -372,6 +372,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/public/venues/{venueSlug}/availability": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List public guest booking times for an opted-in Venue slug
+         * @description ADR-0023 public guest boundary. Returns only public venue metadata and distinct bookable time windows without organizationId, venueId, tableId, shiftId or guest PII.
+         */
+        get: operations["searchPublicVenueAvailability"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/venues/{venueSlug}/reservations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create a public guest reservation for an opted-in Venue slug
+         * @description ADR-0023 public guest boundary. Allocates a deterministic best-fit table server-side inside reservation_public_create without synthetic staff identities.
+         */
+        post: operations["createPublicVenueReservation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -605,6 +645,50 @@ export interface components {
             expectedRevision: number;
             /** Format: uuid */
             idempotencyKey: string;
+        };
+        PublicVenueSummary: {
+            slug: string;
+            name: string;
+            timezone: string;
+        };
+        PublicReservationSlot: {
+            /** Format: date-time */
+            startsAt: string;
+            /** Format: date-time */
+            endsAt: string;
+            timezone: string;
+        };
+        PublicReservationAvailabilityResponse: {
+            venue: components["schemas"]["PublicVenueSummary"];
+            items: components["schemas"]["PublicReservationSlot"][];
+        };
+        CreatePublicReservationRequest: {
+            date: string;
+            partySize: number;
+            /** Format: date-time */
+            startsAt: string;
+            guestName: string;
+            guestEmail: string;
+            /** Format: uuid */
+            idempotencyKey: string;
+        };
+        PublicReservationConfirmation: {
+            /** Format: uuid */
+            reservationId: string;
+            venueSlug: string;
+            venueName: string;
+            date: string;
+            /** Format: date-time */
+            startsAt: string;
+            /** Format: date-time */
+            endsAt: string;
+            timezone: string;
+            partySize: number;
+            guestName: string;
+            /** @constant */
+            status: "BOOKED";
+            /** @constant */
+            confirmationDelivery: "NONE";
         };
     };
     responses: never;
@@ -2115,6 +2199,158 @@ export interface operations {
             };
             /** @description Stale session context or invalid reservation state */
             409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal failure */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    searchPublicVenueAvailability: {
+        parameters: {
+            query: {
+                date: string;
+                partySize: number;
+                fromMinute?: number;
+                toMinute?: number;
+            };
+            header?: never;
+            path: {
+                venueSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Available public booking windows */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicReservationAvailabilityResponse"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden host or forwarded header */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Venue not found or public booking not enabled */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Rate limit exceeded */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal failure */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    createPublicVenueReservation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                venueSlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreatePublicReservationRequest"];
+            };
+        };
+        responses: {
+            /** @description Reservation created or idempotent retry snapshot returned */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicReservationConfirmation"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden host or forwarded header */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Venue not found or public booking not enabled */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Capacity conflict or idempotency key conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Rate limit exceeded */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };

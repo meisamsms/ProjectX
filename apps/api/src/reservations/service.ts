@@ -51,6 +51,49 @@ export interface LifecycleTransition {
   expectedRevision: number;
   idempotencyKey: string;
 }
+export interface PublicVenueSummary {
+  slug: string;
+  name: string;
+  timezone: string;
+}
+export interface PublicReservationSlot {
+  startsAt: string;
+  endsAt: string;
+  timezone: string;
+}
+export interface PublicAvailabilityQuery {
+  venueSlug: string;
+  date: string;
+  partySize: number;
+  fromMinute?: number;
+  toMinute?: number;
+}
+export interface PublicAvailabilityResponse {
+  venue: PublicVenueSummary;
+  items: PublicReservationSlot[];
+}
+export interface CreatePublicReservation {
+  venueSlug: string;
+  date: string;
+  partySize: number;
+  startsAt: string;
+  guestName: string;
+  guestEmail: string;
+  idempotencyKey: string;
+}
+export interface PublicReservationConfirmation {
+  reservationId: string;
+  venueSlug: string;
+  venueName: string;
+  date: string;
+  startsAt: string;
+  endsAt: string;
+  timezone: string;
+  partySize: number;
+  guestName: string;
+  status: "BOOKED";
+  confirmationDelivery: "NONE";
+}
 export interface Reservation extends ReservationSlot {
   id: string;
   clientId: string;
@@ -464,5 +507,111 @@ export async function cancelReservation(
         throw new ReservationError("INVALID_STATE");
     }
     return dto(record);
+  });
+}
+
+const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+function slug(value: unknown): string {
+  if (
+    typeof value !== "string" ||
+    value.length < 3 ||
+    value.length > 64 ||
+    !slugPattern.test(value)
+  )
+    return invalid();
+  return value;
+}
+
+async function publicTransaction<T>(
+  pool: Pool,
+  work: (client: PoolClient) => Promise<T>,
+): Promise<T> {
+  const client = await pool.connect();
+  let destroy = false;
+  try {
+    await client.query("BEGIN");
+    await client.query("SET LOCAL search_path TO projectx_test, public");
+    await client.query(
+      "SELECT set_config('app.user_id','',true),set_config('app.organization_id','',true),set_config('app.venue_id','',true),set_config('app.access_mode','',true)",
+    );
+    const result = await work(client);
+    await client.query("COMMIT");
+    return result;
+  } catch (error) {
+    try {
+      await client.query("ROLLBACK");
+    } catch {
+      destroy = true;
+    }
+    if (error instanceof ReservationError) throw error;
+    const code = (error as { code?: string })?.code;
+    if (code === "23P01" || code === "40P01" || code === "P1005")
+      throw new ReservationError("CAPACITY_CONFLICT");
+    if (code === "P1001") throw new ReservationError("NOT_FOUND");
+    if (code === "P1002") throw new ReservationError("IDEMPOTENCY_CONFLICT");
+    if (code === "42501") throw new ReservationError("ACCESS_DENIED");
+    if (code === "23514" || code === "22P02")
+      throw new ReservationError("INVALID_INPUT");
+    throw new ReservationError("INTERNAL");
+  } finally {
+    client.release(destroy);
+  }
+}
+
+export async function searchPublicAvailability(
+  pool: Pool,
+  input: PublicAvailabilityQuery,
+): Promise<PublicAvailabilityResponse> {
+  const venueSlug = slug(input.venueSlug),
+    date = day(input.date),
+    size = party(input.partySize),
+    from = input.fromMinute ?? 0,
+    to = input.toMinute ?? 1440;
+  if (
+    !Number.isInteger(from) ||
+    !Number.isInteger(to) ||
+    from < 0 ||
+    to > 1440 ||
+    from >= to
+  )
+    return invalid();
+  return publicTransaction(pool, async (client) => {
+    const result = await client.query<{ payload: PublicAvailabilityResponse }>(
+      "SELECT reservation_public_availability($1,$2,$3,$4,$5) AS payload",
+      [venueSlug, date, size, from, to],
+    );
+    const payload = result.rows[0]?.payload;
+    if (!payload) throw new ReservationError("INTERNAL");
+    return payload;
+  });
+}
+
+export async function createPublicReservation(
+  pool: Pool,
+  input: CreatePublicReservation,
+): Promise<PublicReservationConfirmation> {
+  const venueSlug = slug(input.venueSlug),
+    date = day(input.date),
+    size = party(input.partySize),
+    startsAt = instant(input.startsAt),
+    guestName = text(input.guestName, 120),
+    guestEmail = text(input.guestEmail, 254),
+    key = id(input.idempotencyKey);
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestEmail)) return invalid();
+  return publicTransaction(pool, async (client) => {
+    const result = await client.query<{
+      payload: PublicReservationConfirmation;
+    }>("SELECT reservation_public_create($1,$2,$3,$4,$5,$6,$7) AS payload", [
+      venueSlug,
+      date,
+      size,
+      startsAt,
+      guestName,
+      guestEmail,
+      key,
+    ]);
+    const payload = result.rows[0]?.payload;
+    if (!payload) throw new ReservationError("INTERNAL");
+    return payload;
   });
 }

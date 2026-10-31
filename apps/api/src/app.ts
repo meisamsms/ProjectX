@@ -26,6 +26,10 @@ import {
   type ReservationsDependencies,
   registerReservations,
 } from "./reservations/route.js";
+import {
+  type PublicReservationsDependencies,
+  registerPublicReservations,
+} from "./reservations/public-route.js";
 
 export function createApp(
   config: Config,
@@ -37,6 +41,7 @@ export function createApp(
     peopleBookedBy?: PeopleBookedByDependencies;
     peopleServer?: PeopleServerDependencies;
     reservations?: ReservationsDependencies;
+    publicReservations?: PublicReservationsDependencies;
   },
 ): FastifyInstance {
   const app = Fastify({
@@ -115,5 +120,21 @@ export function createApp(
   registerPeopleBookedBy(app, venue ?? options?.peopleBookedBy);
   registerPeopleServer(app, venue ?? options?.peopleServer);
   registerReservations(app, venue ?? options?.reservations);
+  const publicPool =
+    options?.publicReservations?.runtimePool ??
+    pool ??
+    options?.reservations?.runtimePool;
+  registerPublicReservations(
+    app,
+    options?.publicReservations ??
+      (publicPool
+        ? {
+            runtimePool: publicPool,
+            expectedHost: options?.staffAuth?.config.origin
+              ? new URL(options.staffAuth.config.origin).host
+              : "",
+          }
+        : undefined),
+  );
   return app;
 }

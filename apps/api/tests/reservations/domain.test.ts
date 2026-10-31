@@ -742,7 +742,7 @@ describe("RESERVATION-DOMAIN-001 real PostgreSQL16", () => {
       "DROP TABLE projectx_test.reservation_modifications,projectx_test.reservation_changes,projectx_test.reservations,projectx_test.reservation_clients,projectx_test.reservation_tables,projectx_test.reservation_shifts,projectx_test.reservation_venue_settings CASCADE",
     );
     await adminPool.query(
-      "DROP FUNCTION projectx_test.reservation_slots(date,integer),projectx_test.reservation_allowed(text),projectx_test.reservation_zone_validate(),projectx_test.reservation_validate(),projectx_test.reservation_record_change(),projectx_test.reservation_change_immutable()",
+      "DROP FUNCTION projectx_test.reservation_slots(date,integer),projectx_test.reservation_allowed(text),projectx_test.reservation_zone_validate(),projectx_test.reservation_validate(),projectx_test.reservation_record_change(),projectx_test.reservation_change_immutable(),projectx_test.reservation_public_iso(timestamptz),projectx_test.reservation_public_availability(text,date,integer,integer,integer),projectx_test.reservation_public_create(text,date,integer,timestamptz,text,text,uuid)",
     );
     await adminPool.query(
       "DELETE FROM projectx_test.schema_migrations WHERE name=ANY($1)",
@@ -751,6 +751,7 @@ describe("RESERVATION-DOMAIN-001 real PostgreSQL16", () => {
           migration,
           "zz-reservation-domain/20261024001100_reservation_modification.sql",
           "zz-reservation-domain/20261026001200_reservation_lifecycle.sql",
+          "zz-reservation-domain/20261027001300_public_guest_booking.sql",
         ],
       ],
     );
@@ -854,7 +855,7 @@ describe("RESERVATION-DOMAIN-002 atomic modification PostgreSQL16", () => {
       "DROP TABLE projectx_test.reservation_modifications,projectx_test.reservation_changes,projectx_test.reservations,projectx_test.reservation_clients,projectx_test.reservation_tables,projectx_test.reservation_shifts,projectx_test.reservation_venue_settings CASCADE",
     );
     await adminPool.query(
-      "DROP FUNCTION projectx_test.reservation_slots(date,integer),projectx_test.reservation_allowed(text),projectx_test.reservation_zone_validate(),projectx_test.reservation_validate(),projectx_test.reservation_record_change(),projectx_test.reservation_change_immutable()",
+      "DROP FUNCTION projectx_test.reservation_slots(date,integer),projectx_test.reservation_allowed(text),projectx_test.reservation_zone_validate(),projectx_test.reservation_validate(),projectx_test.reservation_record_change(),projectx_test.reservation_change_immutable(),projectx_test.reservation_public_iso(timestamptz),projectx_test.reservation_public_availability(text,date,integer,integer,integer),projectx_test.reservation_public_create(text,date,integer,timestamptz,text,text,uuid)",
     );
     const originalSql = await readFile(
       new URL(
@@ -869,7 +870,7 @@ describe("RESERVATION-DOMAIN-002 atomic modification PostgreSQL16", () => {
       await owner.query("SET LOCAL search_path TO projectx_test, public");
       await owner.query(originalSql);
       await owner.query(
-        "DELETE FROM schema_migrations WHERE name IN ('zz-reservation-domain/20261024001100_reservation_modification.sql','zz-reservation-domain/20261026001200_reservation_lifecycle.sql')",
+        "DELETE FROM schema_migrations WHERE name IN ('zz-reservation-domain/20261024001100_reservation_modification.sql','zz-reservation-domain/20261026001200_reservation_lifecycle.sql','zz-reservation-domain/20261027001300_public_guest_booking.sql')",
       );
       await owner.query("COMMIT");
     } finally {
@@ -921,7 +922,9 @@ describe("RESERVATION-DOMAIN-002 atomic modification PostgreSQL16", () => {
       )
     ).rows;
     expect(
-      after.map(({ revision, ...r }) => {
+      after.map(({ revision, booking_source, public_confirmation, ...r }) => {
+        expect(booking_source).toBe("STAFF");
+        expect(public_confirmation).toBeNull();
         expect(revision).toBe(1);
         return r;
       }),
@@ -932,7 +935,7 @@ describe("RESERVATION-DOMAIN-002 atomic modification PostgreSQL16", () => {
           "SELECT * FROM projectx_test.reservation_changes ORDER BY reservation_id,action",
         )
       ).rows,
-    ).toEqual(audit);
+    ).toEqual(audit.map((row) => ({ ...row, actor_kind: "STAFF" })));
     expect(
       (
         await adminPool.query(
@@ -943,7 +946,7 @@ describe("RESERVATION-DOMAIN-002 atomic modification PostgreSQL16", () => {
     expect(
       (
         await adminPool.query(
-          "SELECT name,checksum FROM projectx_test.schema_migrations WHERE name NOT IN ('zz-reservation-domain/20261024001100_reservation_modification.sql','zz-reservation-domain/20261026001200_reservation_lifecycle.sql') ORDER BY name",
+          "SELECT name,checksum FROM projectx_test.schema_migrations WHERE name NOT IN ('zz-reservation-domain/20261024001100_reservation_modification.sql','zz-reservation-domain/20261026001200_reservation_lifecycle.sql','zz-reservation-domain/20261027001300_public_guest_booking.sql') ORDER BY name",
         )
       ).rows,
     ).toEqual(ledger);
@@ -1713,7 +1716,7 @@ describe("RESERVATION-DOMAIN-003 check-in and seating PostgreSQL16", () => {
       "DROP TABLE projectx_test.reservation_modifications,projectx_test.reservation_changes,projectx_test.reservations,projectx_test.reservation_clients,projectx_test.reservation_tables,projectx_test.reservation_shifts,projectx_test.reservation_venue_settings CASCADE",
     );
     await adminPool.query(
-      "DROP FUNCTION projectx_test.reservation_slots(date,integer),projectx_test.reservation_allowed(text),projectx_test.reservation_zone_validate(),projectx_test.reservation_validate(),projectx_test.reservation_record_change(),projectx_test.reservation_change_immutable()",
+      "DROP FUNCTION projectx_test.reservation_slots(date,integer),projectx_test.reservation_allowed(text),projectx_test.reservation_zone_validate(),projectx_test.reservation_validate(),projectx_test.reservation_record_change(),projectx_test.reservation_change_immutable(),projectx_test.reservation_public_iso(timestamptz),projectx_test.reservation_public_availability(text,date,integer,integer,integer),projectx_test.reservation_public_create(text,date,integer,timestamptz,text,text,uuid)",
     );
     const domain001Sql = await readFile(
       new URL(
@@ -1736,7 +1739,7 @@ describe("RESERVATION-DOMAIN-003 check-in and seating PostgreSQL16", () => {
       await owner.query(domain001Sql);
       await owner.query(domain002Sql);
       await owner.query(
-        "DELETE FROM schema_migrations WHERE name='zz-reservation-domain/20261026001200_reservation_lifecycle.sql'",
+        "DELETE FROM schema_migrations WHERE name IN ('zz-reservation-domain/20261026001200_reservation_lifecycle.sql','zz-reservation-domain/20261027001300_public_guest_booking.sql')",
       );
       await owner.query("COMMIT");
     } finally {
@@ -1785,7 +1788,13 @@ describe("RESERVATION-DOMAIN-003 check-in and seating PostgreSQL16", () => {
           "SELECT * FROM projectx_test.reservations ORDER BY id",
         )
       ).rows,
-    ).toEqual(beforeBookings);
+    ).toEqual(
+      beforeBookings.map((row) => ({
+        ...row,
+        booking_source: "STAFF",
+        public_confirmation: null,
+      })),
+    );
     expect(await modificationRows()).toEqual(beforeMods);
     expect(
       (
@@ -1793,11 +1802,11 @@ describe("RESERVATION-DOMAIN-003 check-in and seating PostgreSQL16", () => {
           "SELECT * FROM projectx_test.reservation_changes ORDER BY reservation_id,action",
         )
       ).rows,
-    ).toEqual(beforeChanges);
+    ).toEqual(beforeChanges.map((row) => ({ ...row, actor_kind: "STAFF" })));
     expect(
       (
         await adminPool.query(
-          "SELECT name,checksum FROM projectx_test.schema_migrations WHERE name<>'zz-reservation-domain/20261026001200_reservation_lifecycle.sql' ORDER BY name",
+          "SELECT name,checksum FROM projectx_test.schema_migrations WHERE name NOT IN ('zz-reservation-domain/20261026001200_reservation_lifecycle.sql','zz-reservation-domain/20261027001300_public_guest_booking.sql') ORDER BY name",
         )
       ).rows,
     ).toEqual(beforeLedger);

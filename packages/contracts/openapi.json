@@ -2010,6 +2010,231 @@
           }
         }
       }
+    },
+    "/api/v1/public/venues/{venueSlug}/availability": {
+      "get": {
+        "operationId": "searchPublicVenueAvailability",
+        "security": [],
+        "summary": "List public guest booking times for an opted-in Venue slug",
+        "description": "ADR-0023 public guest boundary. Returns only public venue metadata and distinct bookable time windows without organizationId, venueId, tableId, shiftId or guest PII.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "venueSlug",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 64,
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            }
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^20\\d{2}-\\d{2}-\\d{2}$"
+            }
+          },
+          {
+            "in": "query",
+            "name": "partySize",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          },
+          {
+            "in": "query",
+            "name": "fromMinute",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1439
+            }
+          },
+          {
+            "in": "query",
+            "name": "toMinute",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1440
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Available public booking windows",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicReservationAvailabilityResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden host or forwarded header",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Venue not found or public booking not enabled",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/public/venues/{venueSlug}/reservations": {
+      "post": {
+        "operationId": "createPublicVenueReservation",
+        "security": [],
+        "summary": "Create a public guest reservation for an opted-in Venue slug",
+        "description": "ADR-0023 public guest boundary. Allocates a deterministic best-fit table server-side inside reservation_public_create without synthetic staff identities.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "venueSlug",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 64,
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePublicReservationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Reservation created or idempotent retry snapshot returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicReservationConfirmation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden host or forwarded header",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Venue not found or public booking not enabled",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Capacity conflict or idempotency key conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2945,6 +3170,186 @@
           "idempotencyKey": {
             "type": "string",
             "format": "uuid"
+          }
+        }
+      },
+      "PublicVenueSummary": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "slug",
+          "name",
+          "timezone"
+        ],
+        "properties": {
+          "slug": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 64,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "timezone": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          }
+        }
+      },
+      "PublicReservationSlot": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "startsAt",
+          "endsAt",
+          "timezone"
+        ],
+        "properties": {
+          "startsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "timezone": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          }
+        }
+      },
+      "PublicReservationAvailabilityResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "venue",
+          "items"
+        ],
+        "properties": {
+          "venue": {
+            "$ref": "#/components/schemas/PublicVenueSummary"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicReservationSlot"
+            }
+          }
+        }
+      },
+      "CreatePublicReservationRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "date",
+          "partySize",
+          "startsAt",
+          "guestName",
+          "guestEmail",
+          "idempotencyKey"
+        ],
+        "properties": {
+          "date": {
+            "type": "string",
+            "pattern": "^20\\d{2}-\\d{2}-\\d{2}$"
+          },
+          "partySize": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50
+          },
+          "startsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "guestName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "guestEmail": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "idempotencyKey": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "PublicReservationConfirmation": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "reservationId",
+          "venueSlug",
+          "venueName",
+          "date",
+          "startsAt",
+          "endsAt",
+          "timezone",
+          "partySize",
+          "guestName",
+          "status",
+          "confirmationDelivery"
+        ],
+        "properties": {
+          "reservationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "venueSlug": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 64,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "venueName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "date": {
+            "type": "string",
+            "pattern": "^20\\d{2}-\\d{2}-\\d{2}$"
+          },
+          "startsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "timezone": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "partySize": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50
+          },
+          "guestName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240
+          },
+          "status": {
+            "type": "string",
+            "const": "BOOKED"
+          },
+          "confirmationDelivery": {
+            "type": "string",
+            "const": "NONE"
           }
         }
       }

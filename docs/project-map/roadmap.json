@@ -3278,7 +3278,7 @@
       "id": "RESERVATION-DOMAIN-007",
       "name": "Public Guest Booking Backend & PostgreSQL Security Slice",
       "phaseId": "PHASE-04",
-      "status": "PLANNED",
+      "status": "IMPLEMENTED",
       "dependencies": [
         "RESERVATION-DOMAIN-006",
         "RESERVATION-DOMAIN-004",
@@ -3310,8 +3310,13 @@
         "Preserve all 62 internal domain tests and 8 staff HTTP tests",
         "Update exact migration-ledger inventory lists for the new additive migration"
       ],
-      "implementationGate": "READY FOR OWNER IMPLEMENTATION AUTHORIZATION under ADR-0023.",
-      "specificationFile": "docs/architecture/ADR-0023-public-guest-booking-boundary.md"
+      "implementationGate": "Owner explicitly authorized bounded restoration to ADR-0023, targeted/full verification and one local commit only after all required gates pass. No push/deployment or DOMAIN-008 authorization.",
+      "specificationFile": "docs/architecture/ADR-0023-public-guest-booking-boundary.md",
+      "remainingWork": "Independent QA and security-review subagent sign-off pending (quota blocked, resets ~168h). All automated gates (pnpm verify:db 292/292, pnpm verify 42/42 E2E, contract:check, map:check) PASS. One local commit made. Task advances to VERIFIED upon independent review completion.",
+      "verificationEvidence": "CHK-091: pnpm verify:db 25 files/292 tests PASS; pnpm verify 42/42 E2E PASS; public-http.test.ts 10/10 PASS; pnpm contract:check, map:check, git diff --check PASS. Independent QA/security review blocked by quota — IMPLEMENTED pending review.",
+      "verificationRefs": [
+        "CHK-091"
+      ]
     },
     {
       "id": "RESERVATION-DOMAIN-008",
@@ -3471,7 +3476,7 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "Owner review of exact five-commit DOMAIN-003..006 plus DOMAIN-005-REGRESSION-001 chain; normal publication only after explicit final-SHA approval, then exact-SHA CI. DOMAIN-007 remains unauthorized.",
+  "nextExactTask": "Complete authorized DOMAIN-007 correction/verification package; no commit until all gates pass. DOMAIN-008 remains unauthorized.",
   "deliveryPriority": {
     "decisionId": "PRIORITY-D001",
     "primaryTarget": "PART 1 — CORE ONLINE RESERVATION SYSTEM",

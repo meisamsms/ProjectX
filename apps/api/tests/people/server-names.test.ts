@@ -811,6 +811,7 @@ describe("PEOPLE-08A forward migration", () => {
           "zz-reservation-domain/20261017001000_reservation_domain.sql",
           "zz-reservation-domain/20261024001100_reservation_modification.sql",
           "zz-reservation-domain/20261026001200_reservation_lifecycle.sql",
+          "zz-reservation-domain/20261027001300_public_guest_booking.sql",
         ].map(async (name) => ({
           name,
           checksum: checksum(await content(name)),

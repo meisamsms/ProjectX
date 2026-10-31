@@ -128,3 +128,14 @@ inferred reference-application behavior.
    - **Prerequisites**: `RESERVATION-DOMAIN-007` (`VERIFIED`), `RESERVATION-DOMAIN-005` (`VERIFIED`), `FOUND-TASK-004` (`VERIFIED`).
    - **Owned paths**: `apps/web/src/reservations/widget-client.ts`, `apps/web/src/reservations/widget-page.tsx`, `apps/web/src/shell.tsx` (`SCR-072`), `apps/web/tests/reservations/widget.test.tsx`, `tests/e2e/reservations-widget.spec.ts`, and map/evidence docs (`CHK-089`).
    - **Verification**: Focused Vitest, Playwright E2E + `@axe-core/playwright` zero violations (Venue/date/party search, slot selection, guest form validation, idempotent booking confirmation with explicit `confirmationDelivery: "NONE"` notice, `400`/`404`/`409`/`429`/`500` draft retention), and full `pnpm verify`.
+
+## DOMAIN-007 implementation notes — owner-authorized bounded correction
+
+The original decision above is preserved. The recovered WIP substituted nullable IDs for the approved discriminators; that unapproved alternative is superseded. Implementation restores `booking_source` and `actor_kind` and their staff/guest constraints. Guest audit rows are restricted to CREATED.
+
+- The PostgreSQL entry point takes seven arguments and computes the normalized request fingerprint itself; clients cannot supply a trusted hash. The guard combines transaction-local state with the definer call path; direct runtime table access remains subject to existing staff RLS.
+- `reservations.public_confirmation` persists the original redacted JSON response atomically with the booking and audit. It is NULL for STAFF and required for PUBLIC_WIDGET; existing whole-row update guards preserve it through modification/cancellation/lifecycle transitions. Retries return this value even after venue metadata changes. Unknown/disabled slugs continue to return 404, including retries.
+- Candidate selection retries the next deterministic table after an exclusion conflict inside a subtransaction; losing candidates leave no client/audit rows.
+- A continuously refilled per-IP/slug token bucket is bounded at 4096 entries. Only fully replenished buckets can be discarded; at saturation new keys receive 429 and existing depleted keys remain limited. This is process-local protection, not a production distributed-abuse guarantee.
+- Canonical authority is mandatory and validated. Missing/invalid configuration, mismatched/missing/duplicate Host, conflicting authority and forwarding headers fail closed. Normal startup derives it from the existing trusted staff-auth origin; absent trusted configuration does not expose a usable booking route.
+- No widget, guest lookup/change/cancel, delivery service, live authentication verification or deployment is included. Verification results are recorded separately in CHK-091.

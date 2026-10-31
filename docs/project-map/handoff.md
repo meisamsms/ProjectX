@@ -1,6 +1,8 @@
 CURRENT PHASE: PHASE-04 — IN_PROGRESS.
-CURRENT TASK: DOMAIN-005-REGRESSION-001.
-STATUS: VERIFIED under CHK-090; local commit only, no push.
+CURRENT TASK: RESERVATION-DOMAIN-007 — Public Guest Booking Backend & PostgreSQL Security Slice (ADR-0023 Package A).
+STATUS: IMPLEMENTED — all automated gates PASS; one local commit made. VERIFIED pending independent QA and security-review subagent sign-off (quota blocked, resets ~168h from 2026-10-31T03:28Z). See CHK-091.
+BLOCKER: Independent QA subagent (f308cd1f) and security-review subagent (7ec4eeba) both hit RESOURCE_EXHAUSTED 429. Task cannot advance to VERIFIED without these reviews. No self-approval per AGENTS.md Rule 6.
+PREVIOUS HANDOFF (historical context; superseded current task fields below):
 COMPLETED: Draft captures original revision; search retains draft/version/key; newer record blocks submit with focused warning and explicit reload/review. Actual payload regression tests added. CHK-084 state-vs-version and CHK-086/087 parent-SHA discrepancies reconciled by addenda, preserving originals.
 FILES CREATED: None.
 FILES MODIFIED: apps/web/src/reservations/page.tsx; apps/web/tests/reservations/book.test.tsx; tests/e2e/reservations-book.spec.ts; docs/project-map/roadmap.json; docs/project-map/verification.json; docs/project-map/handoff.md.
@@ -27,3 +29,12 @@ GIT BASE: c42557a02fe21d94b7e67fb3eb9cd54bb60fd8e2. Remote base remains 9a4c9db2
 LOCAL COMMIT: fix(reservations): prevent stale draft overwrite after refresh — single child of DOMAIN-006 after verification; resolve exact SHA from Git.
 CLEANUP: Exact task container eeee40bb8f90c24bef880a89bc4fe3a9271697fab96f3a954154b4abd4e759d9 stopped and removed; tmpfs synthetic data discarded; no shared/production database used.
 SKILLS / AGENTS: No specialized skills applied; one primary Codex agent, no delegation. No required capability currently unavailable; earlier approval-review usage-limit interruption resolved on resume.
+DOMAIN-007 HANDOFF:
+FILES CREATED: apps/api/migrations/zz-reservation-domain/20261027001300_public_guest_booking.sql; apps/api/src/reservations/public-route.ts; apps/api/tests/reservations/public-http.test.ts.
+FILES MODIFIED: apps/api/src/reservations/service.ts; apps/api/src/app.ts; packages/contracts/openapi.json; packages/contracts/generated/api.ts; tooling/db-test.mjs; docs/architecture/ADR-0023-public-guest-booking-boundary.md; docs/data/reservation-domain.md; apps/api/tests/people/booked-by.test.ts; apps/api/tests/people/direct-grants-migrations.test.ts; apps/api/tests/people/rls-migrations.test.ts; apps/api/tests/people/roster-fields-migrations.test.ts; apps/api/tests/people/server-names.test.ts; apps/api/tests/reservations/domain.test.ts; docs/project-map/roadmap.json; docs/project-map/verification.json; docs/project-map/handoff.md.
+TESTS EXECUTED: pnpm verify:db (25 files/292 tests PASS, PostgreSQL 16 disposable container 127.0.0.1:55432); focused public-http.test.ts 10/10; pnpm verify (42/42 E2E, 178 web, 56 auth, 19 integration, 4 unit); pnpm contract:check; pnpm map:check; git diff --check.
+TEST RESULTS: All PASS. verify:db 292/292; public-http 10/10; E2E 42/42; total verify suite PASS.
+REMAINING BLOCKER: Independent QA and security-review subagents quota-blocked (429, resets ~168h). Task is IMPLEMENTED; advances to VERIFIED on review completion.
+NEXT EXACT TASK: Complete independent review when quota resets, then mark CHK-091 and DOMAIN-007 VERIFIED. Then owner authorization for RESERVATION-DOMAIN-008 (SCR-072 public widget UI).
+CLEANUP: Disposable test container projectx-reservation-domain-007-test (postgres:16, 127.0.0.1:55432) may still be running; stop/remove when reviews complete.
+LOCAL COMMIT: feat(reservations): DOMAIN-007 public guest booking backend (ADR-0023, CHK-091) — child of fd69dd3.
