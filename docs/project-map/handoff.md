@@ -1,25 +1,26 @@
 CURRENT PHASE: PHASE-04 — IN_PROGRESS.
-CURRENT TASK: RESERVATION-DOMAIN-007 evidence reconciliation.
-STATUS: VERIFIED within bounded backend scope under CHK-091.
-COMPLETED: Reconciled contradictory earlier port/exit/sign-off claims with fresh controlled gate evidence; implementation commit 57f65e12b64d6e78853e99c47185899df3bc5c31 preserved.
-FILES CREATED: None in repository.
-FILES MODIFIED: docs/project-map/verification.json, roadmap.json, handoff.md.
-TESTS EXECUTED: pnpm verify:db; pnpm verify.
-TEST RESULTS: Both exit 0; 292 database tests across 25 files, PostgreSQL 16.15; 299 application/browser tests and both builds PASS. Complete logs and UTC metadata: C:/Users/barak/.codex/visualizations/2026/10/20/01a15b3d-c097-7562-a5f6-4b91c3ba7132/domain007-evidence.
-UNRESOLVED ISSUES: Earlier 55432 versus 55437 claims lack independently recoverable provenance; new run verified 55437. Earlier purported subagent requirement unsupported by AGENTS.md. Production/live authentication, widget and integrated core readiness remain unverified.
-TASK ID: RESERVATION-DOMAIN-007.
+CURRENT TASK: RESERVATION-DOMAIN-008.
+STATUS: VERIFIED bounded nonproduction widget; CHK-092 finalSynchronizationVerification.
+COMPLETED: Reused widget search/create/retry/confirmation and public route separation; opt-in localhost proxy disabled in production; real guest-to-staff integration verified. Authorized one-line focus-test waitFor correction preserves exact assertion and People behavior.
+FILES CREATED: widget-client.ts, widget-page.tsx, widget.test.tsx, reservations-widget.spec.ts, reservations-widget-real.spec.ts.
+FILES MODIFIED: apps/web/src/main.tsx; apps/web/vite.config.ts; apps/web/tests/people/add-user.test.tsx; ADR-0023; roadmap.json; verification.json; handoff.md.
+TESTS EXECUTED: Focused People/widget Vitest48/48; final pnpm verify exit0 (4 unit,56 auth,19 integration,178 web,43 browser;1 opt-in test skipped); both builds PASS; proxy guards PASS; map/contract/whitespace checks PASS.
+REUSED EVIDENCE: PostgreSQL16.15 database292/292, public/boundary12/12, expanded real guest-to-staff browser1/1 and widget/shell10/10; unchanged by focus-test correction.
+TEST RESULTS: PASS within bounded scope. Earlier full-gate failures retained in CHK-092. QA reproduced focus assertion without widget; browser timeout cause remains unconfirmed despite10/10 diagnostic passes. No retries used to hide failures.
+UNRESOLVED ISSUES: No local implementation gate blocker. Separate publication approval/CI; live staff provider, external delivery and production/core readiness remain unverified.
+TASK ID: RESERVATION-DOMAIN-008.
 PRIORITY PART: 1.
-CORE WORKFLOW ADVANCED: Guest availability and atomic booking with staff visibility within backend boundary.
-DEPENDENCIES AND THEIR VERIFIED STATUS: DOMAIN-006, DOMAIN-004 and DB-HARNESS-001 verified.
-WHY THIS TASK IS REQUIRED NOW: Owner authorized resolving missing verification evidence.
-OWNED SCOPE AND EXCLUDED SCOPE: Verification and three project-map documents only; no implementation, deployment, publication or DOMAIN-008.
-ACCEPTANCE CRITERIA: Both complete gates pass with captured logs, database identity and exit codes; preserve historical checks.
-VERIFICATION COMMANDS: pnpm verify:db; pnpm verify; pnpm map:check; git diff --check.
-REGRESSION CHECKS: Prior 88 check objects and 67 unrelated task records preserved.
-DECISION: VERIFIED within demonstrated backend scope.
-CORE READINESS GATE: unmet; see CHK-091.
-REQUIRED FOUNDATION DEPENDENCIES: Trusted staff authentication and isolation remain mandatory for live use.
-DEFERRED SECONDARY TASKS AND REASONS: P3 deferred until core readiness gate.
-NEXT EXACT TASK: Owner review and separate publication authorization for local commits.
-NEXT EXACT CORE TASK OR REQUIRED PREDECESSOR: DOMAIN-008 requires separate owner authorization.
-FILES NEXT AGENT MUST READ: AGENTS.md, this handoff, CHK-091, roadmap.json, ADR-0023.
+CORE WORKFLOW ADVANCED: Guest booking to authorized staff visibility.
+DEPENDENCIES AND THEIR VERIFIED STATUS: DOMAIN-007, DOMAIN-005, FOUND-TASK-004 remain VERIFIED.
+WHY REQUIRED NOW: Owner authorized final regression recovery and one local commit.
+OWNED SCOPE: Existing widget, bounded localhost integration, evidence and explicit focus-test synchronization only. No People production changes, deployment or DOMAIN-009.
+ACCEPTANCE: Focused and final gates PASS; original focus assertion preserved; staff/public security boundaries unchanged.
+REGRESSION CHECKS: Historical checks and other task objects preserved; backup retained.
+DECISION: Local completion; no push.
+CORE READINESS GATE: unmet; nonproduction scope only.
+DEFERRED SECONDARY TASKS: P3 deferred until core readiness.
+NEXT EXACT TASK: Owner review of local commit; no automatic further implementation.
+FILES NEXT AGENT MUST READ: AGENTS.md; CHK-091/092; ADR-0023; widget and integration tests.
+GIT BASE: 110238af28e8fa9a608dae8d8a2464d1cafc9d29. One new local child commit after verification; resolve SHA from Git.
+SKILLS / AGENTS: No specialized skill workflow; primary Codex plus existing read-only /root/qa_debug investigation. No new delegation this final correction turn.
+CLEANUP: Disposable database containers removed in prior recovery; no new infrastructure started for final test-only correction.

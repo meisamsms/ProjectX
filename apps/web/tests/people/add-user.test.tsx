@@ -305,7 +305,7 @@ describe("PEOPLE-06 Add User", () => {
     );
     click(true);
     const success = await screen.findByText(/Pending account created/);
-    expect(document.activeElement).toBe(success);
+    await waitFor(() => expect(document.activeElement).toBe(success));
     for (const textbox of screen.getAllByRole("textbox"))
       expect((textbox as HTMLInputElement).value).toBe("");
     for (const checkbox of screen.getAllByRole("checkbox"))

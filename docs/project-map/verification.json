@@ -4190,6 +4190,87 @@
         "governance": "AGENTS.md requires successful verification and evidence; it does not mandate independent subagents. Earlier claimed subagent quota/sign-off requirements are unverified and superseded; no such sign-off is claimed. One primary agent and deterministic tests were used for this reconciliation.",
         "limits": "Verified only the bounded backend and synthetic test environment. Production deployment, live staff authentication, public widget and end-to-end core readiness remain unverified."
       }
+    },
+    {
+      "id": "CHK-092",
+      "taskId": "RESERVATION-DOMAIN-008",
+      "status": "VERIFIED",
+      "result": "VERIFIED bounded nonproduction DOMAIN-008 after authorized test synchronization correction and successful final full gate. Historical failures and uncertain browser timeout cause preserved.",
+      "startingSha": "110238af28e8fa9a608dae8d8a2464d1cafc9d29",
+      "limitations": "Mapped SCR-072 is manager widget configuration; no approved guest URL found. Existing main.tsx wraps application in staff auth when enabled, and is outside ADR widget owned paths.",
+      "ownerDecisions": "Approved /book/:venueSlug and main.tsx public-route separation; staff boundary retained for all other paths.",
+      "results": [
+        "Focused component/shell 10/10 PASS including 8 widget tests; web typecheck PASS.",
+        "Focused Playwright mobile test 1/1 PASS and axe zero violations in booking and confirmation states; repeated with VITE_STAFF_AUTH_ENABLED=1 PASS. Public HTTP is mocked.",
+        "pnpm verify initial FAIL exit 2 on new test mock-call TypeScript indexing; corrected. Final pnpm verify PASS exit 0: 4 unit, 56 auth, 19 integration, 178 web, 43 browser; builds PASS. Subsequent additions were test-only; web typecheck and focused tests rerun PASS.",
+        "Existing DOMAIN-007 CHK-091 real PostgreSQL tests verify public create to authorized staff API visibility, but not this browser widget integrated with the real backend."
+      ],
+      "evidenceDirectory": "C:/Users/barak/.codex/visualizations/2026/10/20/01a15b3d-c097-7562-a5f6-4b91c3ba7132/domain008-evidence",
+      "blocker": "No remaining local verification blocker. Publication approval, exact-SHA CI and production/live provider readiness are not granted or verified.",
+      "integrationResolution": {
+        "authorization": "Owner approved localhost-only development proxy and disposable full-stack harness.",
+        "result": "PASS real Chromium guest booking -> public API -> PostgreSQL 16.15 -> authenticated staff reservation book, 1/1, exit 0. Synthetic fixture-issued staff session, restricted runtime role, no mocked backend response or production data.",
+        "database": "projectx_domain008_test, PostgreSQL 16.15, 127.0.0.1:55438, tmpfs container e17cf5784bf4e8e3ec38f220cc19cb67cf0542fa26a032eba4a1ce763a14b756; stopped and removed.",
+        "verification": "Final pnpm verify exit 0: 4 unit, 56 auth, 19 integration, 178 web, 43 browser passed and opt-in real test skipped in ordinary gate; API/web builds PASS. Real opt-in test separately passed with VITE_STAFF_AUTH_ENABLED=1. Focused widget/shell Vitest 10/10; mock-backed mobile Playwright/axe 1/1 with zero violations, including staff auth enabled.",
+        "evidenceDirectory": "C:/Users/barak/.codex/visualizations/2026/10/20/01a15b3d-c097-7562-a5f6-4b91c3ba7132/domain008-evidence",
+        "limits": "Nonproduction local synthetic test only. Proxy is off by default and fixed to 127.0.0.1:3001 when explicitly enabled. No live provider, email/SMS delivery, production or comprehensive core-readiness claim."
+      },
+      "recoveryVerification": {
+        "startingSha": "110238af28e8fa9a608dae8d8a2464d1cafc9d29",
+        "backup": "All 11 initial WIP files matched the owner-provided backup by SHA-256.",
+        "domain007": "Existing saved verify-db.log and verify-db.json record pnpm verify:db exit 0, 25 files, 292 tests, port 55437; separate verify log records full gate exit 0. Previously recorded port 55432 and independent-subagent requirement were superseded by CHK-091 reconciliation.",
+        "newResults": [
+          "Real browser integration 1/1 PASS with VITE_STAFF_AUTH_ENABLED=1: guest search/create through Fastify and PostgreSQL to synthetic authenticated staff book.",
+          "Focused public HTTP and boundary security 12/12 PASS using real PostgreSQL; db:check 2/2 PASS.",
+          "Widget and shell tests 10/10 PASS; pnpm verify exit 0 including browser and both builds; pnpm map:check and git diff --check PASS.",
+          "Proxy configuration test PASS: production mode rejects proxy even with opt-in environment flag, development mode enables only when opted in. First attempted tsx command failed because tsx was not available in the web package; repeated successfully with Node TS support.",
+          "Expanded real browser/API/PostgreSQL test 1/1 PASS: guest replay, mismatched command and occupied slot 409, two competing requests yield one 201/one 409, anonymous staff denial, unknown venue 404, guest-source/null staff creator, 429 rate limit and authenticated staff book visibility. Harness has one runtime connection; multi-connection concurrency is separately covered by public HTTP PostgreSQL tests.",
+          "Full pnpm verify after expanded integration initially FAIL: existing People add-user Playwright conflict test timed out waiting for Email; 42 browser tests passed and the opt-in real test skipped. Isolated rerun of the exact People test PASS 1/1; full gate rerun required.",
+          "Second final pnpm verify FAIL in existing People Add User component test: focus assertion expected success message but document.activeElement was body (177/178 web tests passed). No unrelated code or assertion changes."
+        ],
+        "scope": "Real browser integration covers guest search/create, replay, capacity conflict, competing submissions, guest identity, rate limit, anonymous staff denial, unknown slug and authenticated staff-book visibility. Multi-connection concurrency and cross-tenant isolation are separately exercised by real PostgreSQL API tests; mobile/axe coverage is mock-backed browser testing.",
+        "database": "PostgreSQL 16.15; isolated projectx_domain008_test on 127.0.0.1:55438, container 64f9c1a156981b1b76816df12aed06c2c975244d9dd09f31a0b1fd89279b88c4, tmpfs and synthetic data; container stopped and removed. Expanded real test used second task container 6a64f3488badf37979f04b4bfb07cafc46beba4f92f4cd32358182aabf27c18b with the same isolated configuration, stopped and removed.",
+        "limitations": "No live staff provider, production deployment, external notification delivery or full core readiness claim.",
+        "agents": [
+          "One primary Codex agent"
+        ],
+        "skills": [],
+        "diagnostic": "Focused People add-user plus widget Vitest: 48/48 PASS. Focused People add-user plus widget Playwright, 2 workers: 5/5 PASS. Both files explicitly run cleanup and unstub globals. The failed focus assertion immediately follows findByText; focus is applied in a React useEffect, so scheduling is a plausible hypothesis, not an established cause. Browser timeout cause and cross-suite leakage remain unproven. No test or application fix applied; full gate remains BLOCKED.",
+        "qaAgentDiagnostic": "Read-only QA subagent: People focus test observes focus immediately after findByText, but application applies focus in passive useEffect; this is an unsynchronized observation and plausible explanation, not proven ordering. Browser timeout trace no longer available. Focused Playwright People conflict case repeated 10 times with 6 workers: 10/10 PASS; no cause established and no timeout change. QA made no edits. No justified corrective change established; status remains BLOCKED."
+      },
+      "finalSynchronizationVerification": {
+        "authorization": "Owner explicitly authorized waitFor around the existing focus assertion; no People application behavior change.",
+        "diagnosis": "findByText waits for message presence; focus is applied in passive useEffect. QA subagent reproduced the body-versus-success assertion with widget absent. This supports synchronization correction, not a conclusive reconstruction of the earlier failure.",
+        "browserTimeout": "Original trace unavailable; cause unconfirmed; original failure preserved. QA diagnostic 10/10 passed at six workers; browser test unchanged.",
+        "fix": "await waitFor(() => expect(document.activeElement).toBe(success)); exact assertion unchanged, no skipped test, timeout increase or application retry.",
+        "focused": {
+          "command": "pnpm exec vitest run apps/web/tests/people/add-user.test.tsx apps/web/tests/reservations/widget.test.tsx --reporter=dot",
+          "exitCode": 0,
+          "passed": 48
+        },
+        "fullGate": {
+          "command": "pnpm verify",
+          "exitCode": 0,
+          "unit": 4,
+          "auth": 56,
+          "integration": 19,
+          "web": 178,
+          "browser": 43,
+          "optInRealTestSkipped": 1,
+          "apiBuild": "PASS",
+          "webBuild": "PASS",
+          "log": "C:/Users/barak/.codex/visualizations/2026/10/20/01a15b3d-c097-7562-a5f6-4b91c3ba7132/domain008-evidence/verify-focus-final.log",
+          "metadata": "C:/Users/barak/.codex/visualizations/2026/10/20/01a15b3d-c097-7562-a5f6-4b91c3ba7132/domain008-evidence/verify-focus-final.json"
+        },
+        "reusedEvidence": "Unchanged PostgreSQL16.15 full database292/292, public/boundary12/12 and expanded real integration1/1 remain applicable; no production/backend or real-integration test change in this correction.",
+        "security": "Proxy production-mode and NODE_ENV=production guards tested PASS. No auth, CSRF, RLS, public redaction or database changes. Synthetic credentials remain generated at runtime; no secret/test infrastructure artifacts added.",
+        "agents": [
+          "Primary Codex implementation agent",
+          "/root/qa_debug via collaboration; read-only People failure investigation; no repository edits"
+        ],
+        "skills": [],
+        "limits": "Nonproduction only. No live provider, external confirmation delivery, production deployment or full core-readiness claim."
+      }
     }
   ],
   "unresolvedQuestions": [

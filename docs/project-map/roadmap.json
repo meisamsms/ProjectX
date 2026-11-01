@@ -3322,7 +3322,7 @@
       "id": "RESERVATION-DOMAIN-008",
       "name": "Public Online Reservation Widget Browser UI (SCR-072)",
       "phaseId": "PHASE-04",
-      "status": "PLANNED",
+      "status": "VERIFIED",
       "dependencies": [
         "RESERVATION-DOMAIN-007",
         "RESERVATION-DOMAIN-005",
@@ -3355,7 +3355,11 @@
         "Zero axe-core accessibility violations across all widget states"
       ],
       "implementationGate": "Requires RESERVATION-DOMAIN-007 VERIFIED and explicit owner authorization.",
-      "specificationFile": "docs/architecture/ADR-0023-public-guest-booking-boundary.md"
+      "specificationFile": "docs/architecture/ADR-0023-public-guest-booking-boundary.md",
+      "currentBlocker": "Bounded nonproduction integration completed; live provider and production readiness remain unverified.",
+      "ownerDecisions": "Owner approved /book/:venueSlug and narrowly scoped apps/web/src/main.tsx route separation while retaining staff boundary.",
+      "verificationEvidence": "CHK-092: focused widget/shell 10/10; Playwright/axe 1/1; real Chromium/PostgreSQL16/staff-book 1/1; final pnpm verify 300 passed and opt-in real test skipped in default gate; builds PASS.",
+      "remainingWork": "Bounded local widget implementation and verification complete under CHK-092. Publication requires separate exact-SHA approval and CI; no next implementation authorized."
     },
     {
       "id": "DOMAIN-005-REGRESSION-001",
@@ -3476,7 +3480,7 @@
     "IMPL-MOD-08",
     "RELEASE-001"
   ],
-  "nextExactTask": "Owner review of DOMAIN-007 local commits and separate publication authorization; DOMAIN-008 requires separate implementation authorization.",
+  "nextExactTask": "Owner review of the exact local DOMAIN-008 commit for publication; no push or DOMAIN-009 authorized.",
   "deliveryPriority": {
     "decisionId": "PRIORITY-D001",
     "primaryTarget": "PART 1 — CORE ONLINE RESERVATION SYSTEM",

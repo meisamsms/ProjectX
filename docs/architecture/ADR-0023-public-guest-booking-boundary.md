@@ -139,3 +139,11 @@ The original decision above is preserved. The recovered WIP substituted nullable
 - A continuously refilled per-IP/slug token bucket is bounded at 4096 entries. Only fully replenished buckets can be discarded; at saturation new keys receive 429 and existing depleted keys remain limited. This is process-local protection, not a production distributed-abuse guarantee.
 - Canonical authority is mandatory and validated. Missing/invalid configuration, mismatched/missing/duplicate Host, conflicting authority and forwarding headers fail closed. Normal startup derives it from the existing trusted staff-auth origin; absent trusted configuration does not expose a usable booking route.
 - No widget, guest lookup/change/cancel, delivery service, live authentication verification or deployment is included. Verification results are recorded separately in CHK-091.
+
+## DOMAIN-008 public route approval
+
+The owner approved `/book/:venueSlug` as the guest page and a narrowly scoped `apps/web/src/main.tsx` routing change: this public route is outside the staff authentication boundary, while all other routes retain their existing staff boundary. The mapped SCR-072 manager settings route is preserved. This does not authorize production exposure or modify the public API security boundary.
+
+The owner additionally approved a localhost-only opt-in development proxy (`PROJECTX_WIDGET_TEST_PROXY=1`, fixed target 127.0.0.1:3001) and disposable browser integration harness for DOMAIN-008. The proxy is disabled by default and is not a production exposure.
+
+The opt-in proxy is also disabled when Vite runs in production mode or NODE_ENV is production.
