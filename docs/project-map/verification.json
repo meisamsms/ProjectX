@@ -2,6 +2,16 @@
   "schemaVersion": 1,
   "checks": [
     {
+      "id": "CHK-145",
+      "taskId": "FLOORPLAN-CORE-01-TABLET",
+      "date": "2026-11-23",
+      "status": "VERIFIED",
+      "classification": "Documentation validation only",
+      "method": "Parse project-map JSON and verify unique, resolved roadmap links, deferred status, unchanged existing tasks and P1 order, preserved evidence and handoff directives. Run the project-map validator and Git whitespace checks in the working tree and isolated publication snapshot.",
+      "result": "PASS. Documentation only. Tablet capability remains PLANNED. Current core task selection and historical verification are preserved.",
+      "registry": "Pinned POS 2026 ecosystem registry v0.1. Manifest fingerprint and all ten file hashes matched. Integrated ownership remains provisional."
+    },
+    {
       "id": "CHK-001",
       "taskId": "DISC-001",
       "status": "VERIFIED",

@@ -36,6 +36,42 @@
   ],
   "tasks": [
     {
+      "id": "FLOORPLAN-CORE-01-TABLET",
+      "name": "Tablet-Compatible Restaurant Floorplan & Operations",
+      "phaseId": "PHASE-04",
+      "status": "PLANNED",
+      "parentTask": "FLOORPLAN-CORE-01",
+      "priorityPart": 3,
+      "priorityDecisionId": "PRIORITY-D001",
+      "dependencies": [
+        "FLOORPLAN-CORE-01",
+        "RESERVATIONS-CORE-01",
+        "AVAILABILITY-CORE-01",
+        "PEOPLE-CORE-01",
+        "CORE-AUTH-02",
+        "CORE-READY-01"
+      ],
+      "specificationFile": "docs/architecture/ADR-0033-future-tablet-floorplan.md",
+      "scope": "Future responsive Floorplan and Reservation Book workflows for Manager, Host/Hostess and Server/Waitstaff. Apply ADR-0033 compatibility constraints when modifying existing P1 surfaces.",
+      "outOfScope": "Current tablet implementation or a tablet-specific P1 test cycle. Separate tablet backend or reservation logic. Offline synchronization, native apps, real-time infrastructure and permission expansion require separate authorization.",
+      "implementationGate": "Deferred under PRIORITY-D001 until CORE-READY-01 passes and the owner approves a bounded implementation, including applicable role, device and synchronization contracts and any integrated catalog ownership decision.",
+      "remainingWork": "Floorplan inventory, visual layout and seating areas have bounded local verification (CHK-133, CHK-142 and CHK-143 in local records). Reservation Book (RESERVATION-DOMAIN-005) has bounded verification, including the local area filter in CHK-144. Parent Floorplan, Reservation and Availability verification remains planned. Confirm operational availability and occupancy, permitted seating and table movement through the existing allocation rules, and an authorized staff role matrix. PEOPLE-CORE-01 is verified for its existing scope; Server Names do not establish table assignment. Verify server assignment separately if included. CORE-AUTH-02 is implemented with live verification outstanding. CORE-READY-01 remains unmet. Multi-device behavior and the supported tablet matrix require future testing.",
+      "acceptanceCriteria": [
+        "Managers view layout and table status on desktop and tablet and authorized managers edit layouts and seating areas.",
+        "Hosts view live Floorplan, authorized reservations, availability and occupancy, and can seat or move guests through approved allocation and state transitions.",
+        "Servers view authorized tables, reservations and operational status on handheld tablets, and identify assigned tables when the assignment workflow is available. Server access denies layout writes.",
+        "Desktop and tablet use the same authoritative records and coordinate system. Concurrent and stale actions refresh or show a safe conflict without losing committed work or exceeding capacity."
+      ],
+      "verificationCommands": [
+        "Before future implementation, record the supported tablet/browser matrix and exact focused Playwright, API contract and PostgreSQL commands. Use pnpm map:check for roadmap consistency.",
+        "Verify representative physical tablets and desktop with touch, keyboard, orientation changes and accessibility. Verify simultaneous tablet/desktop viewing and writes, stale-state recovery and scoped authorization using the approved contracts."
+      ],
+      "regressionChecks": [
+        "Preserve desktop layout editing, Reservation Book, guest availability, seating, cancellation, retries and capacity behavior.",
+        "Exercise unauthorized layout writes, restricted reservation visibility, cross-Venue denial, concurrent table moves and stale layout edits without partial writes or overbooking."
+      ]
+    },
+    {
       "id": "RESERVATION-DOMAIN-001",
       "name": "Internal reservation-domain vertical slice",
       "phaseId": "PHASE-04",

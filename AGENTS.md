@@ -406,3 +406,10 @@ FINAL PRIORITY RULE
 Deliver the core reservation system first. Implement foundation work only
 as its real dependencies require. Return to secondary/admin features after
 the core works end-to-end and the readiness gate has verified evidence.
+
+## Floorplan and Reservation Book tablet compatibility
+
+Preserve [ADR-0033](docs/architecture/ADR-0033-future-tablet-floorplan.md) when
+changing Floorplan or Reservation Book. The compatibility constraints apply to
+current work within its approved scope. Tablet delivery and tablet-specific
+verification are deferred under FLOORPLAN-CORE-01-TABLET.

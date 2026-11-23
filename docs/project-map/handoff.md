@@ -1,4 +1,5 @@
 CURRENT PHASE: PHASE-04 — IN_PROGRESS.
+FUTURE FLOORPLAN COMPATIBILITY: FLOORPLAN-CORE-01-TABLET is PLANNED and deferred. Preserve ADR-0033 in Floorplan and Reservation Book work. CHK-145 verifies documentation only.
 CURRENT TASK: RESERVATION-DOMAIN-008.
 STATUS: VERIFIED bounded nonproduction widget; CHK-092 finalSynchronizationVerification.
 COMPLETED: Reused widget search/create/retry/confirmation and public route separation; opt-in localhost proxy disabled in production; real guest-to-staff integration verified. Authorized one-line focus-test waitFor correction preserves exact assertion and People behavior.
